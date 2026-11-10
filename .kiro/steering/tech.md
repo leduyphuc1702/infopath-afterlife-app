@@ -12,11 +12,8 @@ inclusion: always
 - Lint and format with the project defaults (eslint + prettier, or oxlint/oxfmt). Pick one on day 1 and do not mix.
 
 ## Key libraries
-- **XSLT 1.0:** the engine is chosen in spec 03's design by a measured spike on our 53 views (changed 2026-11-10). It must be pure JS, run in Node 22 and a Web Worker with no DOM, and take JS extension functions. Candidates:
-  - `xsltjs` (MIT, on `@xmldom/xmldom` and `xpath`) is preferred;
-  - `xslt-processor` (LGPL-3.0, used unmodified as an npm dependency) is the fallback. It rendered all 5 views of Microsoft's 2013 sample templates in 12–23 ms in Node (measured locally; those templates are not in the repo). Choosing it needs the maintainer's OK.
-
-  Pin the chosen engine to an exact version.
+- **XSLT 1.0:** `xsltjs` 1.0.0 (MIT, on `@xmldom/xmldom` and `xpath`), pinned exactly. Chosen 2026-11-10 by spec 03's spike on our 53 views, empty and first record: 106/106 match `xsltproc`, 106/106 Node/Worker parity, extension functions through its public `customFunctions` option, endless recursion stops with a `RangeError`. `xslt-processor` (LGPL-3.0) was rejected: 100/106, non-deterministic `generate-id`, and runaway recursion crashed the process. Upgrading `xsltjs` is a reviewed change that re-runs the spec 03 goldens.
+  - `Stylesheet.defaultLoader` calls `fetch` or `fs`. Core always passes its own `loader` and `documentLoader`, so the default is never reached, and the Worker build stubs `fs` and `path` with modules that throw.
   - Do NOT use the browser's native XSLTProcessor (Chrome is removing it).
   - Do NOT use `saxon-js` (proprietary licence).
 - **Deflate:** use `DecompressionStream('deflate-raw')` in every runtime (a global in Node 22 and in Web Workers); `zlib` appears only in tests, as an oracle. Do not add a CAB library. MSZIP history crosses CFDATA blocks and `DecompressionStream` has no dictionary option, so core puts the previous output (≤ 32 KB) in front of each block as a stored deflate block and drops it from the result; proved on all 43 cabinets then in the repo in Node, `worker_threads` and a Chrome 157 Worker, and re-run in Node on all 48 after forms 43–47 arrived (2026-11-10).

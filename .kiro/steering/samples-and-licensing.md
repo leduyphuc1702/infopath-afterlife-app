@@ -31,9 +31,8 @@ its row there. The agent cannot write under `samples/`; ask the human to change 
   `.kiroignore` only as a guard; do not store files there. Never show these files in videos or
   screenshots, and never quote them in docs.
 - Dependencies:
-  - Production dependencies are MIT, Apache-2.0, BSD or ISC. The one allowed exception is
-    `xslt-processor` (LGPL-3.0, unmodified), and only if spec 03's spike picks it and the
-    maintainer agrees; it would then be noted in README "Third-party licences".
+  - Production dependencies are MIT, Apache-2.0, BSD or ISC, with no exceptions (spec 03 chose
+    `xsltjs`, MIT). List them in README "Third-party licences".
   - Do not add GPL or proprietary dependencies.
 - Do not copy Microsoft InfoPath UI assets (icons, images). Recreate the look with CSS and Atlaskit icons.
 - "InfoPath" is a Microsoft trademark. Use it descriptively ("for InfoPath forms") and add a non-affiliation note in the README and the Marketplace listing.
