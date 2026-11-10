@@ -113,3 +113,104 @@ test('the four asterisks sit inside the right edge of their controls, vertically
     }
   }
 });
+
+// --- Task 8 (R5.4 on forms 01–08, R6.3, the date-picker layout) -------------------------------
+
+const cabinets = (await commands.sampleCabinets()).filter((c) => /^0[1-8]-/.test(c.slug));
+
+/** Renders a cabinet's default view with a record into a new host on the page. */
+async function mount(slug: string, record: 'empty' | 'first'): Promise<HTMLElement> {
+  const c = cabinets.find((x) => x.slug === slug)!;
+  const t = await parseXsn(fromBase64(await commands.readFile(c.path, 'base64')));
+  const recordFile = `${c.formsDir!.replace('/forms/', '/records/')}${slug}-${record === 'empty' ? '000-empty' : '001'}.xml`;
+  const r = renderView(await prepareView(t, buildFormIR(t)), {
+    ...GOLDEN_INPUT,
+    record: fromBase64(await commands.readFile(recordFile, 'base64')),
+  });
+  const host = document.createElement('div');
+  host.innerHTML = `<style>${r.css}</style>${r.html}`;
+  document.body.append(host);
+  return host.querySelector<HTMLElement>('.afl-root')!;
+}
+
+test('forms 01–08 are covered', () => {
+  expect(cabinets.map((c) => c.slug.slice(0, 2))).toEqual([
+    '01',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+  ]);
+});
+
+test.each(cabinets.flatMap((c) => [[c.slug, 'empty'] as const, [c.slug, 'first'] as const]))(
+  '%s %s record: no element inside the root takes focus (R5.4)',
+  async (slug, record) => {
+    const r = await mount(slug, record);
+    expect(r.querySelectorAll('[tabindex],[contenteditable],[autofocus],[accesskey]')).toHaveLength(
+      0,
+    );
+    for (const el of [r, ...r.querySelectorAll<HTMLElement>('*')]) {
+      el.focus();
+      expect(document.activeElement, el.outerHTML.slice(0, 80)).not.toBe(el);
+    }
+    r.parentElement!.remove();
+  },
+);
+
+test("form 01's empty PlainText controls are each at least one line high (R6.3)", async () => {
+  const r = await mount('01-leave-request', 'empty');
+  const boxes = [...r.querySelectorAll<HTMLElement>('[data-afl-ctrl]')].filter(
+    (e) => e.getAttribute('xd:xctname') === 'PlainText',
+  );
+  expect(boxes.length).toBe(5);
+  for (const el of boxes) {
+    expect(el.textContent).toBe('');
+    // One line of the control's own font: an inline-block probe holding one character.
+    const probe = document.createElement('span');
+    probe.style.display = 'inline-block';
+    probe.textContent = 'X';
+    el.parentElement!.append(probe);
+    const line = probe.getBoundingClientRect().height;
+    probe.remove();
+    expect(el.clientHeight, el.title).toBeGreaterThanOrEqual(line - 0.5);
+  }
+  r.parentElement!.remove();
+});
+
+test.each([
+  ['01-leave-request', 'empty', 3],
+  ['01-leave-request', 'first', 3],
+  ['02-expense-report', 'empty', 0],
+  ['02-expense-report', 'first', 2],
+] as const)(
+  '%s %s record: each date picker is one line inside its cell, button at the right edge',
+  async (slug, record, count) => {
+    const r = await mount(slug, record);
+    const pickers = [...r.querySelectorAll<HTMLElement>('.xdDTPicker')];
+    expect(pickers).toHaveLength(count);
+    for (const p of pickers) {
+      const text = p.querySelector('.xdDTText')!.getBoundingClientRect();
+      const button = p.querySelector('.xdDTButton')!;
+      const btn = button.getBoundingClientRect();
+      const box = p.getBoundingClientRect();
+      const cell = p.closest('td')!.getBoundingClientRect();
+      const cs = getComputedStyle(p);
+      // One line: the text and the button share a vertical range, text first.
+      expect(text.top, p.title).toBeLessThan(btn.bottom);
+      expect(btn.top, p.title).toBeLessThan(text.bottom);
+      expect(text.right, p.title).toBeLessThanOrEqual(btn.left + 0.5);
+      // Inside the cell.
+      expect(box.left, p.title).toBeGreaterThanOrEqual(cell.left - 0.5);
+      expect(box.right, p.title).toBeLessThanOrEqual(cell.right + 0.5);
+      // The button at the right edge, holding our calendar icon.
+      expect(btn.right, p.title).toBeCloseTo(box.right - parseFloat(cs.borderRightWidth), 0);
+      const icon = button.querySelector('.afl-icon-calendar')!.getBoundingClientRect();
+      expect([icon.width, icon.height]).toEqual([16, 16]);
+    }
+    r.parentElement!.remove();
+  },
+);

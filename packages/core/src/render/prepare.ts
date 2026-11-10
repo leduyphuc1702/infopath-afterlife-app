@@ -9,7 +9,7 @@ import { parseXmlDom, xmlContext } from '../xml/parse';
 import type { ParsedTemplate } from '../xsn/parse';
 import type { BoundControl } from '../ir/types';
 import { compileView, type CompiledView } from './engine/xsltjs';
-import { controlIndex, requiredTargets } from './marks';
+import { activeXIndex, controlIndex, requiredTargets } from './marks';
 
 const MiB = 1024 * 1024;
 
@@ -38,6 +38,8 @@ export interface PreparedInternals {
   readonly controlAt: (file: string, line: number, column: number) => BoundControl | undefined;
   /** Design §9.2: fields that are required or the target of a blank check. */
   readonly required: ReadonlySet<string>;
+  /** R6.2: the FormIR ActiveX control id at an XSL element position. */
+  readonly activeXAt: (file: string, line: number, column: number) => string | undefined;
 }
 
 const internals = new WeakMap<PreparedView, PreparedInternals>();
@@ -98,6 +100,7 @@ export async function prepareView(
     file,
     controlAt: controlIndex(view),
     required: requiredTargets(ir),
+    activeXAt: activeXIndex(ir),
   });
   return prepared;
 }

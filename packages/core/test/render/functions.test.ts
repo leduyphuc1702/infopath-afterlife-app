@@ -124,8 +124,8 @@ test('formatString results are charged to the budget like concat (design §6)', 
   );
   const out = runCompiled(view, '<r/>', { functions: table });
   expect(out.html).toBe('<p>$1,234,567.50</p>');
-  // '$1,234,567.50' is 13 characters → 1 step; no location steps.
-  expect(out.budget.steps).toBe(1);
+  // '$1,234,567.50' is 13 characters → 1 step; no location steps; p and value-of → 2 steps.
+  expect(out.budget.steps).toBe(1 + 2);
 });
 
 let cases: ViewCase[];

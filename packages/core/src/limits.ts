@@ -52,8 +52,8 @@ export interface RenderLimits {
 }
 
 export const DEFAULT_RENDER_LIMITS: RenderLimits = Object.freeze({
-  templateDepth: 256,
-  evaluationSteps: 1_000_000,
+  templateDepth: 128,
+  evaluationSteps: 200_000,
   outputBytes: 4 * MiB,
 });
 

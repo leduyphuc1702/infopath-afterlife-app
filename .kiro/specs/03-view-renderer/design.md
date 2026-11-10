@@ -112,9 +112,9 @@ interface RenderInput {
 }
 interface RenderLimits {
   /** Nested template calls, built-in rule calls and xdMath:Eval calls (§6). */
-  readonly templateDepth: number;   // 256
+  readonly templateDepth: number;   // 128 (task 5)
   /** Per instruction 1; per XPath step 1 + nodes; per string result ceil(length / 16). */
-  readonly evaluationSteps: number; // 1,000,000
+  readonly evaluationSteps: number; // 200,000 (task 5)
   /** Characters added to any result tree, the main one or a variable's, plus 64 per node. */
   readonly outputBytes: number;     // 4 MiB
 }
@@ -240,8 +240,8 @@ listed here, and the guard test (§11) checks each one.
 
 | Limit | Default | Measured max (53 / private) | Why this default |
 |---|---|---|---|
-| `templateDepth` | 256 | 3 / 3 | Equal to `xmlDepth` (256), so built-in rules can recurse through any document the parser accepts. Below the `RangeError` at about 1,131 levels (spike, Node) and `MAX_DEPTH` 3000. Task 5 checks 256 levels in a Chromium Worker. |
-| `evaluationSteps` | 1,000,000 | 2,337 instructions + 531 `applyStep` calls + 22 string steps / 343 + 130 + 4 | About 350 times the measured work. Task 5 measures the time to reach the limit with the R3.3 bombs and lowers the default if it takes over 1 s in Node. |
+| `templateDepth` | 128 | 3 / 3 template calls (form 06: 4 with its built-in rule call) | `Changed at task 5:` was 256, equal to `xmlDepth`. A fresh Chromium Worker overflows its stack between 200 and 230 levels of a `call-template` chain with our hooks (bare `xsltjs`: between 280 and 300); the per-instruction step hook is most of the difference. 128 leaves about 40 % headroom there, and 32 times form 06. A record nested deeper than 128 that a view walks with built-in rules now stops with `LIMIT_EXCEEDED`. A stack overflow before the limit (a view with many elements per level) is still `LIMIT_EXCEEDED templateDepth` (§5.3), never a crash. |
+| `evaluationSteps` | 200,000 | 2,337 instructions + 531 `applyStep` calls + 22 string steps / 343 + 130 + 4 | About 70 times the measured work. `Changed at task 5:` was 1,000,000. The nested `for-each` bomb took 3.96 s to reach 1,000,000 in Node 22; `xsltjs` alone runs about 4 µs per step there (our hooks add about 1 %), so 200,000 is reached in under 1 s. |
 | `outputBytes` | 4 MiB | 451,925 / 74,174 (characters + 64 per node; form 08: 1,471 elements) | 9 times form 08. 64 per node approximates xmldom's memory per node (measured about 620–780 bytes per element), so 4 MiB stops at about 65,000 nodes, about 46 MB. Package images count towards it. |
 
 `Changed at review:` two growth paths that no other limit sees.
@@ -252,7 +252,8 @@ listed here, and the guard test (§11) checks each one.
   `substring-after`, `translate`, `normalize-space`, `string`) and `xdFormatting:formatString`.
   Each result charges `ceil(length / 16)` steps. Measured max per render: 344 characters (form
   08) and 50 (private), 22 and 4 steps, 0.002 % of the budget. At the default, the steps charged
-  for strings in one render stop at 16 Mi characters, 32 MiB as UTF-16, so a doubling bomb stops
+  for strings in one render stop at 3.2 million characters, 6.4 MB as UTF-16 (`Changed at task 5:`
+  with the new default; was 16 Mi characters), so a doubling bomb stops
   before its next string reaches 64 MiB.
 - **Result tree fragments.** A variable's content is built with the same `appendText`,
   `appendNode`, `setAttribute` and `copyNode` calls into a fragment, so `outputBytes` counts it.
@@ -312,9 +313,14 @@ One walk over the result tree, in this order; each step needs what the one befor
    for step 9, drop `head`, and move `body`'s `style`, `class`, `dir`, `lang` onto the root `div`.
 2. **ActiveX placeholder** (R6.2), before sanitising drops `object`: an `object` with a
    `classid` becomes `<div class="afl-unsupported">Custom control {GUID}: not supported</div>`
-   with its sanitised width and height; one `UNSUPPORTED_CONTROL {classid, controlId?, count}`.
+   with its sanitised width and height; one `UNSUPPORTED_CONTROL {classid, controlId?, count}`
+   per classid. `Changed at task 8:` its `param` children go with it and are not counted (the
+   private views' 79 removed elements were 72 `param` and 7 `object`, all ActiveX).
 3. **`res:` icons** (R6.4): `img` with `res://infopath.exe/calendar.gif` or `…/pictureclick.gif`
    (any case) becomes `<span class="afl-icon afl-icon-calendar|picture" aria-hidden="true">`.
+   `Changed at task 8:` `signaturevalid.gif`, `addsignaturebutton.gif` and `signatureerror.gif`
+   become `afl-icon-signature`; any other `res://infopath.exe/` image becomes `afl-icon-unknown`
+   with the image's width and height, and one `CONTENT_REMOVED {kind: resource}` names the file.
    Other `res:` URLs fall to step 5.
 4. **Package images** (R6.1): a relative `src` naming a package file (spec 01 rule) whose magic
    bytes say PNG, GIF, JPEG or BMP becomes a base64 data URL (chunked `btoa`, a global in Node 22
@@ -334,7 +340,11 @@ One walk over the result tree, in this order; each step needs what the one befor
 9. **Serialise** (§8.3), **scope the CSS** (§8.4), and append `own-css.ts`: the asterisk
    (`::after`, about 8 px, `#FF0000`, right 3 px, vertically centred), CSS-drawn icons (no
    Microsoft asset), the placeholder box, the R6.3 rule, and `contain: layout paint` on the root
-   so `position: fixed` cannot leave it. `Changed at review:` R6.3 is
+   so `position: fixed` cannot leave it. `Changed at task 8:` the date picker as InfoPath laid
+   it out: the legacy `nowrap` attribute means `white-space: nowrap` (zero specificity), and
+   `div.xdDTPicker` is one `inline-flex` line inside its cell, the `xdDTText` taking the free
+   width and the `xdDTButton` at the right holding the calendar icon (the view's `display:
+   inline` and `margin-left: -21px` are overridden). `Changed at review:` R6.3 is
    `:where(.afl-root [data-afl-ctrl]){min-height:1lh}` plus
    `:where(.afl-root span[data-afl-ctrl]){display:inline-block}`. `min-height` does nothing on an
    inline element, and InfoPath text boxes are `span`s. `:where()` has zero specificity, so any
@@ -472,7 +482,7 @@ removed. Form 01: four marks with the empty record (`manifest.xsf` lines 79–82
 | R2.1, R2.2 | unit + golden | form 01 record with form 07; forms 03, 04 | `test/render/data.test.ts` |
 | R3.1 | golden + local | as R1.1; private check | — |
 | R3.2 | unit | synthetic `http:`, `file:`, absolute, package include/import, `document()`; **default-loader test** (§5.1) | `test/render/loaders.test.ts` |
-| R3.3 | unit + browser | recursion, nested `for-each` bomb, output bomb, `copy-of` bomb, 256 levels in Worker | `test/render/limits.test.ts`, `test/browser/render-limits.browser.test.ts` |
+| R3.3 | unit + browser | recursion, nested `for-each` bomb, output bomb, `copy-of` bomb, 128 levels in Worker | `test/render/limits.test.ts`, `test/browser/render-limits.browser.test.ts` |
 | R3.4 | lint + unit | `XSLTProcessor` ban; the `license` of every production dependency of `packages/core`, transitive ones included, read offline from its installed `package.json` (`Changed at review:` the lockfile has no licence field) | `test/lint/restricted.test.ts`, `test/render/licences.test.ts` |
 | R4.1–R4.5 | unit | one case per function and per corpus pattern; guard view listing every name | `test/xpath-fns/format.test.ts`, `test/render/functions.test.ts` |
 | R5.1, R5.2 | unit | one case per §8.2 rule and §8.4 rule | `test/render/sanitise.test.ts`, `test/render/css.test.ts` |
@@ -498,7 +508,7 @@ version bump cannot pass silently.
 | A version bump moves the internals of §5.3 | exact pin; guard test (task 1) |
 | `xsltjs` 1.0.0 is three days old | 106 `xsltproc` references (task 10), goldens, private check |
 | A single XPath call does work that `applyStep` charges do not cover | string results are charged (§6); `outputBytes` and record-size limits bound the inputs. A Worker can be terminated by its page (spec 09); a Forge function has its timeout. |
-| The Worker stack is smaller than Node's | 256-level test in a Chromium Worker (task 5) |
+| The Worker stack is smaller than Node's | 128-level test in a Chromium Worker (task 5; `Changed at task 5:` the 256-level test failed, §6) |
 | The blank-check rule marks too much or too little on other forms | goldens of forms 01–08 reviewed against screenshots (task 14); the private check prints mark counts |
 
 ## 13. Review answers (2026-11-10)

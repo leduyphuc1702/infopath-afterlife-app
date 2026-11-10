@@ -1,11 +1,18 @@
-// The result-tree sanitiser (spec 03 design §8.1 steps 1, 5 and 8; §8.2). It walks the engine's
+// The result-tree sanitiser (spec 03 design §8.1 steps 1–5 and 8; §8.2). It walks the engine's
 // result tree once and builds an HTML tree (`serialise.ts`) holding only allowed elements and
 // attributes. It needs no DOM: the result tree is read through the few xmldom members below.
 //
 // Step 8 (inert controls) is applied in the same attribute pass: the marks of step 6 add only
 // `data-afl-*` attributes, so doing it here gives the same tree.
 
-import { filterDeclarations, withoutControls, type Removed } from './css';
+import { filterDeclarations, normalise, withoutControls, type Removed } from './css';
+import {
+  activeXPlaceholder,
+  NO_RESOURCES,
+  packageImage,
+  resourceIcon,
+  type Resources,
+} from './resources';
 import type { HElement, HNode } from './serialise';
 
 /** The xmldom members read here. */
@@ -23,7 +30,7 @@ export interface ResultNode {
 }
 
 /** CONTENT_REMOVED kinds, in issue order. */
-export const REMOVED_KINDS = ['element', 'attribute', 'url', 'css'] as const;
+export const REMOVED_KINDS = ['element', 'attribute', 'url', 'css', 'resource'] as const;
 export type RemovedKind = (typeof REMOVED_KINDS)[number];
 
 export interface Sanitised {
@@ -35,6 +42,8 @@ export interface Sanitised {
   readonly removed: ReadonlyMap<RemovedKind, Removed>;
   /** Text nodes written with `disable-output-escaping` (D6), escaped like any text. */
   readonly rawTextNodes: number;
+  /** R6.2: ActiveX placeholders by classid, in first-occurrence order. */
+  readonly unsupported: ReadonlyMap<string, { count: number; controlId?: string }>;
 }
 
 const XHTML = 'http://www.w3.org/1999/xhtml';
@@ -80,8 +89,13 @@ const RASTER_DATA = /^data:image\/(?:png|gif|jpeg|bmp);base64,[a-z0-9+/=]*$/i;
 /** As the URL parser reads a scheme: ASCII whitespace and control characters removed. */
 const urlForm = withoutControls;
 
-export function sanitiseResult(fragment: ResultNode, scope: string): Sanitised {
+export function sanitiseResult(
+  fragment: ResultNode,
+  scope: string,
+  resources: Resources = NO_RESOURCES,
+): Sanitised {
   const removed = new Map<RemovedKind, Removed>(REMOVED_KINDS.map((k) => [k, []]));
+  const unsupported = new Map<string, { count: number; controlId?: string }>();
   const styles: string[] = [];
   let rawTextNodes = 0;
   const remove = (kind: RemovedKind, what: string) => removed.get(kind)!.push(what);
@@ -107,7 +121,34 @@ export function sanitiseResult(fragment: ResultNode, scope: string): Sanitised {
         continue;
       }
       const ns = child.namespaceURI ?? null;
-      if (!KEEP.has(name) || (ns !== null && ns !== XHTML)) {
+      const xhtml = ns === null || ns === XHTML;
+      // Step 2 (R6.2): before step 5 drops `object`; its `param` children go with it, uncounted.
+      const classid = name === 'object' && xhtml ? attr(child, 'classid') : undefined;
+      if (classid !== undefined) {
+        out.push(activeXPlaceholder(classid, sizeOf(child, remove), child));
+        const seen = unsupported.get(classid);
+        if (seen) seen.count++;
+        else {
+          const controlId = resources.activeXId(child);
+          unsupported.set(
+            classid,
+            controlId === undefined ? { count: 1 } : { count: 1, controlId },
+          );
+        }
+        continue;
+      }
+      // Step 3 (R6.4): InfoPath's own images become our icons.
+      const src = name === 'img' && xhtml ? attr(child, 'src') : undefined;
+      const res =
+        src === undefined
+          ? undefined
+          : resourceIcon(urlForm(src).toLowerCase(), sizeOf(child, remove));
+      if (res) {
+        out.push(res.icon);
+        if (res.unknown !== undefined) remove('resource', res.unknown);
+        continue;
+      }
+      if (!KEEP.has(name) || !xhtml) {
         if (!STRUCTURE.has(name)) remove('element', name);
         walk(child, out);
         continue;
@@ -115,7 +156,7 @@ export function sanitiseResult(fragment: ResultNode, scope: string): Sanitised {
       const el: HElement = {
         kind: 'element',
         name,
-        attrs: attributes(child, name, remove),
+        attrs: attributes(child, name, remove, resources),
         children: [],
         origin: child,
       };
@@ -143,13 +184,14 @@ export function sanitiseResult(fragment: ResultNode, scope: string): Sanitised {
 
   const root: HElement = { kind: 'element', name: 'div', attrs: rootAttrs, children: [] };
   walk(container, root.children);
-  return { root, styles, removed, rawTextNodes };
+  return { root, styles, removed, rawTextNodes, unsupported };
 }
 
 function attributes(
   el: ResultNode,
   element: string,
   remove: (kind: RemovedKind, what: string) => void,
+  resources: Resources,
 ): [string, string][] {
   const out: [string, string][] = [];
   const seen = new Set<string>();
@@ -179,7 +221,13 @@ function attributes(
       }
     } else if (LOADING_ATTRS.has(name)) {
       const url = urlForm(value);
-      if (RASTER_DATA.test(url)) out.push([name, url]);
+      // Step 4 (R6.1): a package image becomes a data URL.
+      const data = RASTER_DATA.test(url)
+        ? url
+        : element === 'img' && name === 'src'
+          ? packageImage(value.trim(), resources)
+          : undefined;
+      if (data !== undefined) out.push([name, data]);
       else remove('url', name);
     } else if (name === 'style') {
       const css: Removed = [];
@@ -193,6 +241,32 @@ function attributes(
     }
   }
   return out;
+}
+
+/**
+ * The size of an element as a filtered `style`: its `width` and `height` attributes (a number,
+ * in pixels, or a percentage) and the width and height declarations of its `style`.
+ */
+function sizeOf(
+  el: ResultNode,
+  remove: (kind: RemovedKind, what: string) => void,
+): [string, string][] {
+  const decls: string[] = [];
+  for (const n of ['width', 'height']) {
+    const v = attr(el, n)?.trim();
+    if (v !== undefined && /^\d+(?:\.\d+)?%?$/.test(v))
+      decls.push(`${n}:${v.endsWith('%') ? v : `${v}px`}`);
+  }
+  const style = attr(el, 'style');
+  if (style !== undefined) {
+    const css: Removed = [];
+    for (const d of filterDeclarations(style, css).split(';')) {
+      const prop = normalise(d.slice(0, d.indexOf(':')));
+      if (prop === 'width' || prop === 'height') decls.push(d);
+    }
+    for (const r of css) remove('css', r);
+  }
+  return decls.length === 0 ? [] : [['style', decls.join(';')]];
 }
 
 function collectStyles(node: ResultNode, out: string[]): void {

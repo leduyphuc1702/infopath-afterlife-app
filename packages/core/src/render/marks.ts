@@ -42,6 +42,18 @@ export function controlIndex(
   return (file, line, column) => byPos.get(key(file, line, column));
 }
 
+/** R6.2: FormIR ActiveX control ids by the source position of their `object` element. */
+export function activeXIndex(
+  ir: FormIR,
+): (file: string, line: number, column: number) => string | undefined {
+  const byPos = new Map<string, string>();
+  for (const c of ir.activeX.controls) {
+    const k = key(c.source.file, c.source.line, c.source.column);
+    if (!byPos.has(k)) byPos.set(k, c.id);
+  }
+  return (file, line, column) => byPos.get(key(file, line, column));
+}
+
 /** Design §9.2: the field ids an asterisk may be drawn for. */
 export function requiredTargets(ir: FormIR): ReadonlySet<string> {
   const out = new Set<string>();

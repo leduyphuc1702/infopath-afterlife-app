@@ -73,6 +73,13 @@ interface XslElement {
   getAttributeNS(ns: string, local: string): string | null;
 }
 
+/** A node added to or copied into a result tree. */
+interface ResultNodeLike {
+  readonly nodeType: number;
+  readonly data?: string;
+  readonly attributes?: ArrayLike<{ readonly name: string; readonly value: string }>;
+}
+
 interface LiteralCtx {
   readonly out?: { readonly lastChild: object | null } | null;
 }
@@ -82,6 +89,19 @@ interface ProcessorLike {
   transform(source: unknown): DomFragment;
   literalResultElement(element: XslElement, ctx: LiteralCtx): void;
   evaluate(text: string, ctx: LiteralCtx, styleNode: XslElement): unknown;
+  invokeTemplate: (this: ProcessorLike, a: unknown, b: unknown, c: unknown, d: unknown) => void;
+  builtInRule: (this: ProcessorLike, a: unknown, b: unknown, c: unknown, d: unknown) => void;
+  executeInstruction: (this: ProcessorLike, a: unknown, b: unknown) => unknown;
+  appendText(out: unknown, text: unknown, raw?: boolean): void;
+  appendNode(out: unknown, node: ResultNodeLike): void;
+  setAttribute(
+    out: { nodeType?: number } | null,
+    ns: unknown,
+    qname: string,
+    value: string,
+    styleNode: unknown,
+  ): void;
+  copyNode(node: ResultNodeLike, out: unknown, deep: boolean): void;
   [BUDGET]?: Budget;
 }
 
@@ -295,6 +315,7 @@ export function runView(view: CompiledView, source: DomDocument, options: RunOpt
     },
   });
   p[BUDGET] = options.budget;
+  installBudget(p, options.budget);
   installFunctions(p.functions, options, unknown);
   const marked = new Map<object, MarkedElement>();
   let unmarked = 0;
@@ -339,9 +360,14 @@ export function runView(view: CompiledView, source: DomDocument, options: RunOpt
   try {
     fragment = p.transform(source);
   } catch (e) {
-    throw toAfterlifeError(abort ?? e, view.view);
+    const b = options.budget;
+    throw toAfterlifeError(
+      b.abort ?? abort ?? (isStackOverflow(e) ? b.stackOverflow() : e),
+      view.view,
+    );
   }
-  if (abort !== undefined) throw toAfterlifeError(abort, view.view);
+  const stored = options.budget.abort ?? abort;
+  if (stored !== undefined) throw toAfterlifeError(stored, view.view);
 
   const issues: Issue[] = [...blockedDocs];
   for (const [name, calls] of unknown) {
@@ -369,6 +395,76 @@ export function runView(view: CompiledView, source: DomDocument, options: RunOpt
     });
   }
   return { fragment, issues, marked, unmarked };
+}
+
+/**
+ * Design §5.3 and §6: depth on template and built-in rule calls, one step per instruction, and
+ * output bytes on every write to a result tree, the main one or a variable's. Each hook is an
+ * own property of this processor, so no other render is charged.
+ */
+function installBudget(p: ProcessorLike, budget: Budget): void {
+  const proto = Object.getPrototypeOf(p) as ProcessorLike;
+  // Each frame here is repeated at every nesting level, and a Worker's stack is smaller than
+  // Node's (design §6, §12): fixed arity, no closures per call.
+  const invoke = proto.invokeTemplate;
+  const builtIn = proto.builtInRule;
+  const execute = proto.executeInstruction;
+  p.invokeTemplate = function (a, b, c, d) {
+    budget.enter();
+    try {
+      invoke.call(p, a, b, c, d);
+    } finally {
+      budget.depth--;
+    }
+  };
+  p.builtInRule = function (a, b, c, d) {
+    budget.enter();
+    try {
+      builtIn.call(p, a, b, c, d);
+    } finally {
+      budget.depth--;
+    }
+  };
+  p.executeInstruction = function (a, b) {
+    budget.step();
+    return execute.call(p, a, b);
+  };
+  p.appendText = (out, text, raw) => {
+    if (out && typeof text === 'string') budget.chargeOutput(text.length);
+    proto.appendText.call(p, out, text, raw);
+  };
+  p.appendNode = (out, node) => {
+    if (out)
+      budget.chargeOutput(
+        node.nodeType === 7 || node.nodeType === 8 ? (node.data ?? '').length : 0,
+        1,
+      );
+    proto.appendNode.call(p, out, node);
+  };
+  p.setAttribute = (out, ns, qname, value, styleNode) => {
+    if (out && out.nodeType === 1) budget.chargeOutput(qname.length + value.length);
+    proto.setAttribute.call(p, out, ns, qname, value, styleNode);
+  };
+  p.copyNode = (node, out, deep) => {
+    // A deep-copied element's attributes bypass setAttribute; its node and children do not.
+    if (deep && node.nodeType === 1 && node.attributes) {
+      let chars = 0;
+      for (let i = 0; i < node.attributes.length; i++) {
+        const a = node.attributes[i]!;
+        chars += a.name.length + a.value.length;
+      }
+      budget.chargeOutput(chars);
+    }
+    proto.copyNode.call(p, node, out, deep);
+  };
+}
+
+/** V8's stack overflow, directly or as the cause of an XsltError (design §5.3, Errors). */
+function isStackOverflow(e: unknown): boolean {
+  for (let x: unknown = e, i = 0; x && i < 4; x = (x as { cause?: unknown }).cause, i++) {
+    if (x instanceof RangeError && x.message === 'Maximum call stack size exceeded') return true;
+  }
+  return false;
 }
 
 /** Test-only (design D10): the result tree as `xsltjs` itself would serialise it. */
@@ -463,6 +559,16 @@ function toAfterlifeError(e: unknown, view: string): AfterlifeError {
   if (e instanceof AfterlifeError) return e as AfterlifeError;
   const cause = (e as { cause?: unknown } | undefined)?.cause;
   if (cause instanceof AfterlifeError) return cause as AfterlifeError;
+  // Any RangeError other than a stack overflow (invalid string or array length), found
+  // directly or as the cause of an XsltError, fails the render; it is never a crash.
+  const range = e instanceof RangeError ? e : cause instanceof RangeError ? cause : undefined;
+  if (range) {
+    return new AfterlifeError('RENDER_FAILED', {
+      view,
+      xsltCode: 'RangeError',
+      message: range.message,
+    });
+  }
   if (e instanceof Error && e.name === 'XsltError') {
     const x = e as XsltErrorLike;
     const line = /\bline (\d+)/.exec(x.location)?.[1];

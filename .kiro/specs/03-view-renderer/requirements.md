@@ -317,7 +317,12 @@ built, so that I can trust the comparison.
 4. THE SYSTEM SHALL replace each InfoPath resource with an icon of its own: a calendar button for
    `calendar.gif` and a picture placeholder for `pictureclick.gif`, drawn with CSS or an
    Atlaskit icon, never a Microsoft asset (samples-and-licensing.md). Oracle: form 02's date
-   pickers and form 08's picture control show the icon; no `res:` URL is left.
+   pickers and form 06's picture control show the icon; no `res:` URL is left.
+   `Changed at review:` (2026-11-10, after the private renders) the three signature images
+   `signaturevalid.gif`, `addsignaturebutton.gif` and `signatureerror.gif` share one signature
+   icon of our own. Any other `res://infopath.exe/` image becomes a neutral box of the same size
+   and is reported as `CONTENT_REMOVED {kind: resource}` with its file name. The picture control
+   is in form 06, not form 08 as first written.
 5. THE SYSTEM SHALL mark each rendered bound control with its FormIR control id and the data path
    of the node instance it shows (with positions, such as
    `/my:expenseClaim[1]/my:expenses[1]/my:expense[2]/my:amount[1]`). Oracle: form 02's first

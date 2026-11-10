@@ -120,7 +120,7 @@ limits, properties, references and performance.
     test/browser/render-dom.browser.test.ts test/browser/render-slice.browser.test.ts`, then
     `pnpm check`. **Slice complete.**
 
-- [ ] 5. Limits
+- [x] 5. Limits
   - `src/render/engine/budget.ts`; the depth, step and output hooks; the `applyStep` wrapper;
     the abort slot; mapping `RangeError` to `LIMIT_EXCEEDED` (§5.3, §6).
   - Tests:
@@ -129,8 +129,8 @@ limits, properties, references and performance.
       string-doubling bomb (`concat($s, $s)`) and a fragment-doubling bomb (`copy-of $x` twice
       into a new variable), each stopped with `LIMIT_EXCEEDED` before 64 MiB is built; a
       non-stack `RangeError` gives `RENDER_FAILED`;
-    - `test/browser/render-limits.browser.test.ts`: 256 nested templates render in a Chromium
-      Worker, and 257 give `LIMIT_EXCEEDED`.
+    - `test/browser/render-limits.browser.test.ts`: 128 nested templates render in a Chromium
+      Worker, and 129 give `LIMIT_EXCEEDED` (`Changed at task 5:` was 256 and 257; design §6).
   - Measure the time each bomb takes to reach the default. If one exceeds 1 s in Node, lower
     `evaluationSteps` and update design §6.
   - Requirements: R3.3.
@@ -170,7 +170,7 @@ limits, properties, references and performance.
   - Oracle: `docs/infopath-ux.md` §3–4 values; an unparseable value is returned unchanged.
   - Done when: `V --project node test/xpath-fns`, then `pnpm check`.
 
-- [ ] 8. What InfoPath showed that the XSL does not
+- [x] 8. What InfoPath showed that the XSL does not
   - `src/render/html/resources.ts` and `own-css.ts`: §8.1 steps 2–4 (ActiveX placeholder,
     `res:` icons, package images) and the R6.3 rule.
   - Tests: `test/render/resources.test.ts`. Extend `render-dom.browser.test.ts` to forms 01–08.
@@ -178,8 +178,10 @@ limits, properties, references and performance.
   - Oracle:
     - a synthetic template with a package PNG gets a `data:image/png` source;
     - form 44 shows the placeholder, with one `UNSUPPORTED_CONTROL`;
-    - form 02's date pickers and form 08's picture control show the icons, and no `res:` URL is
-      left;
+    - form 02's date pickers and form 06's picture control show the icons, and no `res:` URL is
+      left (`Changed at task 8:` the picture control is in form 06; R6.4);
+    - `Changed at task 8:` each date picker of forms 01 and 02 is one line inside its cell, with
+      its button at the right edge;
     - every empty `PlainText` control in form 01's empty record is at least one line high,
       including `span`s the view leaves inline (`Changed at review:`);
     - forms 01–08 have no focusable element.
@@ -234,6 +236,8 @@ limits, properties, references and performance.
   - `test/perf/render.perf.test.ts` and `test/browser/render-perf.browser.test.ts` (§10).
   - `test/render-private.local.test.ts`. It skips `own/` and prints names and counts only:
     - issues by code;
+    - `CONTENT_REMOVED` by kind, `element` expected 0 (`Changed at task 8:` ActiveX `param`
+      children are no longer counted);
     - calls to unimplemented functions (expected 0);
     - guard results by name;
     - FormIR controls with no mark, and asterisks drawn;

@@ -138,6 +138,7 @@ export const ISSUE_CODES = [
   'OUTPUT_ESCAPING_IGNORED',
   'CONTENT_REMOVED',
   'CONTROL_NOT_MARKED',
+  'UNSUPPORTED_CONTROL',
 ] as const;
 export type IssueCode = (typeof ISSUE_CODES)[number];
 

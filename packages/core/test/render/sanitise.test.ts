@@ -337,8 +337,9 @@ describe('form 02 (R5.2 oracle)', () => {
 
   test('contains none of the R5.1 items', () => {
     expect(r51Items(result.html, result.css)).toEqual([]);
-    // Only its two res:// date-picker images were removed; task 8 turns them into icons.
+    // Its two res:// date-picker images became our icons (task 8): nothing was removed.
     expect(engine.match(/src="res:\/\//g)).toHaveLength(2);
-    expect(removed(result.issues)).toEqual([{ kind: 'url', count: 2 }]);
+    expect(result.html).not.toContain('res:');
+    expect(removed(result.issues)).toEqual([]);
   });
 });

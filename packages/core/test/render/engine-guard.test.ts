@@ -158,6 +158,7 @@ test('a probe view shows each task 1 hook firing', async () => {
   expect(out.issues.map((i) => [i.code, i.details])).toEqual([
     ['UNKNOWN_FUNCTION', { name: 'ipApp:GetMajorVersion', calls: 2 }],
   ]);
-  // applyStep: /r/a twice (2 steps × (1 + 1 node)); strings: 14 chars → 1, 320 chars → 20.
-  expect(out.budget.steps).toBe(2 * 2 * 2 + 1 + 20);
+  // applyStep: /r/a twice (2 steps × (1 + 1 node)); strings: 14 chars → 1, 320 chars → 20;
+  // instructions (task 5): p and four value-of.
+  expect(out.budget.steps).toBe(2 * 2 * 2 + 1 + 20 + 5);
 });

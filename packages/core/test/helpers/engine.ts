@@ -1,7 +1,7 @@
 // Drives the engine adapter directly (spec 03 tasks 1–2): compile a view, run it, serialise the
 // result the way xsltjs does.
 
-import { resolveLimits } from '../../src/limits';
+import { resolveLimits, resolveRenderLimits, type RenderLimits } from '../../src/limits';
 import { Budget } from '../../src/render/engine/budget';
 import type { FunctionTable } from '../../src/render/engine/host';
 import {
@@ -66,9 +66,10 @@ export function runCompiled(
     functions?: FunctionTable;
     documents?: Readonly<Record<string, string>>;
     controlAt?: RunOptions['controlAt'];
+    limits?: Partial<RenderLimits>;
   } = {},
 ): RunOutput {
-  const budget = new Budget();
+  const budget = new Budget(resolveRenderLimits(options.limits));
   const reported: Issue[] = [];
   const { fragment, issues, marked } = runView(view, dom(record, 'record.xml'), {
     ...(options.controlAt ? { controlAt: options.controlAt } : {}),

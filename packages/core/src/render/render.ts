@@ -4,7 +4,7 @@
 // mark controls (§9), make inert, serialise, and scope the view's CSS to the render root.
 
 import { AfterlifeError, type Issue } from '../errors';
-import { resolveLimits, type Limits, type RenderLimits } from '../limits';
+import { resolveLimits, resolveRenderLimits, type Limits, type RenderLimits } from '../limits';
 import { parseXmlDom, xmlContext, type DomDocument } from '../xml/parse';
 import { solutionAttribute } from '../xsn/package';
 import { Budget } from './engine/budget';
@@ -13,6 +13,7 @@ import { functionTable } from './functions';
 import { scopeCss, scopeId, type Removed } from './html/css';
 import { OWN_CSS } from './html/own-css';
 import { REMOVED_KINDS, sanitiseResult, type ResultNode } from './html/sanitise';
+import { NO_RESOURCES, type Resources } from './html/resources';
 import { serialiseHtml } from './html/serialise';
 import { applyMarks, controlMark } from './marks';
 import { preparedInternals, type PreparedView } from './prepare';
@@ -57,7 +58,8 @@ const NOW =
 const LOCALE = /^[A-Za-z]{2,3}(?:-[A-Za-z0-9]{1,8})*$/;
 
 export function renderView(prepared: PreparedView, input: RenderInput): RenderResult {
-  const { template, ir, compiled, file, controlAt, required } = preparedInternals(prepared);
+  const { template, ir, compiled, file, controlAt, required, activeXAt } =
+    preparedInternals(prepared);
   checkNow(input.now);
   const locale = input.locale ?? 'en-US';
   if (!LOCALE.test(locale)) {
@@ -76,8 +78,8 @@ export function renderView(prepared: PreparedView, input: RenderInput): RenderRe
   const mismatch = templateMismatch(bytes, name, template.manifest.documentClass.attrs);
   if (mismatch) issues.push(mismatch);
 
-  // input.limits' RenderLimits keys are enforced from task 5 (design §6).
   const documents = new Map<string, DomDocument | undefined>();
+  const budget = new Budget(resolveRenderLimits(input.limits));
   const run = runView(compiled, record.doc, {
     functions: functionTable({ now: input.now, locale, userName: input.userName ?? '' }),
     host: { report: (i) => issues.push(i) },
@@ -89,7 +91,7 @@ export function renderView(prepared: PreparedView, input: RenderInput): RenderRe
       }
       return documents.get(key);
     },
-    budget: new Budget(),
+    budget,
     sourceFile: name,
     controlAt,
   });
@@ -105,8 +107,21 @@ export function renderView(prepared: PreparedView, input: RenderInput): RenderRe
 
   const scope = scopeId(ir.meta.urn ?? '', ir.meta.solutionVersion ?? '', prepared.view.name);
   const namespaces = template.manifest.namespaces;
-  const post = postProcess(run.fragment, scope, compiled.xslFile, run.marked, (m) =>
-    controlMark(m, namespaces, required),
+  const resources: Resources = {
+    file,
+    activeXId: (origin) => {
+      const at = run.marked.get(origin)?.control.source;
+      return at && activeXAt(at.file, at.line, at.column);
+    },
+    chargeOutput: (chars) => budget.chargeOutput(chars),
+  };
+  const post = postProcess(
+    run.fragment,
+    scope,
+    compiled.xslFile,
+    run.marked,
+    (m) => controlMark(m, namespaces, required),
+    resources,
   );
   issues.push(...post.issues);
 
@@ -127,8 +142,9 @@ export function postProcess(
   markOf: (m: MarkedElement) => ControlMark = () => {
     throw new AfterlifeError('INTERNAL', { path: 'postProcess', reason: 'no mark function' });
   },
+  resources: Resources = NO_RESOURCES,
 ): { html: string; css: string; issues: Issue[]; marks: ControlMark[] } {
-  const page = sanitiseResult(fragment as DomFragment & ResultNode, scope);
+  const page = sanitiseResult(fragment as DomFragment & ResultNode, scope, resources);
   const marks = applyMarks(page.root, (origin) => {
     const m = marked.get(origin);
     return m && markOf(m);
@@ -138,9 +154,25 @@ export function postProcess(
   return {
     html: serialiseHtml(page.root),
     css: css.filter((c) => c !== '').join('\n'),
-    issues: postIssues(xslFile, page.rawTextNodes, removed),
+    issues: [
+      ...unsupportedIssues(xslFile, page.unsupported),
+      ...postIssues(xslFile, page.rawTextNodes, removed),
+    ],
     marks,
   };
+}
+
+/** R6.2: one UNSUPPORTED_CONTROL per ActiveX classid, with the first control's id. */
+function unsupportedIssues(
+  file: string,
+  unsupported: ReadonlyMap<string, { count: number; controlId?: string }>,
+): Issue[] {
+  return [...unsupported].map(([classid, { count, controlId }]) => ({
+    code: 'UNSUPPORTED_CONTROL' as const,
+    message: `${file}: custom control ${classid} is not supported; ${count} placeholder(s) drawn`,
+    file,
+    details: { classid, ...(controlId === undefined ? {} : { controlId }), count },
+  }));
 }
 
 /** D6 and §8.2: one OUTPUT_ESCAPING_IGNORED, then one CONTENT_REMOVED per kind. */
