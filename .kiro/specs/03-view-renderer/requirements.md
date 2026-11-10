@@ -2,7 +2,8 @@
 
 Source brief: `docs/spec-briefs/03-view-renderer.md`. Phase 1 of 3 (requirements → design → tasks).
 Status: **approved, 2026-11-10** (review answers applied; each change is marked `Changed at
-review:`). Depends on spec 01 (`ParsedTemplate`, the `xml/` layer) and spec 02 (FormIR: views,
+review:`). Second review, 2026-11-10: five edits after the engine spike, also marked
+`Changed at review:`. Depends on spec 01 (`ParsedTemplate`, the `xml/` layer) and spec 02 (FormIR: views,
 bound controls, validations, ActiveX, data connections and their liveness), both closed.
 
 ## Introduction
@@ -94,8 +95,9 @@ templates; string literals removed before matching function names):
   (`docs/feature-coverage.md` F).
 - ActiveX: form 44, one `object` (spec 02 R4.5).
 
-**Private corpus** (58 view files of the 29 templates, counted by the maintainer, 2026-11-10;
-counts only):
+**Private corpus** (58 `.xsl` files of the 29 templates, counted by the maintainer, 2026-11-10;
+counts only). `Changed at review:` the 58 files are 36 `mainpane` views, 19 `upgrade.xsl` and 3
+other `.xsl` files (engine spike, 2026-11-10); the 36 equal spec 02's count:
 
 | Call | Count | Forms |
 |---|---|---|
@@ -118,9 +120,9 @@ counts only):
   InfoPath runtime sets (signature status `IsValidSignature`, `SignedBy`, `SignedOn`; a
   `filterVersion`; a control id on a repeating group), and each passes a literal default as its
   third argument (maintainer, 2026-11-10, shapes only).
-- The 58 view files include XSL files that no `mainpane` names. `Changed at review:` the local
-  check renders every view a `mainpane` names and counts the other `.xsl` files separately
-  (R10.3).
+- Of the 58 `.xsl` files, 22 are not `mainpane` views (19 `upgrade.xsl`, 3 others).
+  `Changed at review:` the local check renders every view a `mainpane` names and counts the other
+  `.xsl` files separately (R10.3).
 
 **Required asterisk** (`samples/own/screenshots/01-leave-request-Request-empty.png`, checked
 2026-11-10): the asterisk shows on Employee name, Employee ID, First day of leave and Last day of
@@ -167,13 +169,16 @@ record, so that I can see a form nobody can open any more.
    `scanned: false`), THEN THE SYSTEM SHALL throw an `AfterlifeError` naming the view and the
    reason, and SHALL NOT return partial HTML. Oracle: an unknown name; spec 02's missing-view and
    broken-view fixtures.
-4. THE SYSTEM SHALL be synchronous and pure: no network request, no file or clock access. The
-   current date and time (`now`, a required ISO date-time with offset), the locale and the user
+4. Preparing a view (compiling its XSL) MAY be asynchronous, once per view of a template.
+   Rendering a prepared view SHALL be synchronous and pure: no network request, no file or clock
+   access; spec 04 re-renders synchronously after each edit. The current date and time (`now`, a required ISO date-time with offset), the locale and the user
    name (optional, empty when not given) SHALL be inputs, with no fallback to a clock or the
    environment. It SHALL run unchanged in Node 22 and a Web Worker without a DOM. Oracle: the
    spec 01 lint restrictions and the spec 02 clock ban extended to the renderer's modules; a
    Worker build with Node built-ins refused (spec 01 R17.1); a call without `now` fails to
    type-check. `Changed at review:` `now` required, user name optional, no fallback.
+   `Changed at review:` (second review) prepare may be async, render is sync; the chosen engine
+   compiles asynchronously.
 5. THE SYSTEM SHALL parse the XML document as hostile input through core's `xml/` layer, with its
    limits and no DTD. A document that is not well-formed SHALL be an `AfterlifeError`
    (`INVALID_XML`, `UNSAFE_XML` or `LIMIT_EXCEEDED`). Oracle: the spec 01 XML safety fixtures used
@@ -216,12 +221,11 @@ form "like paper".
    `LIMIT_EXCEEDED` naming the limit. Oracle: synthetic views with an infinitely recursive
    template and an output bomb (nested `for-each` over a large record).
 4. THE SYSTEM SHALL NOT use the browser's `XSLTProcessor` or `saxon-js`, and every runtime
-   dependency SHALL be under MIT, Apache-2.0, BSD or ISC terms. The one exception is
-   `xslt-processor` (LGPL-3.0, unmodified, pinned), and only if the design's spike picks it and
-   the maintainer agrees (samples-and-licensing.md). Oracle: a lint rule bans `XSLTProcessor` in
-   core; a test reads the licence of every production dependency of `packages/core` from the
-   lockfile, with the exception listed by name. `Changed at review:` the steering now names the
-   exception; BSD-only became BSD or ISC to match it.
+   dependency SHALL be under MIT, Apache-2.0, BSD or ISC terms, with no exception
+   (samples-and-licensing.md). Oracle: a lint rule bans `XSLTProcessor` in core; a test reads the
+   licence of every production dependency of `packages/core` from the lockfile. `Changed at
+   review:` BSD-only became BSD or ISC; (second review) the `xslt-processor` exception is gone,
+   because the spike chose `xsltjs` (MIT).
 
 ### R4. InfoPath extension functions
 Traces: brief AC2, extended by the Evidence tables; Added: `msxsl`, `function-available`.
@@ -364,10 +368,13 @@ compare means something.
 
 1. THE SYSTEM SHALL, in fallback mode and before the R5–R6 post-processing, give the same HTML as
    `xsltproc` for every one of the 53 views, with the empty record and with the first record, after
-   a normalisation the design defines (whitespace, attribute order, namespace declarations). The
+   a normalisation the design defines (whitespace, attribute order, namespace declarations; the
+   Content-Type `meta` dropped; HTML boolean attribute values emptied; `generate-id()` values
+   renamed in order of first appearance). The
    `xsltproc` references SHALL be made by a committed script with the libxslt version recorded,
    and committed, so CI does not need `xsltproc`. Oracle: 106 reference files; every own extension
-   call is guarded (Evidence), so all 53 views qualify.
+   call is guarded (Evidence), so all 53 views qualify. `Changed at review:` (second review) the
+   last three normalisation steps added; without them the spike matched 19 of 106.
 2. THE SYSTEM SHALL pass a Playwright visual test of the default view of forms 01–08, with the
    empty record and with the first record (16 renders), against baseline PNGs of its own render.
    Each baseline is committed only after the maintainer approves it side by side with the InfoPath
@@ -376,11 +383,13 @@ compare means something.
    human reference. `Changed at review:` R10.1–R10.2 name the empty record, the file the
    screenshots were taken from.
 3. WHERE `AFTERLIFE_PRIVATE_SAMPLES` is set, THE SYSTEM SHALL render every view that a `mainpane`
-   names, in every private template, with its empty form, with no throw. It SHALL print, as names
+   names, in every private template, with its empty form, with no throw. It SHALL skip the
+   `own/` folder, which holds our own 42 forms. It SHALL print, as names
    and counts only: issues by code, calls to unimplemented functions by name (expected 0), guard
    results by name, the slowest render, and the number of `.xsl` files no `mainpane` names
    (counted, not rendered). Oracle: run locally by the maintainer; CI skips it. `Changed at
-   review:` the view set is defined (was open question 6).
+   review:` the view set is defined (was open question 6); (second review) `own/` is skipped,
+   since the private folder holds all 71 forms of the corpus.
 
 ## Traceability
 
