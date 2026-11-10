@@ -41,6 +41,10 @@ export interface XmlElement {
   readonly path: string;
   /** The element serialised, with the namespaces in scope re-declared. */
   outerXml(): string;
+  /** Every child node serialised and joined: elements, text, CDATA, comments and PIs, verbatim. */
+  innerXml(): string;
+  /** The direct text and CDATA children joined, whitespace-only runs included, verbatim. */
+  textContent(): string;
 }
 
 /** The parts of a DOM node this module reads. */
@@ -123,6 +127,15 @@ function element(node: DomNode, path: string, serialize: (n: DomNode) => string)
     column: node.columnNumber ?? 0,
     path,
     outerXml: () => serialize(node),
+    innerXml: () =>
+      Array.from(node.childNodes)
+        .map((c) => serialize(c))
+        .join(''),
+    textContent: () =>
+      Array.from(node.childNodes)
+        .filter((c) => c.nodeType === TEXT || c.nodeType === CDATA)
+        .map((c) => c.nodeValue ?? '')
+        .join(''),
   };
 }
 

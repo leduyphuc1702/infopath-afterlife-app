@@ -217,7 +217,7 @@ export interface Manifest {
   readonly submit?: Submit;                                                     // R11.2
   readonly dataAdapters: readonly Adapter[];
   readonly connectionExtensions: readonly ConnectionExtension[];                // R11.4
-  readonly promotedFields: readonly Modelled<'xsf:listProperties/field'>[];     // R12.1
+  readonly promotedFields: readonly Modelled<'xsf:field'>[];                    // R12.1, listProperties → fields → field
   readonly signatures?: Signatures;                                             // R12.2
   readonly roles?: Roles;                                                       // R12.3
   readonly scripts?: Scripts;                                                   // R12.4
@@ -242,7 +242,7 @@ export interface Adapter extends Modelled<AdapterKey> {
   readonly containsCredential: boolean;             // R11.5, adoAdapter only
 }
 export interface ErrorCondition extends Modelled<'xsf:errorCondition'> {
-  readonly message: Modelled<'xsf:errorCondition/errorMessage'> & { readonly text: string };  // verbatim (R10.3)
+  readonly message: Modelled<'xsf:errorMessage'> & { readonly text: string };  // global errorMessage; verbatim (R10.3)
 }
 // View, RuleSet, DataObject, Submit, Signatures, Roles, Scripts, PackageEntry, ConnectionExtension
 // follow the same pattern: Modelled<key> plus typed child arrays.
@@ -389,9 +389,10 @@ does not change when the author renames a prefix.
 
 ```ts
 type AttrSpec = 'string' | 'yesNo' | { readonly enum: readonly string[] };
+type ChildSpec = SpecKey | { readonly key: SpecKey; readonly viaWildcard: true }; // viaWildcard: §8.1 "Extension points"
 interface ElementSpec {
   readonly attrs: Readonly<Record<string, AttrSpec>>;  // key: local name, or '{uri}local' for qualified attributes
-  readonly children: Readonly<Record<string, SpecKey>>; // child QName ('xsf:rule') → spec key
+  readonly children: Readonly<Record<string, ChildSpec>>; // child QName ('xsf:rule') → spec key
   readonly content: 'elements' | 'text' | 'rawXml';    // text: dialog/message text; rawXml: chooseFragment payload
   readonly req: string;                                 // requirement id, for review and the coverage test
 }
@@ -414,10 +415,15 @@ export const XSF_VOCABULARY = {
 ```
 
 - **Keys are positions, not names.** A local element that MS-IPFF2 defines inside another element
-  gets the key `parent/local` (`xsf:submit/errorMessage`, `xsf:errorCondition/errorMessage`,
-  `xsf:unboundControls/button`, `xsf:listProperties/field`, `xsf:sharepointListAdapter/field`).
-  Children are looked up through the parent's `children` map, so the same name in a different
-  place is a different entry, or unknown.
+  gets the key `parent/local` (`xsf:submit/errorMessage`, `xsf:unboundControls/button`,
+  `xsf:sharepointListAdapter/field`). A global element keeps its own name as its key
+  (`xsf:errorMessage`, the child of `xsf:errorCondition`; `xsf:field`, reached through the chain
+  `xsf:listProperties` → `xsf:fields` → `xsf:field`), and a global element referenced from several
+  parents is one key. Children are looked up through the parent's `children` map, so the same
+  name in a different place is a different entry, or unknown: `xsf:field` under anything other
+  than `xsf:fields` stays unknown. Checked against the MS-IPFF2 5.1 XSD on 2026-11-10:
+  `errorCondition` contains `<xsd:element ref="xsf:errorMessage"/>` and `listProperties` contains
+  `ref="xsf:fields"`.
 - **Coverage:** every element and attribute in requirements Appendix A (forms 01–47 and the public
   sample), plus everything R7–R12 name (`xsf3:customValidation`, `errorBlank`,
   `documentSignatures`, `signedDataBlock`, `signedDataBlock/message`, `xsf3:signatureLines`,
@@ -444,8 +450,13 @@ export const XSF_VOCABULARY = {
   MS-IPFF2 types it as a single NMTOKEN pattern `[a-zA-Z0-9_]*`, but real forms (and form 43) write
   `"client server"`. Across the 43 manifests of forms 01–42 and the public sample, all 2,603
   enumerated attribute values are inside their lists (checked); forms 43–47 add none outside.
-- **Extension points:** `xsf:extension` (MS-IPFF2 content `##any`) declares `xsf2:solutionDefinition`
-  and `xsf3:solutionDefinition` as its children. Anything else inside it is unknown.
+- **Extension points:** `xsf:extension` holds only an `xsd:any` wildcard and `anyAttribute` in
+  MS-IPFF2, so its two children `xsf2:solutionDefinition` and `xsf3:solutionDefinition` are our
+  modelling choice inside that wildcard. The table marks them `viaWildcard: true` on the parent's
+  child entry, and `vocabulary.ms-ipff2.test.ts` checks that every such child is a global element
+  of the xsf2 or xsf3 schema and that the parent's content in `ms-ipff2.ts` is a wildcard
+  (`wildcard: true`, recorded by the generator from `xsd:any`). There is no other exception.
+  Anything else inside `xsf:extension` is unknown.
 
 ### 8.2 Walker (`walk.ts`)
 

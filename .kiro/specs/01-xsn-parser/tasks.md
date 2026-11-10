@@ -186,7 +186,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R4.6 (`xmlBytes`), R5.1, R5.5, R5.6, R5.7 (attack set).
   - Done when: `pnpm check` green.
 
-- [ ] 9. Generate the MS-IPFF2 name list
+- [x] 9. Generate the MS-IPFF2 name list
   - `packages/core/scripts/gen-ms-ipff2.ts` (dev only, run with `pnpm --filter @afterlife/core
     gen:ms-ipff2`; Node and xmldom allowed, outside `src/`): fetches the XSDs of MS-IPFF2
     sections 5.1, 5.2 and 5.3 from learn.microsoft.com and writes `src/xsf/ms-ipff2.ts`: for each
@@ -199,14 +199,15 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Test: `xsf/ms-ipff2.test.ts` (header names the three sections, URLs and a date; known entries:
     `xsf:rule` has `caption`, `condition`, `isEnabled` and the child `xsf:exitRuleSet`;
     `xsf:signedDataBlock/@mode` is `single`, `cosign`, `countersign`;
-    `xsf:submit/errorMessage` and `xsf:errorCondition/errorMessage` are separate positions;
+    `xsf:submit/errorMessage` (local) and `xsf:errorMessage` (global, the child of
+    `xsf:errorCondition`) are separate positions;
     `runtimeCompatibility` is not an enumeration; the file contains no `<xsd:` and no
     `documentation` text).
   - Requirements: R13.4 (enumeration source), R13.8 (documented source).
   - Done when: the script has been run once and its output committed for review; `pnpm check`
     green without network access.
 
-- [ ] 10. Manifest walker with unknown-entry reporting
+- [x] 10. Manifest walker with unknown-entry reporting
   - `src/xsf/walk.ts` (design §8.2) driven by an `ElementSpec` table type in
     `src/xsf/vocabulary.ts`; this task adds only the type and a small test table, not the full
     vocabulary.
@@ -225,7 +226,9 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
     `req` id, covering requirements Appendix A (forms 01–47 and the public sample) and design §8.1.
   - Tests: `xsf/vocabulary.ms-ipff2.test.ts` (every key, child and attribute exists at that
     position in `ms-ipff2.ts`; every enum list equals the generated one;
-    `sharepointListAdapterRW` spelling), `xsf/vocabulary.requirements.test.ts` (the element names
+    `sharepointListAdapterRW` spelling; the only exception is a child marked `viaWildcard: true`
+    (today the two children of `xsf:extension`): each such child is a global element of the xsf2
+    or xsf3 schema, and its parent's content in `ms-ipff2.ts` is a wildcard), `xsf/vocabulary.requirements.test.ts` (the element names
     listed in R7–R12, kept in the test with their requirement ids, are all table keys with that
     `req`), `xsf/walk.samples.test.ts` (walking each `samples/own/forms/*/manifest.xsf` and the
     public manifest gives zero unknown entries; this is the walker-level check before the builders
@@ -255,7 +258,8 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
 - [ ] 13. Manifest builder: rules, bindings, calculations, validation
   - Builders for rule sets, rules (`exitRuleSet` flag), every action kind with attributes and text,
     event bindings from each `ruleSetAction` parent, `domEventHandler` attributes, calculated
-    fields, error conditions with verbatim messages, `xsf3:errorBlank`, `schemaErrorMessages`.
+    fields, error conditions with verbatim messages (the global `xsf:errorMessage`, the child of
+    `xsf:errorCondition`), `xsf3:errorBlank`, `schemaErrorMessages`.
   - Tests: `xsf/build.rules.test.ts` (across the sample manifests: 9 rules in 8 rule sets in 5
     forms; 7 assignment, 3 switchView, 1 query, 1 dialogBoxExpression; 8 `ruleSetAction`: 2
     `onLoad`, 1 `domEventHandler`, 5 buttons; synthetic `exitRuleSet`, `changeAdapterProperty`,
@@ -286,7 +290,8 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Done when: `pnpm check` green.
 
 - [ ] 15. Manifest builder: promoted fields, signatures, roles, code, ActiveX permissions
-  - Builders for `listProperties` and `listPropertiesExtension`, `documentSignatures` with
+  - Builders for `listProperties` (the chain `xsf:listProperties` → `xsf:fields` → `xsf:field`)
+    and `listPropertiesExtension`, `documentSignatures` with
     `signedDataBlock` and `message`, `xsf3:signatureLines`, `roles` with `role` and `membership`,
     `xsf2:managedCode`, `xsf:scripts` with `script`, `permissions/allowedControl`.
   - Synthetic fixtures: `fixtures/synthetic/roles.xsf`, `fixtures/synthetic/allowed-control.xsf`,

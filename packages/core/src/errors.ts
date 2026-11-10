@@ -20,7 +20,8 @@ export interface ErrorDetailsByCode {
   };
   MISSING_MANIFEST: { names: string };
   UNSAFE_XML: { file: string; line: number; column: number };
-  INVALID_XML: { file: string; line: number; column: number; encoding?: string };
+  /** `reason`: set when the XML is well formed but is not what was expected (a manifest root). */
+  INVALID_XML: { file: string; line: number; column: number; encoding?: string; reason?: string };
   INTERNAL: { path: string };
 }
 
@@ -62,7 +63,9 @@ const MESSAGES: { [C in ErrorCode]: (d: ErrorDetailsByCode[C]) => string } = {
   MISSING_MANIFEST: (d) => `No manifest found among: ${d.names}`,
   UNSAFE_XML: (d) => `Document type declaration refused at ${at(d)}`,
   INVALID_XML: (d) =>
-    `Invalid XML at ${at(d)}` + (d.encoding === undefined ? '' : ` (encoding ${d.encoding})`),
+    `Invalid XML at ${at(d)}` +
+    (d.encoding === undefined ? '' : ` (encoding ${d.encoding})`) +
+    (d.reason === undefined ? '' : `: ${d.reason}`),
   INTERNAL: (d) => `Internal error: modelled node not consumed at ${d.path}`,
 };
 

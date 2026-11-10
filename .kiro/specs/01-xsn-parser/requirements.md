@@ -702,8 +702,10 @@ Elements (`xsf`): `adoAdapter`, `applicationParameters`, `assignmentAction`, `at
 `dataObjects`, `davAdapter` †, `davAdapter/fileName` †, `davAdapter/folderURL` †,
 `dialogBoxExpressionAction`, `documentSchema`, `documentSchemas`, `documentSignatures` †,
 `documentVersionUpgrade`, `domEventHandler`, `domEventHandlers`, `editWith`, `editing`,
-`emailAdapter`, `errorCondition`, `errorMessage` (in `errorCondition`), `extension`, `extensions`,
-`field`, `fields`, `file`, `fileNew`, `fileProperties`, `files`, `fragmentToInsert`,
+`emailAdapter`, `errorCondition`, `errorMessage` (global; the child of `errorCondition`),
+`extension`, `extensions`,
+`field` (global; reached through `listProperties` → `fields` → `field`), `fields`, `file`,
+`fileNew`, `fileProperties`, `files`, `fragmentToInsert`,
 `importParameters`, `initialXmlDocument`, `input`, `intro`, `listProperties`, `mainpane`,
 `menuArea`, `onLoad`, `operation`, `package`, `property`, `query`, `queryAction`, `rule`,
 `ruleSet`, `ruleSetAction`, `ruleSets`, `script` †, `scripts` †, `signedDataBlock` †,
@@ -739,7 +741,7 @@ Attributes, by element:
 - `calculatedField`: `expression`, `refresh`, `target`; `domEventHandler`: `match`,
   `handlerObject` †
 - `errorCondition`: `expression`, `expressionContext`, `match`; `errorMessage`: `shortMessage`, `type`
-- `field` (listProperties): `columnName`, `name`, `node`, `type`
+- `field` (in `listProperties/fields`): `columnName`, `name`, `node`, `type`
 - `file`: `name`; `property`: `name`, `type`, `value`; `extension`: `name`
 - `documentSchema`: `location`, `rootSchema`; `initialXmlDocument`: `caption`, `href`
 - `useTransform`: `maxVersionToUpgrade`, `minVersionToUpgrade`, `transform`

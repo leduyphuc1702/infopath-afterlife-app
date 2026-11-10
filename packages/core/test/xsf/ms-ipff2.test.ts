@@ -62,6 +62,45 @@ describe('known entries', () => {
     expect(XD_YES_NO).toEqual(['yes', 'no']);
   });
 
+  test('wildcards: xsf:extension holds only xsd:any and anyAttribute', () => {
+    expect(MS_IPFF2['xsf:extension']).toEqual({
+      attrs: { name: 'string' },
+      children: [],
+      text: true, // mixed="true"
+      wildcard: true,
+      anyAttribute: '##any',
+    });
+    // editWith admits any attribute in the InfoPath 2003 namespace (xd:autogeneration).
+    expect(MS_IPFF2['xsf:editWith']!.anyAttribute).toBe(
+      'http://schemas.microsoft.com/office/infopath/2003',
+    );
+    expect(MS_IPFF2['xsf:editWith']!.wildcard).toBeUndefined();
+    expect(MS_IPFF2['xsf:rule']!.wildcard).toBeUndefined();
+    expect(MS_IPFF2['xsf:rule']!.anyAttribute).toBeUndefined();
+  });
+
+  test('wildcard positions: four xsd:any and three untyped (xsd:anyType) elements', () => {
+    const wild = Object.keys(MS_IPFF2).filter((k) => MS_IPFF2[k]!.wildcard);
+    expect(wild.sort()).toEqual([
+      'xsf:chooseFragment',
+      'xsf:extension',
+      'xsf:footer',
+      'xsf:header',
+      'xsf:useQueryAdapter',
+      'xsf:useScriptHandler',
+      'xsf:webPartConnectionAction',
+    ]);
+  });
+
+  test('text content: simple types, simple content and mixed content', () => {
+    expect(MS_IPFF2['xsf:dialogBoxMessageAction']!.text).toBe(true); // simple type
+    expect(MS_IPFF2['xsf:errorMessage']!.text).toBe(true); // simple content
+    expect(MS_IPFF2['xsf:submit/errorMessage']!.text).toBe(true); // xsd:string
+    expect(MS_IPFF2['xsf:chooseFragment']!.text).toBe(true); // mixed
+    expect(MS_IPFF2['xsf:rule']!.text).toBeUndefined();
+    expect(MS_IPFF2['xsf:rule/exitRuleSet']!.text).toBeUndefined(); // empty complex type
+  });
+
   test('sharepointListAdapterRW is spelled as in MS-IPFF2', () => {
     expect(MS_IPFF2['xsf:sharepointListAdapterRW']).toBeDefined();
     expect(MS_IPFF2['xsf:sharePointListAdapterRW']).toBeUndefined();
@@ -97,7 +136,7 @@ describe('only names and values', () => {
   test('every string in the table is a name or an enumeration value', () => {
     const table = source.slice(source.indexOf('export const MS_IPFF2'));
     const strings = [...table.matchAll(/'([^']*)'/g)].map((m) => m[1]!);
-    for (const s of strings) expect(s).toMatch(/^[\w:./{}-]*$|^InfoPath Design Mode$/);
+    for (const s of strings) expect(s).toMatch(/^[\w:./{}-]*$|^##any$|^InfoPath Design Mode$/);
     // The one value with spaces: xsf:applicationParameters/@application.
     expect(MS_IPFF2['xsf:applicationParameters']!.attrs.application).toEqual({
       enum: ['InfoPath Design Mode'],
