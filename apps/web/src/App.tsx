@@ -5,6 +5,7 @@ import { PaperToolbar, viewCaption } from './paper/PaperToolbar';
 import { ErrorBanner } from './shell/ErrorBanner';
 import { Header } from './shell/Header';
 import { Landing } from './shell/Landing';
+import { Notices } from './shell/Notices';
 import { loadPaperFonts, onDemandFacesFailed } from './shell/fonts';
 import { sampleName } from './shell/sample-names';
 import { cardFor, cardForControl } from './side/card';
@@ -19,7 +20,7 @@ import { localNow, WorkerClient } from './worker/client';
 import type { FailedRes, RenderedRes, ResBody } from './worker/protocol';
 
 /** The latest render answer; the previous paper stays up while the next one is drawn. */
-type Render = RenderedRes | FailedRes;
+type Render = (RenderedRes | FailedRes) & { readonly first?: boolean };
 
 export function App() {
   const client = useMemo(() => new WorkerClient(), []);
@@ -28,6 +29,7 @@ export function App() {
   const [render, setRender] = useState<Render>();
   const known = useRef(new Set<string>());
   const latest = useRef(0);
+  const faded = useRef(new Set<string>());
 
   useEffect(() => () => client.terminate(), [client]);
 
@@ -127,7 +129,11 @@ export function App() {
     const ticket = ++latest.current;
     void client.render(template.templateId, view.name, record?.recordId, now).then((r) => {
       if (ticket !== latest.current) return; // a newer request is on its way
-      if (r.type === 'rendered' || r.type === 'failed') setRender(r);
+      if (r.type !== 'rendered' && r.type !== 'failed') return;
+      // R9.3: the first successful render of each template fades in.
+      const first = r.type === 'rendered' && !faded.current.has(template.templateId);
+      if (first) faded.current.add(template.templateId);
+      setRender({ ...r, first });
     });
   }, [client, now, template, view, record]);
 
@@ -238,6 +244,7 @@ export function App() {
                     {...(reveal !== undefined && { reveal })}
                     onPoint={onPoint}
                     onText={onPaperText}
+                    fade={render.first === true}
                   />
                   {(render.issues.length > 0 || fontNote) && (
                     <details className="afl-notes" open={fontNote || undefined}>
@@ -303,6 +310,7 @@ export function App() {
           </div>
         )}
       </main>
+      <Notices />
     </>
   );
 }

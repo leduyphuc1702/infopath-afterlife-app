@@ -9,7 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "vitest run",
+    "test": "vite build --logLevel warn && vitest run",
     "e2e": "playwright test"
   },
   "dependencies": {

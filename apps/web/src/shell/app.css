@@ -130,6 +130,11 @@ h2 {
   max-width: 720px;
 }
 
+.afl-context {
+  margin: 0 0 var(--ds-space-150);
+  color: var(--ds-text-subtle);
+}
+
 .afl-lead {
   margin: 0 0 var(--ds-space-100);
   font-size: 16px;
@@ -493,4 +498,18 @@ code {
 .afl-dead {
   background: var(--ds-background-danger);
   color: var(--ds-text-danger);
+}
+
+.afl-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-050) var(--ds-space-100);
+  align-items: baseline;
+  padding: var(--ds-space-200) var(--ds-space-300);
+  border-top: 1px solid var(--ds-border);
+  color: var(--ds-text-subtle);
+}
+
+.afl-footer a {
+  color: var(--ds-link);
 }

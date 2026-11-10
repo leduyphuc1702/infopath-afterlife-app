@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import sampleList from 'virtual:sample-list';
-import { recordCount, sampleName } from './sample-names';
+import { sampleDetail, sampleName } from './sample-names';
 
 interface Props {
   readonly onFiles: (files: File[]) => void;
@@ -46,7 +46,9 @@ export function Header({ onFiles, onSample, xray }: Props) {
                   }}
                 >
                   {sampleName(s.id)}
-                  <span className="afl-count">{recordCount(s.records)}</span>
+                  {sampleDetail(s.id, s.records) !== '' && (
+                    <span className="afl-count">{sampleDetail(s.id, s.records)}</span>
+                  )}
                 </button>
               </li>
             ))}

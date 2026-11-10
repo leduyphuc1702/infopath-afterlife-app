@@ -4,5 +4,12 @@ export const sampleName = (id: string) => {
   return words.charAt(0).toUpperCase() + words.slice(1);
 };
 
-export const recordCount = (n: number) =>
-  n === 0 ? 'No records' : n === 1 ? '1 record' : `${n} records`;
+/** The second line of a sample button: its record count, or its author for third-party ones. */
+export const sampleDetail = (id: string, records: number) =>
+  id.startsWith('theill-')
+    ? 'by Peter Theill'
+    : records === 0
+      ? ''
+      : records === 1
+        ? '1 record'
+        : `${records} records`;

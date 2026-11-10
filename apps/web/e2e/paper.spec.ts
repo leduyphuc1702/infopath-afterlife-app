@@ -49,6 +49,8 @@ test('sample 02 record 1 matches core baseline 02-expense-report-Claim-first', a
     .locator('[data-afl-paper]');
   await expect(host.locator('.afl-root')).toBeVisible();
   await page.evaluate(() => document.fonts.ready);
+  // The first render's sepia fade (R9.3) has ended.
+  await expect.poll(() => host.evaluate((h) => getComputedStyle(h).filter)).toBe('none');
   const box = (await host.boundingBox())!;
   const shot = PNG.sync.read(
     await page.screenshot({ clip: { x: box.x, y: box.y, width: 1007, height: 555 } }),
@@ -91,3 +93,109 @@ for (const [label, count] of [
     }
   });
 }
+
+// R3.3: no page style or colour scheme reaches the paper. Every element's computed style is the
+// same in light and dark mode (the page around it does change).
+test('the paper computes the same styles in light and dark colour schemes', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+  await page.goto('./');
+  await page.getByRole('button', { name: /^Expense report/ }).click();
+  await page.getByRole('button', { name: 'Next' }).click();
+  const host = page
+    .getByRole('region', { name: /02-expense-report-001\.xml/ })
+    .locator('[data-afl-paper]');
+  await expect(host.locator('.afl-root')).toBeVisible();
+  // Custom properties (`--ds-*`) inherit into every shadow root, but nothing on the paper reads
+  // them: the render's CSS has no `var(`. The host's own `box-shadow` is the page's frame, not
+  // the paper, so it is left out.
+  expect(
+    await host.evaluate((h) => h.shadowRoot!.querySelector('style')!.textContent),
+  ).not.toContain('var(');
+  const styles = () =>
+    host.evaluate((h) =>
+      [h, ...h.shadowRoot!.querySelectorAll('*')].map((e, i) => {
+        const cs = getComputedStyle(e);
+        return [...cs]
+          .filter((p) => !p.startsWith('--') && !(i === 0 && p === 'box-shadow'))
+          .map((p) => `${p}:${cs.getPropertyValue(p)}`)
+          .join(';');
+      }),
+    );
+  const bodyBg = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+  const light = await styles();
+  const lightBg = await bodyBg();
+  await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
+  await expect(page.locator('html')).toHaveAttribute('data-color-mode', 'dark');
+  const dark = await styles();
+  expect(await bodyBg()).not.toBe(lightBg);
+  expect(light.length).toBeGreaterThan(50);
+  const differ = light.flatMap((l, i) => {
+    if (l === dark[i]) return [];
+    const d = new Set(dark[i]!.split(';'));
+    return [
+      `${i}: ${l
+        .split(';')
+        .filter((x) => !d.has(x))
+        .join('; ')}`,
+    ];
+  });
+  expect(differ.slice(0, 3)).toEqual([]);
+});
+
+// R9.3: the first render of a template fades from sepia to clean within 1.2 s; later renders of
+// it do not; under reduced motion no filter is ever set. A MutationObserver records every filter
+// written to the paper host's style.
+const watchFilters = () => {
+  const w = window as unknown as { __aflFilters: string[] };
+  w.__aflFilters = [];
+  new MutationObserver((list) => {
+    for (const m of list) {
+      const el = m.target as HTMLElement;
+      const f = el.hasAttribute('data-afl-paper') ? el.style.filter : '';
+      // One entry per change of value (setting `transition` also queues a record).
+      if (f && f !== w.__aflFilters.at(-1)) w.__aflFilters.push(f);
+    }
+  }).observe(document, { subtree: true, attributes: true, attributeFilter: ['style'] });
+};
+const filters = (page: import('@playwright/test').Page) =>
+  page.evaluate(() => (window as unknown as { __aflFilters: string[] }).__aflFilters);
+
+test('the first render of a template fades from sepia to clean, once', async ({ page }) => {
+  await page.addInitScript(watchFilters);
+  await page.goto('./');
+  await page.getByRole('button', { name: /^New hire onboarding/ }).click();
+  const host = page.locator('[data-afl-paper]');
+  await expect(host.locator('.afl-root')).toBeAttached();
+  const start = Date.now();
+  await expect
+    .poll(() => host.evaluate((h) => getComputedStyle(h).filter), { intervals: [50] })
+    .toBe('none');
+  const took = Date.now() - start;
+  expect(await filters(page)).toEqual(['sepia(0.85) contrast(0.92)', 'none']);
+  expect(took).toBeLessThan(1200 + 400);
+  // Paging and another view of the same template: no new filter.
+  await page.getByRole('button', { name: 'Next' }).click();
+  await page
+    .getByRole('toolbar', { name: 'Views and records' })
+    .getByLabel('View')
+    .selectOption({ index: 1 });
+  await expect(
+    page.getByRole('region', { name: /-001\.xml$/ }).locator('.afl-root'),
+  ).toBeAttached();
+  await page.waitForTimeout(300);
+  expect(await filters(page)).toEqual(['sepia(0.85) contrast(0.92)', 'none']);
+});
+
+test('under reduced motion no filter is ever set', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.addInitScript(watchFilters);
+  await page.goto('./');
+  await page.getByRole('button', { name: /^New hire onboarding/ }).click();
+  const host = page.locator('[data-afl-paper]');
+  await expect(host.locator('.afl-root')).toBeAttached();
+  for (let i = 0; i < 6; i++) {
+    expect(await host.evaluate((h) => getComputedStyle(h).filter)).toBe('none');
+    await page.waitForTimeout(100);
+  }
+  expect(await filters(page)).toEqual([]);
+});

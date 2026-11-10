@@ -22,7 +22,8 @@ progress; the specs in `docs/spec-briefs/` say what is meant to exist.
 |---|---|
 | Sample set: 47 `.xsn`, 348 records, MIT | **verified** for forms 01–42 — 42 of 42 open in InfoPath Filler 2013, every view captured for the first 8. Forms 43–47 were generated later and never opened in InfoPath |
 | JSM Forms API via `requestJira('/forms/...')` | **verified** — read, create and delete templates on a real site |
-| `.xsn` parser, viewer, Triage, converter, Forge app | in progress |
+| Web viewer (`apps/web`) | **verified** locally (not yet published): spec 09 phase A, `.kiro/specs/09-web-viewer/verification.md` |
+| `.xsn` parser, Triage, converter, Forge app | in progress |
 
 ## What is in the repository
 
@@ -74,6 +75,18 @@ Production dependencies of `@afterlife/core`, all under the MIT licence:
 | `xpath` | 0.0.36 | MIT | XPath 1.0, used by `xsltjs` and by the renderer |
 
 `packages/core/test/render/licences.test.ts` checks this list against the installed packages.
+
+Production dependencies of the web viewer (`apps/web`), bundled into its page and its Web
+Worker. The built site lists each one with its licence text on `notices.html`, and the build
+fails on a licence outside MIT, Apache-2.0, BSD, ISC or OFL-1.1 (`apps/web/plugins/notices.ts`):
+
+| Package | Version | Licence | Use |
+|---|---|---|---|
+| `react`, `react-dom` | 18.3.1 | MIT | the page's UI |
+| `scheduler` | 0.23.2 | MIT | used by `react-dom` |
+| `@atlaskit/tokens` | 20.11.0 | Apache-2.0 | Atlassian design tokens: the light, dark and spacing theme CSS |
+| `@xmldom/xmldom`, `xsltjs`, `xpath` | as above | MIT | `@afterlife/core`, in the Worker |
+| `@fontsource/carlito` | 5.3.0 | SIL Open Font License 1.1 | the paper's Calibri, below |
 
 Fonts, shipped unmodified:
 

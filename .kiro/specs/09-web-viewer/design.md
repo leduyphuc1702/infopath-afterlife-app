@@ -262,6 +262,17 @@ R8.2's tests.
 Chromium, 2026-11-11): performance 100 (FCP 0.2 s, LCP 0.2 s, TBT 0 ms, CLS 0), accessibility
 100. It measures the landing state; no sample is open.
 
+**Lighthouse 13.6.0, task 10** (same command, Chromium 158, 2026-11-11): performance 100 (FCP
+0.2 s, LCP 0.2 s, TBT 0 ms, CLS 0), accessibility 100. Bundles at task 10 (`test/budget.test.ts`,
+gzip -9): entry 66.2 KB, theme chunks 0, Worker 123.1 KB, samples 93.8 KB, Latin fonts 120.3 KB
+raw.
+
+`Changed in task 9:` `plugins/notices.ts` writes `notices.html` as a static page (with the same
+`<meta>` CSP, `notices.css` from `src/shell/notices.css` plus the token themes, and
+`notices-theme.js` for the colour mode), `licenses/*.txt`, and `.vite/modules.json`. One
+collector instance is shared by the page and Worker builds, so the Worker's packages (`xsltjs`,
+`xpath`, xmldom) are listed. `Notices.tsx` is the footer link to it.
+
 ## 8. Build and hosting
 
 - `vite.config.ts`: `base: './'`; `plugins: [react(), samples(), csp(), notices()]`;

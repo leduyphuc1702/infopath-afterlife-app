@@ -74,15 +74,18 @@ Every task from 3 on leaves `pnpm --filter web build` producing a working, shipp
   - Requirements: R8.1, R8.2, R8.3
   - Done when: `pnpm --filter web e2e` green.
 
-- [ ] 9. Look, notices, budget, workflow
+- [x] 9. Look, notices, budget, workflow
   - Tokens everywhere, dark mode, the sepia fade, sentence-case copy pass, `Notices.tsx`,
     `plugins/notices.ts`, README "Third-party licences" rows, `.github/workflows/web-pages.yml`.
   - `test/style.test.ts`, `test/notices.test.ts`, `test/budget.test.ts`, `e2e/keyboard.spec.ts`,
     the fade cases of `e2e/paper.spec.ts`.
+  - `Changed in task 9:` `notices.html` is a static page the build writes (same CSP), so
+    `Notices.tsx` is the footer that links to it; `pnpm --filter web test` builds first, because
+    the `dist` tests (samples, notices, budget, CSP) read it.
   - Requirements: R7.2, R9.2, R9.3, R10.1, R10.2
   - Done when: `pnpm --filter web test && pnpm --filter web e2e` green.
 
-- [ ] 10. Verification
+- [x] 10. Verification
   - Re-check every criterion; second Lighthouse run; `verification.md` with each oracle's
     output; `Status` in `docs/feature-coverage.md` for the viewer rows.
   - Requirements: all

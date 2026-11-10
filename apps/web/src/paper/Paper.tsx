@@ -5,6 +5,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { RenderedRes } from '../worker/protocol';
 import { loadPaperFonts } from '../shell/fonts';
+import { fadeIn } from './fade';
 import { hitTest, measure, toFrame, type Box } from './geometry';
 import './paper.css';
 
@@ -18,6 +19,8 @@ interface Props {
   /** Bring this control into view when it changes. */
   readonly reveal?: number;
   readonly onPoint?: (index: number | undefined) => void;
+  /** The first render of this template: fade from sepia (R9.3). */
+  readonly fade?: boolean;
   /** The paper's text after each render, field values included (design D7's font note). */
   readonly onText?: (text: string) => void;
 }
@@ -30,6 +33,7 @@ export function Paper({
   reveal,
   onPoint,
   onText,
+  fade = false,
 }: Props) {
   const frame = useRef<HTMLElement>(null);
   const host = useRef<HTMLDivElement>(null);
@@ -48,6 +52,7 @@ export function Paper({
     const el = host.current!;
     const root = el.shadowRoot ?? el.attachShadow({ mode: 'open' });
     root.innerHTML = `<style>${result.css}</style>${result.html}`;
+    if (fade) fadeIn(el);
     remeasure();
     if (onText) {
       const values = [...root.querySelectorAll('input, textarea')].map(
@@ -55,6 +60,7 @@ export function Paper({
       );
       onText([root.querySelector('.afl-root')?.textContent ?? '', ...values].join(' '));
     }
+    // `fade` comes with the result it belongs to; it is not a dependency on its own.
   }, [result, remeasure, onText]);
 
   useEffect(() => {
