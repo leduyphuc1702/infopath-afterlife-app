@@ -173,3 +173,46 @@ conditions, all in own forms", true only for forms 01–42. Its numbers were cor
 - Rows citing `test/golden.samples.test.ts` rely on its 48 golden files holding the full result,
   so any change to the cited oracle values changes a golden file.
 - "(every test in the file)" means the cite is every test of that file; the count shows how many.
+
+## Addendum: R21 (task 34, 2026-11-10)
+
+- **Date:** 2026-11-10, after tasks 29–33. **Runtime:** Node v22.23.4, pnpm 12.18.0, Playwright
+  Chromium (HeadlessChrome 158).
+- **Tree:** commit `4357441` plus the uncommitted tasks 32–34 (`FieldNode.sharePoint`, the
+  local-only check, this section).
+- **Clean install:** the files git would commit were copied to an empty folder (no
+  `node_modules`), as for task 28.
+
+| Command (clean folder) | Result |
+|---|---|
+| `pnpm install --frozen-lockfile` | exit 0 |
+| `pnpm check` | exit 0; node project 51 files passed, 1 skipped (`private-corpus.local.test.ts`, variable unset), 2,455 tests passed; browser project 4 files, 106 tests passed |
+| `pnpm test:perf` | exit 0; 51 tests passed; `08-big-form` p95 7.21 ms (budget 300 ms) |
+| `AFTERLIFE_PRIVATE_SAMPLES=$HOME/Desktop/infopath-afterlife/samples vitest run test/private-corpus.local.test.ts` | exit 0; 71 tests passed; `private corpus: 71 files, 71 parsed, 0 issues, 0 unknowns` (the 29 private templates plus the folder's copy of forms 01–42; read only, nothing written) |
+
+**Total: 2,455 + 106 + 51 = 2,612 tests in CI, all passed; plus 71 local-only, all passed.**
+
+### R21.1–R21.7
+
+| Criterion | Tests | Result |
+|---|---|---|
+| R21.1 | `test/xsf/build.identity.test.ts` › "R21.1 namespaces" (4/4); › "an empty manifest root gives empty lists and no optional parts" (1/1); `test/golden.samples.test.ts` (50/50) | Pass |
+| R21.2 | `test/xsf/build.real-infopath.test.ts` › "xsf:importSource", "xsf:menu", "xsf:taskpane", "xsf2:preview", "xsf2:solutionPropertiesExtension", "xsf2:toolbar in xsf2:server", "xsf2:xmlToEditExtension" (12/12); `test/xsn/package.test.ts` › "R21.2: …" (2/2); `test/xsf/vocabulary.requirements.test.ts` R21.2 rows (20/20); `test/xsf/vocabulary.coverage.test.ts` and `vocabulary.ms-ipff2.test.ts` (every test) | Pass |
+| R21.3 | `test/xsf/build.real-infopath.test.ts` › "xsf3:solutionPropertiesExtension2009 (R21.3)" (2/2); `test/xsf/vocabulary.ms-ipff2.test.ts` › "the exceptions" (3/3) | Pass |
+| R21.4 | `test/xsf/build.real-infopath.test.ts` › "allowedLinkImages on xsf2:xmlToEditExtension (R21.4)" (1/1), "xsf2:xmlToEditExtension" (2/2); `test/xsf/vocabulary.ms-ipff2.test.ts` › "the exceptions" (3/3), "xsf2:xmlToEditExtension" (5/5) | Pass |
+| R21.5 | `test/xsd/sharepoint-meta.test.ts` (every test, 5/5) | Pass |
+| R21.6 | `test/private-corpus.local.test.ts`: skipped in `pnpm check`; local run 71/71, 0 issues, 0 unknowns | Pass (local) |
+| R21.7 | `test/unknowns.samples.test.ts` (49/49); `test/counts.samples.test.ts` (50/50); `test/golden.samples.test.ts` (50/50). Golden diffs reviewed at commit `4357441`: only `namespaces` and the new empty lists; tasks 31–32 changed no golden file | Pass |
+
+### Amended rows, re-run
+
+| Criterion | Tests | Result |
+|---|---|---|
+| R6.2 | `test/xsn/package.test.ts` › "R6.2–R6.3: each reference kind, missing in turn" (13/13, now with the two R21.2 tests) | Pass |
+| R8.4 | `test/xsf/build.views.test.ts` › "form 05 (R8.5) menu area buttons", "toolbar buttons" (as in the R8.4 row above); `test/xsf/build.real-infopath.test.ts` › "xsf:menu (menus.xsf)" (3/3) | Pass |
+| R13.6 | `test/unknowns.samples.test.ts` (49/49); `test/xsf/walk.samples.test.ts` (49/49); `test/xsf/unknowns.test.ts` (5/5, the left-out example is now `xsf:externalViews`) | Pass |
+| R15.6 | `test/unknowns.samples.test.ts` (49/49); `test/xsd/schema-set.test.ts` › "every sample: no schema unknowns and no schema issues" (1/1); `test/xsd/sharepoint-meta.test.ts` › "no in-repo sample has sharePoint on any node" (1/1) | Pass |
+| R16.1–R16.4 | `test/counts.samples.test.ts` (50/50); `test/oracles/readme-table.test.ts` (11/11); `test/golden.samples.test.ts` (50/50) | Pass |
+
+**Summary: 121 of 121 criteria pass** (R1–R20 as at task 28, R21.1–R21.7 here; R21.6 by the
+local run).

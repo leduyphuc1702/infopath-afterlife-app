@@ -542,7 +542,7 @@ Same rules as above: one task per turn, `pnpm check` green, no commits. Design ย
   - Requirements: R21.3, R21.4.
   - Done when: `pnpm check` green.
 
-- [ ] 32. SharePoint `ma:` attributes on `FieldNode`
+- [x] 32. SharePoint `ma:` attributes on `FieldNode`
   - `xsd/vocabulary.ts`, `xsd/field-tree.ts`, `xsd/types.ts`: the allow-list rule and
     `FieldNode.sharePoint` (ยง15.3).
   - Fixture: `fixtures/synthetic/real-infopath/sharepoint-meta.xsd`.
@@ -552,7 +552,7 @@ Same rules as above: one task per turn, `pnpm check` green, no commits. Design ย
   - Requirements: R21.5, R21.7.
   - Done when: `pnpm check` green.
 
-- [ ] 33. Local-only private-corpus check
+- [x] 33. Local-only private-corpus check
   - `test/private-corpus.local.test.ts` as in ยง15.4: skipped unless `AFTERLIFE_PRIVATE_SAMPLES`
     is set; recursive `*.xsn`; no throw, zero issues, zero unknowns; messages and the summary line
     carry codes, kinds, namespaces, names, paths and counts only; no snapshots and no writes.
@@ -562,7 +562,7 @@ Same rules as above: one task per turn, `pnpm check` green, no commits. Design ย
   - Done when: `pnpm check` green (the check skipped), and the local run reports 0 issues and 0
     unknowns for every file.
 
-- [ ] 34. Re-check R21 and the earlier criteria
+- [x] 34. Re-check R21 and the earlier criteria
   - Clean install, `pnpm check`, `pnpm test:perf`, and the local corpus check.
   - Append R21.1โ€“R21.7 rows to `verification.md`, each with its passing tests, and re-run the
     rows for R6.2, R8.4, R13.6, R15.6 and R16.

@@ -6,7 +6,7 @@
 // allows for it in any context. Every attribute value is kept as a string (accepted at task 17):
 // no `unexpectedValue` entries come from schemas.
 
-import type { ElementSpec, Vocabulary } from '../xsf/vocabulary';
+import type { AttrSpec, ElementSpec, Vocabulary } from '../xsf/vocabulary';
 import type { XmlElement } from '../xml/node';
 import { NS, qualified } from '../xml/path';
 import type { Documentation } from '../xsf/walk';
@@ -157,13 +157,41 @@ const NOT_MODELLED_ATTRS = new Set([
   'finalDefault',
 ]);
 
+/**
+ * SharePoint's metaAttributes namespace (`ma:`), written on element declarations of list and
+ * workflow data sources (R21.5). XSD 1.0 admits foreign attributes on every component.
+ */
+export const SHAREPOINT_META_NS =
+  'http://schemas.microsoft.com/office/2009/metadata/properties/metaAttributes';
+
+/** The `ma:` names modelled on `xsd:element` (R21.5); any other stays unknown. */
+export const SHAREPOINT_ATTRS = [
+  'readOnly',
+  'displayName',
+  'allowDeletion',
+  'formatCategory',
+  'formatSpec',
+  'SearchPeopleOnly',
+  'SharePointGroup',
+  'auxDataSourceName',
+  'auxChoicesXPath',
+  'auxValue',
+  'auxDisplay',
+] as const;
+export type SharePointAttr = (typeof SHAREPOINT_ATTRS)[number];
+
 function spec(local: string): ElementSpec {
   const x = XSD_1_0[local]!;
   const rawXml = local === 'documentation' || local === 'appinfo';
+  const attrs: [string, AttrSpec][] = x.attrs
+    .filter((a) => !NOT_MODELLED_ATTRS.has(a))
+    .map((a) => [a, 'string']);
+  if (local === 'element') {
+    for (const n of SHAREPOINT_ATTRS)
+      attrs.push([`{${SHAREPOINT_META_NS}}${n}`, { viaWildcard: true }]);
+  }
   return {
-    attrs: Object.fromEntries(
-      x.attrs.filter((a) => !NOT_MODELLED_ATTRS.has(a)).map((a) => [a, 'string' as const]),
-    ),
+    attrs: Object.fromEntries(attrs),
     children: Object.fromEntries(
       x.children.filter((c) => !NOT_MODELLED_ELEMENTS.has(c)).map((c) => [`xsd:${c}`, `xsd:${c}`]),
     ),

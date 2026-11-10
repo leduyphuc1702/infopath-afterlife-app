@@ -2,7 +2,7 @@
 // `{uri}local` for other namespaces, `local` for no namespace (the path convention, §7.3).
 
 import type { Located } from '../unknown';
-import type { Facet as FacetName } from './vocabulary';
+import type { Facet as FacetName, SharePointAttr } from './vocabulary';
 
 export type TypeName = string;
 
@@ -85,6 +85,11 @@ export interface FieldNode {
   readonly recursive: boolean;
   /** The first `xsd:annotation/xsd:documentation` of the declaration, its text verbatim. */
   readonly description?: string;
+  /**
+   * SharePoint `ma:` attributes of the declaration, by local name, as written; absent when the
+   * declaration has none (R21.5).
+   */
+  readonly sharePoint?: Readonly<Partial<Record<SharePointAttr, string>>>;
   /** The declaration. */
   readonly source: Located;
   /** The `ref` site, when it is not the declaration. */

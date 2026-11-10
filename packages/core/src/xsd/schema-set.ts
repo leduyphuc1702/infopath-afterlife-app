@@ -8,8 +8,8 @@ import type { UnknownEntry } from '../unknown';
 import { parseXml, type XmlContext } from '../xml/parse';
 import { NS } from '../xml/path';
 import type { Manifest } from '../xsf/types';
-import { walkTree, type ModelNode } from '../xsf/walk';
-import { XSD_DOCUMENTATION, XSD_VOCABULARY } from './vocabulary';
+import { unknownAttribute, walkTree, type ModelNode } from '../xsf/walk';
+import { SHAREPOINT_META_NS, XSD_DOCUMENTATION, XSD_VOCABULARY } from './vocabulary';
 
 export interface SchemaFileInput {
   readonly name: string;
@@ -160,6 +160,29 @@ export function classifyLocation(
   return { kind: 'file', name: parts[parts.length - 1]! };
 }
 
+/**
+ * `ma:` attributes are modelled on declarations only (R21.5). On an `xsd:element` with `ref` they
+ * describe nothing the field tree keeps, so each is an unknown entry (`documented: false`).
+ */
+function sharePointOnRefs(root: ModelNode, file: string): UnknownEntry[] {
+  const out: UnknownEntry[] = [];
+  const visit = (n: ModelNode) => {
+    if (n.key === 'xsd:element' && n.attrs.ref !== undefined) {
+      for (const a of n.element.attributes) {
+        if (
+          a.namespaceURI === SHAREPOINT_META_NS &&
+          `{${a.namespaceURI}}${a.localName}` in n.attrs
+        ) {
+          out.push(unknownAttribute(a, file, 'notModelled', false));
+        }
+      }
+    }
+    n.children.forEach(visit);
+  };
+  visit(root);
+  return out;
+}
+
 export function loadSchemaSet(
   files: readonly SchemaFileInput[],
   manifest: Manifest,
@@ -179,7 +202,11 @@ export function loadSchemaSet(
         documentation: XSD_DOCUMENTATION,
         notRoot: 'not an XML Schema: the root is not xsd:schema',
       });
-      unknowns.push(...walked.unknowns);
+      unknowns.push(
+        ...[...walked.unknowns, ...sharePointOnRefs(walked.root, f.name)].sort(
+          (a, b) => a.line - b.line || a.column - b.column,
+        ),
+      );
       const tns = walked.root.attrs.targetNamespace;
       docs.push({ file: f.name, root: walked.root, targetNamespace: tns ? tns : null });
     } catch (e) {

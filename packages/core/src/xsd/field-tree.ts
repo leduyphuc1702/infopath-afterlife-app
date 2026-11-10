@@ -10,7 +10,13 @@ import type { XmlElement } from '../xml/node';
 import type { ModelNode } from '../xsf/walk';
 import type { Global, GlobalKind, QName, SchemaDoc, SchemaRoot, SchemaTable } from './schema-set';
 import type { Facet, FieldNode, FieldTree, GroupStep, TypeName, Wildcard } from './types';
-import { FACETS, type Facet as FacetName } from './vocabulary';
+import {
+  FACETS,
+  SHAREPOINT_ATTRS,
+  SHAREPOINT_META_NS,
+  type Facet as FacetName,
+  type SharePointAttr,
+} from './vocabulary';
 import { acceptsEmpty, type SimpleTypeInfo } from './empty-string';
 
 const XHTML = 'http://www.w3.org/1999/xhtml';
@@ -237,6 +243,7 @@ class Builder {
       ...(particle.choiceGroup === undefined ? {} : { choiceGroup: particle.choiceGroup }),
       ...valueConstraint(site, decl),
       ...(description === undefined ? {} : { description }),
+      ...sharePointOf(decl),
       source: located(decl, declDoc),
       ...(site === decl ? {} : { use: located(site, doc) }),
     };
@@ -651,6 +658,16 @@ function occursOf(v: string | undefined): number {
 
 function located(n: ModelNode, doc: SchemaDoc): Located {
   return { file: doc.file, path: n.path, line: n.line, column: n.column };
+}
+
+/** The `ma:` attributes of a declaration (R21.5). */
+function sharePointOf(decl: ModelNode): { sharePoint?: Partial<Record<SharePointAttr, string>> } {
+  const out: Partial<Record<SharePointAttr, string>> = {};
+  for (const name of SHAREPOINT_ATTRS) {
+    const v = decl.attrs[`{${SHAREPOINT_META_NS}}${name}`];
+    if (v !== undefined) out[name] = v;
+  }
+  return Object.keys(out).length ? { sharePoint: out } : {};
 }
 
 function valueConstraint(site: ModelNode, decl: ModelNode): { default?: string; fixed?: string } {

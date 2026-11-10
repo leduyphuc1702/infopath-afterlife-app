@@ -176,7 +176,7 @@ export function unknownElement(
   };
 }
 
-function unknownAttribute(
+export function unknownAttribute(
   a: XmlAttribute,
   file: string,
   reason: UnknownEntry['reason'],

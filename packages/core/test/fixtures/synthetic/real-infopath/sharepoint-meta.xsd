@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 32, R21.5): a list data source schema with SharePoint metaAttributes on
+     its element declarations. Written for this project; names and values are fictional. -->
+<xsd:schema targetNamespace="urn:example:rooms" elementFormDefault="qualified"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:rm="urn:example:rooms"
+  xmlns:ma="http://schemas.microsoft.com/office/2009/metadata/properties/metaAttributes"
+  xmlns:other="urn:example:other">
+	<xsd:element name="rooms">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="room" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="Title" type="xsd:string" ma:displayName="Room name" ma:readOnly="false" ma:allowDeletion="true"/>
+							<xsd:element name="Seats" type="xsd:integer" ma:displayName="Seats" ma:formatCategory="Number" ma:formatSpec="0"/>
+							<xsd:element name="Owner" type="xsd:string" ma:displayName="Owner" ma:SearchPeopleOnly="true" ma:SharePointGroup="0"/>
+							<xsd:element name="Building" type="xsd:string" ma:displayName="Building" ma:auxDataSourceName="Buildings" ma:auxChoicesXPath="/b/building" ma:auxValue="id" ma:auxDisplay="name"/>
+							<xsd:element name="Floor" type="xsd:string" ma:index="3" other:hint="ground"/>
+							<xsd:element ref="rm:Notes" ma:displayName="Notes here"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="Notes" type="xsd:string" ma:displayName="Notes"/>
+</xsd:schema>
