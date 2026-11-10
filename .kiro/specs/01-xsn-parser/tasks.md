@@ -26,7 +26,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
 
 ## Tasks
 
-- [ ] 1. Harness: workspace, `packages/core` skeleton, tools and CI
+- [x] 1. Harness: workspace, `packages/core` skeleton, tools and CI
   - Root: `/package.json` (private, `"type": "module"`, `packageManager: "pnpm@12.18.0"`,
     `engines.node: ">=22.12 <23"`, dev tools from design §12 at their exact versions, scripts
     `typecheck`, `lint`, `format`, `format:check`, `test`, `test:browser`, `test:perf`, `check`),
@@ -62,7 +62,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Done when: `pnpm install` succeeds, then `pnpm check` and `pnpm test:perf` are green on Node
     22.23.4.
 
-- [ ] 2. Spike: stored-block prefix in Node and a Worker, and `TextDecoder` label parity
+- [x] 2. Spike: stored-block prefix in Node and a Worker, and `TextDecoder` label parity
   - `src/cab/inflate.ts`: `storedBlock(history)` and `inflateBlock(data, history, expected)` as in
     design §6.1 (D1–D3), no CAB parsing.
   - Test helpers: `helpers/samples.ts` (lists the 48 cabinets: `samples/own/xsn/*.xsn` and the

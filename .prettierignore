@@ -1,0 +1,7 @@
+samples/
+docs/
+.kiro/
+**/*.md
+packages/core/test/golden/
+pnpm-lock.yaml
+packages/core/test/fixtures/whatwg-encodings.json

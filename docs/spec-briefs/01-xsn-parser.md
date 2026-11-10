@@ -8,7 +8,7 @@ Read an InfoPath template (.xsn) entirely in TypeScript, in both Node and the br
 - As a developer, I want typed errors for broken or unsupported files, so the UI can explain problems clearly.
 
 ## Acceptance criteria (EARS)
-1. WHEN given a .xsn that uses MSZIP compression, THE SYSTEM SHALL return every contained file with bytes identical to `bsdtar -xf` output, for every `.xsn` in `samples/own/xsn/` (42) and `samples/public/` (1).
+1. WHEN given a .xsn that uses MSZIP compression, THE SYSTEM SHALL return every contained file with bytes identical to `bsdtar -xf` output, for every `.xsn` in `samples/own/xsn/` and `samples/public/`.
 2. IF the cabinet uses LZX or Quantum compression, THEN THE SYSTEM SHALL fail with `UNSUPPORTED_COMPRESSION` naming the method.
 3. IF the input is not a cabinet, or is truncated, THEN THE SYSTEM SHALL fail with `CORRUPT_CAB` and the byte offset.
 4. IF the decompressed total exceeds 50 MB, or the entry count exceeds 2,000, THEN THE SYSTEM SHALL stop with `LIMIT_EXCEEDED` (zip-bomb guard).
