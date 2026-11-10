@@ -1,0 +1,82 @@
+[
+  {
+    "file": "06-safety-incident.xsn",
+    "name": "Safety Incident Report",
+    "wave": 1,
+    "coverage": "17 0 0 0",
+    "nativePercent": 100,
+    "records": 10,
+    "counts": "14 2 1 3 0",
+    "causes": "infopath-client"
+  },
+  {
+    "file": "08-big-form.xsn",
+    "name": "Big Form (200 fields)",
+    "wave": 1,
+    "coverage": "200 0 0 0",
+    "nativePercent": 100,
+    "records": 3,
+    "counts": "200 0 1 0 0",
+    "causes": "infopath-client"
+  },
+  {
+    "file": "03-travel-request.xsn",
+    "name": "Travel Request",
+    "wave": 2,
+    "coverage": "21 4 0 0",
+    "nativePercent": 84,
+    "records": 30,
+    "counts": "18 0 2 5 1",
+    "causes": "infopath-client"
+  },
+  {
+    "file": "05-new-hire-onboarding.xsn",
+    "name": "New Hire Onboarding",
+    "wave": 2,
+    "coverage": "20 5 0 0",
+    "nativePercent": 80,
+    "records": 20,
+    "counts": "18 0 3 5 0",
+    "causes": "infopath-client"
+  },
+  {
+    "file": "02-expense-report.xsn",
+    "name": "Expense Report",
+    "wave": 3,
+    "coverage": "14 2 1 0",
+    "nativePercent": 82,
+    "records": 30,
+    "counts": "12 1 1 4 1",
+    "causes": "infopath-client"
+  },
+  {
+    "file": "01-leave-request.xsn",
+    "name": "Leave Request",
+    "wave": 3,
+    "coverage": "14 3 1 0",
+    "nativePercent": 77,
+    "records": 30,
+    "counts": "10 0 1 7 1",
+    "causes": "infopath-client"
+  },
+  {
+    "file": "04-purchase-request.xsn",
+    "name": "Purchase Request",
+    "wave": 3,
+    "coverage": "18 10 3 0",
+    "nativePercent": 58,
+    "records": 20,
+    "counts": "16 1 1 13 2",
+    "causes": "infopath-client internal-sql internal-service"
+  },
+  {
+    "file": "07-leave-request-v2.xsn",
+    "name": "Leave Request",
+    "wave": 3,
+    "coverage": "15 3 1 0",
+    "nativePercent": 78,
+    "records": 10,
+    "counts": "11 0 1 7 1",
+    "causes": "infopath-client"
+  }
+]

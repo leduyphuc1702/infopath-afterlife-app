@@ -20,6 +20,8 @@ below exists today unless marked "to be written".
 │  ├─ src/render/             XSLT render + xd* extension-function shims + sanitise
 │  ├─ src/xpath-fns/          InfoPath function library (today, now, nz, eval, addDays…)
 │  ├─ src/runtime/            Classic runtime: bindings, rules, calcs, validation, repeating
+│  ├─ src/coverage/           Native / Emulated / Manual / Unsupported per FormIR element, as data
+│  │                          citing docs/feature-coverage.md (spec 12; spec 05 reuses it)
 │  ├─ src/convert/            FormIR → JSM Forms design JSON + CoverageReport
 │  ├─ src/triage/             Triage, death certificates, waves (spec brief 12)
 │  ├─ src/legacy/             filled .xml → answers, upgrade.xsl, embedded attachments

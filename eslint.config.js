@@ -88,6 +88,9 @@ export default defineConfig(
       'packages/core/src/ir/**/*.ts',
       'packages/core/src/render/**/*.ts',
       'packages/core/src/xpath-fns/**/*.ts',
+      // Spec 12 R7.2, P10: coverage and Triage are functions of their inputs too.
+      'packages/core/src/coverage/**/*.ts',
+      'packages/core/src/triage/**/*.ts',
     ],
     rules: {
       'no-restricted-globals': [

@@ -1,6 +1,6 @@
 # Spec 12: Triage and death certificate, phase A — design
 
-Requirements: `requirements.md` (R1–R8, 27 criteria). Status: **draft, 2026-11-11**, for review.
+Requirements: `requirements.md` (R1–R8, 28 criteria). Status: **approved, 2026-11-11** (review decisions in `requirements.md`).
 
 ## 1. Architecture
 
@@ -89,6 +89,13 @@ says so rather than counting them Native.
 | activeX | `*` | Unsupported | H "ActiveX controls" | |
 | signature | `*` | Manual | H "Digital signatures" | |
 
+`Changed in task 1:` sections are not elements in phase A: a `Section` carries no
+`xd:binding`, so FormIR has no control for it (form 05's three sections give none). The entry
+stays for spec 05. `DTPicker_DTText`, the date picker's bound inner control, is the subtype
+FormIR gives date pickers. The SharePoint list adapters are subtyped `sharepointList:query` and
+`sharepointList:submit`. `hwsAdapter` has no entry: it is classed Manual and `unlisted`, which
+needs no row. No in-repo element is `unlisted`.
+
 `table-doc.test.ts` (R1.3) finds each cited row by its first cell in the cited section and
 checks that its Coverage cell contains the class word (Native, App, Manual or Unsupported), unless
 the entry has a `verify` note. Section D (expressions) is not an element kind: expressions are
@@ -114,12 +121,12 @@ export function recordEvidence(fileName: string, bytes: Uint8Array): RecordEvide
 
 | Cause | Detected when (FormIR) | Evidence | Date / source |
 |---|---|---|---|
-| `forms-services-spo` | `meta.browserCompatible` | `meta.source` + `/@runtimeCompatibility` | 2026-07-14, "after July 14, 2026"; https://techcommunity.microsoft.com/t5/microsoft-sharepoint-blog/support-update-for-infopath-forms-services-in-microsoft-365/ba-p/3858190 |
+| `forms-services-spo` | `meta.browserCompatible` | `meta.source` (`Changed in task 2:` FormIR has no location for `xsf2:solutionDefinition/@runtimeCompatibility`; the evidence text names it) | 2026-07-14, "after July 14, 2026"; https://techcommunity.microsoft.com/t5/microsoft-sharepoint-blog/support-update-for-infopath-forms-services-in-microsoft-365/ba-p/3858190 |
 | `infopath-client` | always | `meta.source` (`xsf:xDocumentClass`) | 2026-07-14, "after July 14, 2026 (extended support ends 7/15/2026 6:59:59 AM Pacific)"; https://learn.microsoft.com/en-us/lifecycle/products/infopath-2013 |
 | `browser-xslt` | a matched record has an `xml-stylesheet` PI in its first 4 KB | the record file and the PI's line | 2026-11-17, "Chrome 158, November 17, 2026; Origin Trial and Enterprise Policy until Chrome 176, August 17, 2027"; https://developer.chrome.com/docs/web-platform/deprecating-xslt |
 | `internal-sql` | a connection with `adapterKind` `adoAdapter` | the connection's `source` | — |
 | `internal-service` | any other connection, or an ActiveX `server`, with an endpoint of `liveness: 'internal'` | each such endpoint's `source`, host named | — |
-| `code-behind` | `codeBehind.present` | the manifest's code file references; `what` lists the handler names | — |
+| `code-behind` | `codeBehind.present` | `meta.source` with the languages, each code file (path `/`), each handler with its event name | — |
 | `activex` | `activeX.controls` (else `allowed`) not empty | each control's `source` | — |
 | `signatures` | signed blocks or signature lines | each one's `source` | — |
 
@@ -131,6 +138,13 @@ cause of its own: it dies with the client, which `infopath-client` already says;
 item is Manual (§3).
 
 ## 5. Rows, waves, order, CSV
+
+`Changed in task 3:` `triageFiles(files)` parses the `.xsn` files, matches the `.xml` records
+with `matchRecord`, and calls `triage`; a parse failure is an error row with its code. Template
+ids are file names (`#2`, `#3`… for repeats, after sorting by name then bytes), so the result does
+not depend on input order. The Worker (task 5), the Forge resolver and the private-corpus test
+all call it. `src/xsn/package.ts` gains `headText`, the 4 KB decoder `solutionAttribute` already
+used, for `recordEvidence`.
 
 ```ts
 interface TriageRow {

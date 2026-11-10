@@ -1,10 +1,10 @@
 # Spec 12: Triage and death certificate, phase A — tasks
 
-Requirements: `requirements.md`. Design: `design.md`. Status: **draft, 2026-11-11**, for review.
+Requirements: `requirements.md`. Design: `design.md`. Status: **approved, 2026-11-11**.
 
 "Green" means the task's command plus `pnpm check`.
 
-- [ ] 1. Core: coverage table and `classify`
+- [x] 1. Core: coverage table and `classify`
   - `packages/core/src/coverage/` (`table.ts`, `classify.ts`), exported from `src/index.ts`;
     `structure.md` gains `src/coverage/`; lint rules extended to it (R7.2).
   - `test/coverage/classify.test.ts`, `test/coverage/table-doc.test.ts`,
@@ -12,13 +12,13 @@ Requirements: `requirements.md`. Design: `design.md`. Status: **draft, 2026-11-1
   - Requirements: R1.1–R1.4, R7.2
   - Done when: `pnpm --filter @afterlife/core exec vitest run --project node test/coverage test/property/p11.property.test.ts` green.
 
-- [ ] 2. Core: causes and record evidence
+- [x] 2. Core: causes and record evidence
   - `src/triage/catalogue.ts`, `causes.ts`, `record.ts` (`recordEvidence`).
   - `test/triage/causes.test.ts`, `test/property/p9.property.test.ts`.
   - Requirements: R2.1–R2.4, R6.2
   - Done when: `vitest run --project node test/triage/causes.test.ts test/property/p9.property.test.ts` green.
 
-- [ ] 3. Core: rows, waves, order, CSV
+- [x] 3. Core: rows, waves, order, CSV
   - `src/triage/triage.ts`, `wave.ts`, `csv.ts`.
   - `test/triage/triage.test.ts` (golden), `test/triage/csv.test.ts`,
     `test/property/p8.property.test.ts`, `test/property/p10.property.test.ts`.
@@ -55,10 +55,12 @@ Requirements: `requirements.md`. Design: `design.md`. Status: **draft, 2026-11-1
   - Requirements: R5.1, R5.2
   - Done when: `pnpm --filter web e2e` green.
 
-- [ ] 9. Copy, offline, performance
+- [ ] 9. Copy, offline, performance, "Triage all samples"
+  - R4.5: forms 43–47 into `plugins/samples.ts` (templates only); the landing button; measure the
+    samples chunk (budget at most 150 KB if over 120 KB, reason in spec 09 design §7).
   - `test/copy.test.ts`; `e2e/offline.spec.ts` Triage case; the 40-template measurement;
     screenshots (Triage, certificate, print preview) at 1280×800.
-  - Requirements: R3.7, R7.1, R7.3
+  - Requirements: R3.7, R4.5, R7.1, R7.3
   - Done when: `pnpm --filter web test && pnpm --filter web e2e` green.
 
 - [ ] 10. Verification
@@ -78,6 +80,7 @@ Requirements: `requirements.md`. Design: `design.md`. Status: **draft, 2026-11-1
 | R4.1, R4.2 | 6 |
 | R4.3 | 7 |
 | R4.4 | 5 |
+| R4.5 | 9 |
 | R5.1 | 3, 5, 8 |
 | R5.2 | 8 |
 | R6.1 | 3, 6 |

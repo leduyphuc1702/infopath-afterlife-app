@@ -9,7 +9,10 @@ samples/private/
 # Kiro MCP settings hold credentials; keep the description in docs/kiro/mcp.md instead
 .kiro/settings/mcp.json
 .DS_Store
-coverage/
+# Test coverage reports only; packages/core/src/coverage/ is source
+/coverage/
+/packages/*/coverage/
+/apps/*/coverage/
 test-results/
 .vitest-attachments/
 

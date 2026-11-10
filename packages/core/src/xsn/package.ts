@@ -179,6 +179,15 @@ export function solutionName(bytes: Uint8Array): string | undefined {
  * R2.1 reads `name` and `solutionVersion` of a record with it.
  */
 export function solutionAttribute(bytes: Uint8Array, attribute: string): string | undefined {
+  const text = headText(bytes);
+  const pi = /<\?mso-infoPathSolution\b([\s\S]*?)\?>/.exec(text);
+  if (!pi) return undefined;
+  const value = new RegExp(`(?:^|\\s)${attribute}\\s*=\\s*(["'])([\\s\\S]*?)\\1`).exec(pi[1]!);
+  return value?.[2];
+}
+
+/** The first 4 KB as text, by BOM or the first bytes (D8; spec 12 reads `xml-stylesheet` with it). */
+export function headText(bytes: Uint8Array): string {
   const head = bytes.subarray(0, 4096);
   const b = (i: number) => head[i] ?? -1;
   const label =
@@ -187,9 +196,5 @@ export function solutionAttribute(bytes: Uint8Array, attribute: string): string 
       : (b(0) === 0xfe && b(1) === 0xff) || (b(0) === 0 && b(1) === 0x3c && b(2) === 0)
         ? 'utf-16be'
         : 'utf-8';
-  const text = new TextDecoder(label).decode(head);
-  const pi = /<\?mso-infoPathSolution\b([\s\S]*?)\?>/.exec(text);
-  if (!pi) return undefined;
-  const value = new RegExp(`(?:^|\\s)${attribute}\\s*=\\s*(["'])([\\s\\S]*?)\\1`).exec(pi[1]!);
-  return value?.[2];
+  return new TextDecoder(label).decode(head);
 }

@@ -49,6 +49,30 @@ export type {
   Trigger,
   UnresolvedRef,
 } from './ir/types';
+export { classify, elementsOf, isBlankCheck } from './coverage/classify';
+export type { Coverage, CoverageItem } from './coverage/classify';
+export { CLASS_WORDS, COVERAGE_CLASSES, COVERAGE_TABLE, EMULATED_TOOLTIP } from './coverage/table';
+export type { CoverageClass, CoverageEntry, ElementKind, RowRef } from './coverage/table';
+export { CAUSE_IDS, CAUSES, WORKFLOW_LINE } from './triage/catalogue';
+export type { CauseId, CauseInfo } from './triage/catalogue';
+export { causesOf } from './triage/causes';
+export type { Cause, Evidence } from './triage/causes';
+export { recordEvidence } from './triage/record';
+export { CSV_COLUMNS, csvCell, toCsv } from './triage/csv';
+export { triage, triageFiles } from './triage/triage';
+export type {
+  TriageError,
+  TriageFailure,
+  TriageInput,
+  TriageRecord,
+  TriageResult,
+  TriageRow,
+  TriageTemplate,
+  TriageTotals,
+} from './triage/triage';
+export { WAVE_RULES, waveOf } from './triage/wave';
+export type { Wave } from './triage/wave';
+export type { RecordEvidence } from './triage/record';
 export { prepareView } from './render/prepare';
 export type { PrepareOptions, PreparedView } from './render/prepare';
 export { renderView } from './render/render';

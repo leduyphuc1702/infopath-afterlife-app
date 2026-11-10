@@ -1,6 +1,6 @@
 # Spec 12: Triage and death certificate, phase A — requirements
 
-Brief: `docs/spec-briefs/12-triage-death-certificate.md`. Status: **draft, 2026-11-11**, for review.
+Brief: `docs/spec-briefs/12-triage-death-certificate.md`. Status: **approved, 2026-11-11**, with the review decisions below.
 
 ## Introduction
 
@@ -26,6 +26,23 @@ converter reuse it later.
    only.
 5. No effort or time estimates.
 
+**Review decisions (2026-11-11):**
+
+1. Views beyond the default count as App (Emulated).
+2. `Changed at review (2026-11-11):` code-behind is Manual, and so is its certificate entry,
+   against the brief's "Unsupported": "Manual: the logic must be rewritten by hand. The event
+   names it handled are listed." ActiveX stays Unsupported.
+3. A blank check with an authored message is Native.
+4. Section and nested section are Native.
+5. Record date range: Later (spec 11). `Changed at review (2026-11-11):` against the brief's
+   per-form metrics.
+6. `.zip` input: Later. `Changed at review (2026-11-11):` against the brief's inputs.
+7. `src/coverage/` is a core folder, in `structure.md` from task 1.
+8. The UI, the CSV header and the print view say **Emulated**, with the tooltip "Afterlife runs it
+   in Classic mode"; `docs/feature-coverage.md` keeps "App"; `CLASS_WORDS` maps the two.
+9. CSV injection: cells starting with a tab or a carriage return are prefixed too (OWASP).
+10. "Triage all samples" on the landing page (R4.5).
+
 **Facts checked for this draft (2026-11-11):**
 
 - None of the 348 records in `samples/own/records/` carries an `xml-stylesheet` processing
@@ -33,8 +50,8 @@ converter reuse it later.
   `browser-xslt` therefore never fires on the in-repo set; R2.1 tests it on a synthetic record.
 - The in-repo templates show each other cause at least once: form 43 is browser-compatible; form
   04 has a SQL connection and a web service on an internal host; form 46 has a SharePoint library
-  submit to an internal host and C# code-behind; form 44's ActiveX control names an internal
-  `xd:server`; form 47 has script; form 44 has an ActiveX
+  submit to an internal host and C# code-behind; form 44's ActiveX control names an `xd:server`
+  whose liveness is `unknown`; form 47 has script; form 44 has an ActiveX
   control; form 45 has a signed block. All 48 templates (47 own plus weight-keeper) get
   `infopath-client`.
 
@@ -83,8 +100,9 @@ why it has to move.
 
 - **R2.1** THE SYSTEM SHALL detect each cause of the brief's catalogue by the rule in design §4,
   and only then. Oracle: `packages/core/test/triage/causes.test.ts`: `forms-services-spo` on form
-  43 only; `internal-sql` on form 04; `internal-service` on forms 04 (`forms-legacy`), 44 (the ActiveX control's `xd:server`,
-  `intranet.contoso-fictional.example`) and 46;
+  43 only; `internal-sql` on form 04; `internal-service` on forms 04 (`forms-legacy`) and 46 (`Changed in task 2:` not 44: FormIR
+  gives its ActiveX `xd:server`, `intranet.contoso-fictional.example`, liveness `unknown`, reason
+  `public`, so the draft's claim was wrong);
   `code-behind` on forms 46 and 47 with their handler names; `activex` on form 44; `signatures` on
   form 45; `infopath-client` on all 48 templates; `browser-xslt` on a synthetic record with an
   `xml-stylesheet` instruction and on none of the 348 in-repo records.
@@ -103,6 +121,8 @@ why it has to move.
   Oracle: `causes.test.ts` (form 05: `infopath-client` only); `e2e/triage.spec.ts`.
 - **R2.4** Property **P9**: every cause's evidence names a file in the template's package (or the
   record it came from), and its `xpath` selects a node in that file, or its `line` is within it.
+  `Changed in task 2:` a code file named in the manifest (`script.js`) is evidence as a whole,
+  path `/`; a record's instruction has the path `/processing-instruction(xml-stylesheet)[1]`.
   Bound: forms 01–47 and weight-keeper, plus 200 generated FormIR variants,
   `packages/core/test/property/p9.property.test.ts`.
 
@@ -155,6 +175,14 @@ As Mai, I want to see the whole folder at once, then one form's certificate.
   40: 08-big-form.xsn"). Oracle: `test/protocol.browser.test.ts` (progress messages in order,
   one per file).
 
+- **R4.5** `Added at review (2026-11-11):` THE landing page SHALL offer "Triage all samples",
+  which opens every bundled template in Triage with no records: forms 01–08, weight-keeper, and
+  forms 43–47 (code-behind, ActiveX, signatures, dead services), which the samples chunk gains.
+  The notices page and README keep saying forms 43–47 were generated and never opened in
+  InfoPath. IF the samples chunk goes over 120 KB gzip, THEN its budget (spec 09 design §7) MAY
+  rise to at most 150 KB, with the reason recorded. Oracle: `e2e/triage.spec.ts` (14 rows);
+  `apps/web/test/samples.test.ts`, `budget.test.ts`.
+
 ### R5. Export
 
 Traces: brief AC4.
@@ -174,7 +202,8 @@ As Quang, I want the plan on paper and in a spreadsheet.
 Traces: brief "Inputs", "Per-form metrics".
 
 - **R6.1** THE record count SHALL be the number of open records `matchRecord` gives the template,
-  `exact` or `otherVersion`; WHEN no record is open, it SHALL be unknown ("—"), not 0. Oracle:
+  `exact` or `otherVersion`; WHEN no record at all is open, it SHALL be unknown ("—"), not 0
+  (`Changed in task 3:` once any record is open, a template none matches shows 0). Oracle:
   `triage.test.ts`; `e2e/triage.spec.ts`.
 - **R6.2** `browser-xslt` SHALL come from records: a record whose first 4 KB hold an
   `xml-stylesheet` instruction adds the cause to its template, with the record as evidence.
