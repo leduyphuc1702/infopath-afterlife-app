@@ -1,7 +1,7 @@
 # Tasks: 01 .xsn parser (CAB + manifest + schema)
 
 Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 2026-11-10). Design:
-`design.md` (approved 2026-11-10). Status: **draft, awaiting approval.**
+`design.md` (approved 2026-11-10). Status: **approved 2026-11-10.**
 
 ## How every task is run and checked
 
@@ -95,7 +95,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R1.2, R5.3 (label list), R17.2.
   - Done when: `pnpm check` green.
 
-- [ ] 3. Errors, limits and the bounds-checked byte reader
+- [x] 3. Errors, limits and the bounds-checked byte reader
   - `src/errors.ts` (`AfterlifeError` with `code` and `details`, `ErrorCode`, `Issue`,
     `IssueCode`, design §11), `src/limits.ts` (`Limits`, `DEFAULT_LIMITS`, `resolveLimits`),
     `src/cab/bytes.ts` (`ByteReader`: little-endian `u8/u16/u32`, `bytes(n)`, `seek`; every read
@@ -106,7 +106,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R3.2, R4.6.
   - Done when: `pnpm check` green.
 
-- [ ] 4. Test cabinet writer and CAB header, folder and file structures
+- [x] 4. Test cabinet writer and CAB header, folder and file structures
   - `helpers/cab-writer.ts` (test only, Node `zlib.deflateRawSync`): builds cabinets from
     `{ name, bytes, attributes? }[]`, with options for blocks per folder, several folders,
     compression type, header flags, reserve sizes, wrong checksums, and raw overrides of any
@@ -124,7 +124,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R2.1, R2.2, R2.3, R2.4, R2.5, R3.1, R4.2, R4.3.
   - Done when: `pnpm check` green.
 
-- [ ] 5. Read cabinets: data blocks, checksums, slicing
+- [x] 5. Read cabinets: data blocks, checksums, slicing
   - `src/cab/checksum.ts` (MS-CAB checksum), `src/cab/reader.ts` (`readCabinet`, design §6
     steps 5–6: per-folder history, `CK`, `cbUncomp ≤ 32,768`, running `uncompressedBytes` total
     and declared total, `CHECKSUM_MISMATCH` issue only after a block inflates to the right length,
@@ -141,7 +141,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R1.1, R1.2, R1.3, R1.4, R1.5, R3.2, R3.3, R3.4, R3.5, R3.6, R4.1, R4.4.
   - Done when: `pnpm check` green.
 
-- [ ] 6. Cabinet oracle over every sample
+- [x] 6. Cabinet oracle over every sample
   - `oracles/public-sample.ts` (the six sizes and SHA-256 values of requirements Appendix B).
   - Test: `cab/read.samples.test.ts`: for every `samples/own/xsn/<slug>.xsn`, `readCabinet` returns
     exactly the files of `samples/own/forms/<slug>/`, byte for byte; the public sample matches

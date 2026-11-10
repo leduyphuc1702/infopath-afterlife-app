@@ -27,12 +27,14 @@ export function storedBlock(history: Uint8Array): Uint8Array<ArrayBuffer> {
 /**
  * Inflates one block. Returns exactly `expected` bytes or throws `CORRUPT_CAB` (R3.3). An
  * inflater error after all expected bytes have come out is ignored (D3), because whether junk
- * after the stream raises one depends on the runtime (D1). The caller adds the block offset.
+ * after the stream raises one depends on the runtime (D1). `offset` is the block's offset in the
+ * cabinet, reported in the error.
  */
 export async function inflateBlock(
   data: Uint8Array,
   history: Uint8Array,
   expected: number,
+  offset = 0,
 ): Promise<Uint8Array<ArrayBuffer>> {
   const h = lastWindow(history);
   const input = new Uint8Array(h.length ? 5 + h.length + data.length : data.length);
@@ -77,7 +79,7 @@ export async function inflateBlock(
     failure = `inflated to ${Math.max(0, produced - h.length)} bytes, expected ${expected}`;
   }
   if (failure !== undefined) {
-    throw new AfterlifeError('CORRUPT_CAB', { reason: failure });
+    throw new AfterlifeError('CORRUPT_CAB', { offset, reason: failure });
   }
 
   const out = new Uint8Array(expected);
