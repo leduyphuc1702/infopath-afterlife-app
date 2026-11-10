@@ -47,7 +47,7 @@ export interface ElementParts {
 const DOCUMENT: ExprContext = { kind: 'document' };
 
 /** `xsf:assignmentAction` → `assignmentAction`; `xsf:rule/submitAction` → `submitAction`. */
-function localKind(key: string): string {
+export function localKind(key: string): string {
   return key.slice(Math.max(key.lastIndexOf('/'), key.lastIndexOf(':')) + 1);
 }
 

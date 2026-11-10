@@ -46,7 +46,7 @@ every task ends green, so every batch does.
     `endDate` two validations; `errorBlank` and signature-line synthetic fixtures; forms 45, 46, 47).
   - Requirements: R6, R7, R9.
 
-- [ ] 4. Endpoints, liveness and redaction
+- [x] 4. Endpoints, liveness and redaction
   - `src/ir/endpoints.ts` (design §8).
   - Tests: `test/ir/endpoints.test.ts`: one case per liveness row and its boundary
     (`172.15.0.1`, `172.32.0.1`), UNC, drive letters, `file:`, connection-string forms (`tcp:`,
@@ -54,7 +54,7 @@ every task ends green, so every batch does.
     for byte.
   - Requirements: R8.2, R8.3, R8.4.
 
-- [ ] 5. Data connections
+- [x] 5. Data connections
   - `src/ir/connections.ts` (stage 4): every adapter, `isQuery`/`isSubmit`, children, endpoints,
     `credentialRedacted`, submit-value `PendingExpr`s; `meta.publishEndpoint`.
   - Tests: `test/ir/connections.test.ts` (forms 01, 02, 03, 04, 07, 44, 46; the R8.3 sample
@@ -62,7 +62,7 @@ every task ends green, so every batch does.
     connectoid fixtures; every sample `credentialRedacted: false`).
   - Requirements: R8.1, R8.2, R8.3, R8.4.
 
-- [ ] 6. XPath tokenizer and resolver
+- [x] 6. XPath tokenizer and resolver
   - `src/ir/xpath/tokens.ts`, `src/ir/xpath/resolve.ts` (design §7.1–§7.3).
   - Tests: `test/ir/xpath-tokens.test.ts` (`div`, `mod`, `and` as operators and as names, `*` both
     ways, literals, nested predicates, `GetDOM`, `current()`, `xdMath:Eval`);
