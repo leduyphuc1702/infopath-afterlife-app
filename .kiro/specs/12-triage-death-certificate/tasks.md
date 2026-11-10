@@ -69,7 +69,7 @@ Requirements: `requirements.md`. Design: `design.md`. Status: **approved, 2026-1
   - Requirements: R3.7, R4.5, R7.1, R7.3
   - Done when: `pnpm --filter web test && pnpm --filter web e2e` green.
 
-- [ ] 10. Verification
+- [x] 10. Verification
   - Re-check every criterion; `verification.md`; `docs/feature-coverage.md` rows J (Triage, death
     certificate) and the coverage-classification note; README Status row.
   - Requirements: all

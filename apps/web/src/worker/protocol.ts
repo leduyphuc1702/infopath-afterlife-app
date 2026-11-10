@@ -12,6 +12,8 @@ export interface InputFile {
   readonly name: string;
   /** Transferred, not copied. */
   readonly bytes: ArrayBuffer;
+  /** A bundled sample's id: its Triage row uses the sample's display name (spec 12). */
+  readonly sample?: string;
 }
 
 export type Req =

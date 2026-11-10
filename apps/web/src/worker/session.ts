@@ -30,11 +30,14 @@ import type {
   WireError,
   WireMatch,
 } from './protocol';
+import { sampleName } from '../shell/sample-names';
 
 interface Template {
   readonly summary: TemplateSummary;
   readonly parsed: ParsedTemplate;
   readonly views: Map<string, Promise<PreparedView>>;
+  /** Set for a bundled sample (spec 12): Triage shows `sampleName(sample)`. */
+  readonly sample?: string;
 }
 interface StoredRecord {
   readonly recordId: string;
@@ -72,7 +75,7 @@ export class Session {
       const bytes = new Uint8Array(f.bytes);
       const ext = f.name.slice(f.name.lastIndexOf('.') + 1).toLowerCase();
       try {
-        if (ext === 'xsn') await this.addTemplate(f.name, bytes);
+        if (ext === 'xsn') await this.addTemplate(f.name, bytes, f.sample);
         else if (ext === 'xml') this.addRecord(f.name, bytes);
       } catch (e) {
         this.failures.push({ fileName: f.name, error: toWireError(e) });
@@ -81,11 +84,16 @@ export class Session {
     return this.summary();
   }
 
-  private async addTemplate(fileName: string, bytes: Uint8Array): Promise<void> {
+  private async addTemplate(fileName: string, bytes: Uint8Array, sample?: string): Promise<void> {
     const parsed = await parseXsn(bytes);
     const ir: FormIR = buildFormIR(parsed);
     const templateId = `t${this.next++}`;
-    this.templates.push({ summary: { templateId, fileName, ir }, parsed, views: new Map() });
+    this.templates.push({
+      summary: { templateId, fileName, ir },
+      parsed,
+      views: new Map(),
+      ...(sample !== undefined && { sample }),
+    });
     this.templates.sort((a, b) => byName(a.summary, b.summary));
   }
 
@@ -141,7 +149,12 @@ export class Session {
         : { evidence, templateId: r.match.templateId };
     });
     return triage({
-      templates: this.templates.map((t) => t.summary),
+      // Bundled samples show their display name; a user's own files keep core's name.
+      templates: this.templates.map(({ summary: t, sample }) =>
+        sample === undefined
+          ? t
+          : { ...t, ir: { ...t.ir, meta: { ...t.ir.meta, name: sampleName(sample) } } },
+      ),
       records: tr,
       failures: this.failures
         .filter((f) => f.fileName.toLowerCase().endsWith('.xsn'))

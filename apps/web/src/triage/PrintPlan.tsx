@@ -2,7 +2,7 @@
 // common causes, and the wave rules in plain words. Hidden on screen; `triage.css` prints it
 // alone. No time, effort or cost (R3.7).
 import type { CauseId, TriageResult, TriageRow, Wave } from '@afterlife/core';
-import { CAUSE_SHORT, CAUSE_TITLES, EMULATED_TOOLTIP, WAVE_RULES } from './words';
+import { CAUSE_TITLES, EMULATED_TOOLTIP, WAVE_RULES } from './words';
 
 const WAVES: readonly Wave[] = [1, 2, 3];
 
@@ -50,7 +50,7 @@ export function PrintPlan({ result }: { readonly result: TriageResult }) {
       <ol>
         {top.map(([id, n]) => (
           <li key={id}>
-            {CAUSE_TITLES[id]} ({CAUSE_SHORT[id]}, {id}): {n} {n === 1 ? 'form' : 'forms'}
+            {CAUSE_TITLES[id]} (<code>{id}</code>): {n} {n === 1 ? 'form' : 'forms'}
           </li>
         ))}
       </ol>

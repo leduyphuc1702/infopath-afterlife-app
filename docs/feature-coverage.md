@@ -199,8 +199,8 @@ Each line answers a defect recorded in `docs/infopath-ux.md`. None of these exis
 
 | Capability | Why it exists | Spec |
 |---|---|---|
-| Triage table for a whole folder, with a death certificate per form | nobody knows which of their 40 forms still matters | 12 |
-| Coverage Report before publishing: Native / App / Manual / Unsupported per element | the original silently did less than the author thought | 05 |
+| Triage table for a whole folder, with a death certificate per form | nobody knows which of their 40 forms still matters | 12; viewer: spec 12 phase A (Triage, certificates with dated sources, waves, CSV and one-page print; verified locally, not yet published, `.kiro/specs/12-triage-death-certificate/verification.md`) |
+| Coverage Report before publishing: Native / App / Manual / Unsupported per element | the original silently did less than the author thought | 05; classification: spec 12 (`packages/core/src/coverage/`, each entry citing a row of this file; spec 05 reuses it) |
 | Rule trace: which rule fired, in order, what it changed | rules were invisible | 04 |
 | Validation list that names the mechanism and links cause to field | three mechanisms looked identical | 04 |
 | Always-visible view switcher | Filler had none | 03 |

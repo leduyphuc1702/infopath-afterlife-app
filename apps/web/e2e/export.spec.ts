@@ -52,6 +52,9 @@ for (const format of ['A4', 'Letter'] as const)
     await expect(plan).toContainText('47 forms');
     await expect(plan).toContainText('Wave 1: everything converts');
     await expect(plan.locator('ol li')).toHaveCount(5);
+    await expect(plan.locator('ol li').first()).toHaveText(
+      'InfoPath 2013 is out of support (infopath-client): 47 forms',
+    );
     const pdf = await page.pdf({ format, printBackground: true });
     const pages = pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) ?? [];
     expect(pages).toHaveLength(1);

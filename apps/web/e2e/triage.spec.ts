@@ -119,6 +119,10 @@ test('"Triage all samples": 14 forms, wave 1: 2, wave 2: 4, wave 3: 8', async ({
   // Records of forms 01–08 are counted; 43–47 and weight-keeper have none.
   await expect(rowOf(page, '02-expense-report.xsn').locator('td').nth(10)).toHaveText('30');
   await expect(rowOf(page, '44-contract-approval-task.xsn').locator('td').nth(10)).toHaveText('0');
+  // Bundled samples show their display name (sample-names.ts).
+  await expect(rowOf(page, 'theill__weight-keeper.xsn').getByRole('button')).toHaveText(
+    'Weight keeper',
+  );
   // Forms 43–47 are in Triage only, not in "Try a sample".
   await page.locator('.afl-menu summary', { hasText: 'Try a sample' }).click();
   await expect(

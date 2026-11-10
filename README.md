@@ -23,7 +23,8 @@ progress; the specs in `docs/spec-briefs/` say what is meant to exist.
 | Sample set: 47 `.xsn`, 348 records, MIT | **verified** for forms 01–42 — 42 of 42 open in InfoPath Filler 2013, every view captured for the first 8. Forms 43–47 were generated later and never opened in InfoPath |
 | JSM Forms API via `requestJira('/forms/...')` | **verified** — read, create and delete templates on a real site |
 | Web viewer (`apps/web`) | **verified** locally (not yet published): spec 09 phase A, `.kiro/specs/09-web-viewer/verification.md` |
-| `.xsn` parser, Triage, converter, Forge app | in progress |
+| Triage + death certificate (web viewer) | **verified** locally (not yet published): spec 12 phase A, `.kiro/specs/12-triage-death-certificate/verification.md` |
+| `.xsn` parser, converter, Forge app | in progress |
 
 ## What is in the repository
 

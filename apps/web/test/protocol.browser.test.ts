@@ -113,3 +113,22 @@ test('a sample: progress per file, records counted in its Triage row', async () 
   expect(row.kind === 'form' && row.records).toBe(10);
   client.terminate();
 });
+
+test("a bundled sample shows its display name in Triage; the same file opened by a user keeps core's", async () => {
+  const client = new WorkerClient(worker);
+  const s = (await client.openSample('theill-weight-keeper')) as SessionRes;
+  const row = s.triage.rows[0]!;
+  expect(row.kind === 'form' && row.name).toBe('Weight keeper');
+  // The form view keeps FormIR as core built it.
+  expect(s.templates[0]!.ir.meta.name).toBe('weight-keeper');
+  client.terminate();
+  const mine = new WorkerClient(worker);
+  const file = new File(
+    [b64(files['theill-weight-keeper']!.template[1])],
+    'theill__weight-keeper.xsn',
+  );
+  const u = (await mine.open([file])) as SessionRes;
+  const r = u.triage.rows[0]!;
+  expect(r.kind === 'form' && r.name).toBe('weight-keeper');
+  mine.terminate();
+});
