@@ -1,0 +1,2040 @@
+{
+  "cabinet": {
+    "cabinetIndex": 0,
+    "flags": 0,
+    "folders": [
+      {
+        "blocks": 2,
+        "compression": "mszip",
+        "offset": 216
+      }
+    ],
+    "setId": 7166,
+    "versionMajor": 1,
+    "versionMinor": 3
+  },
+  "codeFiles": [],
+  "files": [
+    {
+      "attributes": 32,
+      "bytes": {
+        "sha256": "8a98ae4f9922c87b7f665d2ead47ebff5c94bf7a363e91b891c68f413064a9a0",
+        "size": 10632
+      },
+      "date": 23908,
+      "folder": 0,
+      "name": "manifest.xsf",
+      "size": 10632,
+      "time": 28404
+    },
+    {
+      "attributes": 32,
+      "bytes": {
+        "sha256": "fd6090cf712489992dc48477a13d1196da7422d2809924cf637ea35b17280548",
+        "size": 2965
+      },
+      "date": 23908,
+      "folder": 0,
+      "name": "myschema.xsd",
+      "size": 2965,
+      "time": 28404
+    },
+    {
+      "attributes": 32,
+      "bytes": {
+        "sha256": "59ca8719a5d2e263996d78e113bc9d8a6c289c6383f67135561e0ab1e7f24c0d",
+        "size": 2550
+      },
+      "date": 23908,
+      "folder": 0,
+      "name": "sampledata.xml",
+      "size": 2550,
+      "time": 28404
+    },
+    {
+      "attributes": 32,
+      "bytes": {
+        "sha256": "35e22553bf20fa8d57a8bb2008f39e552eb772e429c2e87e98c1aee8fdd94d74",
+        "size": 1304
+      },
+      "date": 23908,
+      "folder": 0,
+      "name": "template.xml",
+      "size": 1304,
+      "time": 28404
+    },
+    {
+      "attributes": 32,
+      "bytes": {
+        "sha256": "40b62bb56f24126a7c119fcf968f34a57dfbab2840617cf1eaf15c9792c415a3",
+        "size": 6008
+      },
+      "date": 23908,
+      "folder": 0,
+      "name": "upgrade.xsl",
+      "size": 6008,
+      "time": 28404
+    },
+    {
+      "attributes": 32,
+      "bytes": {
+        "sha256": "31abed8418f7b4f231074eab50199b5f10b5e9aec1affa8cef3094505e8fbcaf",
+        "size": 18595
+      },
+      "date": 23908,
+      "folder": 0,
+      "name": "view1.xsl",
+      "size": 18595,
+      "time": 28404
+    }
+  ],
+  "issues": [],
+  "manifest": {
+    "allowedControls": [],
+    "applicationParameters": [
+      {
+        "attrs": {
+          "application": "InfoPath Design Mode"
+        },
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:applicationParameters",
+        "line": 78,
+        "path": "/xsf:xDocumentClass[1]/xsf:applicationParameters[1]",
+        "solutionProperties": {
+          "attrs": {
+            "automaticallyCreateNodes": "yes",
+            "fullyEditableNamespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+            "lastOpenView": "view1.xsl"
+          },
+          "column": 3,
+          "file": "manifest.xsf",
+          "key": "xsf:solutionProperties",
+          "line": 79,
+          "path": "/xsf:xDocumentClass[1]/xsf:applicationParameters[1]/xsf:solutionProperties[1]"
+        }
+      }
+    ],
+    "bindings": [],
+    "blankChecks": [],
+    "calculations": [],
+    "connectionExtensions": [],
+    "containers": [
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:package",
+        "line": 7,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]"
+      },
+      {
+        "attrs": {},
+        "column": 3,
+        "file": "manifest.xsf",
+        "key": "xsf:files",
+        "line": 8,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]"
+      },
+      {
+        "attrs": {},
+        "column": 34,
+        "file": "manifest.xsf",
+        "key": "xsf:fileProperties",
+        "line": 9,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[1]/xsf:fileProperties[1]"
+      },
+      {
+        "attrs": {},
+        "column": 36,
+        "file": "manifest.xsf",
+        "key": "xsf:fileProperties",
+        "line": 11,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[3]/xsf:fileProperties[1]"
+      },
+      {
+        "attrs": {},
+        "column": 31,
+        "file": "manifest.xsf",
+        "key": "xsf:fileProperties",
+        "line": 13,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[5]/xsf:fileProperties[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:documentVersionUpgrade",
+        "line": 17,
+        "path": "/xsf:xDocumentClass[1]/xsf:documentVersionUpgrade[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:extensions",
+        "line": 20,
+        "path": "/xsf:xDocumentClass[1]/xsf:extensions[1]"
+      },
+      {
+        "attrs": {
+          "name": "SolutionDefinitionExtensions"
+        },
+        "column": 3,
+        "file": "manifest.xsf",
+        "key": "xsf:extension",
+        "line": 21,
+        "path": "/xsf:xDocumentClass[1]/xsf:extensions[1]/xsf:extension[1]"
+      },
+      {
+        "attrs": {},
+        "column": 5,
+        "file": "manifest.xsf",
+        "key": "xsf2:dataConnections",
+        "line": 25,
+        "path": "/xsf:xDocumentClass[1]/xsf:extensions[1]/xsf:extension[1]/xsf2:solutionDefinition[1]/xsf2:dataConnections[1]"
+      },
+      {
+        "attrs": {},
+        "column": 5,
+        "file": "manifest.xsf",
+        "key": "xsf2:viewsExtension",
+        "line": 26,
+        "path": "/xsf:xDocumentClass[1]/xsf:extensions[1]/xsf:extension[1]/xsf2:solutionDefinition[1]/xsf2:viewsExtension[1]"
+      },
+      {
+        "attrs": {
+          "default": "Report"
+        },
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:views",
+        "line": 30,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]"
+      },
+      {
+        "attrs": {},
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:editing",
+        "line": 32,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]"
+      },
+      {
+        "attrs": {},
+        "column": 198,
+        "file": "manifest.xsf",
+        "key": "xsf:fragmentToInsert",
+        "line": 41,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[9]/xsf:editWith[1]/xsf:fragmentToInsert[1]"
+      },
+      {
+        "attrs": {},
+        "column": 249,
+        "file": "manifest.xsf",
+        "key": "xsf:fragmentToInsert",
+        "line": 56,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[13]/xsf:editWith[1]/xsf:fragmentToInsert[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:documentSchemas",
+        "line": 81,
+        "path": "/xsf:xDocumentClass[1]/xsf:documentSchemas[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:fileNew",
+        "line": 84,
+        "path": "/xsf:xDocumentClass[1]/xsf:fileNew[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:ruleSets",
+        "line": 87,
+        "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:calculations",
+        "line": 88,
+        "path": "/xsf:xDocumentClass[1]/xsf:calculations[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:domEventHandlers",
+        "line": 90,
+        "path": "/xsf:xDocumentClass[1]/xsf:domEventHandlers[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:customValidation",
+        "line": 92,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]"
+      }
+    ],
+    "dataAdapters": [],
+    "dataObjects": [],
+    "defaultView": "Report",
+    "documentClass": {
+      "attrs": {
+        "name": "urn:schemas-microsoft-com:office:infopath:Safety-Incident:-myXSD-2026-11-03T08-50-00",
+        "productVersion": "15.0.0",
+        "publishUrl": "C:\\forms\\06-safety-incident.xsn",
+        "solutionFormatVersion": "2.0.0.0",
+        "solutionVersion": "1.0.0.1",
+        "trustSetting": "automatic"
+      },
+      "column": 1,
+      "file": "manifest.xsf",
+      "key": "xsf:xDocumentClass",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]"
+    },
+    "documentSchemas": [
+      {
+        "attrs": {
+          "location": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00 myschema.xsd",
+          "rootSchema": "yes"
+        },
+        "column": 3,
+        "file": "manifest.xsf",
+        "key": "xsf:documentSchema",
+        "line": 82,
+        "path": "/xsf:xDocumentClass[1]/xsf:documentSchemas[1]/xsf:documentSchema[1]"
+      }
+    ],
+    "domEventHandlers": [],
+    "fileNew": {
+      "attrs": {
+        "caption": "Safety Incident Report",
+        "href": "template.xml"
+      },
+      "column": 3,
+      "file": "manifest.xsf",
+      "key": "xsf:initialXmlDocument",
+      "line": 85,
+      "path": "/xsf:xDocumentClass[1]/xsf:fileNew[1]/xsf:initialXmlDocument[1]"
+    },
+    "importParameters": {
+      "attrs": {
+        "enabled": "yes"
+      },
+      "column": 2,
+      "file": "manifest.xsf",
+      "key": "xsf:importParameters",
+      "line": 16,
+      "path": "/xsf:xDocumentClass[1]/xsf:importParameters[1]"
+    },
+    "package": [
+      {
+        "attrs": {
+          "name": "myschema.xsd"
+        },
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:file",
+        "line": 9,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[1]",
+        "properties": [
+          {
+            "attrs": {
+              "name": "namespace",
+              "type": "string",
+              "value": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00"
+            },
+            "column": 54,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 9,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[1]/xsf:fileProperties[1]/xsf:property[1]"
+          },
+          {
+            "attrs": {
+              "name": "editability",
+              "type": "string",
+              "value": "full"
+            },
+            "column": 198,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 9,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[1]/xsf:fileProperties[1]/xsf:property[2]"
+          },
+          {
+            "attrs": {
+              "name": "rootElement",
+              "type": "string",
+              "value": "incidentReport"
+            },
+            "column": 273,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 9,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[1]/xsf:fileProperties[1]/xsf:property[3]"
+          },
+          {
+            "attrs": {
+              "name": "useOnDemandAlgorithm",
+              "type": "string",
+              "value": "yes"
+            },
+            "column": 358,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 9,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[1]/xsf:fileProperties[1]/xsf:property[4]"
+          }
+        ]
+      },
+      {
+        "attrs": {
+          "name": "template.xml"
+        },
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:file",
+        "line": 10,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[2]",
+        "properties": []
+      },
+      {
+        "attrs": {
+          "name": "sampledata.xml"
+        },
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:file",
+        "line": 11,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[3]",
+        "properties": [
+          {
+            "attrs": {
+              "name": "fileType",
+              "type": "string",
+              "value": "sampleData"
+            },
+            "column": 56,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 11,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[3]/xsf:fileProperties[1]/xsf:property[1]"
+          }
+        ]
+      },
+      {
+        "attrs": {
+          "name": "upgrade.xsl"
+        },
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:file",
+        "line": 12,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[4]",
+        "properties": []
+      },
+      {
+        "attrs": {
+          "name": "view1.xsl"
+        },
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:file",
+        "line": 13,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[5]",
+        "properties": [
+          {
+            "attrs": {
+              "name": "lang",
+              "type": "string",
+              "value": "1033"
+            },
+            "column": 51,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 13,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[5]/xsf:fileProperties[1]/xsf:property[1]"
+          },
+          {
+            "attrs": {
+              "name": "mode",
+              "type": "string",
+              "value": "1"
+            },
+            "column": 119,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 13,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[5]/xsf:fileProperties[1]/xsf:property[2]"
+          }
+        ]
+      }
+    ],
+    "promotedFieldExtensions": [],
+    "promotedFields": [],
+    "ruleSets": [],
+    "solution": {
+      "definition": {
+        "attrs": {
+          "allowClientOnlyCode": "no",
+          "runtimeCompatibility": "client"
+        },
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf2:solutionDefinition",
+        "line": 22,
+        "path": "/xsf:xDocumentClass[1]/xsf:extensions[1]/xsf:extension[1]/xsf2:solutionDefinition[1]"
+      },
+      "offline": {
+        "attrs": {
+          "cacheQueries": "yes",
+          "openIfQueryFails": "yes"
+        },
+        "column": 5,
+        "file": "manifest.xsf",
+        "key": "xsf2:offline",
+        "line": 23,
+        "path": "/xsf:xDocumentClass[1]/xsf:extensions[1]/xsf:extension[1]/xsf2:solutionDefinition[1]/xsf2:offline[1]"
+      },
+      "runtimeCompatibility": [
+        "client"
+      ],
+      "server": {
+        "attrs": {
+          "formLocale": "en-US",
+          "isMobileEnabled": "no",
+          "isPreSubmitPostBackEnabled": "no"
+        },
+        "column": 5,
+        "file": "manifest.xsf",
+        "key": "xsf2:server",
+        "line": 24,
+        "path": "/xsf:xDocumentClass[1]/xsf:extensions[1]/xsf:extension[1]/xsf2:solutionDefinition[1]/xsf2:server[1]"
+      }
+    },
+    "unlinkedViewExtensions": [],
+    "upgrade": {
+      "attrs": {
+        "maxVersionToUpgrade": "1.0.0.1",
+        "minVersionToUpgrade": "0.0.0.0",
+        "transform": "upgrade.xsl"
+      },
+      "column": 3,
+      "file": "manifest.xsf",
+      "key": "xsf:useTransform",
+      "line": 18,
+      "path": "/xsf:xDocumentClass[1]/xsf:documentVersionUpgrade[1]/xsf:useTransform[1]"
+    },
+    "validations": [
+      {
+        "attrs": {
+          "expression": ". = \"\"",
+          "expressionContext": ".",
+          "match": "/my:incidentReport/my:reporter/my:reporterName"
+        },
+        "column": 3,
+        "file": "manifest.xsf",
+        "key": "xsf:errorCondition",
+        "line": 93,
+        "message": {
+          "attrs": {
+            "shortMessage": "Cannot be blank",
+            "type": "modeless"
+          },
+          "column": 130,
+          "file": "manifest.xsf",
+          "key": "xsf:errorMessage",
+          "line": 93,
+          "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[1]/xsf:errorMessage[1]",
+          "text": "This field is required."
+        },
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[1]"
+      },
+      {
+        "attrs": {
+          "expression": ". = \"\"",
+          "expressionContext": ".",
+          "match": "/my:incidentReport/my:occurredAt"
+        },
+        "column": 3,
+        "file": "manifest.xsf",
+        "key": "xsf:errorCondition",
+        "line": 94,
+        "message": {
+          "attrs": {
+            "shortMessage": "Cannot be blank",
+            "type": "modeless"
+          },
+          "column": 116,
+          "file": "manifest.xsf",
+          "key": "xsf:errorMessage",
+          "line": 94,
+          "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[2]/xsf:errorMessage[1]",
+          "text": "This field is required."
+        },
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[2]"
+      },
+      {
+        "attrs": {
+          "expression": ". = \"\"",
+          "expressionContext": ".",
+          "match": "/my:incidentReport/my:severity"
+        },
+        "column": 3,
+        "file": "manifest.xsf",
+        "key": "xsf:errorCondition",
+        "line": 95,
+        "message": {
+          "attrs": {
+            "shortMessage": "Cannot be blank",
+            "type": "modeless"
+          },
+          "column": 114,
+          "file": "manifest.xsf",
+          "key": "xsf:errorMessage",
+          "line": 95,
+          "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[3]/xsf:errorMessage[1]",
+          "text": "This field is required."
+        },
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[3]"
+      }
+    ],
+    "views": [
+      {
+        "attrs": {
+          "caption": "Report",
+          "name": "Report"
+        },
+        "column": 3,
+        "extensions": [
+          {
+            "attrs": {
+              "clientOnly": "no",
+              "designMode": "normal",
+              "ref": "Report"
+            },
+            "column": 26,
+            "file": "manifest.xsf",
+            "key": "xsf2:viewExtension",
+            "line": 26,
+            "path": "/xsf:xDocumentClass[1]/xsf:extensions[1]/xsf:extension[1]/xsf2:solutionDefinition[1]/xsf2:viewsExtension[1]/xsf2:viewExtension[1]"
+          }
+        ],
+        "file": "manifest.xsf",
+        "isDefault": true,
+        "key": "xsf:view",
+        "line": 31,
+        "mainpanes": [
+          {
+            "attrs": {
+              "transform": "view1.xsl"
+            },
+            "column": 4,
+            "file": "manifest.xsf",
+            "key": "xsf:mainpane",
+            "line": 65,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:mainpane[1]"
+          }
+        ],
+        "menuAreas": [
+          {
+            "attrs": {
+              "name": "msoStructuralEditingContextMenu"
+            },
+            "buttons": [
+              {
+                "attrs": {
+                  "action": "xCollection::insertBefore",
+                  "caption": "Insert person above",
+                  "showIf": "immediate",
+                  "xmlToEdit": "person_9"
+                },
+                "column": 5,
+                "file": "manifest.xsf",
+                "key": "xsf:button",
+                "line": 67,
+                "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:menuArea[1]/xsf:button[1]"
+              },
+              {
+                "attrs": {
+                  "action": "xCollection::insertAfter",
+                  "caption": "Insert person below",
+                  "showIf": "immediate",
+                  "xmlToEdit": "person_9"
+                },
+                "column": 5,
+                "file": "manifest.xsf",
+                "key": "xsf:button",
+                "line": 68,
+                "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:menuArea[1]/xsf:button[2]"
+              },
+              {
+                "attrs": {
+                  "action": "xCollection::remove",
+                  "caption": "Remove person",
+                  "showIf": "immediate",
+                  "xmlToEdit": "person_9"
+                },
+                "column": 5,
+                "file": "manifest.xsf",
+                "key": "xsf:button",
+                "line": 69,
+                "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:menuArea[1]/xsf:button[3]"
+              },
+              {
+                "attrs": {
+                  "action": "xCollection::insert",
+                  "caption": "Insert person",
+                  "showIf": "immediate",
+                  "xmlToEdit": "person_9"
+                },
+                "column": 5,
+                "file": "manifest.xsf",
+                "key": "xsf:button",
+                "line": 70,
+                "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:menuArea[1]/xsf:button[4]"
+              },
+              {
+                "attrs": {
+                  "action": "xCollection::insertBefore",
+                  "caption": "Insert followUp above",
+                  "showIf": "immediate",
+                  "xmlToEdit": "followUp_13"
+                },
+                "column": 5,
+                "file": "manifest.xsf",
+                "key": "xsf:button",
+                "line": 71,
+                "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:menuArea[1]/xsf:button[5]"
+              },
+              {
+                "attrs": {
+                  "action": "xCollection::insertAfter",
+                  "caption": "Insert followUp below",
+                  "showIf": "immediate",
+                  "xmlToEdit": "followUp_13"
+                },
+                "column": 5,
+                "file": "manifest.xsf",
+                "key": "xsf:button",
+                "line": 72,
+                "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:menuArea[1]/xsf:button[6]"
+              },
+              {
+                "attrs": {
+                  "action": "xCollection::remove",
+                  "caption": "Remove followUp",
+                  "showIf": "immediate",
+                  "xmlToEdit": "followUp_13"
+                },
+                "column": 5,
+                "file": "manifest.xsf",
+                "key": "xsf:button",
+                "line": 73,
+                "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:menuArea[1]/xsf:button[7]"
+              },
+              {
+                "attrs": {
+                  "action": "xCollection::insert",
+                  "caption": "Insert followUp",
+                  "showIf": "immediate",
+                  "xmlToEdit": "followUp_13"
+                },
+                "column": 5,
+                "file": "manifest.xsf",
+                "key": "xsf:button",
+                "line": 74,
+                "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:menuArea[1]/xsf:button[8]"
+              }
+            ],
+            "column": 4,
+            "file": "manifest.xsf",
+            "key": "xsf:menuArea",
+            "line": 66,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:menuArea[1]"
+          }
+        ],
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]",
+        "printSettings": [],
+        "toolbars": [],
+        "unboundButtons": [],
+        "xmlToEdit": [
+          {
+            "attrs": {
+              "item": "/my:incidentReport/my:reporter/my:reporterName",
+              "name": "reporterName_1"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 96,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 33,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[1]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 33,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[1]"
+          },
+          {
+            "attrs": {
+              "item": "/my:incidentReport/my:reporter/my:reporterPhone",
+              "name": "reporterPhone_2"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 98,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 34,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[2]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 34,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[2]"
+          },
+          {
+            "attrs": {
+              "item": "/my:incidentReport/my:occurredAt",
+              "name": "occurredAt_3"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 80,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 35,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[3]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 35,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[3]"
+          },
+          {
+            "attrs": {
+              "item": "/my:incidentReport/my:site",
+              "name": "site_4"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 68,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 36,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[4]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 36,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[4]"
+          },
+          {
+            "attrs": {
+              "item": "/my:incidentReport/my:locationDetail",
+              "name": "locationDetail_5"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 88,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 37,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[5]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 37,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[5]"
+          },
+          {
+            "attrs": {
+              "item": "/my:incidentReport/my:severity",
+              "name": "severity_6"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 76,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 38,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[6]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 38,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[6]"
+          },
+          {
+            "attrs": {
+              "item": "/my:incidentReport/my:incidentDescription",
+              "name": "incidentDescription_7"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no",
+                "type": "rich"
+              },
+              "column": 98,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 39,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[7]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 39,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[7]"
+          },
+          {
+            "attrs": {
+              "item": "/my:incidentReport/my:scenePhoto",
+              "name": "scenePhoto_8"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 80,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 40,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[8]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 40,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[8]"
+          },
+          {
+            "attrs": {
+              "container": "/my:incidentReport",
+              "item": "/my:incidentReport/my:persons/my:person",
+              "name": "person_9"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "caption": "person",
+                "component": "xCollection",
+                "{http://schemas.microsoft.com/office/infopath/2003}autogeneration": "template"
+              },
+              "column": 114,
+              "file": "manifest.xsf",
+              "fragments": [
+                {
+                  "attrs": {
+                    "innerFragment": "my:persons/my:person"
+                  },
+                  "column": 220,
+                  "file": "manifest.xsf",
+                  "key": "xsf:chooseFragment",
+                  "line": 41,
+                  "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[9]/xsf:editWith[1]/xsf:fragmentToInsert[1]/xsf:chooseFragment[1]",
+                  "raw": "<my:persons xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00\"><my:person>\n\t<my:personName/>\n\t<my:personRole/>\n\t<my:injuryType/>\n\t<my:followUps>\n\t\t<my:followUp>\n\t\t\t<my:actionDate xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t\t\t<my:actionTaken/>\n\t\t\t<my:actionOwner/>\n\t\t</my:followUp>\n\t</my:followUps>\n</my:person></my:persons>"
+                }
+              ],
+              "key": "xsf:editWith",
+              "line": 41,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[9]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 41,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[9]"
+          },
+          {
+            "attrs": {
+              "item": "/my:incidentReport/my:persons/my:person/my:personName",
+              "name": "personName_10"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 102,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 53,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[10]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 53,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[10]"
+          },
+          {
+            "attrs": {
+              "item": "/my:incidentReport/my:persons/my:person/my:personRole",
+              "name": "personRole_11"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 102,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 54,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[11]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 54,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[11]"
+          },
+          {
+            "attrs": {
+              "item": "/my:incidentReport/my:persons/my:person/my:injuryType",
+              "name": "injuryType_12"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 102,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 55,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[12]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 55,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[12]"
+          },
+          {
+            "attrs": {
+              "container": "/my:incidentReport/my:persons/my:person",
+              "item": "/my:incidentReport/my:persons/my:person/my:followUps/my:followUp",
+              "name": "followUp_13"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "caption": "followUp",
+                "component": "xCollection",
+                "{http://schemas.microsoft.com/office/infopath/2003}autogeneration": "template"
+              },
+              "column": 163,
+              "file": "manifest.xsf",
+              "fragments": [
+                {
+                  "attrs": {
+                    "innerFragment": "my:followUps/my:followUp"
+                  },
+                  "column": 271,
+                  "file": "manifest.xsf",
+                  "key": "xsf:chooseFragment",
+                  "line": 56,
+                  "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[13]/xsf:editWith[1]/xsf:fragmentToInsert[1]/xsf:chooseFragment[1]",
+                  "raw": "<my:followUps xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00\"><my:followUp>\n\t<my:actionDate xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:actionTaken/>\n\t<my:actionOwner/>\n</my:followUp></my:followUps>"
+                }
+              ],
+              "key": "xsf:editWith",
+              "line": 56,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[13]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 56,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[13]"
+          },
+          {
+            "attrs": {
+              "item": "/my:incidentReport/my:persons/my:person/my:followUps/my:followUp/my:actionDate",
+              "name": "actionDate_14"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 127,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 61,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[14]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 61,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[14]"
+          },
+          {
+            "attrs": {
+              "item": "/my:incidentReport/my:persons/my:person/my:followUps/my:followUp/my:actionTaken",
+              "name": "actionTaken_15"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 129,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 62,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[15]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 62,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[15]"
+          },
+          {
+            "attrs": {
+              "item": "/my:incidentReport/my:persons/my:person/my:followUps/my:followUp/my:actionOwner",
+              "name": "actionOwner_16"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 129,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 63,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[16]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 63,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[16]"
+          }
+        ]
+      }
+    ]
+  },
+  "manifestFile": "manifest.xsf",
+  "parserVersion": 1,
+  "schemas": {
+    "main": {
+      "file": "myschema.xsd",
+      "root": {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "effective": {
+                  "maxOccurs": 1,
+                  "minOccurs": 1,
+                  "nillable": false
+                },
+                "facets": [],
+                "kind": "field",
+                "name": "reporterName",
+                "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+                "nodeType": "element",
+                "optional": false,
+                "raw": {
+                  "groups": [
+                    {
+                      "kind": "sequence"
+                    }
+                  ]
+                },
+                "recursive": false,
+                "repeating": false,
+                "required": false,
+                "source": {
+                  "column": 2,
+                  "file": "myschema.xsd",
+                  "line": 26,
+                  "path": "/xsd:schema[1]/xsd:element[3]"
+                },
+                "use": {
+                  "column": 5,
+                  "file": "myschema.xsd",
+                  "line": 21,
+                  "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+                },
+                "wildcards": [],
+                "xsdType": {
+                  "builtin": "xsd:string",
+                  "declared": "xsd:string",
+                  "variety": "atomic"
+                }
+              },
+              {
+                "children": [],
+                "effective": {
+                  "maxOccurs": 1,
+                  "minOccurs": 1,
+                  "nillable": false
+                },
+                "facets": [],
+                "kind": "field",
+                "name": "reporterPhone",
+                "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+                "nodeType": "element",
+                "optional": false,
+                "raw": {
+                  "groups": [
+                    {
+                      "kind": "sequence"
+                    }
+                  ]
+                },
+                "recursive": false,
+                "repeating": false,
+                "required": false,
+                "source": {
+                  "column": 2,
+                  "file": "myschema.xsd",
+                  "line": 27,
+                  "path": "/xsd:schema[1]/xsd:element[4]"
+                },
+                "use": {
+                  "column": 5,
+                  "file": "myschema.xsd",
+                  "line": 22,
+                  "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+                },
+                "wildcards": [],
+                "xsdType": {
+                  "builtin": "xsd:string",
+                  "declared": "xsd:string",
+                  "variety": "atomic"
+                }
+              }
+            ],
+            "effective": {
+              "maxOccurs": 1,
+              "minOccurs": 1,
+              "nillable": false
+            },
+            "facets": [],
+            "kind": "group",
+            "name": "reporter",
+            "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+            "nodeType": "element",
+            "optional": false,
+            "raw": {
+              "groups": [
+                {
+                  "kind": "sequence"
+                }
+              ]
+            },
+            "recursive": false,
+            "repeating": false,
+            "required": false,
+            "source": {
+              "column": 2,
+              "file": "myschema.xsd",
+              "line": 18,
+              "path": "/xsd:schema[1]/xsd:element[2]"
+            },
+            "use": {
+              "column": 5,
+              "file": "myschema.xsd",
+              "line": 6,
+              "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+            },
+            "wildcards": [],
+            "xsdType": {
+              "builtin": "xsd:anyType",
+              "variety": "complex"
+            }
+          },
+          {
+            "children": [],
+            "effective": {
+              "maxOccurs": 1,
+              "minOccurs": 1,
+              "nillable": true
+            },
+            "facets": [],
+            "kind": "field",
+            "name": "occurredAt",
+            "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+            "nodeType": "element",
+            "optional": false,
+            "raw": {
+              "groups": [
+                {
+                  "kind": "sequence"
+                }
+              ],
+              "nillable": "true"
+            },
+            "recursive": false,
+            "repeating": false,
+            "required": false,
+            "source": {
+              "column": 2,
+              "file": "myschema.xsd",
+              "line": 28,
+              "path": "/xsd:schema[1]/xsd:element[5]"
+            },
+            "use": {
+              "column": 5,
+              "file": "myschema.xsd",
+              "line": 7,
+              "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+            },
+            "wildcards": [],
+            "xsdType": {
+              "builtin": "xsd:dateTime",
+              "declared": "xsd:dateTime",
+              "variety": "atomic"
+            }
+          },
+          {
+            "children": [],
+            "effective": {
+              "maxOccurs": 1,
+              "minOccurs": 1,
+              "nillable": false
+            },
+            "facets": [],
+            "kind": "field",
+            "name": "site",
+            "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+            "nodeType": "element",
+            "optional": false,
+            "raw": {
+              "groups": [
+                {
+                  "kind": "sequence"
+                }
+              ]
+            },
+            "recursive": false,
+            "repeating": false,
+            "required": false,
+            "source": {
+              "column": 2,
+              "file": "myschema.xsd",
+              "line": 29,
+              "path": "/xsd:schema[1]/xsd:element[6]"
+            },
+            "use": {
+              "column": 5,
+              "file": "myschema.xsd",
+              "line": 8,
+              "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+            },
+            "wildcards": [],
+            "xsdType": {
+              "builtin": "xsd:string",
+              "declared": "xsd:string",
+              "variety": "atomic"
+            }
+          },
+          {
+            "children": [],
+            "effective": {
+              "maxOccurs": 1,
+              "minOccurs": 1,
+              "nillable": false
+            },
+            "facets": [],
+            "kind": "field",
+            "name": "locationDetail",
+            "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+            "nodeType": "element",
+            "optional": false,
+            "raw": {
+              "groups": [
+                {
+                  "kind": "sequence"
+                }
+              ]
+            },
+            "recursive": false,
+            "repeating": false,
+            "required": false,
+            "source": {
+              "column": 2,
+              "file": "myschema.xsd",
+              "line": 30,
+              "path": "/xsd:schema[1]/xsd:element[7]"
+            },
+            "use": {
+              "column": 5,
+              "file": "myschema.xsd",
+              "line": 9,
+              "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+            },
+            "wildcards": [],
+            "xsdType": {
+              "builtin": "xsd:string",
+              "declared": "xsd:string",
+              "variety": "atomic"
+            }
+          },
+          {
+            "children": [],
+            "effective": {
+              "maxOccurs": 1,
+              "minOccurs": 1,
+              "nillable": false
+            },
+            "facets": [],
+            "kind": "field",
+            "name": "severity",
+            "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+            "nodeType": "element",
+            "optional": false,
+            "raw": {
+              "groups": [
+                {
+                  "kind": "sequence"
+                }
+              ]
+            },
+            "recursive": false,
+            "repeating": false,
+            "required": false,
+            "source": {
+              "column": 2,
+              "file": "myschema.xsd",
+              "line": 31,
+              "path": "/xsd:schema[1]/xsd:element[8]"
+            },
+            "use": {
+              "column": 5,
+              "file": "myschema.xsd",
+              "line": 10,
+              "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[5]"
+            },
+            "wildcards": [],
+            "xsdType": {
+              "builtin": "xsd:string",
+              "declared": "xsd:string",
+              "variety": "atomic"
+            }
+          },
+          {
+            "children": [],
+            "effective": {
+              "maxOccurs": 1,
+              "minOccurs": 1,
+              "nillable": false
+            },
+            "facets": [],
+            "kind": "richText",
+            "name": "incidentDescription",
+            "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+            "nodeType": "element",
+            "optional": false,
+            "raw": {
+              "groups": [
+                {
+                  "kind": "sequence"
+                }
+              ]
+            },
+            "recursive": false,
+            "repeating": false,
+            "required": false,
+            "source": {
+              "column": 2,
+              "file": "myschema.xsd",
+              "line": 32,
+              "path": "/xsd:schema[1]/xsd:element[9]"
+            },
+            "use": {
+              "column": 5,
+              "file": "myschema.xsd",
+              "line": 11,
+              "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[6]"
+            },
+            "wildcards": [],
+            "xsdType": {
+              "builtin": "xsd:anyType",
+              "variety": "complex"
+            }
+          },
+          {
+            "children": [],
+            "effective": {
+              "maxOccurs": 1,
+              "minOccurs": 1,
+              "nillable": true
+            },
+            "facets": [],
+            "kind": "field",
+            "name": "scenePhoto",
+            "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+            "nodeType": "element",
+            "optional": false,
+            "raw": {
+              "groups": [
+                {
+                  "kind": "sequence"
+                }
+              ],
+              "nillable": "true"
+            },
+            "recursive": false,
+            "repeating": false,
+            "required": false,
+            "source": {
+              "column": 2,
+              "file": "myschema.xsd",
+              "line": 39,
+              "path": "/xsd:schema[1]/xsd:element[10]"
+            },
+            "use": {
+              "column": 5,
+              "file": "myschema.xsd",
+              "line": 12,
+              "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[7]"
+            },
+            "wildcards": [],
+            "xsdType": {
+              "builtin": "xsd:base64Binary",
+              "declared": "xsd:base64Binary",
+              "variety": "atomic"
+            }
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [],
+                    "effective": {
+                      "maxOccurs": 1,
+                      "minOccurs": 1,
+                      "nillable": false
+                    },
+                    "facets": [],
+                    "kind": "field",
+                    "name": "personName",
+                    "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+                    "nodeType": "element",
+                    "optional": false,
+                    "raw": {
+                      "groups": [
+                        {
+                          "kind": "sequence"
+                        }
+                      ]
+                    },
+                    "recursive": false,
+                    "repeating": false,
+                    "required": false,
+                    "source": {
+                      "column": 2,
+                      "file": "myschema.xsd",
+                      "line": 57,
+                      "path": "/xsd:schema[1]/xsd:element[13]"
+                    },
+                    "use": {
+                      "column": 5,
+                      "file": "myschema.xsd",
+                      "line": 50,
+                      "path": "/xsd:schema[1]/xsd:element[12]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+                    },
+                    "wildcards": [],
+                    "xsdType": {
+                      "builtin": "xsd:string",
+                      "declared": "xsd:string",
+                      "variety": "atomic"
+                    }
+                  },
+                  {
+                    "children": [],
+                    "effective": {
+                      "maxOccurs": 1,
+                      "minOccurs": 1,
+                      "nillable": false
+                    },
+                    "facets": [],
+                    "kind": "field",
+                    "name": "personRole",
+                    "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+                    "nodeType": "element",
+                    "optional": false,
+                    "raw": {
+                      "groups": [
+                        {
+                          "kind": "sequence"
+                        }
+                      ]
+                    },
+                    "recursive": false,
+                    "repeating": false,
+                    "required": false,
+                    "source": {
+                      "column": 2,
+                      "file": "myschema.xsd",
+                      "line": 58,
+                      "path": "/xsd:schema[1]/xsd:element[14]"
+                    },
+                    "use": {
+                      "column": 5,
+                      "file": "myschema.xsd",
+                      "line": 51,
+                      "path": "/xsd:schema[1]/xsd:element[12]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+                    },
+                    "wildcards": [],
+                    "xsdType": {
+                      "builtin": "xsd:string",
+                      "declared": "xsd:string",
+                      "variety": "atomic"
+                    }
+                  },
+                  {
+                    "children": [],
+                    "effective": {
+                      "maxOccurs": 1,
+                      "minOccurs": 1,
+                      "nillable": false
+                    },
+                    "facets": [],
+                    "kind": "field",
+                    "name": "injuryType",
+                    "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+                    "nodeType": "element",
+                    "optional": false,
+                    "raw": {
+                      "groups": [
+                        {
+                          "kind": "sequence"
+                        }
+                      ]
+                    },
+                    "recursive": false,
+                    "repeating": false,
+                    "required": false,
+                    "source": {
+                      "column": 2,
+                      "file": "myschema.xsd",
+                      "line": 59,
+                      "path": "/xsd:schema[1]/xsd:element[15]"
+                    },
+                    "use": {
+                      "column": 5,
+                      "file": "myschema.xsd",
+                      "line": 52,
+                      "path": "/xsd:schema[1]/xsd:element[12]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+                    },
+                    "wildcards": [],
+                    "xsdType": {
+                      "builtin": "xsd:string",
+                      "declared": "xsd:string",
+                      "variety": "atomic"
+                    }
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [],
+                            "effective": {
+                              "maxOccurs": 1,
+                              "minOccurs": 1,
+                              "nillable": true
+                            },
+                            "facets": [],
+                            "kind": "field",
+                            "name": "actionDate",
+                            "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+                            "nodeType": "element",
+                            "optional": false,
+                            "raw": {
+                              "groups": [
+                                {
+                                  "kind": "sequence"
+                                }
+                              ],
+                              "nillable": "true"
+                            },
+                            "recursive": false,
+                            "repeating": false,
+                            "required": false,
+                            "source": {
+                              "column": 2,
+                              "file": "myschema.xsd",
+                              "line": 76,
+                              "path": "/xsd:schema[1]/xsd:element[18]"
+                            },
+                            "use": {
+                              "column": 5,
+                              "file": "myschema.xsd",
+                              "line": 70,
+                              "path": "/xsd:schema[1]/xsd:element[17]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+                            },
+                            "wildcards": [],
+                            "xsdType": {
+                              "builtin": "xsd:date",
+                              "declared": "xsd:date",
+                              "variety": "atomic"
+                            }
+                          },
+                          {
+                            "children": [],
+                            "effective": {
+                              "maxOccurs": 1,
+                              "minOccurs": 1,
+                              "nillable": false
+                            },
+                            "facets": [],
+                            "kind": "field",
+                            "name": "actionTaken",
+                            "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+                            "nodeType": "element",
+                            "optional": false,
+                            "raw": {
+                              "groups": [
+                                {
+                                  "kind": "sequence"
+                                }
+                              ]
+                            },
+                            "recursive": false,
+                            "repeating": false,
+                            "required": false,
+                            "source": {
+                              "column": 2,
+                              "file": "myschema.xsd",
+                              "line": 77,
+                              "path": "/xsd:schema[1]/xsd:element[19]"
+                            },
+                            "use": {
+                              "column": 5,
+                              "file": "myschema.xsd",
+                              "line": 71,
+                              "path": "/xsd:schema[1]/xsd:element[17]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+                            },
+                            "wildcards": [],
+                            "xsdType": {
+                              "builtin": "xsd:string",
+                              "declared": "xsd:string",
+                              "variety": "atomic"
+                            }
+                          },
+                          {
+                            "children": [],
+                            "effective": {
+                              "maxOccurs": 1,
+                              "minOccurs": 1,
+                              "nillable": false
+                            },
+                            "facets": [],
+                            "kind": "field",
+                            "name": "actionOwner",
+                            "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+                            "nodeType": "element",
+                            "optional": false,
+                            "raw": {
+                              "groups": [
+                                {
+                                  "kind": "sequence"
+                                }
+                              ]
+                            },
+                            "recursive": false,
+                            "repeating": false,
+                            "required": false,
+                            "source": {
+                              "column": 2,
+                              "file": "myschema.xsd",
+                              "line": 78,
+                              "path": "/xsd:schema[1]/xsd:element[20]"
+                            },
+                            "use": {
+                              "column": 5,
+                              "file": "myschema.xsd",
+                              "line": 72,
+                              "path": "/xsd:schema[1]/xsd:element[17]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+                            },
+                            "wildcards": [],
+                            "xsdType": {
+                              "builtin": "xsd:string",
+                              "declared": "xsd:string",
+                              "variety": "atomic"
+                            }
+                          }
+                        ],
+                        "effective": {
+                          "maxOccurs": "unbounded",
+                          "minOccurs": 0,
+                          "nillable": false
+                        },
+                        "facets": [],
+                        "kind": "group",
+                        "name": "followUp",
+                        "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+                        "nodeType": "element",
+                        "optional": true,
+                        "raw": {
+                          "groups": [
+                            {
+                              "kind": "sequence"
+                            }
+                          ],
+                          "maxOccurs": "unbounded",
+                          "minOccurs": "0"
+                        },
+                        "recursive": false,
+                        "repeating": true,
+                        "required": false,
+                        "source": {
+                          "column": 2,
+                          "file": "myschema.xsd",
+                          "line": 67,
+                          "path": "/xsd:schema[1]/xsd:element[17]"
+                        },
+                        "use": {
+                          "column": 5,
+                          "file": "myschema.xsd",
+                          "line": 63,
+                          "path": "/xsd:schema[1]/xsd:element[16]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+                        },
+                        "wildcards": [],
+                        "xsdType": {
+                          "builtin": "xsd:anyType",
+                          "variety": "complex"
+                        }
+                      }
+                    ],
+                    "effective": {
+                      "maxOccurs": 1,
+                      "minOccurs": 1,
+                      "nillable": false
+                    },
+                    "facets": [],
+                    "kind": "group",
+                    "name": "followUps",
+                    "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+                    "nodeType": "element",
+                    "optional": false,
+                    "raw": {
+                      "groups": [
+                        {
+                          "kind": "sequence"
+                        }
+                      ]
+                    },
+                    "recursive": false,
+                    "repeating": false,
+                    "required": false,
+                    "source": {
+                      "column": 2,
+                      "file": "myschema.xsd",
+                      "line": 60,
+                      "path": "/xsd:schema[1]/xsd:element[16]"
+                    },
+                    "use": {
+                      "column": 5,
+                      "file": "myschema.xsd",
+                      "line": 53,
+                      "path": "/xsd:schema[1]/xsd:element[12]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+                    },
+                    "wildcards": [],
+                    "xsdType": {
+                      "builtin": "xsd:anyType",
+                      "variety": "complex"
+                    }
+                  }
+                ],
+                "effective": {
+                  "maxOccurs": "unbounded",
+                  "minOccurs": 0,
+                  "nillable": false
+                },
+                "facets": [],
+                "kind": "group",
+                "name": "person",
+                "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+                "nodeType": "element",
+                "optional": true,
+                "raw": {
+                  "groups": [
+                    {
+                      "kind": "sequence"
+                    }
+                  ],
+                  "maxOccurs": "unbounded",
+                  "minOccurs": "0"
+                },
+                "recursive": false,
+                "repeating": true,
+                "required": false,
+                "source": {
+                  "column": 2,
+                  "file": "myschema.xsd",
+                  "line": 47,
+                  "path": "/xsd:schema[1]/xsd:element[12]"
+                },
+                "use": {
+                  "column": 5,
+                  "file": "myschema.xsd",
+                  "line": 43,
+                  "path": "/xsd:schema[1]/xsd:element[11]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+                },
+                "wildcards": [],
+                "xsdType": {
+                  "builtin": "xsd:anyType",
+                  "variety": "complex"
+                }
+              }
+            ],
+            "effective": {
+              "maxOccurs": 1,
+              "minOccurs": 1,
+              "nillable": false
+            },
+            "facets": [],
+            "kind": "group",
+            "name": "persons",
+            "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+            "nodeType": "element",
+            "optional": false,
+            "raw": {
+              "groups": [
+                {
+                  "kind": "sequence"
+                }
+              ]
+            },
+            "recursive": false,
+            "repeating": false,
+            "required": false,
+            "source": {
+              "column": 2,
+              "file": "myschema.xsd",
+              "line": 40,
+              "path": "/xsd:schema[1]/xsd:element[11]"
+            },
+            "use": {
+              "column": 5,
+              "file": "myschema.xsd",
+              "line": 13,
+              "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[8]"
+            },
+            "wildcards": [],
+            "xsdType": {
+              "builtin": "xsd:anyType",
+              "variety": "complex"
+            }
+          }
+        ],
+        "effective": {
+          "maxOccurs": 1,
+          "minOccurs": 1,
+          "nillable": false
+        },
+        "facets": [],
+        "kind": "group",
+        "name": "incidentReport",
+        "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+        "nodeType": "element",
+        "optional": false,
+        "raw": {
+          "groups": []
+        },
+        "recursive": false,
+        "repeating": false,
+        "required": false,
+        "source": {
+          "column": 2,
+          "file": "myschema.xsd",
+          "line": 3,
+          "path": "/xsd:schema[1]/xsd:element[1]"
+        },
+        "wildcards": [
+          {
+            "kind": "anyAttribute",
+            "namespace": "http://www.w3.org/XML/1998/namespace",
+            "processContents": "lax"
+          }
+        ],
+        "xsdType": {
+          "builtin": "xsd:anyType",
+          "variety": "complex"
+        }
+      }
+    },
+    "secondary": {}
+  },
+  "unknowns": []
+}

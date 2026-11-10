@@ -268,8 +268,11 @@ migrating.
    reference's path.
 4. IF a package file is not listed in `xsf:files`, THEN THE SYSTEM SHALL record an `UNLISTED_FILE`
    issue. In-repo: 0 of 43 forms.
-5. IF two entries have the same name ignoring case, or a name contains `..`, a drive letter or a
-   leading separator, THEN THE SYSTEM SHALL keep the bytes and record an issue.
+5. IF two entries have the same name ignoring case, or a name has a `..` path segment (splitting
+   on `/` and `\`), a drive letter or a leading separator, THEN THE SYSTEM SHALL keep the bytes and
+   record an issue.
+   Changed at task 21: the text said "contains `..`", which would flag a safe name such as
+   `notes..v2.xml`; only a whole `..` segment can climb out of a folder.
 6. WHEN `template.xml` carries `mso-infoPathSolution`, THE SYSTEM SHALL record an issue if its `name`
    differs from `xDocumentClass/@name` (InfoPath rejects that; infopath-domain.md). In-repo: 0 of 43.
 

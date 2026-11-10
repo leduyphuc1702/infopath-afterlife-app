@@ -1,0 +1,1318 @@
+{
+  "cabinet": {
+    "cabinetIndex": 0,
+    "flags": 0,
+    "folders": [
+      {
+        "blocks": 1,
+        "compression": "mszip",
+        "offset": 216
+      }
+    ],
+    "setId": 7166,
+    "versionMajor": 1,
+    "versionMinor": 3
+  },
+  "codeFiles": [],
+  "files": [
+    {
+      "attributes": 32,
+      "bytes": {
+        "sha256": "399652db9a48f8ffe9bab7a13ad5589f011290f3da81686427dc6d189f29dbab",
+        "size": 7662
+      },
+      "date": 23908,
+      "folder": 0,
+      "name": "manifest.xsf",
+      "size": 7662,
+      "time": 28404
+    },
+    {
+      "attributes": 32,
+      "bytes": {
+        "sha256": "90c0ef7d0f43f6c4de77ceeafe5939e4aa2ba097bba87bdf2b8cbf4292ee59e5",
+        "size": 1552
+      },
+      "date": 23908,
+      "folder": 0,
+      "name": "myschema.xsd",
+      "size": 1552,
+      "time": 28404
+    },
+    {
+      "attributes": 32,
+      "bytes": {
+        "sha256": "3306972b657d1d6f73b8499424e31b44d5bc14af190023deb45a4e1095f93656",
+        "size": 917
+      },
+      "date": 23908,
+      "folder": 0,
+      "name": "sampledata.xml",
+      "size": 917,
+      "time": 28404
+    },
+    {
+      "attributes": 32,
+      "bytes": {
+        "sha256": "2cbdd49c8be6976167c6928178b9b6ef0ca706e5976b959cf1f7d496008c0439",
+        "size": 912
+      },
+      "date": 23908,
+      "folder": 0,
+      "name": "template.xml",
+      "size": 912,
+      "time": 28404
+    },
+    {
+      "attributes": 32,
+      "bytes": {
+        "sha256": "7261f3fec190928e39d4008d5747b853370c3ce2cf46ce8c4d66cdd6c25d37c2",
+        "size": 3461
+      },
+      "date": 23908,
+      "folder": 0,
+      "name": "upgrade.xsl",
+      "size": 3461,
+      "time": 28404
+    },
+    {
+      "attributes": 32,
+      "bytes": {
+        "sha256": "0bcedfd7e07b3bbd76be758430c5b26a70359484df2e50c087f3f83e1bd1f4ee",
+        "size": 10904
+      },
+      "date": 23908,
+      "folder": 0,
+      "name": "view1.xsl",
+      "size": 10904,
+      "time": 28404
+    }
+  ],
+  "issues": [],
+  "manifest": {
+    "allowedControls": [],
+    "applicationParameters": [
+      {
+        "attrs": {
+          "application": "InfoPath Design Mode"
+        },
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:applicationParameters",
+        "line": 57,
+        "path": "/xsf:xDocumentClass[1]/xsf:applicationParameters[1]",
+        "solutionProperties": {
+          "attrs": {
+            "automaticallyCreateNodes": "yes",
+            "fullyEditableNamespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:24:00",
+            "lastOpenView": "view1.xsl"
+          },
+          "column": 3,
+          "file": "manifest.xsf",
+          "key": "xsf:solutionProperties",
+          "line": 58,
+          "path": "/xsf:xDocumentClass[1]/xsf:applicationParameters[1]/xsf:solutionProperties[1]"
+        }
+      }
+    ],
+    "bindings": [],
+    "blankChecks": [],
+    "calculations": [
+      {
+        "attrs": {
+          "expression": "xdMath:Nz(../my:likelihood) * xdMath:Nz(../my:consequence)",
+          "refresh": "onChange",
+          "target": "/my:riskAssessment/my:risks/my:risk/my:riskScore"
+        },
+        "column": 3,
+        "file": "manifest.xsf",
+        "key": "xsf:calculatedField",
+        "line": 68,
+        "path": "/xsf:xDocumentClass[1]/xsf:calculations[1]/xsf:calculatedField[1]"
+      }
+    ],
+    "connectionExtensions": [],
+    "containers": [
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:package",
+        "line": 7,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]"
+      },
+      {
+        "attrs": {},
+        "column": 3,
+        "file": "manifest.xsf",
+        "key": "xsf:files",
+        "line": 8,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]"
+      },
+      {
+        "attrs": {},
+        "column": 34,
+        "file": "manifest.xsf",
+        "key": "xsf:fileProperties",
+        "line": 9,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[1]/xsf:fileProperties[1]"
+      },
+      {
+        "attrs": {},
+        "column": 36,
+        "file": "manifest.xsf",
+        "key": "xsf:fileProperties",
+        "line": 11,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[3]/xsf:fileProperties[1]"
+      },
+      {
+        "attrs": {},
+        "column": 31,
+        "file": "manifest.xsf",
+        "key": "xsf:fileProperties",
+        "line": 13,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[5]/xsf:fileProperties[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:documentVersionUpgrade",
+        "line": 17,
+        "path": "/xsf:xDocumentClass[1]/xsf:documentVersionUpgrade[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:extensions",
+        "line": 20,
+        "path": "/xsf:xDocumentClass[1]/xsf:extensions[1]"
+      },
+      {
+        "attrs": {
+          "name": "SolutionDefinitionExtensions"
+        },
+        "column": 3,
+        "file": "manifest.xsf",
+        "key": "xsf:extension",
+        "line": 21,
+        "path": "/xsf:xDocumentClass[1]/xsf:extensions[1]/xsf:extension[1]"
+      },
+      {
+        "attrs": {},
+        "column": 5,
+        "file": "manifest.xsf",
+        "key": "xsf2:dataConnections",
+        "line": 25,
+        "path": "/xsf:xDocumentClass[1]/xsf:extensions[1]/xsf:extension[1]/xsf2:solutionDefinition[1]/xsf2:dataConnections[1]"
+      },
+      {
+        "attrs": {},
+        "column": 5,
+        "file": "manifest.xsf",
+        "key": "xsf2:viewsExtension",
+        "line": 26,
+        "path": "/xsf:xDocumentClass[1]/xsf:extensions[1]/xsf:extension[1]/xsf2:solutionDefinition[1]/xsf2:viewsExtension[1]"
+      },
+      {
+        "attrs": {
+          "default": "Main"
+        },
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:views",
+        "line": 30,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]"
+      },
+      {
+        "attrs": {},
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:editing",
+        "line": 32,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]"
+      },
+      {
+        "attrs": {},
+        "column": 190,
+        "file": "manifest.xsf",
+        "key": "xsf:fragmentToInsert",
+        "line": 35,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[3]/xsf:editWith[1]/xsf:fragmentToInsert[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:documentSchemas",
+        "line": 60,
+        "path": "/xsf:xDocumentClass[1]/xsf:documentSchemas[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:fileNew",
+        "line": 63,
+        "path": "/xsf:xDocumentClass[1]/xsf:fileNew[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:ruleSets",
+        "line": 66,
+        "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:calculations",
+        "line": 67,
+        "path": "/xsf:xDocumentClass[1]/xsf:calculations[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:domEventHandlers",
+        "line": 70,
+        "path": "/xsf:xDocumentClass[1]/xsf:domEventHandlers[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:customValidation",
+        "line": 72,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]"
+      }
+    ],
+    "dataAdapters": [],
+    "dataObjects": [],
+    "defaultView": "Main",
+    "documentClass": {
+      "attrs": {
+        "name": "urn:schemas-microsoft-com:office:infopath:Risk-Assessment:-myXSD-2026-11-04T09-24-00",
+        "productVersion": "15.0.0",
+        "publishUrl": "C:\\forms\\24-risk-assessment.xsn",
+        "solutionFormatVersion": "2.0.0.0",
+        "solutionVersion": "1.0.0.1",
+        "trustSetting": "automatic"
+      },
+      "column": 1,
+      "file": "manifest.xsf",
+      "key": "xsf:xDocumentClass",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]"
+    },
+    "documentSchemas": [
+      {
+        "attrs": {
+          "location": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:24:00 myschema.xsd",
+          "rootSchema": "yes"
+        },
+        "column": 3,
+        "file": "manifest.xsf",
+        "key": "xsf:documentSchema",
+        "line": 61,
+        "path": "/xsf:xDocumentClass[1]/xsf:documentSchemas[1]/xsf:documentSchema[1]"
+      }
+    ],
+    "domEventHandlers": [],
+    "fileNew": {
+      "attrs": {
+        "caption": "Risk Assessment",
+        "href": "template.xml"
+      },
+      "column": 3,
+      "file": "manifest.xsf",
+      "key": "xsf:initialXmlDocument",
+      "line": 64,
+      "path": "/xsf:xDocumentClass[1]/xsf:fileNew[1]/xsf:initialXmlDocument[1]"
+    },
+    "importParameters": {
+      "attrs": {
+        "enabled": "yes"
+      },
+      "column": 2,
+      "file": "manifest.xsf",
+      "key": "xsf:importParameters",
+      "line": 16,
+      "path": "/xsf:xDocumentClass[1]/xsf:importParameters[1]"
+    },
+    "package": [
+      {
+        "attrs": {
+          "name": "myschema.xsd"
+        },
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:file",
+        "line": 9,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[1]",
+        "properties": [
+          {
+            "attrs": {
+              "name": "namespace",
+              "type": "string",
+              "value": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:24:00"
+            },
+            "column": 54,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 9,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[1]/xsf:fileProperties[1]/xsf:property[1]"
+          },
+          {
+            "attrs": {
+              "name": "editability",
+              "type": "string",
+              "value": "full"
+            },
+            "column": 198,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 9,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[1]/xsf:fileProperties[1]/xsf:property[2]"
+          },
+          {
+            "attrs": {
+              "name": "rootElement",
+              "type": "string",
+              "value": "riskAssessment"
+            },
+            "column": 273,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 9,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[1]/xsf:fileProperties[1]/xsf:property[3]"
+          },
+          {
+            "attrs": {
+              "name": "useOnDemandAlgorithm",
+              "type": "string",
+              "value": "yes"
+            },
+            "column": 358,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 9,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[1]/xsf:fileProperties[1]/xsf:property[4]"
+          }
+        ]
+      },
+      {
+        "attrs": {
+          "name": "template.xml"
+        },
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:file",
+        "line": 10,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[2]",
+        "properties": []
+      },
+      {
+        "attrs": {
+          "name": "sampledata.xml"
+        },
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:file",
+        "line": 11,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[3]",
+        "properties": [
+          {
+            "attrs": {
+              "name": "fileType",
+              "type": "string",
+              "value": "sampleData"
+            },
+            "column": 56,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 11,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[3]/xsf:fileProperties[1]/xsf:property[1]"
+          }
+        ]
+      },
+      {
+        "attrs": {
+          "name": "upgrade.xsl"
+        },
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:file",
+        "line": 12,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[4]",
+        "properties": []
+      },
+      {
+        "attrs": {
+          "name": "view1.xsl"
+        },
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:file",
+        "line": 13,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[5]",
+        "properties": [
+          {
+            "attrs": {
+              "name": "lang",
+              "type": "string",
+              "value": "1033"
+            },
+            "column": 51,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 13,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[5]/xsf:fileProperties[1]/xsf:property[1]"
+          },
+          {
+            "attrs": {
+              "name": "mode",
+              "type": "string",
+              "value": "1"
+            },
+            "column": 119,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 13,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[5]/xsf:fileProperties[1]/xsf:property[2]"
+          }
+        ]
+      }
+    ],
+    "promotedFieldExtensions": [],
+    "promotedFields": [],
+    "ruleSets": [],
+    "solution": {
+      "definition": {
+        "attrs": {
+          "allowClientOnlyCode": "no",
+          "runtimeCompatibility": "client"
+        },
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf2:solutionDefinition",
+        "line": 22,
+        "path": "/xsf:xDocumentClass[1]/xsf:extensions[1]/xsf:extension[1]/xsf2:solutionDefinition[1]"
+      },
+      "offline": {
+        "attrs": {
+          "cacheQueries": "yes",
+          "openIfQueryFails": "yes"
+        },
+        "column": 5,
+        "file": "manifest.xsf",
+        "key": "xsf2:offline",
+        "line": 23,
+        "path": "/xsf:xDocumentClass[1]/xsf:extensions[1]/xsf:extension[1]/xsf2:solutionDefinition[1]/xsf2:offline[1]"
+      },
+      "runtimeCompatibility": [
+        "client"
+      ],
+      "server": {
+        "attrs": {
+          "formLocale": "en-US",
+          "isMobileEnabled": "no",
+          "isPreSubmitPostBackEnabled": "no"
+        },
+        "column": 5,
+        "file": "manifest.xsf",
+        "key": "xsf2:server",
+        "line": 24,
+        "path": "/xsf:xDocumentClass[1]/xsf:extensions[1]/xsf:extension[1]/xsf2:solutionDefinition[1]/xsf2:server[1]"
+      }
+    },
+    "unlinkedViewExtensions": [],
+    "upgrade": {
+      "attrs": {
+        "maxVersionToUpgrade": "1.0.0.1",
+        "minVersionToUpgrade": "0.0.0.0",
+        "transform": "upgrade.xsl"
+      },
+      "column": 3,
+      "file": "manifest.xsf",
+      "key": "xsf:useTransform",
+      "line": 18,
+      "path": "/xsf:xDocumentClass[1]/xsf:documentVersionUpgrade[1]/xsf:useTransform[1]"
+    },
+    "validations": [
+      {
+        "attrs": {
+          "expression": ". < 1 or . > 5",
+          "expressionContext": ".",
+          "match": "/my:riskAssessment/my:risks/my:risk/my:likelihood"
+        },
+        "column": 3,
+        "file": "manifest.xsf",
+        "key": "xsf:errorCondition",
+        "line": 73,
+        "message": {
+          "attrs": {
+            "shortMessage": "1 to 5",
+            "type": "modeless"
+          },
+          "column": 137,
+          "file": "manifest.xsf",
+          "key": "xsf:errorMessage",
+          "line": 73,
+          "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[1]/xsf:errorMessage[1]",
+          "text": "Likelihood must be between 1 and 5."
+        },
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[1]"
+      }
+    ],
+    "views": [
+      {
+        "attrs": {
+          "caption": "Main",
+          "name": "Main"
+        },
+        "column": 3,
+        "extensions": [
+          {
+            "attrs": {
+              "clientOnly": "no",
+              "designMode": "normal",
+              "ref": "Main"
+            },
+            "column": 26,
+            "file": "manifest.xsf",
+            "key": "xsf2:viewExtension",
+            "line": 26,
+            "path": "/xsf:xDocumentClass[1]/xsf:extensions[1]/xsf:extension[1]/xsf2:solutionDefinition[1]/xsf2:viewsExtension[1]/xsf2:viewExtension[1]"
+          }
+        ],
+        "file": "manifest.xsf",
+        "isDefault": true,
+        "key": "xsf:view",
+        "line": 31,
+        "mainpanes": [
+          {
+            "attrs": {
+              "transform": "view1.xsl"
+            },
+            "column": 4,
+            "file": "manifest.xsf",
+            "key": "xsf:mainpane",
+            "line": 48,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:mainpane[1]"
+          }
+        ],
+        "menuAreas": [
+          {
+            "attrs": {
+              "name": "msoStructuralEditingContextMenu"
+            },
+            "buttons": [
+              {
+                "attrs": {
+                  "action": "xCollection::insertBefore",
+                  "caption": "Insert risk above",
+                  "showIf": "immediate",
+                  "xmlToEdit": "risk_3"
+                },
+                "column": 5,
+                "file": "manifest.xsf",
+                "key": "xsf:button",
+                "line": 50,
+                "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:menuArea[1]/xsf:button[1]"
+              },
+              {
+                "attrs": {
+                  "action": "xCollection::insertAfter",
+                  "caption": "Insert risk below",
+                  "showIf": "immediate",
+                  "xmlToEdit": "risk_3"
+                },
+                "column": 5,
+                "file": "manifest.xsf",
+                "key": "xsf:button",
+                "line": 51,
+                "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:menuArea[1]/xsf:button[2]"
+              },
+              {
+                "attrs": {
+                  "action": "xCollection::remove",
+                  "caption": "Remove risk",
+                  "showIf": "immediate",
+                  "xmlToEdit": "risk_3"
+                },
+                "column": 5,
+                "file": "manifest.xsf",
+                "key": "xsf:button",
+                "line": 52,
+                "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:menuArea[1]/xsf:button[3]"
+              },
+              {
+                "attrs": {
+                  "action": "xCollection::insert",
+                  "caption": "Insert risk",
+                  "showIf": "immediate",
+                  "xmlToEdit": "risk_3"
+                },
+                "column": 5,
+                "file": "manifest.xsf",
+                "key": "xsf:button",
+                "line": 53,
+                "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:menuArea[1]/xsf:button[4]"
+              }
+            ],
+            "column": 4,
+            "file": "manifest.xsf",
+            "key": "xsf:menuArea",
+            "line": 49,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:menuArea[1]"
+          }
+        ],
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]",
+        "printSettings": [],
+        "toolbars": [],
+        "unboundButtons": [],
+        "xmlToEdit": [
+          {
+            "attrs": {
+              "item": "/my:riskAssessment/my:activityName",
+              "name": "activityName_1"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 84,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 33,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[1]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 33,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[1]"
+          },
+          {
+            "attrs": {
+              "item": "/my:riskAssessment/my:assessor",
+              "name": "assessor_2"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 76,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 34,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[2]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 34,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[2]"
+          },
+          {
+            "attrs": {
+              "container": "/my:riskAssessment",
+              "item": "/my:riskAssessment/my:risks/my:risk",
+              "name": "risk_3"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "caption": "risk",
+                "component": "xCollection",
+                "{http://schemas.microsoft.com/office/infopath/2003}autogeneration": "template"
+              },
+              "column": 108,
+              "file": "manifest.xsf",
+              "fragments": [
+                {
+                  "attrs": {
+                    "innerFragment": "my:risks/my:risk"
+                  },
+                  "column": 212,
+                  "file": "manifest.xsf",
+                  "key": "xsf:chooseFragment",
+                  "line": 35,
+                  "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[3]/xsf:editWith[1]/xsf:fragmentToInsert[1]/xsf:chooseFragment[1]",
+                  "raw": "<my:risks xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:24:00\"><my:risk>\n\t<my:hazard/>\n\t<my:likelihood xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:consequence xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:riskScore xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:control/>\n</my:risk></my:risks>"
+                }
+              ],
+              "key": "xsf:editWith",
+              "line": 35,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[3]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 35,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[3]"
+          },
+          {
+            "attrs": {
+              "item": "/my:riskAssessment/my:risks/my:risk/my:hazard",
+              "name": "hazard_4"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 89,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 42,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[4]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 42,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[4]"
+          },
+          {
+            "attrs": {
+              "item": "/my:riskAssessment/my:risks/my:risk/my:likelihood",
+              "name": "likelihood_5"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 97,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 43,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[5]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 43,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[5]"
+          },
+          {
+            "attrs": {
+              "item": "/my:riskAssessment/my:risks/my:risk/my:consequence",
+              "name": "consequence_6"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 99,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 44,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[6]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 44,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[6]"
+          },
+          {
+            "attrs": {
+              "item": "/my:riskAssessment/my:risks/my:risk/my:riskScore",
+              "name": "riskScore_7"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 95,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 45,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[7]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 45,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[7]"
+          },
+          {
+            "attrs": {
+              "item": "/my:riskAssessment/my:risks/my:risk/my:control",
+              "name": "control_8"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 91,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 46,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[8]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 46,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[8]"
+          }
+        ]
+      }
+    ]
+  },
+  "manifestFile": "manifest.xsf",
+  "parserVersion": 1,
+  "schemas": {
+    "main": {
+      "file": "myschema.xsd",
+      "root": {
+        "children": [
+          {
+            "children": [],
+            "effective": {
+              "maxOccurs": 1,
+              "minOccurs": 1,
+              "nillable": false
+            },
+            "facets": [],
+            "kind": "field",
+            "name": "activityName",
+            "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:24:00",
+            "nodeType": "element",
+            "optional": false,
+            "raw": {
+              "groups": [
+                {
+                  "kind": "sequence"
+                }
+              ]
+            },
+            "recursive": false,
+            "repeating": false,
+            "required": false,
+            "source": {
+              "column": 2,
+              "file": "myschema.xsd",
+              "line": 13,
+              "path": "/xsd:schema[1]/xsd:element[2]"
+            },
+            "use": {
+              "column": 5,
+              "file": "myschema.xsd",
+              "line": 6,
+              "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+            },
+            "wildcards": [],
+            "xsdType": {
+              "builtin": "xsd:string",
+              "declared": "xsd:string",
+              "variety": "atomic"
+            }
+          },
+          {
+            "children": [],
+            "effective": {
+              "maxOccurs": 1,
+              "minOccurs": 1,
+              "nillable": false
+            },
+            "facets": [],
+            "kind": "field",
+            "name": "assessor",
+            "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:24:00",
+            "nodeType": "element",
+            "optional": false,
+            "raw": {
+              "groups": [
+                {
+                  "kind": "sequence"
+                }
+              ]
+            },
+            "recursive": false,
+            "repeating": false,
+            "required": false,
+            "source": {
+              "column": 2,
+              "file": "myschema.xsd",
+              "line": 14,
+              "path": "/xsd:schema[1]/xsd:element[3]"
+            },
+            "use": {
+              "column": 5,
+              "file": "myschema.xsd",
+              "line": 7,
+              "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+            },
+            "wildcards": [],
+            "xsdType": {
+              "builtin": "xsd:string",
+              "declared": "xsd:string",
+              "variety": "atomic"
+            }
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [],
+                    "effective": {
+                      "maxOccurs": 1,
+                      "minOccurs": 1,
+                      "nillable": false
+                    },
+                    "facets": [],
+                    "kind": "field",
+                    "name": "hazard",
+                    "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:24:00",
+                    "nodeType": "element",
+                    "optional": false,
+                    "raw": {
+                      "groups": [
+                        {
+                          "kind": "sequence"
+                        }
+                      ]
+                    },
+                    "recursive": false,
+                    "repeating": false,
+                    "required": false,
+                    "source": {
+                      "column": 2,
+                      "file": "myschema.xsd",
+                      "line": 33,
+                      "path": "/xsd:schema[1]/xsd:element[6]"
+                    },
+                    "use": {
+                      "column": 5,
+                      "file": "myschema.xsd",
+                      "line": 25,
+                      "path": "/xsd:schema[1]/xsd:element[5]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+                    },
+                    "wildcards": [],
+                    "xsdType": {
+                      "builtin": "xsd:string",
+                      "declared": "xsd:string",
+                      "variety": "atomic"
+                    }
+                  },
+                  {
+                    "children": [],
+                    "effective": {
+                      "maxOccurs": 1,
+                      "minOccurs": 1,
+                      "nillable": true
+                    },
+                    "facets": [],
+                    "kind": "field",
+                    "name": "likelihood",
+                    "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:24:00",
+                    "nodeType": "element",
+                    "optional": false,
+                    "raw": {
+                      "groups": [
+                        {
+                          "kind": "sequence"
+                        }
+                      ],
+                      "nillable": "true"
+                    },
+                    "recursive": false,
+                    "repeating": false,
+                    "required": false,
+                    "source": {
+                      "column": 2,
+                      "file": "myschema.xsd",
+                      "line": 34,
+                      "path": "/xsd:schema[1]/xsd:element[7]"
+                    },
+                    "use": {
+                      "column": 5,
+                      "file": "myschema.xsd",
+                      "line": 26,
+                      "path": "/xsd:schema[1]/xsd:element[5]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+                    },
+                    "wildcards": [],
+                    "xsdType": {
+                      "builtin": "xsd:integer",
+                      "declared": "xsd:integer",
+                      "variety": "atomic"
+                    }
+                  },
+                  {
+                    "children": [],
+                    "effective": {
+                      "maxOccurs": 1,
+                      "minOccurs": 1,
+                      "nillable": true
+                    },
+                    "facets": [],
+                    "kind": "field",
+                    "name": "consequence",
+                    "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:24:00",
+                    "nodeType": "element",
+                    "optional": false,
+                    "raw": {
+                      "groups": [
+                        {
+                          "kind": "sequence"
+                        }
+                      ],
+                      "nillable": "true"
+                    },
+                    "recursive": false,
+                    "repeating": false,
+                    "required": false,
+                    "source": {
+                      "column": 2,
+                      "file": "myschema.xsd",
+                      "line": 35,
+                      "path": "/xsd:schema[1]/xsd:element[8]"
+                    },
+                    "use": {
+                      "column": 5,
+                      "file": "myschema.xsd",
+                      "line": 27,
+                      "path": "/xsd:schema[1]/xsd:element[5]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+                    },
+                    "wildcards": [],
+                    "xsdType": {
+                      "builtin": "xsd:integer",
+                      "declared": "xsd:integer",
+                      "variety": "atomic"
+                    }
+                  },
+                  {
+                    "children": [],
+                    "effective": {
+                      "maxOccurs": 1,
+                      "minOccurs": 1,
+                      "nillable": true
+                    },
+                    "facets": [],
+                    "kind": "field",
+                    "name": "riskScore",
+                    "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:24:00",
+                    "nodeType": "element",
+                    "optional": false,
+                    "raw": {
+                      "groups": [
+                        {
+                          "kind": "sequence"
+                        }
+                      ],
+                      "nillable": "true"
+                    },
+                    "recursive": false,
+                    "repeating": false,
+                    "required": false,
+                    "source": {
+                      "column": 2,
+                      "file": "myschema.xsd",
+                      "line": 36,
+                      "path": "/xsd:schema[1]/xsd:element[9]"
+                    },
+                    "use": {
+                      "column": 5,
+                      "file": "myschema.xsd",
+                      "line": 28,
+                      "path": "/xsd:schema[1]/xsd:element[5]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+                    },
+                    "wildcards": [],
+                    "xsdType": {
+                      "builtin": "xsd:double",
+                      "declared": "xsd:double",
+                      "variety": "atomic"
+                    }
+                  },
+                  {
+                    "children": [],
+                    "effective": {
+                      "maxOccurs": 1,
+                      "minOccurs": 1,
+                      "nillable": false
+                    },
+                    "facets": [],
+                    "kind": "field",
+                    "name": "control",
+                    "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:24:00",
+                    "nodeType": "element",
+                    "optional": false,
+                    "raw": {
+                      "groups": [
+                        {
+                          "kind": "sequence"
+                        }
+                      ]
+                    },
+                    "recursive": false,
+                    "repeating": false,
+                    "required": false,
+                    "source": {
+                      "column": 2,
+                      "file": "myschema.xsd",
+                      "line": 37,
+                      "path": "/xsd:schema[1]/xsd:element[10]"
+                    },
+                    "use": {
+                      "column": 5,
+                      "file": "myschema.xsd",
+                      "line": 29,
+                      "path": "/xsd:schema[1]/xsd:element[5]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[5]"
+                    },
+                    "wildcards": [],
+                    "xsdType": {
+                      "builtin": "xsd:string",
+                      "declared": "xsd:string",
+                      "variety": "atomic"
+                    }
+                  }
+                ],
+                "effective": {
+                  "maxOccurs": "unbounded",
+                  "minOccurs": 0,
+                  "nillable": false
+                },
+                "facets": [],
+                "kind": "group",
+                "name": "risk",
+                "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:24:00",
+                "nodeType": "element",
+                "optional": true,
+                "raw": {
+                  "groups": [
+                    {
+                      "kind": "sequence"
+                    }
+                  ],
+                  "maxOccurs": "unbounded",
+                  "minOccurs": "0"
+                },
+                "recursive": false,
+                "repeating": true,
+                "required": false,
+                "source": {
+                  "column": 2,
+                  "file": "myschema.xsd",
+                  "line": 22,
+                  "path": "/xsd:schema[1]/xsd:element[5]"
+                },
+                "use": {
+                  "column": 5,
+                  "file": "myschema.xsd",
+                  "line": 18,
+                  "path": "/xsd:schema[1]/xsd:element[4]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+                },
+                "wildcards": [],
+                "xsdType": {
+                  "builtin": "xsd:anyType",
+                  "variety": "complex"
+                }
+              }
+            ],
+            "effective": {
+              "maxOccurs": 1,
+              "minOccurs": 1,
+              "nillable": false
+            },
+            "facets": [],
+            "kind": "group",
+            "name": "risks",
+            "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:24:00",
+            "nodeType": "element",
+            "optional": false,
+            "raw": {
+              "groups": [
+                {
+                  "kind": "sequence"
+                }
+              ]
+            },
+            "recursive": false,
+            "repeating": false,
+            "required": false,
+            "source": {
+              "column": 2,
+              "file": "myschema.xsd",
+              "line": 15,
+              "path": "/xsd:schema[1]/xsd:element[4]"
+            },
+            "use": {
+              "column": 5,
+              "file": "myschema.xsd",
+              "line": 8,
+              "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+            },
+            "wildcards": [],
+            "xsdType": {
+              "builtin": "xsd:anyType",
+              "variety": "complex"
+            }
+          }
+        ],
+        "effective": {
+          "maxOccurs": 1,
+          "minOccurs": 1,
+          "nillable": false
+        },
+        "facets": [],
+        "kind": "group",
+        "name": "riskAssessment",
+        "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:24:00",
+        "nodeType": "element",
+        "optional": false,
+        "raw": {
+          "groups": []
+        },
+        "recursive": false,
+        "repeating": false,
+        "required": false,
+        "source": {
+          "column": 2,
+          "file": "myschema.xsd",
+          "line": 3,
+          "path": "/xsd:schema[1]/xsd:element[1]"
+        },
+        "wildcards": [
+          {
+            "kind": "anyAttribute",
+            "namespace": "http://www.w3.org/XML/1998/namespace",
+            "processContents": "lax"
+          }
+        ],
+        "xsdType": {
+          "builtin": "xsd:anyType",
+          "variety": "complex"
+        }
+      }
+    },
+    "secondary": {}
+  },
+  "unknowns": []
+}

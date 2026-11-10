@@ -129,6 +129,9 @@ describe('R6.4 and R6.5', () => {
 
   test('".." inside a name is not a path segment', () => {
     expect(unsafe('notes..v2.xml')).toBeUndefined();
+    const name = 'notes..v2.xml';
+    const t = parsePackage(minimalPackage('', { listed: [name], extra: [packageFile(name, 'x')] }));
+    expect(t.issues).toEqual([]);
   });
 });
 

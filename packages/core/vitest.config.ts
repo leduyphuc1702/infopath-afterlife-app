@@ -3,6 +3,7 @@ import type { BrowserCommand } from 'vitest/node';
 import { defineConfig } from 'vitest/config';
 import { WHATWG_LABELS, probeLabels } from './test/helpers/encoding-labels';
 import { sampleCabinets } from './test/helpers/samples';
+import { buildWorkerBundle } from './test/helpers/worker-bundle';
 import { zlibOracleSha256 } from './test/helpers/zlib-oracle';
 
 // Browser commands run in the Node test process, so browser tests can compare with Node
@@ -11,6 +12,9 @@ const commands = {
   zlibOracleSha256: ((_ctx, path: string) => zlibOracleSha256(path)) as BrowserCommand<[string]>,
   nodeAcceptedLabels: (() => probeLabels(WHATWG_LABELS.map((l) => l.label))) as BrowserCommand,
   sampleCabinets: (() => sampleCabinets()) as BrowserCommand,
+  buildWorkerBundle: ((_ctx, entry: string) => buildWorkerBundle(entry)) as BrowserCommand<
+    [string]
+  >,
 };
 
 export default defineConfig({
@@ -25,6 +29,9 @@ export default defineConfig({
         },
       },
       {
+        // Pre-bundle core's one dependency, so Vite does not discover it mid-run and reload the
+        // page (task 24: the first browser test to import src/index.ts).
+        optimizeDeps: { include: ['@xmldom/xmldom'] },
         test: {
           name: 'browser',
           include: ['test/browser/**/*.browser.test.ts'],

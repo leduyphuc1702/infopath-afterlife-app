@@ -1,0 +1,806 @@
+{
+  "cabinet": {
+    "cabinetIndex": 0,
+    "flags": 0,
+    "folders": [
+      {
+        "blocks": 1,
+        "compression": "mszip",
+        "offset": 216
+      }
+    ],
+    "setId": 0,
+    "versionMajor": 1,
+    "versionMinor": 3
+  },
+  "codeFiles": [],
+  "files": [
+    {
+      "attributes": 160,
+      "bytes": {
+        "sha256": "4b5737eae97f769a76a444e99d270b99fb05ef5ed6e4d5d3c6b51f6af976fbd2",
+        "size": 4509
+      },
+      "date": 12665,
+      "folder": 0,
+      "name": "manifest.xsf",
+      "size": 4509,
+      "time": 27573
+    },
+    {
+      "attributes": 160,
+      "bytes": {
+        "sha256": "569b7d3e2bbc70c4cf0b7c8617417bedd1db4fb91275809d8ba55ffc5211a4fd",
+        "size": 1579
+      },
+      "date": 12665,
+      "folder": 0,
+      "name": "upgrade.xsl",
+      "size": 1579,
+      "time": 27573
+    },
+    {
+      "attributes": 160,
+      "bytes": {
+        "sha256": "537b00133ec30ff1e853b0c1354991ea712e0843f46d9cdc313e1b7bd07e69d2",
+        "size": 741
+      },
+      "date": 12665,
+      "folder": 0,
+      "name": "sampledata.xml",
+      "size": 741,
+      "time": 27573
+    },
+    {
+      "attributes": 160,
+      "bytes": {
+        "sha256": "65aa4b86435ba07108f288b5a69b082216d7ebb2004cdadfbb741b5c6d34c218",
+        "size": 10138
+      },
+      "date": 12665,
+      "folder": 0,
+      "name": "view1.xsl",
+      "size": 10138,
+      "time": 27573
+    },
+    {
+      "attributes": 160,
+      "bytes": {
+        "sha256": "2720127ce43389558ca5d66855cf079bfa40f99fb321f5443d1bd8bccf0505f9",
+        "size": 1248
+      },
+      "date": 12665,
+      "folder": 0,
+      "name": "myschema.xsd",
+      "size": 1248,
+      "time": 27573
+    },
+    {
+      "attributes": 160,
+      "bytes": {
+        "sha256": "547a8c908c11f025e96adaca7465bdc71170236f522faa4de7b4dfde6fe0f8c6",
+        "size": 631
+      },
+      "date": 12665,
+      "folder": 0,
+      "name": "template.xml",
+      "size": 631,
+      "time": 27573
+    }
+  ],
+  "issues": [],
+  "manifest": {
+    "allowedControls": [],
+    "applicationParameters": [
+      {
+        "attrs": {
+          "application": "InfoPath Design Mode"
+        },
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:applicationParameters",
+        "line": 52,
+        "path": "/xsf:xDocumentClass[1]/xsf:applicationParameters[1]",
+        "solutionProperties": {
+          "attrs": {
+            "fullyEditableNamespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2004-11-19T20:56:25",
+            "lastOpenView": "view1.xsl",
+            "lastVersionNeedingTransform": "1.0.0.3"
+          },
+          "column": 3,
+          "file": "manifest.xsf",
+          "key": "xsf:solutionProperties",
+          "line": 53,
+          "path": "/xsf:xDocumentClass[1]/xsf:applicationParameters[1]/xsf:solutionProperties[1]"
+        }
+      }
+    ],
+    "bindings": [],
+    "blankChecks": [],
+    "calculations": [
+      {
+        "attrs": {
+          "expression": "xdDate:Today()",
+          "refresh": "onChange",
+          "target": "/my:myFields/my:Date"
+        },
+        "column": 3,
+        "file": "manifest.xsf",
+        "key": "xsf:calculatedField",
+        "line": 62,
+        "path": "/xsf:xDocumentClass[1]/xsf:calculations[1]/xsf:calculatedField[1]"
+      }
+    ],
+    "connectionExtensions": [],
+    "containers": [
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:package",
+        "line": 7,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]"
+      },
+      {
+        "attrs": {},
+        "column": 3,
+        "file": "manifest.xsf",
+        "key": "xsf:files",
+        "line": 8,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]"
+      },
+      {
+        "attrs": {},
+        "column": 5,
+        "file": "manifest.xsf",
+        "key": "xsf:fileProperties",
+        "line": 10,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[1]/xsf:fileProperties[1]"
+      },
+      {
+        "attrs": {},
+        "column": 5,
+        "file": "manifest.xsf",
+        "key": "xsf:fileProperties",
+        "line": 19,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[3]/xsf:fileProperties[1]"
+      },
+      {
+        "attrs": {},
+        "column": 5,
+        "file": "manifest.xsf",
+        "key": "xsf:fileProperties",
+        "line": 24,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[4]/xsf:fileProperties[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:documentVersionUpgrade",
+        "line": 36,
+        "path": "/xsf:xDocumentClass[1]/xsf:documentVersionUpgrade[1]"
+      },
+      {
+        "attrs": {
+          "default": "View 1"
+        },
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:views",
+        "line": 39,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]"
+      },
+      {
+        "attrs": {},
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:editing",
+        "line": 41,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]"
+      },
+      {
+        "attrs": {},
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:unboundControls",
+        "line": 47,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:unboundControls[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:documentSchemas",
+        "line": 55,
+        "path": "/xsf:xDocumentClass[1]/xsf:documentSchemas[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:fileNew",
+        "line": 58,
+        "path": "/xsf:xDocumentClass[1]/xsf:fileNew[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:calculations",
+        "line": 61,
+        "path": "/xsf:xDocumentClass[1]/xsf:calculations[1]"
+      },
+      {
+        "attrs": {},
+        "column": 2,
+        "file": "manifest.xsf",
+        "key": "xsf:listProperties",
+        "line": 64,
+        "path": "/xsf:xDocumentClass[1]/xsf:listProperties[1]"
+      },
+      {
+        "attrs": {},
+        "column": 3,
+        "file": "manifest.xsf",
+        "key": "xsf:fields",
+        "line": 65,
+        "path": "/xsf:xDocumentClass[1]/xsf:listProperties[1]/xsf:fields[1]"
+      }
+    ],
+    "dataAdapters": [],
+    "dataObjects": [],
+    "defaultView": "View 1",
+    "documentClass": {
+      "attrs": {
+        "name": "urn:schemas-microsoft-com:office:infopath:weight-keeper:-myXSD-2004-11-19T20-56-25",
+        "productVersion": "11.0.6357",
+        "publishUrl": "D:\\svn.commanigy.com\\iquomi\\research\\infopath\\weight-keeper.xsn",
+        "solutionFormatVersion": "1.100.0.0",
+        "solutionVersion": "1.0.0.4",
+        "trustLevel": "restricted",
+        "trustSetting": "automatic"
+      },
+      "column": 1,
+      "file": "manifest.xsf",
+      "key": "xsf:xDocumentClass",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]"
+    },
+    "documentSchemas": [
+      {
+        "attrs": {
+          "location": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2004-11-19T20:56:25 myschema.xsd",
+          "rootSchema": "yes"
+        },
+        "column": 3,
+        "file": "manifest.xsf",
+        "key": "xsf:documentSchema",
+        "line": 56,
+        "path": "/xsf:xDocumentClass[1]/xsf:documentSchemas[1]/xsf:documentSchema[1]"
+      }
+    ],
+    "domEventHandlers": [],
+    "fileNew": {
+      "attrs": {
+        "caption": "weight-keeper",
+        "href": "template.xml"
+      },
+      "column": 3,
+      "file": "manifest.xsf",
+      "key": "xsf:initialXmlDocument",
+      "line": 59,
+      "path": "/xsf:xDocumentClass[1]/xsf:fileNew[1]/xsf:initialXmlDocument[1]"
+    },
+    "importParameters": {
+      "attrs": {
+        "enabled": "yes"
+      },
+      "column": 2,
+      "file": "manifest.xsf",
+      "key": "xsf:importParameters",
+      "line": 35,
+      "path": "/xsf:xDocumentClass[1]/xsf:importParameters[1]"
+    },
+    "package": [
+      {
+        "attrs": {
+          "name": "myschema.xsd"
+        },
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:file",
+        "line": 9,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[1]",
+        "properties": [
+          {
+            "attrs": {
+              "name": "namespace",
+              "type": "string",
+              "value": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2004-11-19T20:56:25"
+            },
+            "column": 6,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 11,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[1]/xsf:fileProperties[1]/xsf:property[1]"
+          },
+          {
+            "attrs": {
+              "name": "editability",
+              "type": "string",
+              "value": "full"
+            },
+            "column": 6,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 12,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[1]/xsf:fileProperties[1]/xsf:property[2]"
+          },
+          {
+            "attrs": {
+              "name": "rootElement",
+              "type": "string",
+              "value": "myFields"
+            },
+            "column": 6,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 13,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[1]/xsf:fileProperties[1]/xsf:property[3]"
+          },
+          {
+            "attrs": {
+              "name": "useOnDemandAlgorithm",
+              "type": "string",
+              "value": "yes"
+            },
+            "column": 6,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 14,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[1]/xsf:fileProperties[1]/xsf:property[4]"
+          }
+        ]
+      },
+      {
+        "attrs": {
+          "name": "template.xml"
+        },
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:file",
+        "line": 17,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[2]",
+        "properties": []
+      },
+      {
+        "attrs": {
+          "name": "sampledata.xml"
+        },
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:file",
+        "line": 18,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[3]",
+        "properties": [
+          {
+            "attrs": {
+              "name": "fileType",
+              "type": "string",
+              "value": "sampleData"
+            },
+            "column": 6,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 20,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[3]/xsf:fileProperties[1]/xsf:property[1]"
+          }
+        ]
+      },
+      {
+        "attrs": {
+          "name": "view1.xsl"
+        },
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:file",
+        "line": 23,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[4]",
+        "properties": [
+          {
+            "attrs": {
+              "name": "lang",
+              "type": "string",
+              "value": "1033"
+            },
+            "column": 6,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 25,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[4]/xsf:fileProperties[1]/xsf:property[1]"
+          },
+          {
+            "attrs": {
+              "name": "componentId",
+              "type": "string",
+              "value": "5"
+            },
+            "column": 6,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 26,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[4]/xsf:fileProperties[1]/xsf:property[2]"
+          },
+          {
+            "attrs": {
+              "name": "xmlToEditName",
+              "type": "string",
+              "value": "4"
+            },
+            "column": 6,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 27,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[4]/xsf:fileProperties[1]/xsf:property[3]"
+          },
+          {
+            "attrs": {
+              "name": "showPageWidthIndicator",
+              "type": "string",
+              "value": "yes"
+            },
+            "column": 6,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 28,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[4]/xsf:fileProperties[1]/xsf:property[4]"
+          },
+          {
+            "attrs": {
+              "name": "textSettings:plaintext",
+              "type": "string",
+              "value": "font-family:Verdana;font-size:x-small;color:#000000;font-weight:normal;font-style:normal;text-decoration:none"
+            },
+            "column": 6,
+            "file": "manifest.xsf",
+            "key": "xsf:property",
+            "line": 29,
+            "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[4]/xsf:fileProperties[1]/xsf:property[5]"
+          }
+        ]
+      },
+      {
+        "attrs": {
+          "name": "upgrade.xsl"
+        },
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:file",
+        "line": 32,
+        "path": "/xsf:xDocumentClass[1]/xsf:package[1]/xsf:files[1]/xsf:file[5]",
+        "properties": []
+      }
+    ],
+    "promotedFieldExtensions": [],
+    "promotedFields": [
+      {
+        "attrs": {
+          "columnName": "{05313C16-8C1A-4436-9594-DC8029730BDF}",
+          "name": "Date",
+          "node": "/my:myFields/my:Date",
+          "type": "xsd:date"
+        },
+        "column": 4,
+        "file": "manifest.xsf",
+        "key": "xsf:field",
+        "line": 66,
+        "path": "/xsf:xDocumentClass[1]/xsf:listProperties[1]/xsf:fields[1]/xsf:field[1]"
+      }
+    ],
+    "ruleSets": [],
+    "solution": {
+      "runtimeCompatibility": []
+    },
+    "unlinkedViewExtensions": [],
+    "upgrade": {
+      "attrs": {
+        "maxVersionToUpgrade": "1.0.0.3",
+        "minVersionToUpgrade": "0.0.0.0",
+        "transform": "upgrade.xsl"
+      },
+      "column": 3,
+      "file": "manifest.xsf",
+      "key": "xsf:useTransform",
+      "line": 37,
+      "path": "/xsf:xDocumentClass[1]/xsf:documentVersionUpgrade[1]/xsf:useTransform[1]"
+    },
+    "validations": [],
+    "views": [
+      {
+        "attrs": {
+          "caption": "View 1",
+          "name": "View 1"
+        },
+        "column": 3,
+        "extensions": [],
+        "file": "manifest.xsf",
+        "isDefault": true,
+        "key": "xsf:view",
+        "line": 40,
+        "mainpanes": [
+          {
+            "attrs": {
+              "transform": "view1.xsl"
+            },
+            "column": 4,
+            "file": "manifest.xsf",
+            "key": "xsf:mainpane",
+            "line": 46,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:mainpane[1]"
+          }
+        ],
+        "menuAreas": [],
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]",
+        "printSettings": [],
+        "toolbars": [],
+        "unboundButtons": [
+          {
+            "attrs": {
+              "name": "CTRL5_5"
+            },
+            "column": 5,
+            "file": "manifest.xsf",
+            "key": "xsf:unboundControls/button",
+            "line": 48,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:unboundControls[1]/xsf:button[1]"
+          }
+        ],
+        "xmlToEdit": [
+          {
+            "attrs": {
+              "item": "/my:myFields/my:Date",
+              "name": "field1_1"
+            },
+            "column": 5,
+            "editWith": {
+              "attrs": {
+                "autoComplete": "no",
+                "component": "xField",
+                "proofing": "no"
+              },
+              "column": 6,
+              "file": "manifest.xsf",
+              "fragments": [],
+              "key": "xsf:editWith",
+              "line": 43,
+              "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[1]/xsf:editWith[1]"
+            },
+            "file": "manifest.xsf",
+            "key": "xsf:xmlToEdit",
+            "line": 42,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[1]"
+          }
+        ]
+      }
+    ]
+  },
+  "manifestFile": "manifest.xsf",
+  "parserVersion": 1,
+  "schemas": {
+    "main": {
+      "file": "myschema.xsd",
+      "root": {
+        "children": [
+          {
+            "children": [],
+            "effective": {
+              "maxOccurs": 1,
+              "minOccurs": 0,
+              "nillable": false
+            },
+            "facets": [],
+            "kind": "field",
+            "name": "Date",
+            "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2004-11-19T20:56:25",
+            "nodeType": "element",
+            "optional": true,
+            "raw": {
+              "groups": [
+                {
+                  "kind": "sequence"
+                }
+              ],
+              "minOccurs": "0"
+            },
+            "recursive": false,
+            "repeating": false,
+            "required": false,
+            "source": {
+              "column": 2,
+              "file": "myschema.xsd",
+              "line": 14,
+              "path": "/xsd:schema[1]/xsd:element[2]"
+            },
+            "use": {
+              "column": 5,
+              "file": "myschema.xsd",
+              "line": 6,
+              "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+            },
+            "wildcards": [],
+            "xsdType": {
+              "builtin": "xsd:date",
+              "declared": "xsd:date",
+              "variety": "atomic"
+            }
+          },
+          {
+            "children": [],
+            "effective": {
+              "maxOccurs": 1,
+              "minOccurs": 0,
+              "nillable": false
+            },
+            "facets": [],
+            "kind": "field",
+            "name": "Weight",
+            "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2004-11-19T20:56:25",
+            "nodeType": "element",
+            "optional": true,
+            "raw": {
+              "groups": [
+                {
+                  "kind": "sequence"
+                }
+              ],
+              "minOccurs": "0"
+            },
+            "recursive": false,
+            "repeating": false,
+            "required": false,
+            "source": {
+              "column": 2,
+              "file": "myschema.xsd",
+              "line": 15,
+              "path": "/xsd:schema[1]/xsd:element[3]"
+            },
+            "use": {
+              "column": 5,
+              "file": "myschema.xsd",
+              "line": 7,
+              "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+            },
+            "wildcards": [],
+            "xsdType": {
+              "builtin": "xsd:double",
+              "declared": "xsd:double",
+              "variety": "atomic"
+            }
+          },
+          {
+            "children": [],
+            "effective": {
+              "maxOccurs": 1,
+              "minOccurs": 0,
+              "nillable": false
+            },
+            "facets": [],
+            "kind": "field",
+            "name": "field1",
+            "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2004-11-19T20:56:25",
+            "nodeType": "element",
+            "optional": true,
+            "raw": {
+              "groups": [
+                {
+                  "kind": "sequence"
+                }
+              ],
+              "minOccurs": "0"
+            },
+            "recursive": false,
+            "repeating": false,
+            "required": false,
+            "source": {
+              "column": 2,
+              "file": "myschema.xsd",
+              "line": 16,
+              "path": "/xsd:schema[1]/xsd:element[4]"
+            },
+            "use": {
+              "column": 5,
+              "file": "myschema.xsd",
+              "line": 8,
+              "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+            },
+            "wildcards": [],
+            "xsdType": {
+              "builtin": "xsd:string",
+              "declared": "xsd:string",
+              "variety": "atomic"
+            }
+          },
+          {
+            "children": [],
+            "effective": {
+              "maxOccurs": 1,
+              "minOccurs": 0,
+              "nillable": false
+            },
+            "facets": [],
+            "kind": "richText",
+            "name": "field2",
+            "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2004-11-19T20:56:25",
+            "nodeType": "element",
+            "optional": true,
+            "raw": {
+              "groups": [
+                {
+                  "kind": "sequence"
+                }
+              ],
+              "minOccurs": "0"
+            },
+            "recursive": false,
+            "repeating": false,
+            "required": false,
+            "source": {
+              "column": 2,
+              "file": "myschema.xsd",
+              "line": 17,
+              "path": "/xsd:schema[1]/xsd:element[5]"
+            },
+            "use": {
+              "column": 5,
+              "file": "myschema.xsd",
+              "line": 9,
+              "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+            },
+            "wildcards": [],
+            "xsdType": {
+              "builtin": "xsd:anyType",
+              "variety": "complex"
+            }
+          }
+        ],
+        "effective": {
+          "maxOccurs": 1,
+          "minOccurs": 1,
+          "nillable": false
+        },
+        "facets": [],
+        "kind": "group",
+        "name": "myFields",
+        "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2004-11-19T20:56:25",
+        "nodeType": "element",
+        "optional": false,
+        "raw": {
+          "groups": []
+        },
+        "recursive": false,
+        "repeating": false,
+        "required": false,
+        "source": {
+          "column": 2,
+          "file": "myschema.xsd",
+          "line": 3,
+          "path": "/xsd:schema[1]/xsd:element[1]"
+        },
+        "wildcards": [
+          {
+            "kind": "anyAttribute",
+            "namespace": "http://www.w3.org/XML/1998/namespace",
+            "processContents": "lax"
+          }
+        ],
+        "xsdType": {
+          "builtin": "xsd:anyType",
+          "variety": "complex"
+        }
+      }
+    },
+    "secondary": {}
+  },
+  "unknowns": []
+}

@@ -434,7 +434,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R16.1, R16.2, R16.3.
   - Done when: `pnpm check` green.
 
-- [ ] 23. Golden snapshots and zero unknowns over every sample
+- [x] 23. Golden snapshots and zero unknowns over every sample
   - `helpers/snapshot.ts` (bytes → `{ size, sha256 }`, sorted keys, arrays in document order),
     `test/golden/<slug>.json` for the 47 README forms and `theill-weight-keeper.json`, written with
     `toMatchFileSnapshot` and reviewed as a diff.
@@ -446,7 +446,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
     R17.4.
   - Done when: `pnpm check` green, and the 48 golden files are in the diff for review.
 
-- [ ] 24. Worker parity **[browser]**
+- [x] 24. Worker parity **[browser]**
   - `browser/parse.worker.ts` (imports `parseXsn` from `src/index.ts`, receives bytes, returns the
     snapshot form from `helpers/snapshot.ts`).
   - Test: `browser/worker-parity.browser.test.ts` **[browser]**: every cabinet read with the
