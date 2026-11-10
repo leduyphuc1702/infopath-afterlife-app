@@ -16,7 +16,7 @@ Add **Rule Trace**, a live log of which rules fired. InfoPath never had this.
 1. THE SYSTEM SHALL bind every element with `xd:xctname` + `xd:binding` to a real input (Atlaskit where possible), preserving position and inline style. Context-relative bindings SHALL work inside repeating rows.
 2. WHEN a bound value changes, THE SYSTEM SHALL, in this order:
    1. write it to the XML DOM;
-   2. run the field's rule set (respecting `stopRuleSetsProcessing`);
+   2. run the field's rule set (a rule with an `xsf:exitRuleSet` child stops the remaining rules);
    3. recompute dependent calculatedFields;
    4. re-evaluate errorConditions, customValidation and schema constraints;
    5. re-render the view.

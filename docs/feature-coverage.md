@@ -71,7 +71,8 @@ control is the cheapest way to close this.
 
 ## C. Rules and actions
 
-8 action kinds, 95 actions in total.
+7 action kinds, 94 actions in total. `facts.json` reports 8 kinds and 95, but one of them is not an
+action (see the `containmentAction` note below the table).
 
 | Action | Count | What it does | Coverage | Status |
 |---|---|---|---|---|
@@ -82,9 +83,17 @@ control is the cheapest way to close this.
 | `switchViewAction` | 7 | change view | App (view switcher) | spec 03 |
 | `queryAction` | 1 | query a data connection | Manual → Automation/AQL | spec 05 |
 | `dialogBoxExpressionAction` | 1 | modal message built from fields | App (inline notice) | spec 04 |
-| `containmentAction` | 1 | insert/remove optional or repeating block | App | spec 04 |
+| `changeAdapterProperty`, `openNewDocumentAction`, `dialogBoxMessageAction`, `webPartConnectionAction`, `signSignatureLineAction` | 0 in corpus | defined in MS-IPFF2 2.2.1.2.114 | per action | spec 04/05 — **untested, no fixture** |
 | Conditional formatting (show/hide, colour, disable) | 38 rule sets | visual changes driven by conditions | App (live binding) | spec 03/04 |
-| Submit-only / "stop processing rules" flags | format | short-circuits the rule chain | App | spec 04 |
+| Submit-only / "stop processing rules" (`xsf:exitRuleSet`) | format | short-circuits the rule chain | App | spec 04 |
+
+`containmentAction` was removed from this table on 2026-11-10. It is not an InfoPath action: the
+child list of `xsf:rule` in MS-IPFF2 2.2.1.2.114 has no such element, and the three MS-IPFF2 XSDs
+(sections 5.1–5.3) do not define it. The one occurrence is the form field `<my:containmentAction>`
+inside form 23's `xsf:fragmentToInsert`; counting tag names that end in `Action` reproduces it.
+`facts.py` and `docs/corpus-facts.md` still show it until the script is fixed and re-run.
+Insert/remove of optional and repeating blocks is real, but it lives in `xsf:editWith`
+(`xCollection`, `xOptional`) and `xsf:menuArea` buttons, not in rules (spec 04 AC4).
 
 ## D. Expressions
 
@@ -111,9 +120,14 @@ InfoPath extension functions actually used: `xdFormatting:formatString` 556, `xd
 
 ## E. Validation
 
+An earlier version of this table named a `requiredCondition` element. MS-IPFF2 has none: the
+three XSDs (sections 5.1–5.3, checked 2026-11-10) contain no element or attribute of that name.
+The 51 counted conditions are all `xsf:errorCondition` (MS-IPFF2 2.2.1.2.44).
+
 | Mechanism | Count | Coverage | Status |
 |---|---|---|---|
-| `requiredCondition` / `errorCondition` | 51 | Native (`rq`) + App (message text) | spec 05 |
+| `xsf:errorCondition` | 51 | Native (`rq`) + App (message text) | spec 05 |
+| `xsf3:errorBlank` ("cannot be blank", InfoPath 2010+; MS-IPFF2 2.2.3.2.18) | 0 in corpus | Native (`rq`) | spec 05 — **untested, no fixture** |
 | Schema type and facet checks (length, range, pattern) | format | Native (`mnc/mxc`, `mnn/mxn`, `rgx`) | spec 05 |
 | Custom XPath validation with author message | 51 conditions, 13 distinct messages | App (validator) | spec 04 — 25 conditions fall back to InfoPath's English `This field is required.`, so fallback text needs translating and authored text must not be |
 | Submit blocked by validation | format | Native (JSM form blocks submit) | spec 05 |

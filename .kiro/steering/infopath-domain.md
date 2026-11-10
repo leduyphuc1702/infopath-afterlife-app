@@ -19,26 +19,28 @@ fileMatchPattern: ["packages/core/**", "apps/**/classic/**"]
   - Images, and optionally `*.dll` (managed code) or `*.js`/`*.vbs` (script).
 
 ## manifest.xsf essentials (namespace `http://schemas.microsoft.com/office/infopath/2003/solutionDefinition`, plus xsf2/xsf3 extensions)
-- `xsf:xDocumentClass`: root. Attributes `solutionVersion`, `productVersion`, `publishUrl` (often a hard-coded local path or server), `trustLevel`.
+- The authoritative vocabulary is the XSDs in Microsoft's public [MS-IPFF2] sections 5.1 (xsf), 5.2 (xsf2) and 5.3 (xsf3). All 43 in-repo manifests conform to them (checked 2026-11-10).
+- `xsf:xDocumentClass`: root. Attributes `name` (the URN), `solutionVersion`, `productVersion`, `solutionFormatVersion`, `publishUrl` (often a hard-coded local path or server), `trustSetting`, and optionally `trustLevel` and `requireFullTrust`. `trustLevel` is absent from all 42 own forms (they carry `trustSetting="automatic"`); the 2004 public sample has `trustLevel="restricted"`.
 - `xsf:views/xsf:view`: name, `xsf:mainpane transform="view1.xsl"`, menus and toolbars, `xsf:unboundControls`.
 - `xsf:documentSchemas`: root schema location.
 - `xsf:fileNew/xsf:initialXmlDocument`: `template.xml`.
-- `xsf:ruleSets/xsf:ruleSet/xsf:rule`: `condition` (XPath), `caption`, `isEnabled`, `stopRuleSetsProcessing`. Actions:
+- `xsf:ruleSets/xsf:ruleSet/xsf:rule`: attributes `condition` (XPath), `caption`, `isEnabled`. "Stop processing rules" is not an attribute: it is an empty child element `xsf:exitRuleSet` after the actions (MS-IPFF2 2.2.1.2.114). Rule sets run from `xsf:ruleSetAction`, whose parent is the trigger: `xsf:domEventHandler`, `xsf:onLoad`, a button, or `xsf:submit`. Actions:
   - `xsf:assignmentAction` (`targetField`, `expression`);
   - `xsf:dialogBoxMessageAction`, `xsf:dialogBoxExpressionAction`;
   - `xsf:switchViewAction`;
   - `xsf:queryAction`;
   - `xsf:submitAction`;
   - `xsf:openNewDocumentAction`;
-  - `xsf:closeDocumentAction`.
+  - `xsf:closeDocumentAction`;
+  - also `xsf:changeAdapterProperty`, `xsf:webPartConnectionAction`, `xsf:signSignatureLineAction` (MS-IPFF2 2.2.1.2.114). There is no `containmentAction`.
 - `xsf:domEventHandlers`: links a field to a ruleSet (rules run on change), or to code.
 - `xsf:calculations/xsf:calculatedField`: `target`, `expression`, `refresh="onChange|onInit"`.
-- `xsf:customValidation/xsf:errorCondition`: `match`, `expressionContext`, `expression` (error when true), `xsf:errorMessage` (`type="modeless|modal"`, `shortMessage`).
+- `xsf:customValidation/xsf:errorCondition`: `match`, `expressionContext`, `expression` (error when true), `showErrorOn`, `xsf:errorMessage` (`type="modeless|modal"`, `shortMessage`). InfoPath 2010+ adds `xsf3:customValidation/xsf3:errorBlank` (`match`, `expression`, `expressionContext`; MS-IPFF2 2.2.3.2.18) for "cannot be blank". There is no `requiredCondition` element.
 - `xsf:dataObjects/xsf:dataObject`: secondary data sources, with adapters:
   - `xsf:xmlFileAdapter`;
   - `xsf:adoAdapter` (SQL);
   - `xsf:webServiceAdapter`;
-  - `xsf2:sharepointListAdapter(RW)`;
+  - `xsf:sharepointListAdapter` and `xsf:sharepointListAdapterRW` (both in the `xsf` namespace, spelled as in the MS-IPFF2 5.1 XSD; the 2.2.1 element index writes `sharePointListAdapterRW`);
   - `xsf:davAdapter`;
   - `xsf:emailAdapter`;
   - `xsf:submitToHostAdapter`.

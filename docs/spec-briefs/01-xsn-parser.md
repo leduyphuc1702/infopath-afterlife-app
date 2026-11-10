@@ -26,8 +26,9 @@ Read an InfoPath template (.xsn) entirely in TypeScript, in both Node and the br
 6. WHEN parsing the schemas, THE SYSTEM SHALL build a field tree with:
    - name and namespace;
    - XSD type;
-   - required (minOccurs ≥ 1 and not nillable);
-   - repeating (maxOccurs > 1 or unbounded);
+   - `minOccurs`, `maxOccurs` and `nillable` exactly as written (raw), plus their effective values;
+   - required: effective minOccurs ≥ 1, not nillable, **and** the empty string is not a valid value of the type. (Changed 2026-11-10: "minOccurs ≥ 1 and not nillable" alone marked every `xsd:string` field required; form 01 `reason` is a non-nillable string, empty in `template.xml`, and opens in InfoPath. See spec 01 R14.4.);
+   - repeating (maxOccurs > 1 or unbounded) and optional (minOccurs = 0);
    - group or field kind.
 
    It SHALL resolve `include`, `import`, `ref` and named complex types across the schema files in the package.

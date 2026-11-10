@@ -20,7 +20,8 @@ One versioned JSON model that describes an InfoPath form. The converter, the Cla
    - `dataConnections[]`: id, adapter type, endpoint, isSubmit, `liveness: unknown|dead|internal`;
    - `codeBehind`: present, files, handlers;
    - `signatures`;
-   - `promotedFields[]`.
+   - `promotedFields[]`;
+   - `unknowns[]`: every manifest or schema node the parser does not model (spec 01 R13), carried over unchanged: kind, file, path, namespace, name, line, raw XML, and `documented` (whether MS-IPFF2 defines it). Each one later gets a coverage state in spec 05, so nothing the parser could not read disappears between the template and Jira.
 2. WHEN a field label is not explicit, THE SYSTEM SHALL guess it from the text in the nearest preceding table cell of the default view. If no guess is possible, it SHALL use the field name in "Title Case".
 3. THE SYSTEM SHALL build a dependency index. For every field, it lists the rules, calculations, validations, views and connections that read or write it.
 4. THE SYSTEM SHALL mark a data connection endpoint as `internal` when its host is:
