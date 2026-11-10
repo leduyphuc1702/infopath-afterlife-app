@@ -23,11 +23,16 @@ fileMatchPattern: ["**/*.test.ts", "**/test/**", "packages/core/**"]
   - P11: CSV export round-trip: parsing the exported CSV gives back every non-repeating field value of every record, and the flattened repeating rows add up to the original row counts.
 - **Reference images:** `samples/own/screenshots/` holds 22 screenshots from InfoPath Filler 2013:
   every view of forms 01–08, empty and filled, 100% zoom, cropped to the form canvas (1007x555).
-  Forms 09–47 have none. Use them to judge render fidelity alongside the `xsltproc` references.
+  Forms 09–47 have none. The screenshots show the first record (`<slug>-001.xml`) filled and
+  `<slug>-000-empty.xml` empty (capture script `allshots.ps1`). They are the human reference for
+  render fidelity.
 - **Integration tests** against the Forge dev site are manual but scripted. Record a screen capture for the write-up.
 - **Visual tests** (Playwright):
-  - compare the web viewer render with reference PNGs made by `xsltproc` from `samples/own/` and `samples/public/`;
+  - compare renders with baseline PNGs of our own render. A baseline is committed only after the
+    maintainer approves it side by side with the InfoPath screenshot of the same view and state;
   - fail when the pixel difference is above the agreed threshold.
+  - `xsltproc` cannot run InfoPath's extension functions, so it gives structural HTML references
+    (functions reported unavailable), not picture references (spec 03, changed 2026-11-10).
 - **Private samples:** unlicensed samples never enter the repo (`docs/SAMPLE-LICENSES.md`). Tests
   that use them read the absolute path in the env var `AFTERLIFE_PRIVATE_SAMPLES` and skip when it
   is unset. Run them locally before each release.

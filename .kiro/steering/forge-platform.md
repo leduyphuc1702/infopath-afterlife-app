@@ -41,7 +41,7 @@ fileMatchPattern: ["apps/forge/**"]
 1. Forms API from Forge. Done 2026-11-04 with `asApp()`: read, create and delete a template. Still
    open: the same calls with `asUser()`, and creating a template with `publish.portal.portalRequestTypeIds`
    set so it appears on a portal request type.
-2. `portalRequestCreatePropertyPanel` Custom UI can run `xslt-processor` and render inline styles.
+2. `portalRequestCreatePropertyPanel` Custom UI can run the spec 03 renderer and render inline styles.
 3. `customFieldType` object: maximum value size, and which experiences support edit on the portal.
 4. A Rovo agent runs on the dev site, and `rovo:mcp` can be enabled.
 5. Can Forms questions be placed inside ADF table cells in the form layout?

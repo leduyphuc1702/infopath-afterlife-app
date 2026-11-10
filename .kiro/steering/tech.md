@@ -12,12 +12,16 @@ inclusion: always
 - Lint and format with the project defaults (eslint + prettier, or oxlint/oxfmt). Pick one on day 1 and do not mix.
 
 ## Key libraries
-- **XSLT 1.0:** `xslt-processor` (pure JS, LGPL-3.0; used unmodified as an npm dependency, which is fine with an MIT repo). It rendered all 5 views of Microsoft's 2013 sample templates in 12–23 ms in Node (measured locally; those templates are not in the repo).
+- **XSLT 1.0:** the engine is chosen in spec 03's design by a measured spike on our 53 views (changed 2026-11-10). It must be pure JS, run in Node 22 and a Web Worker with no DOM, and take JS extension functions. Candidates:
+  - `xsltjs` (MIT, on `@xmldom/xmldom` and `xpath`) is preferred;
+  - `xslt-processor` (LGPL-3.0, used unmodified as an npm dependency) is the fallback. It rendered all 5 views of Microsoft's 2013 sample templates in 12–23 ms in Node (measured locally; those templates are not in the repo). Choosing it needs the maintainer's OK.
+
+  Pin the chosen engine to an exact version.
   - Do NOT use the browser's native XSLTProcessor (Chrome is removing it).
   - Do NOT use `saxon-js` (proprietary licence).
 - **Deflate:** use `DecompressionStream('deflate-raw')` in every runtime (a global in Node 22 and in Web Workers); `zlib` appears only in tests, as an oracle. Do not add a CAB library. MSZIP history crosses CFDATA blocks and `DecompressionStream` has no dictionary option, so core puts the previous output (≤ 32 KB) in front of each block as a stored deflate block and drops it from the result; proved on all 43 cabinets then in the repo in Node, `worker_threads` and a Chrome 157 Worker, and re-run in Node on all 48 after forms 43–47 arrived (2026-11-10).
-- **XML parsing:** `@xmldom/xmldom` (MIT, no dependencies) in Node and in the browser, behind one abstraction in core (`packages/core/src/xml/`). Do NOT use the browser's `DOMParser`: it does not exist in Web Workers, where the parser runs. Checked 2026-11-10 with 0.9.12: it never fetches a DTD or external entity, and never expands entities (unknown references stay as text and raise an error); it gives line and column on every node and in every error. It has no depth limit, so core checks depth before parsing. `xslt-processor` keeps its own parser for XSLT (spec 03).
-- **HTML sanitising:** DOMPurify.
+- **XML parsing:** `@xmldom/xmldom` (MIT, no dependencies) in Node and in the browser, behind one abstraction in core (`packages/core/src/xml/`). Do NOT use the browser's `DOMParser`: it does not exist in Web Workers, where the parser runs. Checked 2026-11-10 with 0.9.12: it never fetches a DTD or external entity, and never expands entities (unknown references stay as text and raise an error); it gives line and column on every node and in every error. It has no depth limit, so core checks depth before parsing. How the XSLT engine parses views is settled in spec 03.
+- **HTML sanitising:** core sanitises render output itself, with no DOM, so it gives the same bytes in Node and a Web Worker (spec 03). The web viewer may add DOMPurify as a second layer on the main thread.
 - **UI:**
   - React 18;
   - `@atlaskit/*` components and `@atlaskit/tokens` in Custom UI;
