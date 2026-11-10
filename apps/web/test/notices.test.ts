@@ -2,10 +2,15 @@ import { readFileSync } from 'node:fs';
 import { expect, test } from 'vitest';
 import { readDist } from './dist';
 
+const ROOT = new URL('../../../', import.meta.url);
+
 // R7.2: every package in the build's module list (page and Worker) appears in the notices, with
 // its licence text; plus the app, samples/own, Peter Theill's notice and Carlito's OFL.
 const html = readDist('notices.html').toString('utf8');
-const ids = JSON.parse(readDist('.vite/modules.json').toString('utf8')) as string[];
+// Repo-relative module ids of the page and Worker builds (plugins/notices.ts, outside dist).
+const ids = JSON.parse(
+  readFileSync(new URL('../build-meta/modules.json', import.meta.url), 'utf8'),
+) as string[];
 
 /** Package names, read from the module ids here, independently of plugins/notices.ts. */
 const packages = [
@@ -33,7 +38,7 @@ test('every package in the bundles has a section with its version, licence and t
       0,
       dir.indexOf(`/node_modules/${name}/`) + `/node_modules/${name}`.length,
     );
-    const pkg = JSON.parse(readFileSync(`${pkgDir}/package.json`, 'utf8')) as {
+    const pkg = JSON.parse(readFileSync(new URL(`${pkgDir}/package.json`, ROOT), 'utf8')) as {
       version: string;
       license: string;
     };

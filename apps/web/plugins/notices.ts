@@ -5,9 +5,11 @@
 //
 // Output: `notices.html` (static, under the same CSP as the app), `notices.css` and
 // `notices-theme.js` (the colour mode, as `shell/theme.ts` sets it), `licenses/<package>.txt`,
-// and `.vite/modules.json`, the raw module ids, for `test/notices.test.ts`.
-import { readdirSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
+// The module ids go to `apps/web/build-meta/modules.json` (git-ignored, outside `dist`), made
+// relative to the repo root, for `test/notices.test.ts`: nothing published names a build-machine
+// path (design §7).
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { isAbsolute, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { Plugin } from 'vite';
 import dark from '@atlaskit/tokens/dist/esm/artifacts/themes/atlassian-dark.js';
@@ -16,6 +18,13 @@ import spacing from '@atlaskit/tokens/dist/esm/artifacts/themes/atlassian-spacin
 import { CSP } from './csp.ts';
 
 const ROOT = fileURLToPath(new URL('../../../', import.meta.url));
+export const BUILD_META = fileURLToPath(new URL('../build-meta/', import.meta.url));
+
+/** A module id relative to the repo root, without the virtual-module marker or a query. */
+export const repoRelative = (id: string) => {
+  const path = id.replace(/^\0/, '').replace(/[?#].*$/, '');
+  return isAbsolute(path) ? relative(ROOT, path).split('\\').join('/') : path;
+};
 const ALLOWED = /^(MIT|Apache-2\.0|BSD-2-Clause|BSD-3-Clause|ISC|OFL-1\.1)$/;
 const LICENCE_FILE = /^(licen[cs]e|copying)(\.(md|txt))?$/i;
 const NOTICE_FILE = /^notice(\.(md|txt))?$/i;
@@ -198,11 +207,11 @@ export function notices(): { readonly collect: Plugin; readonly write: Plugin } 
         source:
           "document.documentElement.dataset.colorMode = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';\n",
       });
-      this.emitFile({
-        type: 'asset',
-        fileName: '.vite/modules.json',
-        source: JSON.stringify([...ids].sort(), null, 1),
-      });
+      mkdirSync(BUILD_META, { recursive: true });
+      writeFileSync(
+        join(BUILD_META, 'modules.json'),
+        JSON.stringify([...new Set([...ids].map(repoRelative))].sort(), null, 1),
+      );
     },
   };
   return { collect, write };

@@ -5,14 +5,17 @@ import { distAssets, readDist } from './dist';
 // R10.1, design §7: gzip -9 sizes of the built files against the budgets.
 const KB = 1024;
 const gz = (rel: string) => gzipSync(readDist(rel), { level: 9 }).length;
-const manifest = JSON.parse(readDist('.vite/manifest.json').toString('utf8')) as Record<
-  string,
-  { file: string; isEntry?: boolean; css?: string[] }
->;
+// The entry script and stylesheet, as index.html loads them (dist has no manifest).
+const index = readDist('index.html').toString('utf8');
+const entry = {
+  file: /<script type="module"[^>]* src="\.\/(assets\/[^"]+\.js)"/.exec(index)![1]!,
+  css: [...index.matchAll(/<link rel="stylesheet"[^>]* href="\.\/(assets\/[^"]+\.css)"/g)].map(
+    (m) => m[1]!,
+  ),
+};
 
 test('budgets: entry, theme chunks, Worker, samples, Latin fonts', () => {
-  const entry = Object.values(manifest).find((m) => m.isEntry)!;
-  const entrySize = gz(entry.file) + (entry.css ?? []).reduce((n, c) => n + gz(c), 0);
+  const entrySize = gz(entry.file) + entry.css.reduce((n, c) => n + gz(c), 0);
   const js = distAssets().filter((f) => f.endsWith('.js'));
   const worker = js.filter((f) => f.startsWith('worker-'));
   const samples = js.filter((f) => f.startsWith('_virtual_sample-files-'));

@@ -1,7 +1,7 @@
 # InfoPath UX, written down before the last copy of it disappears
 
-This is the reference the app is built against. InfoPath Forms Services was retired from
-SharePoint Online on 2026-07-14 and the product itself is out of support, so the interaction
+This is the reference the app is built against. Microsoft removed InfoPath Forms Services
+from SharePoint Online after 2026-07-14, and the product itself is out of support, so the interaction
 details below are not documented anywhere current. They were recorded from a working
 installation: Microsoft InfoPath Filler 2013 (15.0.5603.1000, 32-bit) and InfoPath Designer
 2013 on Windows 11 ARM, driven for two days while building the 42-form sample set.

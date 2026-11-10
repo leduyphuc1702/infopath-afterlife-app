@@ -12,3 +12,6 @@ samples/private/
 coverage/
 test-results/
 .vitest-attachments/
+
+# Spec 09 design §7: build metadata the web tests read, kept out of dist
+apps/web/build-meta/

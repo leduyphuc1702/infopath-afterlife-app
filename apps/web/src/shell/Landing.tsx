@@ -5,7 +5,7 @@ export function Landing({ onSample }: { readonly onSample: (id: string) => void 
   return (
     <section className="afl-landing" aria-labelledby="afl-try">
       <p className="afl-context">
-        Microsoft retired InfoPath Forms Services in SharePoint Online on July 14, 2026.
+        Microsoft removed InfoPath Forms Services from SharePoint Online after July 14, 2026.
       </p>
       <p className="afl-lead">
         Open a form and its filled-in records as InfoPath drew them, in your browser.

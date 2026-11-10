@@ -256,7 +256,12 @@ R8.2's tests.
 | Samples chunk | 120 KB | 96.1 measured at task 3 |
 | Fonts fetched for an English form | 260 KB raw | 123 KB measured at task 3: the 4 Latin faces. Latin Extended (336 KB) loads on demand only (D7) |
 
-`test/budget.test.ts` reads `dist/.vite/manifest.json` and gzips each file (gzip -9).
+`Changed after phase A (2026-11-11):` `dist` holds only what is published: no dot-entry and no
+build-machine path. Vite's `build.manifest` is off; `test/budget.test.ts` finds the entry script
+and stylesheet in `dist/index.html` and gzips each file (gzip -9). The module ids the notices test
+needs go to `apps/web/build-meta/modules.json` (git-ignored, beside `dist`), relative to the repo
+root. `test/published.test.ts` fails on a dot-entry in `dist` or on any absolute home path, the
+repo root, the home directory or the user name in a file there.
 
 **Lighthouse 13.6.0, task 3** (desktop preset, `vite preview` under the sub-path, Playwright's
 Chromium, 2026-11-11): performance 100 (FCP 0.2 s, LCP 0.2 s, TBT 0 ms, CLS 0), accessibility
@@ -269,7 +274,7 @@ raw.
 
 `Changed in task 9:` `plugins/notices.ts` writes `notices.html` as a static page (with the same
 `<meta>` CSP, `notices.css` from `src/shell/notices.css` plus the token themes, and
-`notices-theme.js` for the colour mode), `licenses/*.txt`, and `.vite/modules.json`. One
+`notices-theme.js` for the colour mode), `licenses/*.txt`, and `build-meta/modules.json` outside `dist`. One
 collector instance is shared by the page and Worker builds, so the Worker's packages (`xsltjs`,
 `xpath`, xmldom) are listed. `Notices.tsx` is the footer link to it.
 

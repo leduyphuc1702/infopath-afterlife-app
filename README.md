@@ -1,7 +1,7 @@
 # InfoPath Afterlife
 
-InfoPath forms stopped working in SharePoint Online on **July 14, 2026**, when Microsoft retired
-InfoPath Forms Services. Teams that had run the same leave request, expense claim or inspection
+InfoPath forms stopped working in SharePoint Online after **July 14, 2026**, when Microsoft
+removed InfoPath Forms Services. Teams that had run the same leave request, expense claim or inspection
 form for fifteen years were left with `.xsn` files nobody could open, and no record of the rules
 inside them.
 

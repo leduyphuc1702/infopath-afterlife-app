@@ -15,5 +15,6 @@ export default defineConfig({
   base: './',
   plugins: [react(), xsltjsStubs(), samples(), csp(), licences.write],
   worker: { format: 'es', plugins: () => [xsltjsStubs(), samples(), licences.collect] },
-  build: { manifest: true, target: 'es2023' },
+  // No `manifest`: `dist` holds only what is published (design §7).
+  build: { target: 'es2023' },
 });
