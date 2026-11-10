@@ -456,7 +456,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R17.1 (runtime check), R17.3.
   - Done when: `pnpm check` green.
 
-- [ ] 25. Property P1: never hangs, never an untyped error
+- [x] 25. Property P1: never hangs, never an untyped error
   - Tests: `property/p1.property.test.ts` (design §13.3: three generators, 1,000 runs each, each
     run timed with `performance.now()` under 1 s; pass is a result or an `AfterlifeError` whose
     code is in design §11), `property/regressions.ts` (failing seeds, replayed every run; empty at
@@ -464,7 +464,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R19.1, R19.2, R19.3.
   - Done when: `pnpm check` green; the test log shows 3,000 runs and the slowest run time.
 
-- [ ] 26. Property P12: every manifest node accounted for exactly once
+- [x] 26. Property P12: every manifest node accounted for exactly once
   - Test: `property/p12.property.test.ts` (design §13.3: random insertions into random README
     manifests; an oracle that walks the mutated DOM with its own code; exactly one of modelled or
     unknown for every element and non-`xmlns` attribute; each inserted unmodelled node has an entry
@@ -473,7 +473,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R20.1, R20.2, R20.3.
   - Done when: `pnpm check` green.
 
-- [ ] 27. Performance budget
+- [x] 27. Performance budget
   - Test: `perf/parse.perf.test.ts` (each of the 48 cabinets: 3 warm-up runs, then 20 timed
     `parseXsn` runs; p95 under 300 ms each; prints a table of p50 and p95 per form, with
     `08-big-form` on its own line; fails if `process.version` is not `v22.*`).
