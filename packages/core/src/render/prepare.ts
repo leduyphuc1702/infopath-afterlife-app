@@ -7,7 +7,9 @@ import type { FormIR, IrView } from '../ir/types';
 import { resolveLimits, type Limits } from '../limits';
 import { parseXmlDom, xmlContext } from '../xml/parse';
 import type { ParsedTemplate } from '../xsn/parse';
+import type { BoundControl } from '../ir/types';
 import { compileView, type CompiledView } from './engine/xsltjs';
+import { controlIndex, requiredTargets } from './marks';
 
 const MiB = 1024 * 1024;
 
@@ -32,6 +34,10 @@ export interface PreparedInternals {
   readonly ir: FormIR;
   readonly compiled: CompiledView;
   readonly file: (name: string) => Uint8Array | undefined;
+  /** Design §9.1: the view's controls by XSL source position. */
+  readonly controlAt: (file: string, line: number, column: number) => BoundControl | undefined;
+  /** Design §9.2: fields that are required or the target of a blank check. */
+  readonly required: ReadonlySet<string>;
 }
 
 const internals = new WeakMap<PreparedView, PreparedInternals>();
@@ -85,7 +91,14 @@ export async function prepareView(
     view,
     issues: Object.freeze([...compiled.issues]),
   });
-  internals.set(prepared, { template, ir, compiled, file });
+  internals.set(prepared, {
+    template,
+    ir,
+    compiled,
+    file,
+    controlAt: controlIndex(view),
+    required: requiredTargets(ir),
+  });
   return prepared;
 }
 

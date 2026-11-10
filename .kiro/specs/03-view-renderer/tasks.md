@@ -86,7 +86,7 @@ limits, properties, references and performance.
     - the synthetic guard view, and `ipApp:GetMajorVersion()` called unguarded.
   - Done when: `V --project node test/render test/xpath-fns`, then `pnpm check`.
 
-- [ ] 3. Sanitiser, serialiser and scoped CSS
+- [x] 3. Sanitiser, serialiser and scoped CSS
   - `src/render/html/sanitise.ts`, `serialise.ts`, `css.ts` and `own-css.ts` (root rules): §8.1
     steps 1, 5, 8 and 9; §8.2–§8.4; `OUTPUT_ESCAPING_IGNORED` (D6).
   - Tests: `test/render/sanitise.test.ts` and `test/render/css.test.ts`, one case per rule:
@@ -97,7 +97,7 @@ limits, properties, references and performance.
     table structure, and contains none of the R5.1 items.
   - Done when: `V --project node test/render`, then `pnpm check`.
 
-- [ ] 4. Control marks, required asterisk, and the form 01 slice
+- [x] 4. Control marks, required asterisk, and the form 01 slice
   - `src/render/marks.ts` and the `literalResultElement` hook (§9); §8.1 steps 6 and 7; the
     asterisk rule in `own-css.ts`.
   - Golden: form 01's default view with the empty record and with `-001.xml`, through

@@ -8,6 +8,7 @@ import xsltjsModule from 'xsltjs';
 import processorModule from 'xsltjs/scripts/Processor.js';
 import serializerModule from 'xsltjs/scripts/Serializer.js';
 import { AfterlifeError, type Issue } from '../../errors';
+import type { BoundControl } from '../../ir/types';
 import { xmlText, type DomDocument, type XmlContext } from '../../xml/parse';
 import type { Budget } from './budget';
 import {
@@ -47,6 +48,7 @@ type ApplyStep = ((
 ) => unknown[]) & { [MARK]?: true; [ORIGINAL]?: ApplyStep };
 
 interface XPathInternals {
+  readonly XNodeSet: new () => { first(): unknown };
   readonly XString: new (s: string) => XValue;
   readonly XNumber: new (n: number) => XValue;
   readonly XBoolean: new (b: boolean) => XValue;
@@ -63,9 +65,23 @@ export interface DomFragment {
   readonly nodeType: 11;
 }
 
+/** The XSL element a literal result element comes from: xmldom, with its source position. */
+interface XslElement {
+  readonly lineNumber?: number;
+  readonly columnNumber?: number;
+  readonly ownerDocument?: { readonly xsltBaseURI?: string };
+  getAttributeNS(ns: string, local: string): string | null;
+}
+
+interface LiteralCtx {
+  readonly out?: { readonly lastChild: object | null } | null;
+}
+
 interface ProcessorLike {
   readonly functions: FunctionsLike;
   transform(source: unknown): DomFragment;
+  literalResultElement(element: XslElement, ctx: LiteralCtx): void;
+  evaluate(text: string, ctx: LiteralCtx, styleNode: XslElement): unknown;
   [BUDGET]?: Budget;
 }
 
@@ -146,6 +162,7 @@ export const EMPTY_XSL =
   '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"/>';
 
 const BASE = 'xsn:///';
+const XD = 'http://schemas.microsoft.com/office/infopath/2003';
 
 export interface CompileInput {
   /** The view name, for error messages. */
@@ -214,12 +231,25 @@ export interface RunOptions {
   readonly budget: Budget;
   /** Base URI of the source document, for relative `document()` calls. */
   readonly sourceFile?: string;
+  /** Design §9.1: the FormIR control at an XSL element position (package file, line, column). */
+  readonly controlAt?: (file: string, line: number, column: number) => BoundControl | undefined;
+}
+
+/** A rendered control: its FormIR control, and the source node its binding selected. */
+export interface MarkedElement {
+  readonly control: BoundControl;
+  /** An @xmldom/xmldom node of the record; absent when the binding was not or could not be evaluated. */
+  readonly node?: unknown;
 }
 
 export interface RunResult {
   readonly fragment: DomFragment;
   /** In first-occurrence order: blocked documents, unknown functions, warnings, messages. */
   readonly issues: readonly Issue[];
+  /** Result-tree element → its control (design §9.1). Empty without `controlAt`. */
+  readonly marked: ReadonlyMap<object, MarkedElement>;
+  /** Literal elements with an `xd:binding` at a position FormIR did not record. */
+  readonly unmarked: number;
 }
 
 export function runView(view: CompiledView, source: DomDocument, options: RunOptions): RunResult {
@@ -266,6 +296,42 @@ export function runView(view: CompiledView, source: DomDocument, options: RunOpt
   });
   p[BUDGET] = options.budget;
   installFunctions(p.functions, options, unknown);
+  const marked = new Map<object, MarkedElement>();
+  let unmarked = 0;
+  if (options.controlAt) {
+    const controlAt = options.controlAt;
+    const proto = Object.getPrototypeOf(p) as ProcessorLike;
+    p.literalResultElement = (element, ctx) => {
+      proto.literalResultElement.call(p, element, ctx);
+      const created = ctx.out?.lastChild;
+      const file = packageName(element.ownerDocument?.xsltBaseURI ?? '');
+      const control =
+        file === undefined
+          ? undefined
+          : controlAt(file, element.lineNumber ?? 0, element.columnNumber ?? 0);
+      if (!control) {
+        if (element.getAttributeNS(XD, 'binding') !== null) unmarked++;
+        return;
+      }
+      if (!created) return;
+      let node: unknown;
+      if (control.targetId !== undefined && !control.readOnly) {
+        try {
+          const value = proto.evaluate.call(p, control.binding, ctx, element);
+          if (value instanceof XPath.XNodeSet) node = value.first() ?? undefined;
+        } catch (e) {
+          // FormIR already reported a bad binding; a limit or our own error still stops the run.
+          if (
+            e instanceof AfterlifeError ||
+            (e as { cause?: unknown }).cause instanceof AfterlifeError
+          ) {
+            throw e;
+          }
+        }
+      }
+      marked.set(created, node === undefined ? { control } : { control, node });
+    };
+  }
 
   const doc = source as unknown as { xsltBaseURI?: string };
   if (doc.xsltBaseURI === undefined) doc.xsltBaseURI = BASE + (options.sourceFile ?? 'record.xml');
@@ -302,7 +368,7 @@ export function runView(view: CompiledView, source: DomDocument, options: RunOpt
       details: { count: messages },
     });
   }
-  return { fragment, issues };
+  return { fragment, issues, marked, unmarked };
 }
 
 /** Test-only (design D10): the result tree as `xsltjs` itself would serialise it. */

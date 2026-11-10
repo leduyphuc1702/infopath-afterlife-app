@@ -135,6 +135,9 @@ export const ISSUE_CODES = [
   'UNKNOWN_FUNCTION',
   'ENGINE_WARNING',
   'XSL_MESSAGE',
+  'OUTPUT_ESCAPING_IGNORED',
+  'CONTENT_REMOVED',
+  'CONTROL_NOT_MARKED',
 ] as const;
 export type IssueCode = (typeof ISSUE_CODES)[number];
 

@@ -1,0 +1,159 @@
+// Control marks and the required asterisk (spec 03 design §9; §8.1 steps 6 and 7; R6.5, R6.6).
+//
+// At prepare, FormIR's bound controls are indexed by the source position of their XSL element.
+// In the run, the adapter's `literalResultElement` hook finds the control for each created
+// element and the record node its binding selects (engine/xsltjs.ts). After sanitising, each
+// surviving element gets `data-afl-ctrl` and `data-afl-path`, and, when its node is empty and
+// its field is required or blank-checked, the asterisk.
+
+import { dataStep } from '../ir/ids';
+import type { BoundControl, FormIR, IrView } from '../ir/types';
+import type { MarkedElement } from './engine/xsltjs';
+import type { ControlMark } from './render';
+import type { HElement, HNode } from './html/serialise';
+
+/** The xmldom members of a record node read here. */
+interface SourceNode {
+  readonly nodeType: number;
+  readonly namespaceURI?: string | null;
+  readonly localName?: string | null;
+  readonly nodeName: string;
+  readonly value?: string;
+  readonly textContent?: string | null;
+  readonly parentNode?: SourceNode | null;
+  readonly ownerElement?: SourceNode | null;
+  readonly previousSibling?: SourceNode | null;
+  readonly firstChild?: SourceNode | null;
+  readonly nextSibling?: SourceNode | null;
+}
+
+const key = (file: string, line: number, column: number) =>
+  `${file.toLowerCase()}\u0000${line}\u0000${column}`;
+
+/** Design §9.1: `file:line:column` → control, over every control FormIR found in the view. */
+export function controlIndex(
+  view: IrView,
+): (file: string, line: number, column: number) => BoundControl | undefined {
+  const byPos = new Map<string, BoundControl>();
+  for (const c of view.controls) {
+    const k = key(c.source.file, c.source.line, c.source.column);
+    if (!byPos.has(k)) byPos.set(k, c);
+  }
+  return (file, line, column) => byPos.get(key(file, line, column));
+}
+
+/** Design §9.2: the field ids an asterisk may be drawn for. */
+export function requiredTargets(ir: FormIR): ReadonlySet<string> {
+  const out = new Set<string>();
+  for (const f of ir.fields) if (f.required) out.add(f.id);
+  for (const v of ir.validations) {
+    if (v.matchId === undefined) continue;
+    const blank =
+      v.kind === 'blank' ||
+      (v.expressionContext === '.' && (v.expression ?? '').replace(/\s+/g, '') === '.=""');
+    if (blank) out.add(v.matchId);
+  }
+  return out;
+}
+
+/** The ControlMark of one rendered control. */
+export function controlMark(
+  m: MarkedElement,
+  namespaces: Readonly<Record<string, string>>,
+  required: ReadonlySet<string>,
+): ControlMark {
+  const { control } = m;
+  const node = m.node as SourceNode | undefined;
+  const path = node && dataPath(node, namespaces);
+  const empty = node !== undefined && isEmpty(node);
+  return {
+    controlId: control.id,
+    ...(path === undefined ? {} : { path }),
+    ...(control.targetId === undefined ? {} : { fieldId: control.targetId }),
+    empty,
+    required: empty && control.targetId !== undefined && required.has(control.targetId),
+  };
+}
+
+/** No element children and an empty string value (design §9.2). */
+function isEmpty(node: SourceNode): boolean {
+  if (node.nodeType === 2) return (node.value ?? '') === '';
+  if (node.nodeType !== 1) return false;
+  for (let c = node.firstChild; c; c = c.nextSibling) if (c.nodeType === 1) return false;
+  return (node.textContent ?? '') === '';
+}
+
+/**
+ * Design §9.1: `/my:a[1]/my:b[2]` from the document down, with the manifest's prefixes and
+ * 1-based positions among same-name siblings; an attribute adds `/@name`. Undefined for any
+ * other node kind.
+ */
+function dataPath(node: SourceNode, ns: Readonly<Record<string, string>>): string | undefined {
+  if (node.nodeType === 2) {
+    const owner = node.ownerElement;
+    const base = owner && dataPath(owner, ns);
+    return base === undefined
+      ? undefined
+      : `${base}/${dataStep(node.namespaceURI ?? null, localOf(node), 'attribute', ns)}`;
+  }
+  if (node.nodeType !== 1) return undefined;
+  const steps: string[] = [];
+  for (let n: SourceNode | null | undefined = node; n && n.nodeType === 1; n = n.parentNode) {
+    const uri = n.namespaceURI ?? null;
+    const local = localOf(n);
+    let pos = 1;
+    for (let s = n.previousSibling; s; s = s.previousSibling) {
+      if (s.nodeType === 1 && (s.namespaceURI ?? null) === uri && localOf(s) === local) pos++;
+    }
+    steps.push(`${dataStep(uri, local, 'element', ns)}[${pos}]`);
+  }
+  return `/${steps.reverse().join('/')}`;
+}
+
+const localOf = (n: SourceNode) => n.localName ?? n.nodeName.replace(/^.*:/, '');
+
+const REPLACED = new Set(['input', 'select', 'textarea']);
+
+/**
+ * §8.1 steps 6 and 7, in document order: `data-afl-ctrl` and `data-afl-path` on each marked
+ * element that survived sanitising, then the asterisk: class `afl-required`, and after an
+ * `input`, `select` or `textarea`, which cannot show `::after`, a mark span.
+ */
+export function applyMarks(
+  root: HElement,
+  markOf: (origin: object) => ControlMark | undefined,
+): ControlMark[] {
+  const marks: ControlMark[] = [];
+  const walk = (children: HNode[]) => {
+    for (let i = 0; i < children.length; i++) {
+      const el = children[i]!;
+      if (el.kind !== 'element') continue;
+      const mark = el.origin && markOf(el.origin);
+      if (mark) {
+        marks.push(mark);
+        if (mark.required) {
+          const cls = el.attrs.find(([n]) => n === 'class');
+          if (cls) cls[1] = cls[1] === '' ? 'afl-required' : `${cls[1]} afl-required`;
+          else el.attrs.push(['class', 'afl-required']);
+        }
+        el.attrs.push(['data-afl-ctrl', mark.controlId]);
+        if (mark.path !== undefined) el.attrs.push(['data-afl-path', mark.path]);
+      }
+      walk(el.children);
+      if (mark?.required && REPLACED.has(el.name)) {
+        children.splice(i + 1, 0, {
+          kind: 'element',
+          name: 'span',
+          attrs: [
+            ['class', 'afl-required-mark'],
+            ['aria-hidden', 'true'],
+          ],
+          children: [{ kind: 'text', text: '*' }],
+        });
+        i++;
+      }
+    }
+  };
+  walk(root.children);
+  return marks;
+}

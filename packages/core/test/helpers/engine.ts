@@ -9,8 +9,10 @@ import {
   engineHtml,
   runView,
   type CompiledView,
+  type RunOptions,
 } from '../../src/render/engine/xsltjs';
 import type { Issue } from '../../src/errors';
+import { postProcess } from '../../src/render/render';
 import { parseXmlDom, xmlContext, type DomDocument } from '../../src/xml/parse';
 import type { ViewCase } from './render-cases';
 import { packageFileOf } from './render-cases';
@@ -51,6 +53,7 @@ export function compileCase(c: ViewCase): Promise<CompiledView> {
 
 export interface RunOutput {
   readonly html: string;
+  readonly marked: number;
   readonly issues: readonly Issue[];
   readonly budget: Budget;
 }
@@ -62,11 +65,13 @@ export function runCompiled(
     fallback?: boolean;
     functions?: FunctionTable;
     documents?: Readonly<Record<string, string>>;
+    controlAt?: RunOptions['controlAt'];
   } = {},
 ): RunOutput {
   const budget = new Budget();
   const reported: Issue[] = [];
-  const { fragment, issues } = runView(view, dom(record, 'record.xml'), {
+  const { fragment, issues, marked } = runView(view, dom(record, 'record.xml'), {
+    ...(options.controlAt ? { controlAt: options.controlAt } : {}),
     fallback: options.fallback ?? false,
     functions: options.functions ?? new Map(),
     host: { report: (i) => reported.push(i) },
@@ -76,5 +81,26 @@ export function runCompiled(
     },
     budget,
   });
-  return { html: engineHtml(view, fragment), issues: [...issues, ...reported], budget };
+  return {
+    html: engineHtml(view, fragment),
+    marked: marked.size,
+    issues: [...issues, ...reported],
+    budget,
+  };
+}
+
+/** Compiles and runs `xsl`, then post-processes the result as renderView does (design §8.1). */
+export async function postText(
+  xsl: string,
+  record: string = '<r/>',
+  scope = 's1',
+): Promise<{ html: string; css: string; issues: Issue[] }> {
+  const view = await compileText(xsl);
+  const { fragment } = runView(view, dom(record, 'record.xml'), {
+    functions: new Map(),
+    host: { report() {} },
+    loadDocument: () => undefined,
+    budget: new Budget(),
+  });
+  return postProcess(fragment, scope, 'view1.xsl');
 }
