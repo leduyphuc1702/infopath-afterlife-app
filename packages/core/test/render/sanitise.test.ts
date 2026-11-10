@@ -196,6 +196,24 @@ describe('step 5: attributes (R5.1, R5.2)', () => {
     );
   });
 
+  test('xd:inline, xd:num and xd:value (record data) go silently, whatever the prefix', async () => {
+    const r = await postText(
+      sheet(
+        '<span xd:binding="my:a" xd:boundProp="xd:num" xd:num="350.3" xd:onValue="A">' +
+          '<xsl:attribute name="xd:inline">x0lGQRQ=</xsl:attribute>' +
+          '<xsl:attribute name="ip:VALUE" namespace="' +
+          XD +
+          '">A</xsl:attribute>v</span><span my:num="1" xd:numeric="2">w</span>',
+        '',
+      ).replace('<xsl:stylesheet ', '<xsl:stylesheet xmlns:my="urn:my" '),
+    );
+    expect(inner(r.html)).toBe(
+      '<span xd:binding="my:a" xd:boundprop="xd:num" xd:onvalue="A">v</span>' +
+        '<span my:num="1" xd:numeric="2">w</span>',
+    );
+    expect(r.issues).toEqual([]);
+  });
+
   test('a style attribute goes through the declaration filter; an empty result drops it', async () => {
     const r = await postText(
       page(

@@ -78,6 +78,44 @@ describe('R6.1: package images', () => {
   });
 });
 
+describe('R6.1: inline pictures (Changed at task 9)', () => {
+  const PNG_B64 = btoa(
+    String.fromCharCode(0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 13),
+  );
+
+  test('msoxd:;inline; with a raster image becomes a data URL; whitespace in the base64 is ignored', async () => {
+    const r = await postText(
+      page(
+        `<img src="msoxd:;inline;${PNG_B64}"/><img src="MSOXD:;inline;${PNG_B64.slice(0, 8)}&#10;${PNG_B64.slice(8)}"/>`,
+      ),
+    );
+    expect(inner(r.html)).toBe(
+      `<img src="data:image/png;base64,${PNG_B64}"><img src="data:image/png;base64,${PNG_B64}">`,
+    );
+    expect(r.issues).toEqual([]);
+  });
+
+  test('msoxd:;inline; with anything else, or another msoxd: form, is removed and counted', async () => {
+    const r = await postText(
+      page(
+        `<img src="msoxd:;inline;${btoa('not an image')}"/><img src="msoxd:;inline;%%%%"/>` +
+          `<img src="msoxd:;linked;${PNG_B64}"/>`,
+      ),
+    );
+    expect(inner(r.html)).toBe('<img><img><img>');
+    expect(codes(r)).toEqual([['CONTENT_REMOVED', { kind: 'url', count: 3 }]]);
+  });
+
+  test("form 06's first record shows its scene photo, with no CONTENT_REMOVED", async () => {
+    const f06 = await render('06-safety-incident', 'first');
+    expect(f06.html).toMatch(
+      /<img style="WIDTH:160px;HEIGHT:120px" src="data:image\/png;base64,iVBORw0KGgo[A-Za-z0-9+/=]+">/,
+    );
+    expect(f06.html).not.toContain('msoxd:');
+    expect(f06.issues).toEqual([]);
+  });
+});
+
 describe('R6.2: ActiveX', () => {
   test('form 44: the object becomes the placeholder, with one UNSUPPORTED_CONTROL', async () => {
     const r = await render('44-contract-approval-task', 'first');

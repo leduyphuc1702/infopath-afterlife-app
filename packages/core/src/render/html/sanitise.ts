@@ -8,6 +8,7 @@
 import { filterDeclarations, normalise, withoutControls, type Removed } from './css';
 import {
   activeXPlaceholder,
+  inlinePicture,
   NO_RESOURCES,
   packageImage,
   resourceIcon,
@@ -47,6 +48,7 @@ export interface Sanitised {
 }
 
 const XHTML = 'http://www.w3.org/1999/xhtml';
+const XD = 'http://schemas.microsoft.com/office/infopath/2003';
 
 /** Dropped with their content. */
 const DROP = new Set([
@@ -72,6 +74,12 @@ const ATTR_NAME = /^[a-z_:][a-z0-9_:.-]*$/;
 const DENIED_ATTRS = new Set(['srcdoc', 'action', 'formaction', 'xlink:href', 'ping']);
 /** Step 8, dropped silently: InfoPath's editing attributes and anything that takes focus. */
 const INERT_ATTRS = new Set(['contenteditable', 'tabindex', 'accesskey', 'autofocus', 'hidefocus']);
+/**
+ * Dropped silently (§8.4, R5.2): `xd:` attributes that hold record data, written by the view's
+ * `xsl:attribute` as the control's `xd:boundProp`. `inline` is a whole attachment or picture as
+ * base64; `num` and `value` are the raw field value. Marks carry the path to that data instead.
+ */
+const XD_RECORD_ATTRS = new Set(['inline', 'num', 'value']);
 /** Step 8: prefixed so that no page global or label is shadowed by name. */
 const PREFIXED_ATTRS = new Set(['id', 'name', 'for']);
 const LOADING_ATTRS = new Set([
@@ -201,6 +209,7 @@ function attributes(
     const name = a.nodeName.toLowerCase();
     const value = a.value ?? '';
     if (name === 'xmlns' || name.startsWith('xmlns:') || INERT_ATTRS.has(name)) continue;
+    if (a.namespaceURI === XD && XD_RECORD_ATTRS.has((a.localName ?? '').toLowerCase())) continue;
     if (
       !ATTR_NAME.test(name) ||
       name.startsWith('on') ||
@@ -221,11 +230,11 @@ function attributes(
       }
     } else if (LOADING_ATTRS.has(name)) {
       const url = urlForm(value);
-      // Step 4 (R6.1): a package image becomes a data URL.
+      // Step 4 (R6.1): a package image or an inline picture becomes a data URL.
       const data = RASTER_DATA.test(url)
         ? url
         : element === 'img' && name === 'src'
-          ? packageImage(value.trim(), resources)
+          ? (packageImage(value.trim(), resources) ?? inlinePicture(value.trim()))
           : undefined;
       if (data !== undefined) out.push([name, data]);
       else remove('url', name);

@@ -195,7 +195,7 @@ limits, properties, references and performance.
   - Done when: `V --project node test/render` and `V --project browser
     test/browser/render-dom.browser.test.ts`, then `pnpm check`.
 
-- [ ] 9. Goldens for the 53 views, and Worker parity
+- [x] 9. Goldens for the 53 views, and Worker parity
   - `test/render/golden.samples.test.ts`: 106 files under `test/golden/render/` (§10).
   - `test/browser/render-parity.browser.test.ts`: the 106 renders in a Chromium Worker, built
     with the stubs and a throwing `fetch`, are byte-identical to the goldens.
@@ -203,10 +203,14 @@ limits, properties, references and performance.
   - Oracle: 106 goldens with no engine error; 106/106 identical in the Worker; 0 calls to an
     unimplemented function; `CONTENT_REMOVED` counts by kind reported, 0 on every own render
     (`Changed at review:`).
+  - `Changed at review:` `xd:inline` is dropped silently (design §8.4, R5.2). `Changed at task
+    9:` so are `xd:num` and `xd:value`, the other `xd:` attributes holding record data; and
+    inline pictures (`msoxd:;inline;`) become data URLs (R6.1, design §8.1 step 4), since form
+    06's first record otherwise lost its photo with one `CONTENT_REMOVED {kind: url}`.
   - Done when: `V --project node test/render/golden.samples.test.ts` and `V --project browser
     test/browser/render-parity.browser.test.ts`, then `pnpm check`.
 
-- [ ] 10. `xsltproc` references
+- [x] 10. `xsltproc` references
   - `scripts/gen-xsltproc-refs.ts` and a package script `gen:xsltproc-refs`. Its output: 106
     references and `VERSION.txt` under `test/golden/render/xsltproc/` (§10).
   - `test/render/xsltproc.test.ts`: the normalisation list in design §10, steps 1–8.

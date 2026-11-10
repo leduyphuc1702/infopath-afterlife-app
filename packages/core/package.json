@@ -12,7 +12,8 @@
     "test": "vitest run --project node",
     "test:browser": "vitest run --project browser",
     "test:perf": "vitest run --project perf",
-    "gen:ms-ipff2": "node scripts/gen-ms-ipff2.ts"
+    "gen:ms-ipff2": "node scripts/gen-ms-ipff2.ts",
+    "gen:xsltproc-refs": "node scripts/gen-xsltproc-refs.ts"
   },
   "dependencies": {
     "@xmldom/xmldom": "0.9.12",

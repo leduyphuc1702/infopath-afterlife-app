@@ -287,9 +287,13 @@ open it, so that the free viewer is safe to use on anything.
    - CSS `expression(`, `behavior:`, `-moz-binding` and `@import`.
 
    Oracle: unit cases per item; the 53 golden results contain none; P5.
-2. THE SYSTEM SHALL keep `style`, `class`, `title`, `xd:*` attributes and `data:image/…` sources,
-   and the view's text, tables and layout. Oracle: the golden results keep form 02's `title`,
-   `class` and `xd:binding` attributes and its table structure.
+2. THE SYSTEM SHALL keep `style`, `class`, `title`, `xd:*` attributes except `xd:inline`,
+   `xd:num` and `xd:value`, and `data:image/…` sources, and the view's text, tables and layout.
+   Oracle: the golden results keep form 02's `title`, `class` and `xd:binding` attributes and its
+   table structure. `Changed at review:` (after task 7) "`xd:*` attributes except `xd:inline`":
+   it is InfoPath runtime data (a whole attachment or picture as base64), not presentation, and
+   is dropped silently (design §8.4). `Changed at task 9:` `xd:num` and `xd:value` join it: they
+   carry the raw field value, written as the control's `xd:boundProp`.
 3. THE SYSTEM SHALL sanitise with no DOM, in Node 22 and in a Web Worker, with byte-identical
    results. Oracle: the Worker parity harness (spec 01) on the 53 views × 2 golden results.
 4. THE SYSTEM SHALL render controls inert: no element of the render result accepts input or
@@ -308,6 +312,9 @@ built, so that I can trust the comparison.
 
 1. THE SYSTEM SHALL replace each package image reference in the view with a `data:image/…` URL of
    that file. Oracle: a synthetic template with a package image (no own sample has one, Evidence).
+   `Changed at task 9:` the same for an inline picture (`msoxd:;inline;` and the record's base64,
+   when it is a PNG, GIF, JPEG or BMP). Oracle: form 06's first record shows its scene photo with
+   no `CONTENT_REMOVED` (design §8.1 step 4).
 2. WHEN a view holds an ActiveX object (FormIR `activeX.controls`), THE SYSTEM SHALL render in its
    place a grey placeholder box with the text "Custom control {GUID}: not supported" and record an
    `UNSUPPORTED_CONTROL` issue. Oracle: form 44.

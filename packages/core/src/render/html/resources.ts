@@ -86,6 +86,32 @@ export function imageType(bytes: Uint8Array): string | undefined {
   return MAGIC.find(([, m]) => m.every((b, i) => bytes[i] === b))?.[0];
 }
 
+const BASE64 = /^[A-Za-z0-9+/]*={0,2}$/;
+
+/**
+ * Base64 text (ASCII whitespace ignored) whose magic bytes say PNG, GIF, JPEG or BMP, as a data
+ * URL; undefined for anything else. Shared by `xdImage:getImageUrl` and inline pictures.
+ */
+export function base64Image(text: string): string | undefined {
+  const b64 = text.replace(/[\t\n\r ]+/g, '');
+  if (b64.length < 12 || b64.length % 4 !== 0 || !BASE64.test(b64)) return undefined;
+  const type = imageType(Uint8Array.from(atob(b64.slice(0, 12)), (c) => c.charCodeAt(0)));
+  return type === undefined ? undefined : `data:image/${type};base64,${b64}`;
+}
+
+const INLINE_PICTURE = 'msoxd:;inline;';
+
+/**
+ * Step 4 (`Changed at task 9:`): InfoPath's picture control writes its picture as
+ * `msoxd:;inline;` followed by the record's base64 (form 06). A raster image becomes a data URL;
+ * anything else gives undefined, and step 5 removes the `src`.
+ */
+export function inlinePicture(src: string): string | undefined {
+  return src.slice(0, INLINE_PICTURE.length).toLowerCase() === INLINE_PICTURE
+    ? base64Image(src.slice(INLINE_PICTURE.length))
+    : undefined;
+}
+
 /**
  * Step 4: a relative `src` naming a package file whose magic bytes say PNG, GIF, JPEG or BMP
  * becomes a base64 data URL; anything else gives undefined.

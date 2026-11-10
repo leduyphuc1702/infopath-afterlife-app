@@ -1,0 +1,8 @@
+/usr/bin/xsltproc --version
+Using libxml 20913, libxslt 10135 and libexslt 820
+xsltproc was compiled against libxml 20913, libxslt 10135 and libexslt 820
+libxslt 10135 was compiled against libxml 20913
+libexslt 820 was compiled against libxml 20913
+
+Command: /usr/bin/xsltproc --nonet <view> <record>
+Generated: 2026-11-10, 53 views, 106 files

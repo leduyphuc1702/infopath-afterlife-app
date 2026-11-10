@@ -360,7 +360,11 @@ One walk over the result tree, in this order; each step needs what the one befor
    Other `res:` URLs fall to step 5.
 4. **Package images** (R6.1): a relative `src` naming a package file (spec 01 rule) whose magic
    bytes say PNG, GIF, JPEG or BMP becomes a base64 data URL (chunked `btoa`, a global in Node 22
-   and Workers).
+   and Workers). `Changed at task 9:` **inline pictures** too: InfoPath's picture control writes
+   `src="msoxd:;inline;"` followed by the record's base64 (form 06, the only own picture control).
+   When that base64 is a raster image by the `getImageUrl` rule (§7.1), it becomes the same data
+   URL; anything else is removed in step 5 and counted (`CONTENT_REMOVED {kind: url}`). Without
+   this, form 06's first record lost its photo and was the one own render with `CONTENT_REMOVED`.
 5. **Sanitise** (§8.2); one `CONTENT_REMOVED {kind, count}` per kind.
 6. **Control marks** (§9): `data-afl-ctrl`, `data-afl-path` on recorded elements that survived
    step 5. Step 5 removed any `data-afl-*` from the view, so marks cannot be forged.
@@ -430,6 +434,11 @@ One walk over the result tree, in this order; each step needs what the one befor
   forms: `CalPopup`, `urn::controls/Binder`, `DTPicker`, `xOptional`, `urn::xdPicture`,
   `urn::xdFileAttachment`, `urn::tables/NDTable`, written `url(…)` or `url (…)`); the head's
   `meta` and `title`; `xmlns*` attributes; `contenteditable`, `tabindex` and `hidefocus` (step 8).
+  Also the `xd:` attributes that hold record data, not a binding or a control name: `xd:inline`
+  (a whole attachment or picture as base64; `Changed at review:` after task 7), and `xd:num` and
+  `xd:value` (the raw field value; `Changed at task 9:`). In the 53 views each is written by
+  `xsl:attribute` as the control's `xd:boundProp` (4, 189 and 160 sites). They are matched by the
+  InfoPath namespace and local name, whatever the prefix; marks give the path to the same data.
   `CONTENT_REMOVED` is then for content a view really carried. Expected: 0 on every own render;
   task 9 reports counts by kind, and any other InfoPath-only construct found there joins this
   list with a design edit.
@@ -504,8 +513,8 @@ little-endian:
   `span.afl-icon.afl-icon-file` (CSS, no Microsoft asset), `span.afl-attachment-name` (a text
   node: the serialiser escapes it) and `span.afl-attachment-size` (`109 bytes`). Lone surrogates
   in the name become U+FFFD.
-- The view's own `xd:inline` attribute on the control still carries the base64 text, as R5.2
-  keeps `xd:*` attributes; it is an attribute value, escaped, never decoded.
+- `Changed at review:` the view's own `xd:inline` attribute, which repeats the base64 text, is
+  dropped silently (§8.4).
 
 ## 10. References, goldens, determinism, performance (R1.1, R5.3, R7, R9, R10.1)
 
@@ -556,7 +565,7 @@ little-endian:
 | R5.1, R5.2 | unit | one case per §8.2 rule and §8.4 rule | `test/render/sanitise.test.ts`, `test/render/css.test.ts` |
 | R5.3, R7.1 | browser | Worker parity over 106 goldens | `test/browser/render-parity.browser.test.ts` |
 | R5.4, R5.5, R6.3 | browser | forms 01–08 inside a page | `test/browser/render-dom.browser.test.ts` |
-| R6.1–R6.4 | unit | synthetic package image; form 44; forms 02, 08 | `test/render/resources.test.ts` |
+| R6.1–R6.4 | unit | synthetic package image; synthetic and form 06 inline pictures (`Changed at task 9:`); form 44; forms 02, 08 | `test/render/resources.test.ts` |
 | R6.5, R6.6 | unit + golden | form 02 first record; form 01 both records; synthetic `errorBlank` and non-nillable date | `test/render/marks.test.ts` |
 | R6.7 | unit | form 02 first record; truncated header; name-length overflow; markup in a name | `test/render/attachment.test.ts` |
 | R7.1 (P4) | property, 200 runs | sample record with text values replaced by generated strings; generated `now`, locale, user name; permuted view order | `test/property/p4.property.test.ts` |

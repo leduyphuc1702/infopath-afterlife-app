@@ -4,7 +4,7 @@
 
 import type { Issue } from '../errors';
 import type { FnArg, FnHost, FnImpl, FunctionTable } from './engine/host';
-import { imageType } from './html/resources';
+import { base64Image } from './html/resources';
 import { formatStringResult } from '../xpath-fns/format';
 import { average, nowValue, nz, stringCompare, today } from '../xpath-fns/values';
 
@@ -34,7 +34,6 @@ export interface FunctionInputs {
 
 const str = (args: readonly FnArg[], i: number) => args[i]?.string() ?? '';
 const strings = (arg: FnArg | undefined) => arg?.nodes()?.map((n) => n.string()) ?? [];
-const BASE64 = /^[A-Za-z0-9+/]*={0,2}$/;
 
 export function functionTable(inputs: FunctionInputs): FunctionTable {
   const file = inputs.file ?? '';
@@ -90,12 +89,8 @@ export function functionTable(inputs: FunctionInputs): FunctionTable {
   const getImageUrl: FnImpl = (args, host) => {
     const nodes = args[0]?.nodes();
     if (!nodes || nodes.length !== 1 || !nodes[0]!.element) return '';
-    const b64 = nodes[0]!.string().replace(/[\t\n\r ]+/g, '');
-    if (b64.length < 12 || b64.length % 4 !== 0 || !BASE64.test(b64)) return '';
-    const head = Uint8Array.from(atob(b64.slice(0, 12)), (c) => c.charCodeAt(0));
-    const type = imageType(head);
-    if (type === undefined) return '';
-    const url = `data:image/${type};base64,${b64}`;
+    const url = base64Image(nodes[0]!.string());
+    if (url === undefined) return '';
     host.chargeOutput(url.length);
     return url;
   };

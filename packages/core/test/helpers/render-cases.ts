@@ -11,6 +11,8 @@ export interface ViewCase {
   /** `01-leave-request/view1.xsl`. */
   readonly id: string;
   readonly slug: string;
+  /** One of our forms (samples/own/), not the public sample. */
+  readonly own: boolean;
   readonly t: ParsedTemplate;
   /** `xsf:view/@name`. */
   readonly view: string;
@@ -46,6 +48,7 @@ export async function viewCases(): Promise<ViewCase[]> {
       out.push({
         id: `${c.slug}/${xslFile}`,
         slug: c.slug,
+        own,
         t,
         view: v.attrs.name ?? xslFile,
         xslFile,
