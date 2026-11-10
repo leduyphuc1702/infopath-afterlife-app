@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:00:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:00:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="leaveRequest">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:employeeName"/>
+				<xsd:element ref="my:employeeId"/>
+				<xsd:element ref="my:department"/>
+				<xsd:element ref="my:requestDate"/>
+				<xsd:element ref="my:leaveType"/>
+				<xsd:element ref="my:startDate"/>
+				<xsd:element ref="my:endDate"/>
+				<xsd:element ref="my:daysRequested"/>
+				<xsd:element ref="my:halfDay"/>
+				<xsd:element ref="my:reason"/>
+				<xsd:element ref="my:managerEmail"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="employeeName" type="xsd:string"/>
+	<xsd:element name="employeeId" type="xsd:string"/>
+	<xsd:element name="department" type="xsd:string"/>
+	<xsd:element name="requestDate" nillable="true" type="xsd:date"/>
+	<xsd:element name="leaveType" type="xsd:string"/>
+	<xsd:element name="startDate" nillable="true" type="xsd:date"/>
+	<xsd:element name="endDate" nillable="true" type="xsd:date"/>
+	<xsd:element name="daysRequested" nillable="true" type="xsd:integer"/>
+	<xsd:element name="halfDay" type="xsd:boolean"/>
+	<xsd:element name="reason" type="xsd:string"/>
+	<xsd:element name="managerEmail" type="xsd:string"/>
+</xsd:schema>

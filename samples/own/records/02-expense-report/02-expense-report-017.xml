@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Expense-Claim:-myXSD-2026-11-03T08-10-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/02-expense-report.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:expenseClaim xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:claimant>
+		<my:claimantName>Priya Juniper</my:claimantName>
+		<my:claimantId>E20017</my:claimantId>
+		<my:claimantDept>SAL</my:claimantDept>
+	</my:claimant>
+	<my:businessPurpose>Team offsite</my:businessPurpose>
+	<my:claimCurrency>GBP</my:claimCurrency>
+	<my:expenses>
+		<my:expense>
+			<my:expenseDate>2026-07-21</my:expenseDate>
+			<my:expenseType>Lodging</my:expenseType>
+			<my:expenseDescription>Lodging - Blue Fern Cafe</my:expenseDescription>
+			<my:amount>189.54</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGYAAAARAAAAcgBlAGMAZQBpAHAAdAAtADEANwAtADEALgB0AHgAdAAAAFJFQ0VJUFQKQmx1ZSBGZXJuIENhZmUKRGF0ZTogMjAyNi0wNy0yMQpUb3RhbDogMTg5LjU0ClJlZjogNzAxNDU5MDMKVGhpcyBpcyBhIGZpY3Rpb25hbCB0ZXN0IHJlY2VpcHQuCg==</my:receipt>
+		</my:expense>
+		<my:expense>
+			<my:expenseDate>2025-08-26</my:expenseDate>
+			<my:expenseType>Supplies</my:expenseType>
+			<my:expenseDescription>Supplies - Paper Lantern Supplies</my:expenseDescription>
+			<my:amount>471.06</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAG4AAAARAAAAcgBlAGMAZQBpAHAAdAAtADEANwAtADIALgB0AHgAdAAAAFJFQ0VJUFQKUGFwZXIgTGFudGVybiBTdXBwbGllcwpEYXRlOiAyMDI1LTA4LTI2ClRvdGFsOiA0NzEuMDYKUmVmOiAyOTQ1NDc5OApUaGlzIGlzIGEgZmljdGlvbmFsIHRlc3QgcmVjZWlwdC4K</my:receipt>
+		</my:expense>
+		<my:expense>
+			<my:expenseDate>2026-08-22</my:expenseDate>
+			<my:expenseType>Travel</my:expenseType>
+			<my:expenseDescription>Travel - Harbor Inn</my:expenseDescription>
+			<my:amount>436.34</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGIAAAARAAAAcgBlAGMAZQBpAHAAdAAtADEANwAtADMALgB0AHgAdAAAAFJFQ0VJUFQKSGFyYm9yIElubgpEYXRlOiAyMDI2LTA4LTIyClRvdGFsOiA0MzYuMzQKUmVmOiA0MDI5MzE3MQpUaGlzIGlzIGEgZmljdGlvbmFsIHRlc3QgcmVjZWlwdC4K</my:receipt>
+		</my:expense>
+		<my:expense>
+			<my:expenseDate>2025-09-30</my:expenseDate>
+			<my:expenseType>Lodging</my:expenseType>
+			<my:expenseDescription>Lodging - Northwind Taxi</my:expenseDescription>
+			<my:amount>231.06</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGYAAAARAAAAcgBlAGMAZQBpAHAAdAAtADEANwAtADQALgB0AHgAdAAAAFJFQ0VJUFQKTm9ydGh3aW5kIFRheGkKRGF0ZTogMjAyNS0wOS0zMApUb3RhbDogMjMxLjA2ClJlZjogMjM4NjU3NjQKVGhpcyBpcyBhIGZpY3Rpb25hbCB0ZXN0IHJlY2VpcHQuCg==</my:receipt>
+		</my:expense>
+	</my:expenses>
+	<my:totalAmount>1328.00</my:totalAmount>
+	<my:approverEmail>rafael.ingram@contoso-fictional.example</my:approverEmail>
+</my:expenseClaim>

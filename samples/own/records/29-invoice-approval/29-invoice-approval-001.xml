@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Invoice-Approval:-myXSD-2026-11-04T09-29-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/29-invoice-approval.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:invoiceApproval xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:invoiceNumber>Bravo 68</my:invoiceNumber>
+	<my:vendorName>Alpha 47</my:vendorName>
+	<my:invoiceDate>2026-07-03</my:invoiceDate>
+	<my:lines>
+		<my:line>
+			<my:lineText>Ember 34</my:lineText>
+			<my:lineQty>541.46</my:lineQty>
+			<my:linePrice>204.53</my:linePrice>
+			<my:lineTotal xsi:nil="true"></my:lineTotal>
+		</my:line>
+		<my:line>
+			<my:lineText>Cedar 13</my:lineText>
+			<my:lineQty>101.02</my:lineQty>
+			<my:linePrice>34.48</my:linePrice>
+			<my:lineTotal xsi:nil="true"></my:lineTotal>
+		</my:line>
+	</my:lines>
+	<my:netTotal xsi:nil="true"></my:netTotal>
+	<my:taxRate>890.98</my:taxRate>
+	<my:grossTotal xsi:nil="true"></my:grossTotal>
+</my:invoiceApproval>

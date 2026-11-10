@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Mileage-Claim:-myXSD-2026-11-04T09-18-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="manifest.xsf" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:mileageClaim xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:18:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:claimantName></my:claimantName>
+	<my:trips>
+		<my:trip>
+			<my:tripDate xsi:nil="true"></my:tripDate>
+			<my:tripFrom></my:tripFrom>
+			<my:tripTo></my:tripTo>
+			<my:tripKm xsi:nil="true"></my:tripKm>
+			<my:tripRate xsi:nil="true"></my:tripRate>
+			<my:tripAmount xsi:nil="true"></my:tripAmount>
+		</my:trip>
+	</my:trips>
+	<my:claimTotal xsi:nil="true"></my:claimTotal>
+</my:mileageClaim>

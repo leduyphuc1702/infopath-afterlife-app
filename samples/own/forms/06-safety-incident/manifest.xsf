@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is automatically created and modified by Microsoft InfoPath.
+Changes made to the file outside of InfoPath might be lost if the form template is modified in InfoPath.
+-->
+<xsf:xDocumentClass trustSetting="automatic" solutionFormatVersion="2.0.0.0" solutionVersion="1.0.0.1" productVersion="15.0.0" name="urn:schemas-microsoft-com:office:infopath:Safety-Incident:-myXSD-2026-11-03T08-50-00" publishUrl="C:\forms\06-safety-incident.xsn" xmlns:xsf="http://schemas.microsoft.com/office/infopath/2003/solutionDefinition" xmlns:xsf2="http://schemas.microsoft.com/office/infopath/2006/solutionDefinition/extensions" xmlns:xsf3="http://schemas.microsoft.com/office/infopath/2009/solutionDefinition/extensions" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xdUtil="http://schemas.microsoft.com/office/infopath/2003/xslt/Util" xmlns:xdXDocument="http://schemas.microsoft.com/office/infopath/2003/xslt/xDocument" xmlns:xdMath="http://schemas.microsoft.com/office/infopath/2003/xslt/Math" xmlns:xdDate="http://schemas.microsoft.com/office/infopath/2003/xslt/Date" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xdExtension="http://schemas.microsoft.com/office/infopath/2003/xslt/extension" xmlns:xdEnvironment="http://schemas.microsoft.com/office/infopath/2006/xslt/environment" xmlns:xdUser="http://schemas.microsoft.com/office/infopath/2006/xslt/User" xmlns:xdServerInfo="http://schemas.microsoft.com/office/infopath/2009/xslt/ServerInfo" xmlns:dfs="http://schemas.microsoft.com/office/infopath/2003/dataFormSolution" xmlns:d="http://schemas.microsoft.com/office/infopath/2003/ado/dataFields" xmlns:tns="http://forms-legacy/budget/" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00">
+	<xsf:package>
+		<xsf:files>
+			<xsf:file name="myschema.xsd"><xsf:fileProperties><xsf:property name="namespace" type="string" value="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00"></xsf:property><xsf:property name="editability" type="string" value="full"></xsf:property><xsf:property name="rootElement" type="string" value="incidentReport"></xsf:property><xsf:property name="useOnDemandAlgorithm" type="string" value="yes"></xsf:property></xsf:fileProperties></xsf:file>
+			<xsf:file name="template.xml"></xsf:file>
+			<xsf:file name="sampledata.xml"><xsf:fileProperties><xsf:property name="fileType" type="string" value="sampleData"></xsf:property></xsf:fileProperties></xsf:file>
+			<xsf:file name="upgrade.xsl"></xsf:file>
+			<xsf:file name="view1.xsl"><xsf:fileProperties><xsf:property name="lang" type="string" value="1033"></xsf:property><xsf:property name="mode" type="string" value="1"></xsf:property></xsf:fileProperties></xsf:file>
+		</xsf:files>
+	</xsf:package>
+	<xsf:importParameters enabled="yes"></xsf:importParameters>
+	<xsf:documentVersionUpgrade>
+		<xsf:useTransform transform="upgrade.xsl" minVersionToUpgrade="0.0.0.0" maxVersionToUpgrade="1.0.0.1"></xsf:useTransform>
+	</xsf:documentVersionUpgrade>
+	<xsf:extensions>
+		<xsf:extension name="SolutionDefinitionExtensions">
+			<xsf2:solutionDefinition runtimeCompatibility="client" allowClientOnlyCode="no">
+				<xsf2:offline openIfQueryFails="yes" cacheQueries="yes"></xsf2:offline>
+				<xsf2:server isPreSubmitPostBackEnabled="no" formLocale="en-US" isMobileEnabled="no"></xsf2:server>
+				<xsf2:dataConnections></xsf2:dataConnections>
+				<xsf2:viewsExtension><xsf2:viewExtension ref="Report" designMode="normal" clientOnly="no"></xsf2:viewExtension></xsf2:viewsExtension>
+			</xsf2:solutionDefinition>
+		</xsf:extension>
+	</xsf:extensions>
+	<xsf:views default="Report">
+		<xsf:view name="Report" caption="Report">
+			<xsf:editing>
+				<xsf:xmlToEdit name="reporterName_1" item="/my:incidentReport/my:reporter/my:reporterName"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="reporterPhone_2" item="/my:incidentReport/my:reporter/my:reporterPhone"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="occurredAt_3" item="/my:incidentReport/my:occurredAt"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="site_4" item="/my:incidentReport/my:site"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="locationDetail_5" item="/my:incidentReport/my:locationDetail"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="severity_6" item="/my:incidentReport/my:severity"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="incidentDescription_7" item="/my:incidentReport/my:incidentDescription"><xsf:editWith type="rich" proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="scenePhoto_8" item="/my:incidentReport/my:scenePhoto"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="person_9" item="/my:incidentReport/my:persons/my:person" container="/my:incidentReport"><xsf:editWith caption="person" xd:autogeneration="template" component="xCollection"><xsf:fragmentToInsert><xsf:chooseFragment innerFragment="my:persons/my:person"><my:persons><my:person>
+	<my:personName></my:personName>
+	<my:personRole></my:personRole>
+	<my:injuryType></my:injuryType>
+	<my:followUps>
+		<my:followUp>
+			<my:actionDate xsi:nil="true"></my:actionDate>
+			<my:actionTaken></my:actionTaken>
+			<my:actionOwner></my:actionOwner>
+		</my:followUp>
+	</my:followUps>
+</my:person></my:persons></xsf:chooseFragment></xsf:fragmentToInsert></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="personName_10" item="/my:incidentReport/my:persons/my:person/my:personName"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="personRole_11" item="/my:incidentReport/my:persons/my:person/my:personRole"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="injuryType_12" item="/my:incidentReport/my:persons/my:person/my:injuryType"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="followUp_13" item="/my:incidentReport/my:persons/my:person/my:followUps/my:followUp" container="/my:incidentReport/my:persons/my:person"><xsf:editWith caption="followUp" xd:autogeneration="template" component="xCollection"><xsf:fragmentToInsert><xsf:chooseFragment innerFragment="my:followUps/my:followUp"><my:followUps><my:followUp>
+	<my:actionDate xsi:nil="true"></my:actionDate>
+	<my:actionTaken></my:actionTaken>
+	<my:actionOwner></my:actionOwner>
+</my:followUp></my:followUps></xsf:chooseFragment></xsf:fragmentToInsert></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="actionDate_14" item="/my:incidentReport/my:persons/my:person/my:followUps/my:followUp/my:actionDate"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="actionTaken_15" item="/my:incidentReport/my:persons/my:person/my:followUps/my:followUp/my:actionTaken"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="actionOwner_16" item="/my:incidentReport/my:persons/my:person/my:followUps/my:followUp/my:actionOwner"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+			</xsf:editing>
+			<xsf:mainpane transform="view1.xsl"></xsf:mainpane>
+			<xsf:menuArea name="msoStructuralEditingContextMenu">
+				<xsf:button action="xCollection::insertBefore" xmlToEdit="person_9" caption="Insert person above" showIf="immediate"></xsf:button>
+				<xsf:button action="xCollection::insertAfter" xmlToEdit="person_9" caption="Insert person below" showIf="immediate"></xsf:button>
+				<xsf:button action="xCollection::remove" xmlToEdit="person_9" caption="Remove person" showIf="immediate"></xsf:button>
+				<xsf:button action="xCollection::insert" xmlToEdit="person_9" caption="Insert person" showIf="immediate"></xsf:button>
+				<xsf:button action="xCollection::insertBefore" xmlToEdit="followUp_13" caption="Insert followUp above" showIf="immediate"></xsf:button>
+				<xsf:button action="xCollection::insertAfter" xmlToEdit="followUp_13" caption="Insert followUp below" showIf="immediate"></xsf:button>
+				<xsf:button action="xCollection::remove" xmlToEdit="followUp_13" caption="Remove followUp" showIf="immediate"></xsf:button>
+				<xsf:button action="xCollection::insert" xmlToEdit="followUp_13" caption="Insert followUp" showIf="immediate"></xsf:button>
+			</xsf:menuArea>
+		</xsf:view>
+	</xsf:views>
+	<xsf:applicationParameters application="InfoPath Design Mode">
+		<xsf:solutionProperties fullyEditableNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00" lastOpenView="view1.xsl" automaticallyCreateNodes="yes"></xsf:solutionProperties>
+	</xsf:applicationParameters>
+	<xsf:documentSchemas>
+		<xsf:documentSchema rootSchema="yes" location="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00 myschema.xsd"></xsf:documentSchema>
+	</xsf:documentSchemas>
+	<xsf:fileNew>
+		<xsf:initialXmlDocument caption="Safety Incident Report" href="template.xml"></xsf:initialXmlDocument>
+	</xsf:fileNew>
+	<xsf:ruleSets></xsf:ruleSets>
+	<xsf:calculations>
+	</xsf:calculations>
+	<xsf:domEventHandlers>
+	</xsf:domEventHandlers>
+	<xsf:customValidation>
+		<xsf:errorCondition match="/my:incidentReport/my:reporter/my:reporterName" expressionContext="." expression=". = &quot;&quot;"><xsf:errorMessage type="modeless" shortMessage="Cannot be blank">This field is required.</xsf:errorMessage></xsf:errorCondition>
+		<xsf:errorCondition match="/my:incidentReport/my:occurredAt" expressionContext="." expression=". = &quot;&quot;"><xsf:errorMessage type="modeless" shortMessage="Cannot be blank">This field is required.</xsf:errorMessage></xsf:errorCondition>
+		<xsf:errorCondition match="/my:incidentReport/my:severity" expressionContext="." expression=". = &quot;&quot;"><xsf:errorMessage type="modeless" shortMessage="Cannot be blank">This field is required.</xsf:errorMessage></xsf:errorCondition>
+	</xsf:customValidation>
+</xsf:xDocumentClass>

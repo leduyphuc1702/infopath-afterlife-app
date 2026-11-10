@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is automatically created and modified by Microsoft InfoPath.
+Changes made to the file outside of InfoPath might be lost if the form template is modified in InfoPath.
+-->
+<xsf:xDocumentClass trustSetting="automatic" solutionFormatVersion="2.0.0.0" solutionVersion="1.0.0.1" productVersion="15.0.0" name="urn:schemas-microsoft-com:office:infopath:Purchase-Request:-myXSD-2026-11-03T08-30-00" publishUrl="C:\forms\04-purchase-request.xsn" xmlns:xsf="http://schemas.microsoft.com/office/infopath/2003/solutionDefinition" xmlns:xsf2="http://schemas.microsoft.com/office/infopath/2006/solutionDefinition/extensions" xmlns:xsf3="http://schemas.microsoft.com/office/infopath/2009/solutionDefinition/extensions" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xdUtil="http://schemas.microsoft.com/office/infopath/2003/xslt/Util" xmlns:xdXDocument="http://schemas.microsoft.com/office/infopath/2003/xslt/xDocument" xmlns:xdMath="http://schemas.microsoft.com/office/infopath/2003/xslt/Math" xmlns:xdDate="http://schemas.microsoft.com/office/infopath/2003/xslt/Date" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xdExtension="http://schemas.microsoft.com/office/infopath/2003/xslt/extension" xmlns:xdEnvironment="http://schemas.microsoft.com/office/infopath/2006/xslt/environment" xmlns:xdUser="http://schemas.microsoft.com/office/infopath/2006/xslt/User" xmlns:xdServerInfo="http://schemas.microsoft.com/office/infopath/2009/xslt/ServerInfo" xmlns:dfs="http://schemas.microsoft.com/office/infopath/2003/dataFormSolution" xmlns:d="http://schemas.microsoft.com/office/infopath/2003/ado/dataFields" xmlns:tns="http://forms-legacy/budget/" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00">
+	<xsf:package>
+		<xsf:files>
+			<xsf:file name="myschema.xsd"><xsf:fileProperties><xsf:property name="namespace" type="string" value="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00"></xsf:property><xsf:property name="editability" type="string" value="full"></xsf:property><xsf:property name="rootElement" type="string" value="purchaseRequest"></xsf:property><xsf:property name="useOnDemandAlgorithm" type="string" value="yes"></xsf:property></xsf:fileProperties></xsf:file>
+			<xsf:file name="template.xml"></xsf:file>
+			<xsf:file name="sampledata.xml"><xsf:fileProperties><xsf:property name="fileType" type="string" value="sampleData"></xsf:property></xsf:fileProperties></xsf:file>
+			<xsf:file name="upgrade.xsl"></xsf:file>
+			<xsf:file name="view1.xsl"><xsf:fileProperties><xsf:property name="lang" type="string" value="1033"></xsf:property><xsf:property name="mode" type="string" value="1"></xsf:property></xsf:fileProperties></xsf:file>
+			<xsf:file name="Vendors.xsd"></xsf:file>
+			<xsf:file name="Vendors1.xsd"></xsf:file>
+			<xsf:file name="Vendors2.xsd"></xsf:file>
+			<xsf:file name="BudgetService.xsd"></xsf:file>
+			<xsf:file name="BudgetService1.xsd"></xsf:file>
+			<xsf:file name="BudgetServiceInput.xml"></xsf:file>
+		</xsf:files>
+	</xsf:package>
+	<xsf:importParameters enabled="yes"></xsf:importParameters>
+	<xsf:documentVersionUpgrade>
+		<xsf:useTransform transform="upgrade.xsl" minVersionToUpgrade="0.0.0.0" maxVersionToUpgrade="1.0.0.1"></xsf:useTransform>
+	</xsf:documentVersionUpgrade>
+	<xsf:extensions>
+		<xsf:extension name="SolutionDefinitionExtensions">
+			<xsf2:solutionDefinition runtimeCompatibility="client" allowClientOnlyCode="no">
+				<xsf2:offline openIfQueryFails="yes" cacheQueries="yes"></xsf2:offline>
+				<xsf2:server isPreSubmitPostBackEnabled="no" formLocale="en-US" isMobileEnabled="no"></xsf2:server>
+				<xsf2:dataConnections></xsf2:dataConnections>
+				<xsf2:viewsExtension><xsf2:viewExtension ref="Request" designMode="normal" clientOnly="no"></xsf2:viewExtension></xsf2:viewsExtension>
+			</xsf2:solutionDefinition>
+		</xsf:extension>
+	</xsf:extensions>
+	<xsf:views default="Request">
+		<xsf:view name="Request" caption="Request">
+			<xsf:editing>
+				<xsf:xmlToEdit name="requesterName_1" item="/my:purchaseRequest/my:requester/my:requesterName"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="requesterEmail_2" item="/my:purchaseRequest/my:requester/my:requesterEmail"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="costCenterCode_3" item="/my:purchaseRequest/my:requester/my:costCenterCode"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="vendorId_4" item="/my:purchaseRequest/my:vendorId"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="neededBy_5" item="/my:purchaseRequest/my:neededBy"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="line_6" item="/my:purchaseRequest/my:lines/my:line" container="/my:purchaseRequest"><xsf:editWith caption="line" xd:autogeneration="template" component="xCollection"><xsf:fragmentToInsert><xsf:chooseFragment innerFragment="my:lines/my:line"><my:lines><my:line>
+	<my:lineDescription></my:lineDescription>
+	<my:quantity xsi:nil="true"></my:quantity>
+	<my:unitPrice xsi:nil="true"></my:unitPrice>
+	<my:lineTotal xsi:nil="true"></my:lineTotal>
+</my:line></my:lines></xsf:chooseFragment></xsf:fragmentToInsert></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="lineDescription_7" item="/my:purchaseRequest/my:lines/my:line/my:lineDescription"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="quantity_8" item="/my:purchaseRequest/my:lines/my:line/my:quantity"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="unitPrice_9" item="/my:purchaseRequest/my:lines/my:line/my:unitPrice"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="lineTotal_10" item="/my:purchaseRequest/my:lines/my:line/my:lineTotal"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="subtotal_11" item="/my:purchaseRequest/my:subtotal"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="vatRate_12" item="/my:purchaseRequest/my:vatRate"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="vatAmount_13" item="/my:purchaseRequest/my:vatAmount"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="grandTotal_14" item="/my:purchaseRequest/my:grandTotal"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="budgetRemaining_15" item="/my:purchaseRequest/my:budgetRemaining"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="needsAccounting_16" item="/my:purchaseRequest/my:needsAccounting"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="justification_17" item="/my:purchaseRequest/my:justification"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+			</xsf:editing>
+			<xsf:mainpane transform="view1.xsl"></xsf:mainpane>
+			<xsf:unboundControls><xsf:button name="CTRL900"><xsf:ruleSetAction ruleSet="checkBudget"></xsf:ruleSetAction></xsf:button><xsf:button name="CTRL901"><xsf:ruleSetAction ruleSet="checkApproval"></xsf:ruleSetAction></xsf:button></xsf:unboundControls>
+			<xsf:menuArea name="msoStructuralEditingContextMenu">
+				<xsf:button action="xCollection::insertBefore" xmlToEdit="line_6" caption="Insert line above" showIf="immediate"></xsf:button>
+				<xsf:button action="xCollection::insertAfter" xmlToEdit="line_6" caption="Insert line below" showIf="immediate"></xsf:button>
+				<xsf:button action="xCollection::remove" xmlToEdit="line_6" caption="Remove line" showIf="immediate"></xsf:button>
+				<xsf:button action="xCollection::insert" xmlToEdit="line_6" caption="Insert line" showIf="immediate"></xsf:button>
+			</xsf:menuArea>
+		</xsf:view>
+	</xsf:views>
+	<xsf:applicationParameters application="InfoPath Design Mode">
+		<xsf:solutionProperties fullyEditableNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00" lastOpenView="view1.xsl" automaticallyCreateNodes="yes"></xsf:solutionProperties>
+	</xsf:applicationParameters>
+	<xsf:documentSchemas>
+		<xsf:documentSchema rootSchema="yes" location="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00 myschema.xsd"></xsf:documentSchema>
+	</xsf:documentSchemas>
+	<xsf:fileNew>
+		<xsf:initialXmlDocument caption="Purchase Request" href="template.xml"></xsf:initialXmlDocument>
+	</xsf:fileNew>
+	<xsf:dataObjects>
+		<xsf:dataObject name="Vendors" schema="Vendors.xsd" initOnLoad="no">
+			<xsf:query>
+				<xsf:adoAdapter connectionString="Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=True;Initial Catalog=Purchasing;Data Source=sql-legacy01;Use Procedure for Prepare=1;Auto Translate=True;Packet Size=4096;Workstation ID=FORMS01;Use Encryption for Data=False;Tag with column collation when possible=False" commandText="select &quot;VendorID&quot;,&quot;VendorName&quot; from &quot;dbo&quot;.&quot;Vendors&quot; as &quot;Vendors&quot;" queryAllowed="yes" submitAllowed="no"></xsf:adoAdapter>
+			</xsf:query>
+		</xsf:dataObject>
+		<xsf:dataObject name="BudgetService" schema="BudgetService.xsd" initOnLoad="no">
+			<xsf:query>
+				<xsf:webServiceAdapter wsdlUrl="http://forms-legacy/budget/BudgetService.asmx?WSDL" queryAllowed="yes" submitAllowed="no" name="BudgetService">
+					<xsf:operation name="GetRemainingBudget" soapAction="http://forms-legacy/budget/GetRemainingBudget" serviceUrl="http://forms-legacy/budget/BudgetService.asmx">
+						<xsf:input source="BudgetServiceInput.xml"></xsf:input>
+					</xsf:operation>
+				</xsf:webServiceAdapter>
+			</xsf:query>
+		</xsf:dataObject></xsf:dataObjects>
+	<xsf:ruleSets>
+		<xsf:ruleSet name="checkBudget">
+			<xsf:rule caption="Query budget service" isEnabled="yes">
+				<xsf:assignmentAction targetField="xdXDocument:GetDOM(&quot;BudgetService&quot;)/dfs:myFields/dfs:queryFields/tns:GetRemainingBudget/tns:costCenter" expression="/my:purchaseRequest/my:requester/my:costCenterCode"></xsf:assignmentAction>
+				<xsf:queryAction adapter="BudgetService"></xsf:queryAction>
+				<xsf:assignmentAction targetField="/my:purchaseRequest/my:budgetRemaining" expression="xdXDocument:GetDOM(&quot;BudgetService&quot;)/dfs:myFields/dfs:dataFields/tns:GetRemainingBudgetResponse/tns:GetRemainingBudgetResult"></xsf:assignmentAction>
+			</xsf:rule>
+		</xsf:ruleSet>
+		<xsf:ruleSet name="checkApproval">
+			<xsf:rule caption="Over 1000 needs accounting approval" condition="/my:purchaseRequest/my:grandTotal &gt; 1000" isEnabled="yes">
+				<xsf:assignmentAction targetField="/my:purchaseRequest/my:needsAccounting" expression="&quot;true&quot;"></xsf:assignmentAction>
+				<xsf:dialogBoxExpressionAction>concat(&quot;Total &quot;, /my:purchaseRequest/my:grandTotal, &quot; is over 1000: accounting must approve.&quot;)</xsf:dialogBoxExpressionAction>
+			</xsf:rule>
+			<xsf:rule caption="1000 or less" condition="/my:purchaseRequest/my:grandTotal &lt;= 1000" isEnabled="yes">
+				<xsf:assignmentAction targetField="/my:purchaseRequest/my:needsAccounting" expression="&quot;false&quot;"></xsf:assignmentAction>
+			</xsf:rule>
+		</xsf:ruleSet></xsf:ruleSets>
+	<xsf:calculations>
+		<xsf:calculatedField target="/my:purchaseRequest/my:lines/my:line/my:lineTotal" expression="xdMath:Nz(../my:quantity) * xdMath:Nz(../my:unitPrice)" refresh="onChange"></xsf:calculatedField>
+		<xsf:calculatedField target="/my:purchaseRequest/my:subtotal" expression="sum(xdMath:Nz(../my:lines/my:line/my:lineTotal))" refresh="onChange"></xsf:calculatedField>
+		<xsf:calculatedField target="/my:purchaseRequest/my:vatAmount" expression="round(xdMath:Nz(../my:subtotal) * xdMath:Nz(../my:vatRate) * 100) div 100" refresh="onChange"></xsf:calculatedField>
+		<xsf:calculatedField target="/my:purchaseRequest/my:grandTotal" expression="xdMath:Nz(../my:subtotal) + xdMath:Nz(../my:vatAmount)" refresh="onChange"></xsf:calculatedField>
+	</xsf:calculations>
+	<xsf:domEventHandlers>
+	</xsf:domEventHandlers>
+	<xsf:customValidation>
+		<xsf:errorCondition match="/my:purchaseRequest/my:requester/my:requesterName" expressionContext="." expression=". = &quot;&quot;"><xsf:errorMessage type="modeless" shortMessage="Cannot be blank">This field is required.</xsf:errorMessage></xsf:errorCondition>
+		<xsf:errorCondition match="/my:purchaseRequest/my:justification" expressionContext="." expression=". = &quot;&quot;"><xsf:errorMessage type="modeless" shortMessage="Cannot be blank">This field is required.</xsf:errorMessage></xsf:errorCondition>
+		<xsf:errorCondition match="/my:purchaseRequest/my:lines/my:line/my:quantity" expressionContext="." expression=". &lt; 1"><xsf:errorMessage type="modeless" shortMessage="At least 1">Quantity must be at least 1.</xsf:errorMessage></xsf:errorCondition>
+	</xsf:customValidation>
+</xsf:xDocumentClass>

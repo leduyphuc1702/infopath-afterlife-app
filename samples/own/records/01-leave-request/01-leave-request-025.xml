@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Leave-Request:-myXSD-2026-11-03T08-00-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/01-leave-request.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:leaveRequest xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:00:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:employeeName>Rafael Fenwick</my:employeeName>
+	<my:employeeId>E10025</my:employeeId>
+	<my:department>OPS</my:department>
+	<my:requestDate>2025-01-22</my:requestDate>
+	<my:leaveType>Annual</my:leaveType>
+	<my:startDate>2025-01-27</my:startDate>
+	<my:endDate>2025-02-10</my:endDate>
+	<my:daysRequested>10</my:daysRequested>
+	<my:reason>Wedding</my:reason>
+	<my:managerEmail>emeka.eskew@contoso-fictional.example</my:managerEmail>
+</my:leaveRequest>

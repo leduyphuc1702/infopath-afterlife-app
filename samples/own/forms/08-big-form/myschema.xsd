@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T09:00:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T09:00:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="bigForm">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:section1"/>
+				<xsd:element ref="my:section2"/>
+				<xsd:element ref="my:section3"/>
+				<xsd:element ref="my:section4"/>
+				<xsd:element ref="my:section5"/>
+				<xsd:element ref="my:section6"/>
+				<xsd:element ref="my:section7"/>
+				<xsd:element ref="my:section8"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="section1">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:s1f01"/>
+				<xsd:element ref="my:s1f02"/>
+				<xsd:element ref="my:s1f03"/>
+				<xsd:element ref="my:s1f04"/>
+				<xsd:element ref="my:s1f05"/>
+				<xsd:element ref="my:s1f06"/>
+				<xsd:element ref="my:s1f07"/>
+				<xsd:element ref="my:s1f08"/>
+				<xsd:element ref="my:s1f09"/>
+				<xsd:element ref="my:s1f10"/>
+				<xsd:element ref="my:s1f11"/>
+				<xsd:element ref="my:s1f12"/>
+				<xsd:element ref="my:s1f13"/>
+				<xsd:element ref="my:s1f14"/>
+				<xsd:element ref="my:s1f15"/>
+				<xsd:element ref="my:s1f16"/>
+				<xsd:element ref="my:s1f17"/>
+				<xsd:element ref="my:s1f18"/>
+				<xsd:element ref="my:s1f19"/>
+				<xsd:element ref="my:s1f20"/>
+				<xsd:element ref="my:s1f21"/>
+				<xsd:element ref="my:s1f22"/>
+				<xsd:element ref="my:s1f23"/>
+				<xsd:element ref="my:s1f24"/>
+				<xsd:element ref="my:s1f25"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="s1f01" nillable="true" type="xsd:date"/>
+	<xsd:element name="s1f02" type="xsd:string"/>
+	<xsd:element name="s1f03" nillable="true" type="xsd:double"/>
+	<xsd:element name="s1f04" type="xsd:boolean"/>
+	<xsd:element name="s1f05" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s1f06" type="xsd:string"/>
+	<xsd:element name="s1f07" type="xsd:string"/>
+	<xsd:element name="s1f08" type="xsd:string"/>
+	<xsd:element name="s1f09" type="xsd:string"/>
+	<xsd:element name="s1f10" type="xsd:string"/>
+	<xsd:element name="s1f11" nillable="true" type="xsd:date"/>
+	<xsd:element name="s1f12" type="xsd:string"/>
+	<xsd:element name="s1f13" nillable="true" type="xsd:double"/>
+	<xsd:element name="s1f14" type="xsd:boolean"/>
+	<xsd:element name="s1f15" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s1f16" type="xsd:string"/>
+	<xsd:element name="s1f17" type="xsd:string"/>
+	<xsd:element name="s1f18" type="xsd:string"/>
+	<xsd:element name="s1f19" type="xsd:string"/>
+	<xsd:element name="s1f20" type="xsd:string"/>
+	<xsd:element name="s1f21" nillable="true" type="xsd:date"/>
+	<xsd:element name="s1f22" type="xsd:string"/>
+	<xsd:element name="s1f23" nillable="true" type="xsd:double"/>
+	<xsd:element name="s1f24" type="xsd:boolean"/>
+	<xsd:element name="s1f25" nillable="true" type="xsd:integer"/>
+	<xsd:element name="section2">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:s2f01"/>
+				<xsd:element ref="my:s2f02"/>
+				<xsd:element ref="my:s2f03"/>
+				<xsd:element ref="my:s2f04"/>
+				<xsd:element ref="my:s2f05"/>
+				<xsd:element ref="my:s2f06"/>
+				<xsd:element ref="my:s2f07"/>
+				<xsd:element ref="my:s2f08"/>
+				<xsd:element ref="my:s2f09"/>
+				<xsd:element ref="my:s2f10"/>
+				<xsd:element ref="my:s2f11"/>
+				<xsd:element ref="my:s2f12"/>
+				<xsd:element ref="my:s2f13"/>
+				<xsd:element ref="my:s2f14"/>
+				<xsd:element ref="my:s2f15"/>
+				<xsd:element ref="my:s2f16"/>
+				<xsd:element ref="my:s2f17"/>
+				<xsd:element ref="my:s2f18"/>
+				<xsd:element ref="my:s2f19"/>
+				<xsd:element ref="my:s2f20"/>
+				<xsd:element ref="my:s2f21"/>
+				<xsd:element ref="my:s2f22"/>
+				<xsd:element ref="my:s2f23"/>
+				<xsd:element ref="my:s2f24"/>
+				<xsd:element ref="my:s2f25"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="s2f01" type="xsd:string"/>
+	<xsd:element name="s2f02" nillable="true" type="xsd:double"/>
+	<xsd:element name="s2f03" type="xsd:boolean"/>
+	<xsd:element name="s2f04" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s2f05" type="xsd:string"/>
+	<xsd:element name="s2f06" type="xsd:string"/>
+	<xsd:element name="s2f07" type="xsd:string"/>
+	<xsd:element name="s2f08" type="xsd:string"/>
+	<xsd:element name="s2f09" type="xsd:string"/>
+	<xsd:element name="s2f10" nillable="true" type="xsd:date"/>
+	<xsd:element name="s2f11" type="xsd:string"/>
+	<xsd:element name="s2f12" nillable="true" type="xsd:double"/>
+	<xsd:element name="s2f13" type="xsd:boolean"/>
+	<xsd:element name="s2f14" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s2f15" type="xsd:string"/>
+	<xsd:element name="s2f16" type="xsd:string"/>
+	<xsd:element name="s2f17" type="xsd:string"/>
+	<xsd:element name="s2f18" type="xsd:string"/>
+	<xsd:element name="s2f19" type="xsd:string"/>
+	<xsd:element name="s2f20" nillable="true" type="xsd:date"/>
+	<xsd:element name="s2f21" type="xsd:string"/>
+	<xsd:element name="s2f22" nillable="true" type="xsd:double"/>
+	<xsd:element name="s2f23" type="xsd:boolean"/>
+	<xsd:element name="s2f24" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s2f25" type="xsd:string"/>
+	<xsd:element name="section3">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:s3f01"/>
+				<xsd:element ref="my:s3f02"/>
+				<xsd:element ref="my:s3f03"/>
+				<xsd:element ref="my:s3f04"/>
+				<xsd:element ref="my:s3f05"/>
+				<xsd:element ref="my:s3f06"/>
+				<xsd:element ref="my:s3f07"/>
+				<xsd:element ref="my:s3f08"/>
+				<xsd:element ref="my:s3f09"/>
+				<xsd:element ref="my:s3f10"/>
+				<xsd:element ref="my:s3f11"/>
+				<xsd:element ref="my:s3f12"/>
+				<xsd:element ref="my:s3f13"/>
+				<xsd:element ref="my:s3f14"/>
+				<xsd:element ref="my:s3f15"/>
+				<xsd:element ref="my:s3f16"/>
+				<xsd:element ref="my:s3f17"/>
+				<xsd:element ref="my:s3f18"/>
+				<xsd:element ref="my:s3f19"/>
+				<xsd:element ref="my:s3f20"/>
+				<xsd:element ref="my:s3f21"/>
+				<xsd:element ref="my:s3f22"/>
+				<xsd:element ref="my:s3f23"/>
+				<xsd:element ref="my:s3f24"/>
+				<xsd:element ref="my:s3f25"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="s3f01" nillable="true" type="xsd:double"/>
+	<xsd:element name="s3f02" type="xsd:boolean"/>
+	<xsd:element name="s3f03" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s3f04" type="xsd:string"/>
+	<xsd:element name="s3f05" type="xsd:string"/>
+	<xsd:element name="s3f06" type="xsd:string"/>
+	<xsd:element name="s3f07" type="xsd:string"/>
+	<xsd:element name="s3f08" type="xsd:string"/>
+	<xsd:element name="s3f09" nillable="true" type="xsd:date"/>
+	<xsd:element name="s3f10" type="xsd:string"/>
+	<xsd:element name="s3f11" nillable="true" type="xsd:double"/>
+	<xsd:element name="s3f12" type="xsd:boolean"/>
+	<xsd:element name="s3f13" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s3f14" type="xsd:string"/>
+	<xsd:element name="s3f15" type="xsd:string"/>
+	<xsd:element name="s3f16" type="xsd:string"/>
+	<xsd:element name="s3f17" type="xsd:string"/>
+	<xsd:element name="s3f18" type="xsd:string"/>
+	<xsd:element name="s3f19" nillable="true" type="xsd:date"/>
+	<xsd:element name="s3f20" type="xsd:string"/>
+	<xsd:element name="s3f21" nillable="true" type="xsd:double"/>
+	<xsd:element name="s3f22" type="xsd:boolean"/>
+	<xsd:element name="s3f23" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s3f24" type="xsd:string"/>
+	<xsd:element name="s3f25" type="xsd:string"/>
+	<xsd:element name="section4">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:s4f01"/>
+				<xsd:element ref="my:s4f02"/>
+				<xsd:element ref="my:s4f03"/>
+				<xsd:element ref="my:s4f04"/>
+				<xsd:element ref="my:s4f05"/>
+				<xsd:element ref="my:s4f06"/>
+				<xsd:element ref="my:s4f07"/>
+				<xsd:element ref="my:s4f08"/>
+				<xsd:element ref="my:s4f09"/>
+				<xsd:element ref="my:s4f10"/>
+				<xsd:element ref="my:s4f11"/>
+				<xsd:element ref="my:s4f12"/>
+				<xsd:element ref="my:s4f13"/>
+				<xsd:element ref="my:s4f14"/>
+				<xsd:element ref="my:s4f15"/>
+				<xsd:element ref="my:s4f16"/>
+				<xsd:element ref="my:s4f17"/>
+				<xsd:element ref="my:s4f18"/>
+				<xsd:element ref="my:s4f19"/>
+				<xsd:element ref="my:s4f20"/>
+				<xsd:element ref="my:s4f21"/>
+				<xsd:element ref="my:s4f22"/>
+				<xsd:element ref="my:s4f23"/>
+				<xsd:element ref="my:s4f24"/>
+				<xsd:element ref="my:s4f25"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="s4f01" type="xsd:boolean"/>
+	<xsd:element name="s4f02" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s4f03" type="xsd:string"/>
+	<xsd:element name="s4f04" type="xsd:string"/>
+	<xsd:element name="s4f05" type="xsd:string"/>
+	<xsd:element name="s4f06" type="xsd:string"/>
+	<xsd:element name="s4f07" type="xsd:string"/>
+	<xsd:element name="s4f08" nillable="true" type="xsd:date"/>
+	<xsd:element name="s4f09" type="xsd:string"/>
+	<xsd:element name="s4f10" nillable="true" type="xsd:double"/>
+	<xsd:element name="s4f11" type="xsd:boolean"/>
+	<xsd:element name="s4f12" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s4f13" type="xsd:string"/>
+	<xsd:element name="s4f14" type="xsd:string"/>
+	<xsd:element name="s4f15" type="xsd:string"/>
+	<xsd:element name="s4f16" type="xsd:string"/>
+	<xsd:element name="s4f17" type="xsd:string"/>
+	<xsd:element name="s4f18" nillable="true" type="xsd:date"/>
+	<xsd:element name="s4f19" type="xsd:string"/>
+	<xsd:element name="s4f20" nillable="true" type="xsd:double"/>
+	<xsd:element name="s4f21" type="xsd:boolean"/>
+	<xsd:element name="s4f22" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s4f23" type="xsd:string"/>
+	<xsd:element name="s4f24" type="xsd:string"/>
+	<xsd:element name="s4f25" type="xsd:string"/>
+	<xsd:element name="section5">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:s5f01"/>
+				<xsd:element ref="my:s5f02"/>
+				<xsd:element ref="my:s5f03"/>
+				<xsd:element ref="my:s5f04"/>
+				<xsd:element ref="my:s5f05"/>
+				<xsd:element ref="my:s5f06"/>
+				<xsd:element ref="my:s5f07"/>
+				<xsd:element ref="my:s5f08"/>
+				<xsd:element ref="my:s5f09"/>
+				<xsd:element ref="my:s5f10"/>
+				<xsd:element ref="my:s5f11"/>
+				<xsd:element ref="my:s5f12"/>
+				<xsd:element ref="my:s5f13"/>
+				<xsd:element ref="my:s5f14"/>
+				<xsd:element ref="my:s5f15"/>
+				<xsd:element ref="my:s5f16"/>
+				<xsd:element ref="my:s5f17"/>
+				<xsd:element ref="my:s5f18"/>
+				<xsd:element ref="my:s5f19"/>
+				<xsd:element ref="my:s5f20"/>
+				<xsd:element ref="my:s5f21"/>
+				<xsd:element ref="my:s5f22"/>
+				<xsd:element ref="my:s5f23"/>
+				<xsd:element ref="my:s5f24"/>
+				<xsd:element ref="my:s5f25"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="s5f01" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s5f02" type="xsd:string"/>
+	<xsd:element name="s5f03" type="xsd:string"/>
+	<xsd:element name="s5f04" type="xsd:string"/>
+	<xsd:element name="s5f05" type="xsd:string"/>
+	<xsd:element name="s5f06" type="xsd:string"/>
+	<xsd:element name="s5f07" nillable="true" type="xsd:date"/>
+	<xsd:element name="s5f08" type="xsd:string"/>
+	<xsd:element name="s5f09" nillable="true" type="xsd:double"/>
+	<xsd:element name="s5f10" type="xsd:boolean"/>
+	<xsd:element name="s5f11" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s5f12" type="xsd:string"/>
+	<xsd:element name="s5f13" type="xsd:string"/>
+	<xsd:element name="s5f14" type="xsd:string"/>
+	<xsd:element name="s5f15" type="xsd:string"/>
+	<xsd:element name="s5f16" type="xsd:string"/>
+	<xsd:element name="s5f17" nillable="true" type="xsd:date"/>
+	<xsd:element name="s5f18" type="xsd:string"/>
+	<xsd:element name="s5f19" nillable="true" type="xsd:double"/>
+	<xsd:element name="s5f20" type="xsd:boolean"/>
+	<xsd:element name="s5f21" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s5f22" type="xsd:string"/>
+	<xsd:element name="s5f23" type="xsd:string"/>
+	<xsd:element name="s5f24" type="xsd:string"/>
+	<xsd:element name="s5f25" type="xsd:string"/>
+	<xsd:element name="section6">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:s6f01"/>
+				<xsd:element ref="my:s6f02"/>
+				<xsd:element ref="my:s6f03"/>
+				<xsd:element ref="my:s6f04"/>
+				<xsd:element ref="my:s6f05"/>
+				<xsd:element ref="my:s6f06"/>
+				<xsd:element ref="my:s6f07"/>
+				<xsd:element ref="my:s6f08"/>
+				<xsd:element ref="my:s6f09"/>
+				<xsd:element ref="my:s6f10"/>
+				<xsd:element ref="my:s6f11"/>
+				<xsd:element ref="my:s6f12"/>
+				<xsd:element ref="my:s6f13"/>
+				<xsd:element ref="my:s6f14"/>
+				<xsd:element ref="my:s6f15"/>
+				<xsd:element ref="my:s6f16"/>
+				<xsd:element ref="my:s6f17"/>
+				<xsd:element ref="my:s6f18"/>
+				<xsd:element ref="my:s6f19"/>
+				<xsd:element ref="my:s6f20"/>
+				<xsd:element ref="my:s6f21"/>
+				<xsd:element ref="my:s6f22"/>
+				<xsd:element ref="my:s6f23"/>
+				<xsd:element ref="my:s6f24"/>
+				<xsd:element ref="my:s6f25"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="s6f01" type="xsd:string"/>
+	<xsd:element name="s6f02" type="xsd:string"/>
+	<xsd:element name="s6f03" type="xsd:string"/>
+	<xsd:element name="s6f04" type="xsd:string"/>
+	<xsd:element name="s6f05" type="xsd:string"/>
+	<xsd:element name="s6f06" nillable="true" type="xsd:date"/>
+	<xsd:element name="s6f07" type="xsd:string"/>
+	<xsd:element name="s6f08" nillable="true" type="xsd:double"/>
+	<xsd:element name="s6f09" type="xsd:boolean"/>
+	<xsd:element name="s6f10" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s6f11" type="xsd:string"/>
+	<xsd:element name="s6f12" type="xsd:string"/>
+	<xsd:element name="s6f13" type="xsd:string"/>
+	<xsd:element name="s6f14" type="xsd:string"/>
+	<xsd:element name="s6f15" type="xsd:string"/>
+	<xsd:element name="s6f16" nillable="true" type="xsd:date"/>
+	<xsd:element name="s6f17" type="xsd:string"/>
+	<xsd:element name="s6f18" nillable="true" type="xsd:double"/>
+	<xsd:element name="s6f19" type="xsd:boolean"/>
+	<xsd:element name="s6f20" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s6f21" type="xsd:string"/>
+	<xsd:element name="s6f22" type="xsd:string"/>
+	<xsd:element name="s6f23" type="xsd:string"/>
+	<xsd:element name="s6f24" type="xsd:string"/>
+	<xsd:element name="s6f25" type="xsd:string"/>
+	<xsd:element name="section7">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:s7f01"/>
+				<xsd:element ref="my:s7f02"/>
+				<xsd:element ref="my:s7f03"/>
+				<xsd:element ref="my:s7f04"/>
+				<xsd:element ref="my:s7f05"/>
+				<xsd:element ref="my:s7f06"/>
+				<xsd:element ref="my:s7f07"/>
+				<xsd:element ref="my:s7f08"/>
+				<xsd:element ref="my:s7f09"/>
+				<xsd:element ref="my:s7f10"/>
+				<xsd:element ref="my:s7f11"/>
+				<xsd:element ref="my:s7f12"/>
+				<xsd:element ref="my:s7f13"/>
+				<xsd:element ref="my:s7f14"/>
+				<xsd:element ref="my:s7f15"/>
+				<xsd:element ref="my:s7f16"/>
+				<xsd:element ref="my:s7f17"/>
+				<xsd:element ref="my:s7f18"/>
+				<xsd:element ref="my:s7f19"/>
+				<xsd:element ref="my:s7f20"/>
+				<xsd:element ref="my:s7f21"/>
+				<xsd:element ref="my:s7f22"/>
+				<xsd:element ref="my:s7f23"/>
+				<xsd:element ref="my:s7f24"/>
+				<xsd:element ref="my:s7f25"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="s7f01" type="xsd:string"/>
+	<xsd:element name="s7f02" type="xsd:string"/>
+	<xsd:element name="s7f03" type="xsd:string"/>
+	<xsd:element name="s7f04" type="xsd:string"/>
+	<xsd:element name="s7f05" nillable="true" type="xsd:date"/>
+	<xsd:element name="s7f06" type="xsd:string"/>
+	<xsd:element name="s7f07" nillable="true" type="xsd:double"/>
+	<xsd:element name="s7f08" type="xsd:boolean"/>
+	<xsd:element name="s7f09" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s7f10" type="xsd:string"/>
+	<xsd:element name="s7f11" type="xsd:string"/>
+	<xsd:element name="s7f12" type="xsd:string"/>
+	<xsd:element name="s7f13" type="xsd:string"/>
+	<xsd:element name="s7f14" type="xsd:string"/>
+	<xsd:element name="s7f15" nillable="true" type="xsd:date"/>
+	<xsd:element name="s7f16" type="xsd:string"/>
+	<xsd:element name="s7f17" nillable="true" type="xsd:double"/>
+	<xsd:element name="s7f18" type="xsd:boolean"/>
+	<xsd:element name="s7f19" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s7f20" type="xsd:string"/>
+	<xsd:element name="s7f21" type="xsd:string"/>
+	<xsd:element name="s7f22" type="xsd:string"/>
+	<xsd:element name="s7f23" type="xsd:string"/>
+	<xsd:element name="s7f24" type="xsd:string"/>
+	<xsd:element name="s7f25" nillable="true" type="xsd:date"/>
+	<xsd:element name="section8">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:s8f01"/>
+				<xsd:element ref="my:s8f02"/>
+				<xsd:element ref="my:s8f03"/>
+				<xsd:element ref="my:s8f04"/>
+				<xsd:element ref="my:s8f05"/>
+				<xsd:element ref="my:s8f06"/>
+				<xsd:element ref="my:s8f07"/>
+				<xsd:element ref="my:s8f08"/>
+				<xsd:element ref="my:s8f09"/>
+				<xsd:element ref="my:s8f10"/>
+				<xsd:element ref="my:s8f11"/>
+				<xsd:element ref="my:s8f12"/>
+				<xsd:element ref="my:s8f13"/>
+				<xsd:element ref="my:s8f14"/>
+				<xsd:element ref="my:s8f15"/>
+				<xsd:element ref="my:s8f16"/>
+				<xsd:element ref="my:s8f17"/>
+				<xsd:element ref="my:s8f18"/>
+				<xsd:element ref="my:s8f19"/>
+				<xsd:element ref="my:s8f20"/>
+				<xsd:element ref="my:s8f21"/>
+				<xsd:element ref="my:s8f22"/>
+				<xsd:element ref="my:s8f23"/>
+				<xsd:element ref="my:s8f24"/>
+				<xsd:element ref="my:s8f25"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="s8f01" type="xsd:string"/>
+	<xsd:element name="s8f02" type="xsd:string"/>
+	<xsd:element name="s8f03" type="xsd:string"/>
+	<xsd:element name="s8f04" nillable="true" type="xsd:date"/>
+	<xsd:element name="s8f05" type="xsd:string"/>
+	<xsd:element name="s8f06" nillable="true" type="xsd:double"/>
+	<xsd:element name="s8f07" type="xsd:boolean"/>
+	<xsd:element name="s8f08" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s8f09" type="xsd:string"/>
+	<xsd:element name="s8f10" type="xsd:string"/>
+	<xsd:element name="s8f11" type="xsd:string"/>
+	<xsd:element name="s8f12" type="xsd:string"/>
+	<xsd:element name="s8f13" type="xsd:string"/>
+	<xsd:element name="s8f14" nillable="true" type="xsd:date"/>
+	<xsd:element name="s8f15" type="xsd:string"/>
+	<xsd:element name="s8f16" nillable="true" type="xsd:double"/>
+	<xsd:element name="s8f17" type="xsd:boolean"/>
+	<xsd:element name="s8f18" nillable="true" type="xsd:integer"/>
+	<xsd:element name="s8f19" type="xsd:string"/>
+	<xsd:element name="s8f20" type="xsd:string"/>
+	<xsd:element name="s8f21" type="xsd:string"/>
+	<xsd:element name="s8f22" type="xsd:string"/>
+	<xsd:element name="s8f23" type="xsd:string"/>
+	<xsd:element name="s8f24" nillable="true" type="xsd:date"/>
+	<xsd:element name="s8f25" type="xsd:string"/>
+</xsd:schema>

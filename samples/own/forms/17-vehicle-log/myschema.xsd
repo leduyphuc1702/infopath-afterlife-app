@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:17:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:17:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="vehicleLog">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:driverName"/>
+				<xsd:element ref="my:vehiclePlate"/>
+				<xsd:element ref="my:tripDate"/>
+				<xsd:element ref="my:odometerStart"/>
+				<xsd:element ref="my:odometerEnd"/>
+				<xsd:element ref="my:distance"/>
+				<xsd:element ref="my:purpose"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="driverName" type="xsd:string"/>
+	<xsd:element name="vehiclePlate" type="xsd:string"/>
+	<xsd:element name="tripDate" nillable="true" type="xsd:date"/>
+	<xsd:element name="odometerStart" nillable="true" type="xsd:integer"/>
+	<xsd:element name="odometerEnd" nillable="true" type="xsd:integer"/>
+	<xsd:element name="distance" nillable="true" type="xsd:double"/>
+	<xsd:element name="purpose" type="xsd:string"/>
+</xsd:schema>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Safety-Incident:-myXSD-2026-11-03T08-50-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/06-safety-incident.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:incidentReport xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:reporter>
+		<my:reporterName>Wendell Ingram</my:reporterName>
+		<my:reporterPhone>+1-555-0126</my:reporterPhone>
+	</my:reporter>
+	<my:occurredAt>2026-05-17T18:16:00</my:occurredAt>
+	<my:site>North</my:site>
+	<my:locationDetail>Forklift aisle 7</my:locationDetail>
+	<my:severity>High</my:severity>
+	<my:incidentDescription><div xmlns="http://www.w3.org/1999/xhtml"><p>Incident at 18:16. <em>Fictional test record.</em></p></div></my:incidentDescription>
+	<my:scenePhoto>iVBORw0KGgoAAAANSUhEUgAAAAgAAAAGCAIAAABxZ0isAAAAEUlEQVR4nGOodxHFihgGUgIA8psogYM4H+UAAAAASUVORK5CYII=</my:scenePhoto>
+	<my:persons>
+		<my:person>
+			<my:personName>Yara Harrow</my:personName>
+			<my:personRole>Visitor</my:personRole>
+			<my:injuryType>FirstAid</my:injuryType>
+			<my:followUps>
+				<my:followUp>
+					<my:actionDate>2026-05-17</my:actionDate>
+					<my:actionTaken>Guard rail repaired</my:actionTaken>
+					<my:actionOwner>Ivo Harrow</my:actionOwner>
+				</my:followUp>
+				<my:followUp>
+					<my:actionDate>2026-05-18</my:actionDate>
+					<my:actionTaken>Area cordoned off</my:actionTaken>
+					<my:actionOwner>Mara Harrow</my:actionOwner>
+				</my:followUp>
+			</my:followUps>
+		</my:person>
+		<my:person>
+			<my:personName>Rafael Brask</my:personName>
+			<my:personRole>Visitor</my:personRole>
+			<my:injuryType>Minor</my:injuryType>
+			<my:followUps>
+				<my:followUp>
+					<my:actionDate>2026-05-17</my:actionDate>
+					<my:actionTaken>Toolbox talk held</my:actionTaken>
+					<my:actionOwner>Ilse Arden</my:actionOwner>
+				</my:followUp>
+				<my:followUp>
+					<my:actionDate>2026-05-18</my:actionDate>
+					<my:actionTaken>First aid given</my:actionTaken>
+					<my:actionOwner>Oscar Galloway</my:actionOwner>
+				</my:followUp>
+				<my:followUp>
+					<my:actionDate>2026-05-19</my:actionDate>
+					<my:actionTaken>Area cordoned off</my:actionTaken>
+					<my:actionOwner>Kenji Fenwick</my:actionOwner>
+				</my:followUp>
+			</my:followUps>
+		</my:person>
+	</my:persons>
+</my:incidentReport>

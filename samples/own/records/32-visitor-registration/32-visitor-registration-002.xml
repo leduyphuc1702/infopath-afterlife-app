@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Visitor-Registration:-myXSD-2026-11-04T09-32-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/32-visitor-registration.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:visitorRegistration xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:32:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:visitorName>Alpha 63</my:visitorName>
+	<my:visitorCompany>Cedar 94</my:visitorCompany>
+	<my:visitDate>2026-08-17</my:visitDate>
+	<my:hostName>Alpha 55</my:hostName>
+	<my:site>North</my:site>
+	<my:badgeIssued>true</my:badgeIssued>
+	<my:safetyBriefed>true</my:safetyBriefed>
+</my:visitorRegistration>

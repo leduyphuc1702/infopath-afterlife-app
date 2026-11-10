@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Timesheet:-myXSD-2026-11-04T09-10-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/10-timesheet.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:timesheet xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:10:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:employee>
+		<my:employeeName>Alpha 59</my:employeeName>
+		<my:employeeId>Delta 94</my:employeeId>
+		<my:weekStart>2026-05-14</my:weekStart>
+	</my:employee>
+	<my:lines>
+		<my:day>
+			<my:workDate>2025-11-23</my:workDate>
+			<my:hoursWorked>487.85</my:hoursWorked>
+			<my:projectCode>P100</my:projectCode>
+			<my:note>Delta 33</my:note>
+		</my:day>
+		<my:day>
+			<my:workDate>2026-07-11</my:workDate>
+			<my:hoursWorked>142.33</my:hoursWorked>
+			<my:projectCode>P100</my:projectCode>
+			<my:note>Falcon 25</my:note>
+		</my:day>
+	</my:lines>
+	<my:totalHours xsi:nil="true"></my:totalHours>
+	<my:approverEmail>Falcon 70</my:approverEmail>
+</my:timesheet>

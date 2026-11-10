@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Vendor-Onboarding:-myXSD-2026-11-04T09-12-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/12-vendor-onboarding.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:vendorOnboarding xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:12:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:vendor>
+		<my:vendorName>Delta 57</my:vendorName>
+		<my:country>VN</my:country>
+		<my:taxId>Ember 17</my:taxId>
+		<my:contactEmail>Bravo 35</my:contactEmail>
+	</my:vendor>
+	<my:bank>
+		<my:bankName>Alpha 80</my:bankName>
+		<my:accountNumber>Bravo 33</my:accountNumber>
+		<my:currency>USD</my:currency>
+	</my:bank>
+	<my:riskRating>Low</my:riskRating>
+	<my:sanctionsChecked>false</my:sanctionsChecked>
+	<my:notes><div xmlns="http://www.w3.org/1999/xhtml"><p>Test record, fictional.</p></div></my:notes>
+</my:vendorOnboarding>

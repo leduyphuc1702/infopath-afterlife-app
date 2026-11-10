@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/dataFormSolution" xmlns:dfs="http://schemas.microsoft.com/office/infopath/2003/dataFormSolution" xmlns:tns="http://forms-legacy/budget/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:import namespace="http://forms-legacy/budget/" schemaLocation="BudgetService1.xsd"/>
+	<xsd:element name="myFields">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="queryFields">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element ref="tns:GetRemainingBudget" minOccurs="0"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="dataFields">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element ref="tns:GetRemainingBudgetResponse" minOccurs="0"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

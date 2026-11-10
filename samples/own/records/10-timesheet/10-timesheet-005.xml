@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Timesheet:-myXSD-2026-11-04T09-10-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/10-timesheet.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:timesheet xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:10:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:employee>
+		<my:employeeName>Delta 88</my:employeeName>
+		<my:employeeId>Delta 28</my:employeeId>
+		<my:weekStart>2025-11-30</my:weekStart>
+	</my:employee>
+	<my:lines>
+		<my:day>
+			<my:workDate>2026-07-28</my:workDate>
+			<my:hoursWorked>412.92</my:hoursWorked>
+			<my:projectCode>P100</my:projectCode>
+			<my:note>Ember 92</my:note>
+		</my:day>
+		<my:day>
+			<my:workDate>2026-09-04</my:workDate>
+			<my:hoursWorked>276.38</my:hoursWorked>
+			<my:projectCode>P100</my:projectCode>
+			<my:note>Cedar 81</my:note>
+		</my:day>
+	</my:lines>
+	<my:totalHours xsi:nil="true"></my:totalHours>
+	<my:approverEmail>Bravo 53</my:approverEmail>
+</my:timesheet>

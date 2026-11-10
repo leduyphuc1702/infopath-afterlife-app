@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Vehicle-Log:-myXSD-2026-11-04T09-17-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="manifest.xsf" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:vehicleLog xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:17:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:driverName></my:driverName>
+	<my:vehiclePlate></my:vehiclePlate>
+	<my:tripDate xsi:nil="true"></my:tripDate>
+	<my:odometerStart xsi:nil="true"></my:odometerStart>
+	<my:odometerEnd xsi:nil="true"></my:odometerEnd>
+	<my:distance xsi:nil="true"></my:distance>
+	<my:purpose></my:purpose>
+</my:vehicleLog>

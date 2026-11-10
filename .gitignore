@@ -1,0 +1,11 @@
+node_modules/
+dist/
+build/
+.env
+.env.*
+*.log
+# Local-only samples whose licence does not allow redistribution (see docs/SAMPLE-LICENSES.md)
+samples/private/
+# Kiro MCP settings hold credentials; keep the description in docs/kiro/mcp.md instead
+.kiro/settings/mcp.json
+.DS_Store

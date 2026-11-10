@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="purchaseRequest">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:requester"/>
+				<xsd:element ref="my:vendorId"/>
+				<xsd:element ref="my:neededBy"/>
+				<xsd:element ref="my:lines"/>
+				<xsd:element ref="my:subtotal"/>
+				<xsd:element ref="my:vatRate"/>
+				<xsd:element ref="my:vatAmount"/>
+				<xsd:element ref="my:grandTotal"/>
+				<xsd:element ref="my:budgetRemaining"/>
+				<xsd:element ref="my:needsAccounting"/>
+				<xsd:element ref="my:justification"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="requester">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:requesterName"/>
+				<xsd:element ref="my:requesterEmail"/>
+				<xsd:element ref="my:costCenterCode"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="requesterName" type="xsd:string"/>
+	<xsd:element name="requesterEmail" type="xsd:string"/>
+	<xsd:element name="costCenterCode" type="xsd:string"/>
+	<xsd:element name="vendorId" type="xsd:string"/>
+	<xsd:element name="neededBy" nillable="true" type="xsd:date"/>
+	<xsd:element name="lines">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:line" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="line">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:lineDescription"/>
+				<xsd:element ref="my:quantity"/>
+				<xsd:element ref="my:unitPrice"/>
+				<xsd:element ref="my:lineTotal"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="lineDescription" type="xsd:string"/>
+	<xsd:element name="quantity" nillable="true" type="xsd:integer"/>
+	<xsd:element name="unitPrice" nillable="true" type="xsd:double"/>
+	<xsd:element name="lineTotal" nillable="true" type="xsd:double"/>
+	<xsd:element name="subtotal" nillable="true" type="xsd:double"/>
+	<xsd:element name="vatRate" nillable="true" type="xsd:double"/>
+	<xsd:element name="vatAmount" nillable="true" type="xsd:double"/>
+	<xsd:element name="grandTotal" nillable="true" type="xsd:double"/>
+	<xsd:element name="budgetRemaining" nillable="true" type="xsd:double"/>
+	<xsd:element name="needsAccounting" type="xsd:boolean"/>
+	<xsd:element name="justification" type="xsd:string"/>
+</xsd:schema>

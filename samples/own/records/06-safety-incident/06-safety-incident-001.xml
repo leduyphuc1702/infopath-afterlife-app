@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Safety-Incident:-myXSD-2026-11-03T08-50-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/06-safety-incident.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:incidentReport xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:reporter>
+		<my:reporterName>Yara Arden</my:reporterName>
+		<my:reporterPhone>+1-555-0116</my:reporterPhone>
+	</my:reporter>
+	<my:occurredAt>2026-03-28T20:54:00</my:occurredAt>
+	<my:site>North</my:site>
+	<my:locationDetail>Stairwell B</my:locationDetail>
+	<my:severity>High</my:severity>
+	<my:incidentDescription><div xmlns="http://www.w3.org/1999/xhtml"><p>Incident at 20:54. <em>Fictional test record.</em></p></div></my:incidentDescription>
+	<my:scenePhoto>iVBORw0KGgoAAAANSUhEUgAAAAgAAAAGCAIAAABxZ0isAAAAEUlEQVR4nGOYJ1yEFTEMpAQABfY2kVTjUm0AAAAASUVORK5CYII=</my:scenePhoto>
+	<my:persons>
+		<my:person>
+			<my:personName>Ivo Dallow</my:personName>
+			<my:personRole>Contractor</my:personRole>
+			<my:injuryType>None</my:injuryType>
+			<my:followUps>
+				<my:followUp>
+					<my:actionDate>2026-03-28</my:actionDate>
+					<my:actionTaken>Guard rail repaired</my:actionTaken>
+					<my:actionOwner>Farah Juniper</my:actionOwner>
+				</my:followUp>
+				<my:followUp>
+					<my:actionDate>2026-03-29</my:actionDate>
+					<my:actionTaken>First aid given</my:actionTaken>
+					<my:actionOwner>Sanne Juniper</my:actionOwner>
+				</my:followUp>
+				<my:followUp>
+					<my:actionDate>2026-03-30</my:actionDate>
+					<my:actionTaken>Area cordoned off</my:actionTaken>
+					<my:actionOwner>Mara Keel</my:actionOwner>
+				</my:followUp>
+			</my:followUps>
+		</my:person>
+		<my:person>
+			<my:personName>Gus Fenwick</my:personName>
+			<my:personRole>Visitor</my:personRole>
+			<my:injuryType>FirstAid</my:injuryType>
+			<my:followUps>
+				<my:followUp>
+					<my:actionDate>2026-03-28</my:actionDate>
+					<my:actionTaken>Guard rail repaired</my:actionTaken>
+					<my:actionOwner>Mara Dallow</my:actionOwner>
+				</my:followUp>
+			</my:followUps>
+		</my:person>
+		<my:person>
+			<my:personName>Hana Ingram</my:personName>
+			<my:personRole>Contractor</my:personRole>
+			<my:injuryType>None</my:injuryType>
+			<my:followUps>
+				<my:followUp>
+					<my:actionDate>2026-03-28</my:actionDate>
+					<my:actionTaken>Area cordoned off</my:actionTaken>
+					<my:actionOwner>Rafael Arden</my:actionOwner>
+				</my:followUp>
+				<my:followUp>
+					<my:actionDate>2026-03-29</my:actionDate>
+					<my:actionTaken>First aid given</my:actionTaken>
+					<my:actionOwner>Oscar Harrow</my:actionOwner>
+				</my:followUp>
+				<my:followUp>
+					<my:actionDate>2026-03-30</my:actionDate>
+					<my:actionTaken>Guard rail repaired</my:actionTaken>
+					<my:actionOwner>Wendell Ingram</my:actionOwner>
+				</my:followUp>
+			</my:followUps>
+		</my:person>
+	</my:persons>
+</my:incidentReport>

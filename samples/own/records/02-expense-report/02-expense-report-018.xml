@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Expense-Claim:-myXSD-2026-11-03T08-10-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/02-expense-report.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:expenseClaim xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:claimant>
+		<my:claimantName>Yara Fenwick</my:claimantName>
+		<my:claimantId>E20018</my:claimantId>
+		<my:claimantDept>HR</my:claimantDept>
+	</my:claimant>
+	<my:businessPurpose>Site audit</my:businessPurpose>
+	<my:claimCurrency>EUR</my:claimCurrency>
+	<my:expenses>
+		<my:expense>
+			<my:expenseDate>2025-07-18</my:expenseDate>
+			<my:expenseType>Supplies</my:expenseType>
+			<my:expenseDescription>Supplies - Harbor Inn</my:expenseDescription>
+			<my:amount>182.94</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGIAAAARAAAAcgBlAGMAZQBpAHAAdAAtADEAOAAtADEALgB0AHgAdAAAAFJFQ0VJUFQKSGFyYm9yIElubgpEYXRlOiAyMDI1LTA3LTE4ClRvdGFsOiAxODIuOTQKUmVmOiA5NDM5NTY5OQpUaGlzIGlzIGEgZmljdGlvbmFsIHRlc3QgcmVjZWlwdC4K</my:receipt>
+		</my:expense>
+		<my:expense>
+			<my:expenseDate>2025-05-02</my:expenseDate>
+			<my:expenseType>Supplies</my:expenseType>
+			<my:expenseDescription>Supplies - Harbor Inn</my:expenseDescription>
+			<my:amount>167.82</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGIAAAARAAAAcgBlAGMAZQBpAHAAdAAtADEAOAAtADIALgB0AHgAdAAAAFJFQ0VJUFQKSGFyYm9yIElubgpEYXRlOiAyMDI1LTA1LTAyClRvdGFsOiAxNjcuODIKUmVmOiA3MTg5MjQxMQpUaGlzIGlzIGEgZmljdGlvbmFsIHRlc3QgcmVjZWlwdC4K</my:receipt>
+		</my:expense>
+		<my:expense>
+			<my:expenseDate>2025-04-07</my:expenseDate>
+			<my:expenseType>Travel</my:expenseType>
+			<my:expenseDescription>Travel - Harbor Inn</my:expenseDescription>
+			<my:amount>391.29</my:amount>
+			<my:receipt xsi:nil="true"></my:receipt>
+		</my:expense>
+	</my:expenses>
+	<my:totalAmount>742.05</my:totalAmount>
+	<my:approverEmail>rafael.ingram@contoso-fictional.example</my:approverEmail>
+</my:expenseClaim>

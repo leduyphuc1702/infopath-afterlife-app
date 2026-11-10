@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="onboarding">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:newHire"/>
+				<xsd:element ref="my:employment"/>
+				<xsd:element ref="my:equipment"/>
+				<xsd:element ref="my:relocation" minOccurs="0"/>
+				<xsd:element ref="my:welcomeNote"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="newHire">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:hireName"/>
+				<xsd:element ref="my:hireStartDate"/>
+				<xsd:element ref="my:hireTitle"/>
+				<xsd:element ref="my:hireDept"/>
+				<xsd:element ref="my:hireManager"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="hireName" type="xsd:string"/>
+	<xsd:element name="hireStartDate" nillable="true" type="xsd:date"/>
+	<xsd:element name="hireTitle" type="xsd:string"/>
+	<xsd:element name="hireDept" type="xsd:string"/>
+	<xsd:element name="hireManager" type="xsd:string"/>
+	<xsd:element name="employment">
+		<xsd:complexType>
+			<xsd:choice>
+				<xsd:element ref="my:fullTime"/>
+				<xsd:element ref="my:contractor"/>
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="fullTime">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:annualSalary"/>
+				<xsd:element ref="my:benefitsPlan"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="annualSalary" nillable="true" type="xsd:double"/>
+	<xsd:element name="benefitsPlan" type="xsd:string"/>
+	<xsd:element name="contractor">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:agencyName"/>
+				<xsd:element ref="my:hourlyRate"/>
+				<xsd:element ref="my:contractEnd"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="agencyName" type="xsd:string"/>
+	<xsd:element name="hourlyRate" nillable="true" type="xsd:double"/>
+	<xsd:element name="contractEnd" nillable="true" type="xsd:date"/>
+	<xsd:element name="equipment">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:needsLaptop"/>
+				<xsd:element ref="my:needsPhone"/>
+				<xsd:element ref="my:needsMonitor"/>
+				<xsd:element ref="my:accountsNeeded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="needsLaptop" type="xsd:boolean"/>
+	<xsd:element name="needsPhone" type="xsd:boolean"/>
+	<xsd:element name="needsMonitor" type="xsd:boolean"/>
+	<xsd:element name="accountsNeeded" type="xsd:string"/>
+	<xsd:element name="relocation">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:relocateFrom"/>
+				<xsd:element ref="my:relocationAllowance"/>
+				<xsd:element ref="my:movingDate"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="relocateFrom" type="xsd:string"/>
+	<xsd:element name="relocationAllowance" nillable="true" type="xsd:double"/>
+	<xsd:element name="movingDate" nillable="true" type="xsd:date"/>
+	<xsd:element name="welcomeNote">
+		<xsd:complexType mixed="true">
+			<xsd:sequence>
+				<xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/1999/xhtml" processContents="lax"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

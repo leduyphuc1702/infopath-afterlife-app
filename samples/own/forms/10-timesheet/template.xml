@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Timesheet:-myXSD-2026-11-04T09-10-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="manifest.xsf" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:timesheet xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:10:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:employee>
+		<my:employeeName></my:employeeName>
+		<my:employeeId></my:employeeId>
+		<my:weekStart xsi:nil="true"></my:weekStart>
+	</my:employee>
+	<my:lines>
+		<my:day>
+			<my:workDate xsi:nil="true"></my:workDate>
+			<my:hoursWorked xsi:nil="true"></my:hoursWorked>
+			<my:projectCode></my:projectCode>
+			<my:note></my:note>
+		</my:day>
+	</my:lines>
+	<my:totalHours xsi:nil="true"></my:totalHours>
+	<my:approverEmail></my:approverEmail>
+</my:timesheet>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:34:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:34:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="facilitiesWorkOrder">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:requestedBy"/>
+				<xsd:element ref="my:location"/>
+				<xsd:element ref="my:room"/>
+				<xsd:element ref="my:category"/>
+				<xsd:element ref="my:description"/>
+				<xsd:element ref="my:priority"/>
+				<xsd:element ref="my:completedOn"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="requestedBy" type="xsd:string"/>
+	<xsd:element name="location" type="xsd:string"/>
+	<xsd:element name="room" type="xsd:string"/>
+	<xsd:element name="category" type="xsd:string"/>
+	<xsd:element name="description">
+		<xsd:complexType mixed="true">
+			<xsd:sequence>
+				<xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/1999/xhtml" processContents="lax"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="priority" type="xsd:string"/>
+	<xsd:element name="completedOn" nillable="true" type="xsd:date"/>
+</xsd:schema>

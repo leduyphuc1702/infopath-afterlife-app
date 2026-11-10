@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dfs:myFields xmlns:dfs="http://schemas.microsoft.com/office/infopath/2003/dataFormSolution" xmlns:tns="http://forms-legacy/budget/"><dfs:queryFields><tns:GetRemainingBudget><tns:costCenter></tns:costCenter></tns:GetRemainingBudget></dfs:queryFields><dfs:dataFields></dfs:dataFields></dfs:myFields>

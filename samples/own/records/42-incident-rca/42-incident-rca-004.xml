@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Incident-Rca:-myXSD-2026-11-04T09-42-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/42-incident-rca.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:incidentRca xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:42:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:incidentRef>Ember 30</my:incidentRef>
+	<my:rootCause><div xmlns="http://www.w3.org/1999/xhtml"><p>Test record, fictional.</p></div></my:rootCause>
+	<my:contributing>Falcon 32</my:contributing>
+	<my:preventive>Cedar 38</my:preventive>
+	<my:ownerEmail>Falcon 92</my:ownerEmail>
+</my:incidentRca>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Expense-Claim:-myXSD-2026-11-03T08-10-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/02-expense-report.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:expenseClaim xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:claimant>
+		<my:claimantName>Mara Fenwick</my:claimantName>
+		<my:claimantId>E20028</my:claimantId>
+		<my:claimantDept>FIN</my:claimantDept>
+	</my:claimant>
+	<my:businessPurpose>Team offsite</my:businessPurpose>
+	<my:claimCurrency>USD</my:claimCurrency>
+	<my:expenses>
+		<my:expense>
+			<my:expenseDate>2026-07-14</my:expenseDate>
+			<my:expenseType>Travel</my:expenseType>
+			<my:expenseDescription>Travel - Northwind Taxi</my:expenseDescription>
+			<my:amount>161.37</my:amount>
+			<my:receipt xsi:nil="true"></my:receipt>
+		</my:expense>
+		<my:expense>
+			<my:expenseDate>2026-05-04</my:expenseDate>
+			<my:expenseType>Travel</my:expenseType>
+			<my:expenseDescription>Travel - Blue Fern Cafe</my:expenseDescription>
+			<my:amount>30.37</my:amount>
+			<my:receipt xsi:nil="true"></my:receipt>
+		</my:expense>
+	</my:expenses>
+	<my:totalAmount>191.74</my:totalAmount>
+	<my:approverEmail>mara.corvin@contoso-fictional.example</my:approverEmail>
+</my:expenseClaim>

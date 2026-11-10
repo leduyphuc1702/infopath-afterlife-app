@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:18:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:18:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="mileageClaim">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:claimantName"/>
+				<xsd:element ref="my:trips"/>
+				<xsd:element ref="my:claimTotal"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="claimantName" type="xsd:string"/>
+	<xsd:element name="trips">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:trip" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="trip">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:tripDate"/>
+				<xsd:element ref="my:tripFrom"/>
+				<xsd:element ref="my:tripTo"/>
+				<xsd:element ref="my:tripKm"/>
+				<xsd:element ref="my:tripRate"/>
+				<xsd:element ref="my:tripAmount"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="tripDate" nillable="true" type="xsd:date"/>
+	<xsd:element name="tripFrom" type="xsd:string"/>
+	<xsd:element name="tripTo" type="xsd:string"/>
+	<xsd:element name="tripKm" nillable="true" type="xsd:double"/>
+	<xsd:element name="tripRate" nillable="true" type="xsd:double"/>
+	<xsd:element name="tripAmount" nillable="true" type="xsd:double"/>
+	<xsd:element name="claimTotal" nillable="true" type="xsd:double"/>
+</xsd:schema>

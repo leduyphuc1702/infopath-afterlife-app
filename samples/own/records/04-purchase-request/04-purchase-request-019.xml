@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Purchase-Request:-myXSD-2026-11-03T08-30-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/04-purchase-request.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:purchaseRequest xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:requester>
+		<my:requesterName>Emeka Harrow</my:requesterName>
+		<my:requesterEmail>emeka.harrow@contoso-fictional.example</my:requesterEmail>
+		<my:costCenterCode>CC-152</my:costCenterCode>
+	</my:requester>
+	<my:vendorId>V134</my:vendorId>
+	<my:neededBy>2026-02-27</my:neededBy>
+	<my:lines>
+		<my:line>
+			<my:lineDescription>USB dock</my:lineDescription>
+			<my:quantity>6</my:quantity>
+			<my:unitPrice>246.37</my:unitPrice>
+			<my:lineTotal>1478.22</my:lineTotal>
+		</my:line>
+		<my:line>
+			<my:lineDescription>USB dock</my:lineDescription>
+			<my:quantity>8</my:quantity>
+			<my:unitPrice>245.36</my:unitPrice>
+			<my:lineTotal>1962.88</my:lineTotal>
+		</my:line>
+		<my:line>
+			<my:lineDescription>USB dock</my:lineDescription>
+			<my:quantity>4</my:quantity>
+			<my:unitPrice>28.82</my:unitPrice>
+			<my:lineTotal>115.28</my:lineTotal>
+		</my:line>
+		<my:line>
+			<my:lineDescription>USB dock</my:lineDescription>
+			<my:quantity>10</my:quantity>
+			<my:unitPrice>98.33</my:unitPrice>
+			<my:lineTotal>983.30</my:lineTotal>
+		</my:line>
+	</my:lines>
+	<my:subtotal>4539.68</my:subtotal>
+	<my:vatRate>0.1</my:vatRate>
+	<my:vatAmount>453.97</my:vatAmount>
+	<my:grandTotal>4993.65</my:grandTotal>
+	<my:budgetRemaining>3721.79</my:budgetRemaining>
+	<my:needsAccounting>true</my:needsAccounting>
+	<my:justification>Broken equipment</my:justification>
+</my:purchaseRequest>

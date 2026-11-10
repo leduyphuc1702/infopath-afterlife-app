@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Travel-Perdiem:-myXSD-2026-11-04T09-31-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/31-travel-perdiem.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:travelPerdiem xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:31:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:travelerName>Ember 39</my:travelerName>
+	<my:destination>Cedar 94</my:destination>
+	<my:days>
+		<my:day>
+			<my:dayDate>2025-09-23</my:dayDate>
+			<my:dayMeals>868.00</my:dayMeals>
+			<my:dayLodging>814.96</my:dayLodging>
+			<my:dayTotal xsi:nil="true"></my:dayTotal>
+		</my:day>
+		<my:day>
+			<my:dayDate>2025-08-22</my:dayDate>
+			<my:dayMeals>505.96</my:dayMeals>
+			<my:dayLodging>368.89</my:dayLodging>
+			<my:dayTotal xsi:nil="true"></my:dayTotal>
+		</my:day>
+	</my:days>
+	<my:perDiemTotal xsi:nil="true"></my:perDiemTotal>
+</my:travelPerdiem>

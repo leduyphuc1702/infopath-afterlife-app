@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Safety-Incident:-myXSD-2026-11-03T08-50-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="manifest.xsf" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:incidentReport xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:reporter>
+		<my:reporterName></my:reporterName>
+		<my:reporterPhone></my:reporterPhone>
+	</my:reporter>
+	<my:occurredAt xsi:nil="true"></my:occurredAt>
+	<my:site></my:site>
+	<my:locationDetail></my:locationDetail>
+	<my:severity></my:severity>
+	<my:incidentDescription></my:incidentDescription>
+	<my:scenePhoto xsi:nil="true"></my:scenePhoto>
+	<my:persons>
+		<my:person>
+			<my:personName></my:personName>
+			<my:personRole></my:personRole>
+			<my:injuryType></my:injuryType>
+			<my:followUps>
+				<my:followUp>
+					<my:actionDate xsi:nil="true"></my:actionDate>
+					<my:actionTaken></my:actionTaken>
+					<my:actionOwner></my:actionOwner>
+				</my:followUp>
+			</my:followUps>
+		</my:person>
+	</my:persons>
+</my:incidentReport>

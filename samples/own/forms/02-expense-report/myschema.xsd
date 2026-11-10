@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="expenseClaim">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:claimant"/>
+				<xsd:element ref="my:businessPurpose"/>
+				<xsd:element ref="my:claimCurrency"/>
+				<xsd:element ref="my:expenses"/>
+				<xsd:element ref="my:totalAmount"/>
+				<xsd:element ref="my:approverEmail"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="claimant">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:claimantName"/>
+				<xsd:element ref="my:claimantId"/>
+				<xsd:element ref="my:claimantDept"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="claimantName" type="xsd:string"/>
+	<xsd:element name="claimantId" type="xsd:string"/>
+	<xsd:element name="claimantDept" type="xsd:string"/>
+	<xsd:element name="businessPurpose" type="xsd:string"/>
+	<xsd:element name="claimCurrency" type="xsd:string"/>
+	<xsd:element name="expenses">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:expense" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="expense">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:expenseDate"/>
+				<xsd:element ref="my:expenseType"/>
+				<xsd:element ref="my:expenseDescription"/>
+				<xsd:element ref="my:amount"/>
+				<xsd:element ref="my:receipt"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="expenseDate" nillable="true" type="xsd:date"/>
+	<xsd:element name="expenseType" type="xsd:string"/>
+	<xsd:element name="expenseDescription" type="xsd:string"/>
+	<xsd:element name="amount" nillable="true" type="xsd:double"/>
+	<xsd:element name="receipt" nillable="true" type="xsd:base64Binary"/>
+	<xsd:element name="totalAmount" nillable="true" type="xsd:double"/>
+	<xsd:element name="approverEmail" type="xsd:string"/>
+</xsd:schema>

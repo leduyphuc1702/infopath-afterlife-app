@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Expense-Claim:-myXSD-2026-11-03T08-10-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/02-expense-report.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:expenseClaim xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:claimant>
+		<my:claimantName>Tobin Brask</my:claimantName>
+		<my:claimantId>E20019</my:claimantId>
+		<my:claimantDept>OPS</my:claimantDept>
+	</my:claimant>
+	<my:businessPurpose>Team offsite</my:businessPurpose>
+	<my:claimCurrency>EUR</my:claimCurrency>
+	<my:expenses>
+		<my:expense>
+			<my:expenseDate>2025-07-16</my:expenseDate>
+			<my:expenseType>Other</my:expenseType>
+			<my:expenseDescription>Other - Metro Rail</my:expenseDescription>
+			<my:amount>42.39</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGEAAAARAAAAcgBlAGMAZQBpAHAAdAAtADEAOQAtADEALgB0AHgAdAAAAFJFQ0VJUFQKTWV0cm8gUmFpbApEYXRlOiAyMDI1LTA3LTE2ClRvdGFsOiA0Mi4zOQpSZWY6IDM1ODA3MDkyClRoaXMgaXMgYSBmaWN0aW9uYWwgdGVzdCByZWNlaXB0Lgo=</my:receipt>
+		</my:expense>
+		<my:expense>
+			<my:expenseDate>2025-01-11</my:expenseDate>
+			<my:expenseType>Supplies</my:expenseType>
+			<my:expenseDescription>Supplies - Northwind Taxi</my:expenseDescription>
+			<my:amount>462.51</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGYAAAARAAAAcgBlAGMAZQBpAHAAdAAtADEAOQAtADIALgB0AHgAdAAAAFJFQ0VJUFQKTm9ydGh3aW5kIFRheGkKRGF0ZTogMjAyNS0wMS0xMQpUb3RhbDogNDYyLjUxClJlZjogNDg4Mzg4MzkKVGhpcyBpcyBhIGZpY3Rpb25hbCB0ZXN0IHJlY2VpcHQuCg==</my:receipt>
+		</my:expense>
+		<my:expense>
+			<my:expenseDate>2025-06-08</my:expenseDate>
+			<my:expenseType>Travel</my:expenseType>
+			<my:expenseDescription>Travel - Blue Fern Cafe</my:expenseDescription>
+			<my:amount>90.17</my:amount>
+			<my:receipt xsi:nil="true"></my:receipt>
+		</my:expense>
+	</my:expenses>
+	<my:totalAmount>595.07</my:totalAmount>
+	<my:approverEmail>farah.arden@contoso-fictional.example</my:approverEmail>
+</my:expenseClaim>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is automatically created and modified by Microsoft InfoPath.
+Changes made to the file outside of InfoPath might be lost if the form template is modified in InfoPath.
+-->
+<xsf:xDocumentClass trustSetting="automatic" solutionFormatVersion="2.0.0.0" solutionVersion="1.0.0.1" productVersion="15.0.0" name="urn:schemas-microsoft-com:office:infopath:New-Hire-Onboarding:-myXSD-2026-11-03T08-40-00" publishUrl="C:\forms\05-new-hire-onboarding.xsn" xmlns:xsf="http://schemas.microsoft.com/office/infopath/2003/solutionDefinition" xmlns:xsf2="http://schemas.microsoft.com/office/infopath/2006/solutionDefinition/extensions" xmlns:xsf3="http://schemas.microsoft.com/office/infopath/2009/solutionDefinition/extensions" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xdUtil="http://schemas.microsoft.com/office/infopath/2003/xslt/Util" xmlns:xdXDocument="http://schemas.microsoft.com/office/infopath/2003/xslt/xDocument" xmlns:xdMath="http://schemas.microsoft.com/office/infopath/2003/xslt/Math" xmlns:xdDate="http://schemas.microsoft.com/office/infopath/2003/xslt/Date" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xdExtension="http://schemas.microsoft.com/office/infopath/2003/xslt/extension" xmlns:xdEnvironment="http://schemas.microsoft.com/office/infopath/2006/xslt/environment" xmlns:xdUser="http://schemas.microsoft.com/office/infopath/2006/xslt/User" xmlns:xdServerInfo="http://schemas.microsoft.com/office/infopath/2009/xslt/ServerInfo" xmlns:dfs="http://schemas.microsoft.com/office/infopath/2003/dataFormSolution" xmlns:d="http://schemas.microsoft.com/office/infopath/2003/ado/dataFields" xmlns:tns="http://forms-legacy/budget/" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00">
+	<xsf:package>
+		<xsf:files>
+			<xsf:file name="myschema.xsd"><xsf:fileProperties><xsf:property name="namespace" type="string" value="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00"></xsf:property><xsf:property name="editability" type="string" value="full"></xsf:property><xsf:property name="rootElement" type="string" value="onboarding"></xsf:property><xsf:property name="useOnDemandAlgorithm" type="string" value="yes"></xsf:property></xsf:fileProperties></xsf:file>
+			<xsf:file name="template.xml"></xsf:file>
+			<xsf:file name="sampledata.xml"><xsf:fileProperties><xsf:property name="fileType" type="string" value="sampleData"></xsf:property></xsf:fileProperties></xsf:file>
+			<xsf:file name="upgrade.xsl"></xsf:file>
+			<xsf:file name="view1.xsl"><xsf:fileProperties><xsf:property name="lang" type="string" value="1033"></xsf:property><xsf:property name="mode" type="string" value="1"></xsf:property></xsf:fileProperties></xsf:file>
+			<xsf:file name="view2.xsl"><xsf:fileProperties><xsf:property name="lang" type="string" value="1033"></xsf:property><xsf:property name="mode" type="string" value="1"></xsf:property></xsf:fileProperties></xsf:file>
+			<xsf:file name="view3.xsl"><xsf:fileProperties><xsf:property name="lang" type="string" value="1033"></xsf:property><xsf:property name="mode" type="string" value="1"></xsf:property></xsf:fileProperties></xsf:file>
+		</xsf:files>
+	</xsf:package>
+	<xsf:importParameters enabled="yes"></xsf:importParameters>
+	<xsf:documentVersionUpgrade>
+		<xsf:useTransform transform="upgrade.xsl" minVersionToUpgrade="0.0.0.0" maxVersionToUpgrade="1.0.0.1"></xsf:useTransform>
+	</xsf:documentVersionUpgrade>
+	<xsf:extensions>
+		<xsf:extension name="SolutionDefinitionExtensions">
+			<xsf2:solutionDefinition runtimeCompatibility="client" allowClientOnlyCode="no">
+				<xsf2:offline openIfQueryFails="yes" cacheQueries="yes"></xsf2:offline>
+				<xsf2:server isPreSubmitPostBackEnabled="no" formLocale="en-US" isMobileEnabled="no"></xsf2:server>
+				<xsf2:dataConnections></xsf2:dataConnections>
+				<xsf2:viewsExtension><xsf2:viewExtension ref="HR" designMode="normal" clientOnly="no"></xsf2:viewExtension><xsf2:viewExtension ref="IT" designMode="normal" clientOnly="no"></xsf2:viewExtension><xsf2:viewExtension ref="Manager" designMode="normal" clientOnly="no"></xsf2:viewExtension></xsf2:viewsExtension>
+			</xsf2:solutionDefinition>
+		</xsf:extension>
+	</xsf:extensions>
+	<xsf:views default="HR">
+		<xsf:view name="HR" caption="HR">
+			<xsf:editing>
+				<xsf:xmlToEdit name="hireName_1" item="/my:onboarding/my:newHire/my:hireName"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="hireStartDate_2" item="/my:onboarding/my:newHire/my:hireStartDate"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="hireTitle_3" item="/my:onboarding/my:newHire/my:hireTitle"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="hireDept_4" item="/my:onboarding/my:newHire/my:hireDept"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="hireManager_5" item="/my:onboarding/my:newHire/my:hireManager"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="fullTime_6" item="/my:onboarding/my:employment/my:fullTime" container="/my:onboarding/my:employment"><xsf:editWith caption="fullTime" xd:autogeneration="template" component="xReplace"><xsf:fragmentToInsert><xsf:chooseFragment><my:fullTime>
+	<my:annualSalary xsi:nil="true"></my:annualSalary>
+	<my:benefitsPlan></my:benefitsPlan>
+</my:fullTime></xsf:chooseFragment></xsf:fragmentToInsert></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="annualSalary_7" item="/my:onboarding/my:employment/my:fullTime/my:annualSalary"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="benefitsPlan_8" item="/my:onboarding/my:employment/my:fullTime/my:benefitsPlan"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="contractor_9" item="/my:onboarding/my:employment/my:contractor" container="/my:onboarding/my:employment"><xsf:editWith caption="contractor" xd:autogeneration="template" component="xReplace"><xsf:fragmentToInsert><xsf:chooseFragment><my:contractor>
+	<my:agencyName></my:agencyName>
+	<my:hourlyRate xsi:nil="true"></my:hourlyRate>
+	<my:contractEnd xsi:nil="true"></my:contractEnd>
+</my:contractor></xsf:chooseFragment></xsf:fragmentToInsert></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="agencyName_10" item="/my:onboarding/my:employment/my:contractor/my:agencyName"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="hourlyRate_11" item="/my:onboarding/my:employment/my:contractor/my:hourlyRate"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="contractEnd_12" item="/my:onboarding/my:employment/my:contractor/my:contractEnd"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="needsLaptop_13" item="/my:onboarding/my:equipment/my:needsLaptop"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="needsPhone_14" item="/my:onboarding/my:equipment/my:needsPhone"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="needsMonitor_15" item="/my:onboarding/my:equipment/my:needsMonitor"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="accountsNeeded_16" item="/my:onboarding/my:equipment/my:accountsNeeded"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+			</xsf:editing>
+			<xsf:mainpane transform="view1.xsl"></xsf:mainpane>
+			<xsf:unboundControls><xsf:button name="CTRL910"><xsf:ruleSetAction ruleSet="toIT"></xsf:ruleSetAction></xsf:button><xsf:button name="CTRL911"><xsf:ruleSetAction ruleSet="toManager"></xsf:ruleSetAction></xsf:button></xsf:unboundControls>
+			<xsf:menuArea name="msoStructuralEditingContextMenu">
+				<xsf:button action="xReplace::replace" xmlToEdit="fullTime_6" caption="Replace with fullTime" showIf="immediate"></xsf:button>
+				<xsf:button action="xReplace::replace" xmlToEdit="contractor_9" caption="Replace with contractor" showIf="immediate"></xsf:button>
+			</xsf:menuArea>
+		</xsf:view>
+		<xsf:view name="IT" caption="IT">
+			<xsf:editing>
+				<xsf:xmlToEdit name="hireName_1" item="/my:onboarding/my:newHire/my:hireName"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="hireStartDate_2" item="/my:onboarding/my:newHire/my:hireStartDate"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="hireTitle_3" item="/my:onboarding/my:newHire/my:hireTitle"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="hireDept_4" item="/my:onboarding/my:newHire/my:hireDept"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="hireManager_5" item="/my:onboarding/my:newHire/my:hireManager"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="needsLaptop_6" item="/my:onboarding/my:equipment/my:needsLaptop"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="needsPhone_7" item="/my:onboarding/my:equipment/my:needsPhone"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="needsMonitor_8" item="/my:onboarding/my:equipment/my:needsMonitor"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="accountsNeeded_9" item="/my:onboarding/my:equipment/my:accountsNeeded"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+			</xsf:editing>
+			<xsf:mainpane transform="view2.xsl"></xsf:mainpane>
+			<xsf:unboundControls><xsf:button name="CTRL912"><xsf:ruleSetAction ruleSet="toHR"></xsf:ruleSetAction></xsf:button></xsf:unboundControls>
+			<xsf:menuArea name="msoStructuralEditingContextMenu">
+
+			</xsf:menuArea>
+		</xsf:view>
+		<xsf:view name="Manager" caption="Manager">
+			<xsf:editing>
+				<xsf:xmlToEdit name="hireName_1" item="/my:onboarding/my:newHire/my:hireName"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="hireStartDate_2" item="/my:onboarding/my:newHire/my:hireStartDate"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="hireTitle_3" item="/my:onboarding/my:newHire/my:hireTitle"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="hireDept_4" item="/my:onboarding/my:newHire/my:hireDept"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="hireManager_5" item="/my:onboarding/my:newHire/my:hireManager"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="needsLaptop_6" item="/my:onboarding/my:equipment/my:needsLaptop"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="needsPhone_7" item="/my:onboarding/my:equipment/my:needsPhone"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="needsMonitor_8" item="/my:onboarding/my:equipment/my:needsMonitor"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="accountsNeeded_9" item="/my:onboarding/my:equipment/my:accountsNeeded"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="relocation_10" item="/my:onboarding/my:relocation" container="/my:onboarding"><xsf:editWith caption="relocation" xd:autogeneration="template" component="xOptional"><xsf:fragmentToInsert><xsf:chooseFragment><my:relocation>
+	<my:relocateFrom></my:relocateFrom>
+	<my:relocationAllowance xsi:nil="true"></my:relocationAllowance>
+	<my:movingDate xsi:nil="true"></my:movingDate>
+</my:relocation></xsf:chooseFragment></xsf:fragmentToInsert></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="relocateFrom_11" item="/my:onboarding/my:relocation/my:relocateFrom"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="relocationAllowance_12" item="/my:onboarding/my:relocation/my:relocationAllowance"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="movingDate_13" item="/my:onboarding/my:relocation/my:movingDate"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="welcomeNote_14" item="/my:onboarding/my:welcomeNote"><xsf:editWith type="rich" proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+			</xsf:editing>
+			<xsf:mainpane transform="view3.xsl"></xsf:mainpane>
+			<xsf:menuArea name="msoStructuralEditingContextMenu">
+				<xsf:button action="xOptional::insert" xmlToEdit="relocation_10" caption="Insert relocation" showIf="immediate"></xsf:button>
+				<xsf:button action="xOptional::remove" xmlToEdit="relocation_10" caption="Remove relocation" showIf="immediate"></xsf:button>
+			</xsf:menuArea>
+		</xsf:view>
+	</xsf:views>
+	<xsf:applicationParameters application="InfoPath Design Mode">
+		<xsf:solutionProperties fullyEditableNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00" lastOpenView="view1.xsl" automaticallyCreateNodes="yes"></xsf:solutionProperties>
+	</xsf:applicationParameters>
+	<xsf:documentSchemas>
+		<xsf:documentSchema rootSchema="yes" location="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00 myschema.xsd"></xsf:documentSchema>
+	</xsf:documentSchemas>
+	<xsf:fileNew>
+		<xsf:initialXmlDocument caption="New Hire Onboarding" href="template.xml"></xsf:initialXmlDocument>
+	</xsf:fileNew>
+	<xsf:ruleSets>
+		<xsf:ruleSet name="toHR">
+			<xsf:rule caption="Switch to HR" isEnabled="yes">
+				<xsf:switchViewAction view="HR"></xsf:switchViewAction>
+			</xsf:rule>
+		</xsf:ruleSet>
+		<xsf:ruleSet name="toIT">
+			<xsf:rule caption="Switch to IT" isEnabled="yes">
+				<xsf:switchViewAction view="IT"></xsf:switchViewAction>
+			</xsf:rule>
+		</xsf:ruleSet>
+		<xsf:ruleSet name="toManager">
+			<xsf:rule caption="Switch to Manager" isEnabled="yes">
+				<xsf:switchViewAction view="Manager"></xsf:switchViewAction>
+			</xsf:rule>
+		</xsf:ruleSet></xsf:ruleSets>
+	<xsf:calculations>
+	</xsf:calculations>
+	<xsf:domEventHandlers>
+	</xsf:domEventHandlers>
+	<xsf:customValidation>
+		<xsf:errorCondition match="/my:onboarding/my:newHire/my:hireName" expressionContext="." expression=". = &quot;&quot;"><xsf:errorMessage type="modeless" shortMessage="Cannot be blank">This field is required.</xsf:errorMessage></xsf:errorCondition>
+		<xsf:errorCondition match="/my:onboarding/my:newHire/my:hireStartDate" expressionContext="." expression=". = &quot;&quot;"><xsf:errorMessage type="modeless" shortMessage="Cannot be blank">This field is required.</xsf:errorMessage></xsf:errorCondition>
+	</xsf:customValidation>
+</xsf:xDocumentClass>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="travelRequest">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:traveler"/>
+				<xsd:element ref="my:tripType"/>
+				<xsd:element ref="my:destCountry"/>
+				<xsd:element ref="my:destCity"/>
+				<xsd:element ref="my:departDate"/>
+				<xsd:element ref="my:returnDate"/>
+				<xsd:element ref="my:purpose"/>
+				<xsd:element ref="my:international"/>
+				<xsd:element ref="my:accounting"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="traveler">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:travelerName"/>
+				<xsd:element ref="my:travelerEmail"/>
+				<xsd:element ref="my:travelerDept"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="travelerName" type="xsd:string"/>
+	<xsd:element name="travelerEmail" type="xsd:string"/>
+	<xsd:element name="travelerDept" type="xsd:string"/>
+	<xsd:element name="tripType" type="xsd:string"/>
+	<xsd:element name="destCountry" type="xsd:string"/>
+	<xsd:element name="destCity" type="xsd:string"/>
+	<xsd:element name="departDate" nillable="true" type="xsd:date"/>
+	<xsd:element name="returnDate" nillable="true" type="xsd:date"/>
+	<xsd:element name="purpose" type="xsd:string"/>
+	<xsd:element name="international">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:passportNumber"/>
+				<xsd:element ref="my:passportExpiry"/>
+				<xsd:element ref="my:visaRequired"/>
+				<xsd:element ref="my:travelInsurance"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="passportNumber" type="xsd:string"/>
+	<xsd:element name="passportExpiry" nillable="true" type="xsd:date"/>
+	<xsd:element name="visaRequired" type="xsd:boolean"/>
+	<xsd:element name="travelInsurance" type="xsd:boolean"/>
+	<xsd:element name="accounting">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:costCenter"/>
+				<xsd:element ref="my:estimatedCost"/>
+				<xsd:element ref="my:advanceAmount"/>
+				<xsd:element ref="my:accountingApprover"/>
+				<xsd:element ref="my:accountingStatus"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="costCenter" type="xsd:string"/>
+	<xsd:element name="estimatedCost" nillable="true" type="xsd:double"/>
+	<xsd:element name="advanceAmount" nillable="true" type="xsd:double"/>
+	<xsd:element name="accountingApprover" type="xsd:string"/>
+	<xsd:element name="accountingStatus" type="xsd:string"/>
+</xsd:schema>

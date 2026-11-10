@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Invoice-Approval:-myXSD-2026-11-04T09-29-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="manifest.xsf" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:invoiceApproval xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:invoiceNumber>Ember 42</my:invoiceNumber>
+	<my:vendorName>Delta 86</my:vendorName>
+	<my:invoiceDate>2026-04-14</my:invoiceDate>
+	<my:lines>
+		<my:line>
+			<my:lineText>Alpha 42</my:lineText>
+			<my:lineQty>702.76</my:lineQty>
+			<my:linePrice>885.12</my:linePrice>
+			<my:lineTotal xsi:nil="true"></my:lineTotal>
+		</my:line>
+	</my:lines>
+	<my:netTotal xsi:nil="true"></my:netTotal>
+	<my:taxRate>648.49</my:taxRate>
+	<my:grossTotal xsi:nil="true"></my:grossTotal>
+</my:invoiceApproval>

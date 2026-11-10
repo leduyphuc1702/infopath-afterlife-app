@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:15:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:15:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="problemReport">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:reportedBy"/>
+				<xsd:element ref="my:detectedAt"/>
+				<xsd:element ref="my:service"/>
+				<xsd:element ref="my:impact"/>
+				<xsd:element ref="my:description"/>
+				<xsd:element ref="my:actions"/>
+				<xsd:element ref="my:resolved"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="reportedBy" type="xsd:string"/>
+	<xsd:element name="detectedAt" nillable="true" type="xsd:dateTime"/>
+	<xsd:element name="service" type="xsd:string"/>
+	<xsd:element name="impact" type="xsd:string"/>
+	<xsd:element name="description">
+		<xsd:complexType mixed="true">
+			<xsd:sequence>
+				<xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/1999/xhtml" processContents="lax"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="actions">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:action" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="action">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:actionAt"/>
+				<xsd:element ref="my:actionText"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="actionAt" nillable="true" type="xsd:dateTime"/>
+	<xsd:element name="actionText" type="xsd:string"/>
+	<xsd:element name="resolved" type="xsd:boolean"/>
+</xsd:schema>

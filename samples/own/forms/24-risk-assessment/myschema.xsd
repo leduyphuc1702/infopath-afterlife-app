@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:24:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:24:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="riskAssessment">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:activityName"/>
+				<xsd:element ref="my:assessor"/>
+				<xsd:element ref="my:risks"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="activityName" type="xsd:string"/>
+	<xsd:element name="assessor" type="xsd:string"/>
+	<xsd:element name="risks">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:risk" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="risk">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:hazard"/>
+				<xsd:element ref="my:likelihood"/>
+				<xsd:element ref="my:consequence"/>
+				<xsd:element ref="my:riskScore"/>
+				<xsd:element ref="my:control"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="hazard" type="xsd:string"/>
+	<xsd:element name="likelihood" nillable="true" type="xsd:integer"/>
+	<xsd:element name="consequence" nillable="true" type="xsd:integer"/>
+	<xsd:element name="riskScore" nillable="true" type="xsd:double"/>
+	<xsd:element name="control" type="xsd:string"/>
+</xsd:schema>

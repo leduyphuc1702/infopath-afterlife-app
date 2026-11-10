@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Timesheet-Approval:-myXSD-2026-11-04T09-41-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/41-timesheet-approval.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:timesheetApproval xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:41:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:employee>
+		<my:employeeName>Ember 49</my:employeeName>
+		<my:weekStart>2026-08-22</my:weekStart>
+	</my:employee>
+	<my:hoursTotal>236.49</my:hoursTotal>
+	<my:decision>Pending</my:decision>
+	<my:decisionNote>Cedar 28</my:decisionNote>
+</my:timesheetApproval>

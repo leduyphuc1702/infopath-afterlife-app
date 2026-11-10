@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:16:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:16:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="equipmentLoan">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:borrowerName"/>
+				<xsd:element ref="my:equipmentTag"/>
+				<xsd:element ref="my:loanFrom"/>
+				<xsd:element ref="my:loanTo"/>
+				<xsd:element ref="my:conditionOut"/>
+				<xsd:element ref="my:depositTaken"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="borrowerName" type="xsd:string"/>
+	<xsd:element name="equipmentTag" type="xsd:string"/>
+	<xsd:element name="loanFrom" nillable="true" type="xsd:date"/>
+	<xsd:element name="loanTo" nillable="true" type="xsd:date"/>
+	<xsd:element name="conditionOut" type="xsd:string"/>
+	<xsd:element name="depositTaken" nillable="true" type="xsd:double"/>
+</xsd:schema>

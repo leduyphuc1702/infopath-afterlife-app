@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Project-Charter:-myXSD-2026-11-04T09-27-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/27-project-charter.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:projectCharter xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:27:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:project>
+		<my:projectName>Alpha 92</my:projectName>
+		<my:sponsor>Delta 12</my:sponsor>
+		<my:startDate>2026-06-03</my:startDate>
+		<my:endDate>2025-06-15</my:endDate>
+		<my:budget>800.76</my:budget>
+	</my:project>
+	<my:scope>
+		<my:inScope><div xmlns="http://www.w3.org/1999/xhtml"><p>Test record, fictional.</p></div></my:inScope>
+		<my:outOfScope><div xmlns="http://www.w3.org/1999/xhtml"><p>Test record, fictional.</p></div></my:outOfScope>
+		<my:successCriteria>Ember 98</my:successCriteria>
+	</my:scope>
+	<my:approvedOn>2025-06-01</my:approvedOn>
+</my:projectCharter>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Mileage-Claim:-myXSD-2026-11-04T09-18-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/18-mileage-claim.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:mileageClaim xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:18:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:claimantName>Ember 98</my:claimantName>
+	<my:trips>
+		<my:trip>
+			<my:tripDate>2026-09-03</my:tripDate>
+			<my:tripFrom>Ember 91</my:tripFrom>
+			<my:tripTo>Cedar 75</my:tripTo>
+			<my:tripKm>413.54</my:tripKm>
+			<my:tripRate>883.86</my:tripRate>
+			<my:tripAmount xsi:nil="true"></my:tripAmount>
+		</my:trip>
+		<my:trip>
+			<my:tripDate>2026-09-18</my:tripDate>
+			<my:tripFrom>Delta 90</my:tripFrom>
+			<my:tripTo>Ember 60</my:tripTo>
+			<my:tripKm>599.49</my:tripKm>
+			<my:tripRate>321.53</my:tripRate>
+			<my:tripAmount xsi:nil="true"></my:tripAmount>
+		</my:trip>
+	</my:trips>
+	<my:claimTotal xsi:nil="true"></my:claimTotal>
+</my:mileageClaim>

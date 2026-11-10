@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Expense-Claim:-myXSD-2026-11-03T08-10-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/02-expense-report.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:expenseClaim xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:claimant>
+		<my:claimantName>Rafael Quill</my:claimantName>
+		<my:claimantId>E20025</my:claimantId>
+		<my:claimantDept>OPS</my:claimantDept>
+	</my:claimant>
+	<my:businessPurpose>Team offsite</my:businessPurpose>
+	<my:claimCurrency>EUR</my:claimCurrency>
+	<my:expenses>
+		<my:expense>
+			<my:expenseDate>2025-03-12</my:expenseDate>
+			<my:expenseType>Other</my:expenseType>
+			<my:expenseDescription>Other - Harbor Inn</my:expenseDescription>
+			<my:amount>350.35</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGIAAAARAAAAcgBlAGMAZQBpAHAAdAAtADIANQAtADEALgB0AHgAdAAAAFJFQ0VJUFQKSGFyYm9yIElubgpEYXRlOiAyMDI1LTAzLTEyClRvdGFsOiAzNTAuMzUKUmVmOiA4NDE3NTUyMwpUaGlzIGlzIGEgZmljdGlvbmFsIHRlc3QgcmVjZWlwdC4K</my:receipt>
+		</my:expense>
+		<my:expense>
+			<my:expenseDate>2026-04-09</my:expenseDate>
+			<my:expenseType>Meals</my:expenseType>
+			<my:expenseDescription>Meals - Harbor Inn</my:expenseDescription>
+			<my:amount>107.38</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGIAAAARAAAAcgBlAGMAZQBpAHAAdAAtADIANQAtADIALgB0AHgAdAAAAFJFQ0VJUFQKSGFyYm9yIElubgpEYXRlOiAyMDI2LTA0LTA5ClRvdGFsOiAxMDcuMzgKUmVmOiAxNTQ4MzQ1MApUaGlzIGlzIGEgZmljdGlvbmFsIHRlc3QgcmVjZWlwdC4K</my:receipt>
+		</my:expense>
+		<my:expense>
+			<my:expenseDate>2026-08-08</my:expenseDate>
+			<my:expenseType>Supplies</my:expenseType>
+			<my:expenseDescription>Supplies - Blue Fern Cafe</my:expenseDescription>
+			<my:amount>245.26</my:amount>
+			<my:receipt xsi:nil="true"></my:receipt>
+		</my:expense>
+		<my:expense>
+			<my:expenseDate>2026-05-21</my:expenseDate>
+			<my:expenseType>Travel</my:expenseType>
+			<my:expenseDescription>Travel - Harbor Inn</my:expenseDescription>
+			<my:amount>25.98</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGEAAAARAAAAcgBlAGMAZQBpAHAAdAAtADIANQAtADQALgB0AHgAdAAAAFJFQ0VJUFQKSGFyYm9yIElubgpEYXRlOiAyMDI2LTA1LTIxClRvdGFsOiAyNS45OApSZWY6IDU1NTg2ODMxClRoaXMgaXMgYSBmaWN0aW9uYWwgdGVzdCByZWNlaXB0Lgo=</my:receipt>
+		</my:expense>
+	</my:expenses>
+	<my:totalAmount>728.97</my:totalAmount>
+	<my:approverEmail>farah.juniper@contoso-fictional.example</my:approverEmail>
+</my:expenseClaim>

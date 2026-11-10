@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Risk-Assessment:-myXSD-2026-11-04T09-24-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/24-risk-assessment.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:riskAssessment xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:24:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:activityName>Falcon 58</my:activityName>
+	<my:assessor>Alpha 85</my:assessor>
+	<my:risks>
+		<my:risk>
+			<my:hazard>Delta 38</my:hazard>
+			<my:likelihood>7</my:likelihood>
+			<my:consequence>10</my:consequence>
+			<my:riskScore xsi:nil="true"></my:riskScore>
+			<my:control>Delta 34</my:control>
+		</my:risk>
+		<my:risk>
+			<my:hazard>Ember 42</my:hazard>
+			<my:likelihood>6</my:likelihood>
+			<my:consequence>19</my:consequence>
+			<my:riskScore xsi:nil="true"></my:riskScore>
+			<my:control>Alpha 19</my:control>
+		</my:risk>
+	</my:risks>
+</my:riskAssessment>

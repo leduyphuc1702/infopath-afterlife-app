@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Expense-Claim:-myXSD-2026-11-03T08-10-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/02-expense-report.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:expenseClaim xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:claimant>
+		<my:claimantName>Tobin Arden</my:claimantName>
+		<my:claimantId>E20013</my:claimantId>
+		<my:claimantDept>FIN</my:claimantDept>
+	</my:claimant>
+	<my:businessPurpose>Site audit</my:businessPurpose>
+	<my:claimCurrency>USD</my:claimCurrency>
+	<my:expenses>
+		<my:expense>
+			<my:expenseDate>2025-12-15</my:expenseDate>
+			<my:expenseType>Travel</my:expenseType>
+			<my:expenseDescription>Travel - Northwind Taxi</my:expenseDescription>
+			<my:amount>444.70</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGYAAAARAAAAcgBlAGMAZQBpAHAAdAAtADEAMwAtADEALgB0AHgAdAAAAFJFQ0VJUFQKTm9ydGh3aW5kIFRheGkKRGF0ZTogMjAyNS0xMi0xNQpUb3RhbDogNDQ0LjcwClJlZjogMjc2MDI4NzMKVGhpcyBpcyBhIGZpY3Rpb25hbCB0ZXN0IHJlY2VpcHQuCg==</my:receipt>
+		</my:expense>
+		<my:expense>
+			<my:expenseDate>2026-06-22</my:expenseDate>
+			<my:expenseType>Lodging</my:expenseType>
+			<my:expenseDescription>Lodging - Northwind Taxi</my:expenseDescription>
+			<my:amount>299.14</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGYAAAARAAAAcgBlAGMAZQBpAHAAdAAtADEAMwAtADIALgB0AHgAdAAAAFJFQ0VJUFQKTm9ydGh3aW5kIFRheGkKRGF0ZTogMjAyNi0wNi0yMgpUb3RhbDogMjk5LjE0ClJlZjogMTY1Mzc4NjIKVGhpcyBpcyBhIGZpY3Rpb25hbCB0ZXN0IHJlY2VpcHQuCg==</my:receipt>
+		</my:expense>
+	</my:expenses>
+	<my:totalAmount>743.84</my:totalAmount>
+	<my:approverEmail>priya.ingram@contoso-fictional.example</my:approverEmail>
+</my:expenseClaim>

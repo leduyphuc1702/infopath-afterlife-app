@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Purchase-Request:-myXSD-2026-11-03T08-30-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/04-purchase-request.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:purchaseRequest xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:requester>
+		<my:requesterName></my:requesterName>
+		<my:requesterEmail></my:requesterEmail>
+		<my:costCenterCode></my:costCenterCode>
+	</my:requester>
+	<my:vendorId></my:vendorId>
+	<my:neededBy xsi:nil="true"></my:neededBy>
+	<my:lines>
+	</my:lines>
+	<my:subtotal xsi:nil="true"></my:subtotal>
+	<my:vatRate>0.1</my:vatRate>
+	<my:vatAmount xsi:nil="true"></my:vatAmount>
+	<my:grandTotal xsi:nil="true"></my:grandTotal>
+	<my:budgetRemaining xsi:nil="true"></my:budgetRemaining>
+	<my:needsAccounting>false</my:needsAccounting>
+	<my:justification></my:justification>
+</my:purchaseRequest>

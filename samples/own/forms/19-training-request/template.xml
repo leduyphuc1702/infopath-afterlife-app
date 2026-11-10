@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Training-Request:-myXSD-2026-11-04T09-19-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="manifest.xsf" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:trainingRequest xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:19:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:requester>
+		<my:requesterName></my:requesterName>
+		<my:requesterEmail></my:requesterEmail>
+		<my:requesterDept></my:requesterDept>
+	</my:requester>
+	<my:subject></my:subject>
+	<my:neededBy xsi:nil="true"></my:neededBy>
+	<my:provider></my:provider>
+	<my:courseStart xsi:nil="true"></my:courseStart>
+	<my:courseEnd xsi:nil="true"></my:courseEnd>
+	<my:cost xsi:nil="true"></my:cost>
+	<my:mandatory>false</my:mandatory>
+	<my:justification></my:justification>
+	<my:ownerEmail></my:ownerEmail>
+</my:trainingRequest>

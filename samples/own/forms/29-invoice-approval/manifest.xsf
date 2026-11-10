@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is automatically created and modified by Microsoft InfoPath.
+Changes made to the file outside of InfoPath might be lost if the form template is modified in InfoPath.
+-->
+<xsf:xDocumentClass trustSetting="automatic" solutionFormatVersion="2.0.0.0" solutionVersion="1.0.0.1" productVersion="15.0.0" name="urn:schemas-microsoft-com:office:infopath:Invoice-Approval:-myXSD-2026-11-04T09-29-00" publishUrl="C:\forms\29-invoice-approval.xsn" xmlns:xsf="http://schemas.microsoft.com/office/infopath/2003/solutionDefinition" xmlns:xsf2="http://schemas.microsoft.com/office/infopath/2006/solutionDefinition/extensions" xmlns:xsf3="http://schemas.microsoft.com/office/infopath/2009/solutionDefinition/extensions" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xdUtil="http://schemas.microsoft.com/office/infopath/2003/xslt/Util" xmlns:xdXDocument="http://schemas.microsoft.com/office/infopath/2003/xslt/xDocument" xmlns:xdMath="http://schemas.microsoft.com/office/infopath/2003/xslt/Math" xmlns:xdDate="http://schemas.microsoft.com/office/infopath/2003/xslt/Date" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xdExtension="http://schemas.microsoft.com/office/infopath/2003/xslt/extension" xmlns:xdEnvironment="http://schemas.microsoft.com/office/infopath/2006/xslt/environment" xmlns:xdUser="http://schemas.microsoft.com/office/infopath/2006/xslt/User" xmlns:xdServerInfo="http://schemas.microsoft.com/office/infopath/2009/xslt/ServerInfo" xmlns:dfs="http://schemas.microsoft.com/office/infopath/2003/dataFormSolution" xmlns:d="http://schemas.microsoft.com/office/infopath/2003/ado/dataFields" xmlns:tns="http://forms-legacy/budget/" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00">
+	<xsf:package>
+		<xsf:files>
+			<xsf:file name="myschema.xsd"><xsf:fileProperties><xsf:property name="namespace" type="string" value="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00"></xsf:property><xsf:property name="editability" type="string" value="full"></xsf:property><xsf:property name="rootElement" type="string" value="invoiceApproval"></xsf:property><xsf:property name="useOnDemandAlgorithm" type="string" value="yes"></xsf:property></xsf:fileProperties></xsf:file>
+			<xsf:file name="template.xml"></xsf:file>
+			<xsf:file name="sampledata.xml"><xsf:fileProperties><xsf:property name="fileType" type="string" value="sampleData"></xsf:property></xsf:fileProperties></xsf:file>
+			<xsf:file name="upgrade.xsl"></xsf:file>
+			<xsf:file name="view1.xsl"><xsf:fileProperties><xsf:property name="lang" type="string" value="1033"></xsf:property><xsf:property name="mode" type="string" value="1"></xsf:property></xsf:fileProperties></xsf:file>
+		</xsf:files>
+	</xsf:package>
+	<xsf:importParameters enabled="yes"></xsf:importParameters>
+	<xsf:documentVersionUpgrade>
+		<xsf:useTransform transform="upgrade.xsl" minVersionToUpgrade="0.0.0.0" maxVersionToUpgrade="1.0.0.1"></xsf:useTransform>
+	</xsf:documentVersionUpgrade>
+	<xsf:extensions>
+		<xsf:extension name="SolutionDefinitionExtensions">
+			<xsf2:solutionDefinition runtimeCompatibility="client" allowClientOnlyCode="no">
+				<xsf2:offline openIfQueryFails="yes" cacheQueries="yes"></xsf2:offline>
+				<xsf2:server isPreSubmitPostBackEnabled="no" formLocale="en-US" isMobileEnabled="no"></xsf2:server>
+				<xsf2:dataConnections></xsf2:dataConnections>
+				<xsf2:viewsExtension><xsf2:viewExtension ref="Main" designMode="normal" clientOnly="no"></xsf2:viewExtension></xsf2:viewsExtension>
+			</xsf2:solutionDefinition>
+		</xsf:extension>
+	</xsf:extensions>
+	<xsf:views default="Main">
+		<xsf:view name="Main" caption="Main">
+			<xsf:editing>
+				<xsf:xmlToEdit name="invoiceNumber_1" item="/my:invoiceApproval/my:invoiceNumber"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="vendorName_2" item="/my:invoiceApproval/my:vendorName"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="invoiceDate_3" item="/my:invoiceApproval/my:invoiceDate"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="line_4" item="/my:invoiceApproval/my:lines/my:line" container="/my:invoiceApproval"><xsf:editWith caption="line" xd:autogeneration="template" component="xCollection"><xsf:fragmentToInsert><xsf:chooseFragment innerFragment="my:lines/my:line"><my:lines><my:line>
+	<my:lineText></my:lineText>
+	<my:lineQty xsi:nil="true"></my:lineQty>
+	<my:linePrice xsi:nil="true"></my:linePrice>
+	<my:lineTotal xsi:nil="true"></my:lineTotal>
+</my:line></my:lines></xsf:chooseFragment></xsf:fragmentToInsert></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="lineText_5" item="/my:invoiceApproval/my:lines/my:line/my:lineText"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="lineQty_6" item="/my:invoiceApproval/my:lines/my:line/my:lineQty"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="linePrice_7" item="/my:invoiceApproval/my:lines/my:line/my:linePrice"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="lineTotal_8" item="/my:invoiceApproval/my:lines/my:line/my:lineTotal"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="netTotal_9" item="/my:invoiceApproval/my:netTotal"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="taxRate_10" item="/my:invoiceApproval/my:taxRate"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="grossTotal_11" item="/my:invoiceApproval/my:grossTotal"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+			</xsf:editing>
+			<xsf:mainpane transform="view1.xsl"></xsf:mainpane>
+			<xsf:menuArea name="msoStructuralEditingContextMenu">
+				<xsf:button action="xCollection::insertBefore" xmlToEdit="line_4" caption="Insert line above" showIf="immediate"></xsf:button>
+				<xsf:button action="xCollection::insertAfter" xmlToEdit="line_4" caption="Insert line below" showIf="immediate"></xsf:button>
+				<xsf:button action="xCollection::remove" xmlToEdit="line_4" caption="Remove line" showIf="immediate"></xsf:button>
+				<xsf:button action="xCollection::insert" xmlToEdit="line_4" caption="Insert line" showIf="immediate"></xsf:button>
+			</xsf:menuArea>
+		</xsf:view>
+	</xsf:views>
+	<xsf:applicationParameters application="InfoPath Design Mode">
+		<xsf:solutionProperties fullyEditableNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00" lastOpenView="view1.xsl" automaticallyCreateNodes="yes"></xsf:solutionProperties>
+	</xsf:applicationParameters>
+	<xsf:documentSchemas>
+		<xsf:documentSchema rootSchema="yes" location="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00 myschema.xsd"></xsf:documentSchema>
+	</xsf:documentSchemas>
+	<xsf:fileNew>
+		<xsf:initialXmlDocument caption="Invoice Approval" href="template.xml"></xsf:initialXmlDocument>
+	</xsf:fileNew>
+	<xsf:ruleSets></xsf:ruleSets>
+	<xsf:calculations>
+		<xsf:calculatedField target="/my:invoiceApproval/my:lines/my:line/my:lineTotal" expression="xdMath:Nz(../my:lineQty) * xdMath:Nz(../my:linePrice)" refresh="onChange"></xsf:calculatedField>
+		<xsf:calculatedField target="/my:invoiceApproval/my:netTotal" expression="sum(xdMath:Nz(../my:lines/my:line/my:lineTotal))" refresh="onChange"></xsf:calculatedField>
+		<xsf:calculatedField target="/my:invoiceApproval/my:grossTotal" expression="xdMath:Nz(../my:netTotal) * (1 + xdMath:Nz(../my:taxRate))" refresh="onChange"></xsf:calculatedField>
+	</xsf:calculations>
+	<xsf:domEventHandlers>
+	</xsf:domEventHandlers>
+	<xsf:customValidation>
+	</xsf:customValidation>
+</xsf:xDocumentClass>

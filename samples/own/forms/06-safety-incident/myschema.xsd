@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="incidentReport">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:reporter"/>
+				<xsd:element ref="my:occurredAt"/>
+				<xsd:element ref="my:site"/>
+				<xsd:element ref="my:locationDetail"/>
+				<xsd:element ref="my:severity"/>
+				<xsd:element ref="my:incidentDescription"/>
+				<xsd:element ref="my:scenePhoto"/>
+				<xsd:element ref="my:persons"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="reporter">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:reporterName"/>
+				<xsd:element ref="my:reporterPhone"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="reporterName" type="xsd:string"/>
+	<xsd:element name="reporterPhone" type="xsd:string"/>
+	<xsd:element name="occurredAt" nillable="true" type="xsd:dateTime"/>
+	<xsd:element name="site" type="xsd:string"/>
+	<xsd:element name="locationDetail" type="xsd:string"/>
+	<xsd:element name="severity" type="xsd:string"/>
+	<xsd:element name="incidentDescription">
+		<xsd:complexType mixed="true">
+			<xsd:sequence>
+				<xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/1999/xhtml" processContents="lax"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="scenePhoto" nillable="true" type="xsd:base64Binary"/>
+	<xsd:element name="persons">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:person" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="person">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:personName"/>
+				<xsd:element ref="my:personRole"/>
+				<xsd:element ref="my:injuryType"/>
+				<xsd:element ref="my:followUps"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="personName" type="xsd:string"/>
+	<xsd:element name="personRole" type="xsd:string"/>
+	<xsd:element name="injuryType" type="xsd:string"/>
+	<xsd:element name="followUps">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:followUp" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="followUp">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:actionDate"/>
+				<xsd:element ref="my:actionTaken"/>
+				<xsd:element ref="my:actionOwner"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="actionDate" nillable="true" type="xsd:date"/>
+	<xsd:element name="actionTaken" type="xsd:string"/>
+	<xsd:element name="actionOwner" type="xsd:string"/>
+</xsd:schema>

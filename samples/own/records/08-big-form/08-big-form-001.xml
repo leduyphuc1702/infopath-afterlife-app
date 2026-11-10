@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Big-Form:-myXSD-2026-11-03T09-00-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/08-big-form.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:bigForm xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T09:00:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:section1>
+		<my:s1f01>2026-07-16</my:s1f01>
+		<my:s1f02>B</my:s1f02>
+		<my:s1f03>217.27</my:s1f03>
+		<my:s1f04>true</my:s1f04>
+		<my:s1f05>43</my:s1f05>
+		<my:s1f06>Value 1-s1f06</my:s1f06>
+		<my:s1f07>C</my:s1f07>
+		<my:s1f08>Value 1-s1f08</my:s1f08>
+		<my:s1f09>Value 1-s1f09</my:s1f09>
+		<my:s1f10>Value 1-s1f10</my:s1f10>
+		<my:s1f11>2026-02-01</my:s1f11>
+		<my:s1f12>B</my:s1f12>
+		<my:s1f13>387.37</my:s1f13>
+		<my:s1f14>true</my:s1f14>
+		<my:s1f15>70</my:s1f15>
+		<my:s1f16>Value 1-s1f16</my:s1f16>
+		<my:s1f17>C</my:s1f17>
+		<my:s1f18>Value 1-s1f18</my:s1f18>
+		<my:s1f19>Value 1-s1f19</my:s1f19>
+		<my:s1f20>Value 1-s1f20</my:s1f20>
+		<my:s1f21>2025-04-02</my:s1f21>
+		<my:s1f22>C</my:s1f22>
+		<my:s1f23>502.35</my:s1f23>
+		<my:s1f24>false</my:s1f24>
+		<my:s1f25>87</my:s1f25>
+	</my:section1>
+	<my:section2>
+		<my:s2f01>A</my:s2f01>
+		<my:s2f02>274.15</my:s2f02>
+		<my:s2f03>true</my:s2f03>
+		<my:s2f04>73</my:s2f04>
+		<my:s2f05>Value 1-s2f05</my:s2f05>
+		<my:s2f06>A</my:s2f06>
+		<my:s2f07>Value 1-s2f07</my:s2f07>
+		<my:s2f08>Value 1-s2f08</my:s2f08>
+		<my:s2f09>Value 1-s2f09</my:s2f09>
+		<my:s2f10>2025-10-07</my:s2f10>
+		<my:s2f11>A</my:s2f11>
+		<my:s2f12>241.98</my:s2f12>
+		<my:s2f13>false</my:s2f13>
+		<my:s2f14>91</my:s2f14>
+		<my:s2f15>Value 1-s2f15</my:s2f15>
+		<my:s2f16>B</my:s2f16>
+		<my:s2f17>Value 1-s2f17</my:s2f17>
+		<my:s2f18>Value 1-s2f18</my:s2f18>
+		<my:s2f19>Value 1-s2f19</my:s2f19>
+		<my:s2f20>2026-07-04</my:s2f20>
+		<my:s2f21>A</my:s2f21>
+		<my:s2f22>134.19</my:s2f22>
+		<my:s2f23>true</my:s2f23>
+		<my:s2f24>91</my:s2f24>
+		<my:s2f25>Value 1-s2f25</my:s2f25>
+	</my:section2>
+	<my:section3>
+		<my:s3f01>432.53</my:s3f01>
+		<my:s3f02>true</my:s3f02>
+		<my:s3f03>12</my:s3f03>
+		<my:s3f04>Value 1-s3f04</my:s3f04>
+		<my:s3f05>B</my:s3f05>
+		<my:s3f06>Value 1-s3f06</my:s3f06>
+		<my:s3f07>Value 1-s3f07</my:s3f07>
+		<my:s3f08>Value 1-s3f08</my:s3f08>
+		<my:s3f09>2026-04-16</my:s3f09>
+		<my:s3f10>C</my:s3f10>
+		<my:s3f11>819.93</my:s3f11>
+		<my:s3f12>true</my:s3f12>
+		<my:s3f13>81</my:s3f13>
+		<my:s3f14>Value 1-s3f14</my:s3f14>
+		<my:s3f15>B</my:s3f15>
+		<my:s3f16>Value 1-s3f16</my:s3f16>
+		<my:s3f17>Value 1-s3f17</my:s3f17>
+		<my:s3f18>Value 1-s3f18</my:s3f18>
+		<my:s3f19>2025-02-16</my:s3f19>
+		<my:s3f20>C</my:s3f20>
+		<my:s3f21>590.71</my:s3f21>
+		<my:s3f22>false</my:s3f22>
+		<my:s3f23>61</my:s3f23>
+		<my:s3f24>Value 1-s3f24</my:s3f24>
+		<my:s3f25>B</my:s3f25>
+	</my:section3>
+	<my:section4>
+		<my:s4f01>false</my:s4f01>
+		<my:s4f02>89</my:s4f02>
+		<my:s4f03>Value 1-s4f03</my:s4f03>
+		<my:s4f04>A</my:s4f04>
+		<my:s4f05>Value 1-s4f05</my:s4f05>
+		<my:s4f06>Value 1-s4f06</my:s4f06>
+		<my:s4f07>Value 1-s4f07</my:s4f07>
+		<my:s4f08>2025-04-08</my:s4f08>
+		<my:s4f09>C</my:s4f09>
+		<my:s4f10>397.84</my:s4f10>
+		<my:s4f11>true</my:s4f11>
+		<my:s4f12>37</my:s4f12>
+		<my:s4f13>Value 1-s4f13</my:s4f13>
+		<my:s4f14>B</my:s4f14>
+		<my:s4f15>Value 1-s4f15</my:s4f15>
+		<my:s4f16>Value 1-s4f16</my:s4f16>
+		<my:s4f17>Value 1-s4f17</my:s4f17>
+		<my:s4f18>2025-07-25</my:s4f18>
+		<my:s4f19>B</my:s4f19>
+		<my:s4f20>124.84</my:s4f20>
+		<my:s4f21>true</my:s4f21>
+		<my:s4f22>86</my:s4f22>
+		<my:s4f23>Value 1-s4f23</my:s4f23>
+		<my:s4f24>B</my:s4f24>
+		<my:s4f25>Value 1-s4f25</my:s4f25>
+	</my:section4>
+	<my:section5>
+		<my:s5f01>72</my:s5f01>
+		<my:s5f02>Value 1-s5f02</my:s5f02>
+		<my:s5f03>C</my:s5f03>
+		<my:s5f04>Value 1-s5f04</my:s5f04>
+		<my:s5f05>Value 1-s5f05</my:s5f05>
+		<my:s5f06>Value 1-s5f06</my:s5f06>
+		<my:s5f07>2025-05-21</my:s5f07>
+		<my:s5f08>B</my:s5f08>
+		<my:s5f09>198.15</my:s5f09>
+		<my:s5f10>true</my:s5f10>
+		<my:s5f11>92</my:s5f11>
+		<my:s5f12>Value 1-s5f12</my:s5f12>
+		<my:s5f13>A</my:s5f13>
+		<my:s5f14>Value 1-s5f14</my:s5f14>
+		<my:s5f15>Value 1-s5f15</my:s5f15>
+		<my:s5f16>Value 1-s5f16</my:s5f16>
+		<my:s5f17>2026-08-04</my:s5f17>
+		<my:s5f18>A</my:s5f18>
+		<my:s5f19>503.27</my:s5f19>
+		<my:s5f20>false</my:s5f20>
+		<my:s5f21>61</my:s5f21>
+		<my:s5f22>Value 1-s5f22</my:s5f22>
+		<my:s5f23>B</my:s5f23>
+		<my:s5f24>Value 1-s5f24</my:s5f24>
+		<my:s5f25>Value 1-s5f25</my:s5f25>
+	</my:section5>
+	<my:section6>
+		<my:s6f01>Value 1-s6f01</my:s6f01>
+		<my:s6f02>A</my:s6f02>
+		<my:s6f03>Value 1-s6f03</my:s6f03>
+		<my:s6f04>Value 1-s6f04</my:s6f04>
+		<my:s6f05>Value 1-s6f05</my:s6f05>
+		<my:s6f06>2026-01-31</my:s6f06>
+		<my:s6f07>A</my:s6f07>
+		<my:s6f08>337.21</my:s6f08>
+		<my:s6f09>true</my:s6f09>
+		<my:s6f10>35</my:s6f10>
+		<my:s6f11>Value 1-s6f11</my:s6f11>
+		<my:s6f12>B</my:s6f12>
+		<my:s6f13>Value 1-s6f13</my:s6f13>
+		<my:s6f14>Value 1-s6f14</my:s6f14>
+		<my:s6f15>Value 1-s6f15</my:s6f15>
+		<my:s6f16>2025-07-26</my:s6f16>
+		<my:s6f17>C</my:s6f17>
+		<my:s6f18>406.98</my:s6f18>
+		<my:s6f19>true</my:s6f19>
+		<my:s6f20>28</my:s6f20>
+		<my:s6f21>Value 1-s6f21</my:s6f21>
+		<my:s6f22>A</my:s6f22>
+		<my:s6f23>Value 1-s6f23</my:s6f23>
+		<my:s6f24>Value 1-s6f24</my:s6f24>
+		<my:s6f25>Value 1-s6f25</my:s6f25>
+	</my:section6>
+	<my:section7>
+		<my:s7f01>A</my:s7f01>
+		<my:s7f02>Value 1-s7f02</my:s7f02>
+		<my:s7f03>Value 1-s7f03</my:s7f03>
+		<my:s7f04>Value 1-s7f04</my:s7f04>
+		<my:s7f05>2026-03-14</my:s7f05>
+		<my:s7f06>A</my:s7f06>
+		<my:s7f07>381.30</my:s7f07>
+		<my:s7f08>false</my:s7f08>
+		<my:s7f09>64</my:s7f09>
+		<my:s7f10>Value 1-s7f10</my:s7f10>
+		<my:s7f11>B</my:s7f11>
+		<my:s7f12>Value 1-s7f12</my:s7f12>
+		<my:s7f13>Value 1-s7f13</my:s7f13>
+		<my:s7f14>Value 1-s7f14</my:s7f14>
+		<my:s7f15>2025-01-22</my:s7f15>
+		<my:s7f16>A</my:s7f16>
+		<my:s7f17>218.40</my:s7f17>
+		<my:s7f18>false</my:s7f18>
+		<my:s7f19>66</my:s7f19>
+		<my:s7f20>Value 1-s7f20</my:s7f20>
+		<my:s7f21>B</my:s7f21>
+		<my:s7f22>Value 1-s7f22</my:s7f22>
+		<my:s7f23>Value 1-s7f23</my:s7f23>
+		<my:s7f24>Value 1-s7f24</my:s7f24>
+		<my:s7f25>2025-03-21</my:s7f25>
+	</my:section7>
+	<my:section8>
+		<my:s8f01>Value 1-s8f01</my:s8f01>
+		<my:s8f02>Value 1-s8f02</my:s8f02>
+		<my:s8f03>Value 1-s8f03</my:s8f03>
+		<my:s8f04>2026-03-03</my:s8f04>
+		<my:s8f05>A</my:s8f05>
+		<my:s8f06>394.41</my:s8f06>
+		<my:s8f07>true</my:s8f07>
+		<my:s8f08>8</my:s8f08>
+		<my:s8f09>Value 1-s8f09</my:s8f09>
+		<my:s8f10>C</my:s8f10>
+		<my:s8f11>Value 1-s8f11</my:s8f11>
+		<my:s8f12>Value 1-s8f12</my:s8f12>
+		<my:s8f13>Value 1-s8f13</my:s8f13>
+		<my:s8f14>2026-01-20</my:s8f14>
+		<my:s8f15>C</my:s8f15>
+		<my:s8f16>514.09</my:s8f16>
+		<my:s8f17>false</my:s8f17>
+		<my:s8f18>2</my:s8f18>
+		<my:s8f19>Value 1-s8f19</my:s8f19>
+		<my:s8f20>B</my:s8f20>
+		<my:s8f21>Value 1-s8f21</my:s8f21>
+		<my:s8f22>Value 1-s8f22</my:s8f22>
+		<my:s8f23>Value 1-s8f23</my:s8f23>
+		<my:s8f24>2025-01-29</my:s8f24>
+		<my:s8f25>C</my:s8f25>
+	</my:section8>
+</my:bigForm>

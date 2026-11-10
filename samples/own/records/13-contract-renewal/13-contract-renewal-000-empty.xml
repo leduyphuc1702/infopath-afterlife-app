@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Contract-Renewal:-myXSD-2026-11-04T09-13-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/13-contract-renewal.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:contractRenewal xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:13:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:contract>
+		<my:contractNumber></my:contractNumber>
+		<my:counterparty></my:counterparty>
+		<my:annualValue xsi:nil="true"></my:annualValue>
+		<my:expiryDate xsi:nil="true"></my:expiryDate>
+	</my:contract>
+	<my:renewalTerm></my:renewalTerm>
+	<my:priceChange xsi:nil="true"></my:priceChange>
+	<my:legalReviewed>false</my:legalReviewed>
+	<my:comments></my:comments>
+</my:contractRenewal>

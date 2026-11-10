@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Petty-Cash:-myXSD-2026-11-04T09-30-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/30-petty-cash.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:pettyCash xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:30:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:claimantName>Alpha 46</my:claimantName>
+	<my:claimDate>2025-07-24</my:claimDate>
+	<my:items>
+		<my:item>
+			<my:itemDate>2026-03-06</my:itemDate>
+			<my:itemText>Ember 50</my:itemText>
+			<my:itemAmount>374.64</my:itemAmount>
+			<my:itemReceipt xsi:nil="true"></my:itemReceipt>
+		</my:item>
+	</my:items>
+	<my:amountTotal xsi:nil="true"></my:amountTotal>
+	<my:cashierName>Delta 10</my:cashierName>
+</my:pettyCash>

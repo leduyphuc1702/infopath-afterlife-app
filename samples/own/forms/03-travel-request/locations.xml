@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locations>
+	<country code="US" name="United States">
+		<city>Seattle</city>
+		<city>Chicago</city>
+		<city>Austin</city>
+		<city>Boston</city>
+	</country>
+	<country code="DE" name="Germany">
+		<city>Berlin</city>
+		<city>Munich</city>
+		<city>Hamburg</city>
+	</country>
+	<country code="JP" name="Japan">
+		<city>Tokyo</city>
+		<city>Osaka</city>
+	</country>
+	<country code="VN" name="Vietnam">
+		<city>Hanoi</city>
+		<city>Ho Chi Minh City</city>
+		<city>Da Nang</city>
+	</country>
+	<country code="BR" name="Brazil">
+		<city>Sao Paulo</city>
+		<city>Recife</city>
+	</country>
+</locations>

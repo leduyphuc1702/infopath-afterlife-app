@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:22:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:22:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="qualityInspection">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:inspectionDate"/>
+				<xsd:element ref="my:site"/>
+				<xsd:element ref="my:inspector"/>
+				<xsd:element ref="my:checks"/>
+				<xsd:element ref="my:result"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="inspectionDate" nillable="true" type="xsd:date"/>
+	<xsd:element name="site" type="xsd:string"/>
+	<xsd:element name="inspector" type="xsd:string"/>
+	<xsd:element name="checks">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:check" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="check">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:checkItem"/>
+				<xsd:element ref="my:checkPass"/>
+				<xsd:element ref="my:checkNote"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="checkItem" type="xsd:string"/>
+	<xsd:element name="checkPass" type="xsd:boolean"/>
+	<xsd:element name="checkNote" type="xsd:string"/>
+	<xsd:element name="result" type="xsd:string"/>
+</xsd:schema>

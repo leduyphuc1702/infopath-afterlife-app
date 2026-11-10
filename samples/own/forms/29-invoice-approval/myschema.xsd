@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="invoiceApproval">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:invoiceNumber"/>
+				<xsd:element ref="my:vendorName"/>
+				<xsd:element ref="my:invoiceDate"/>
+				<xsd:element ref="my:lines"/>
+				<xsd:element ref="my:netTotal"/>
+				<xsd:element ref="my:taxRate"/>
+				<xsd:element ref="my:grossTotal"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="invoiceNumber" type="xsd:string"/>
+	<xsd:element name="vendorName" type="xsd:string"/>
+	<xsd:element name="invoiceDate" nillable="true" type="xsd:date"/>
+	<xsd:element name="lines">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:line" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="line">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:lineText"/>
+				<xsd:element ref="my:lineQty"/>
+				<xsd:element ref="my:linePrice"/>
+				<xsd:element ref="my:lineTotal"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="lineText" type="xsd:string"/>
+	<xsd:element name="lineQty" nillable="true" type="xsd:double"/>
+	<xsd:element name="linePrice" nillable="true" type="xsd:double"/>
+	<xsd:element name="lineTotal" nillable="true" type="xsd:double"/>
+	<xsd:element name="netTotal" nillable="true" type="xsd:double"/>
+	<xsd:element name="taxRate" nillable="true" type="xsd:double"/>
+	<xsd:element name="grossTotal" nillable="true" type="xsd:double"/>
+</xsd:schema>

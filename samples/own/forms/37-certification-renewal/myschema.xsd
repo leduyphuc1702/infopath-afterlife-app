@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:37:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:37:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="certificationRenewal">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:holderName"/>
+				<xsd:element ref="my:certification"/>
+				<xsd:element ref="my:issuedOn"/>
+				<xsd:element ref="my:expiresOn"/>
+				<xsd:element ref="my:renewalCost"/>
+				<xsd:element ref="my:examBooked"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="holderName" type="xsd:string"/>
+	<xsd:element name="certification" type="xsd:string"/>
+	<xsd:element name="issuedOn" nillable="true" type="xsd:date"/>
+	<xsd:element name="expiresOn" nillable="true" type="xsd:date"/>
+	<xsd:element name="renewalCost" nillable="true" type="xsd:double"/>
+	<xsd:element name="examBooked" type="xsd:boolean"/>
+</xsd:schema>

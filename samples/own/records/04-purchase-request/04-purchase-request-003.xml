@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Purchase-Request:-myXSD-2026-11-03T08-30-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/04-purchase-request.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:purchaseRequest xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:requester>
+		<my:requesterName>Mara Juniper</my:requesterName>
+		<my:requesterEmail>mara.juniper@contoso-fictional.example</my:requesterEmail>
+		<my:costCenterCode>CC-109</my:costCenterCode>
+	</my:requester>
+	<my:vendorId>V114</my:vendorId>
+	<my:neededBy>2026-06-12</my:neededBy>
+	<my:lines>
+		<my:line>
+			<my:lineDescription>Safety boots</my:lineDescription>
+			<my:quantity>7</my:quantity>
+			<my:unitPrice>117.71</my:unitPrice>
+			<my:lineTotal>823.97</my:lineTotal>
+		</my:line>
+		<my:line>
+			<my:lineDescription>Office chair</my:lineDescription>
+			<my:quantity>9</my:quantity>
+			<my:unitPrice>239.37</my:unitPrice>
+			<my:lineTotal>2154.33</my:lineTotal>
+		</my:line>
+	</my:lines>
+	<my:subtotal>2978.30</my:subtotal>
+	<my:vatRate>0.1</my:vatRate>
+	<my:vatAmount>297.83</my:vatAmount>
+	<my:grandTotal>3276.13</my:grandTotal>
+	<my:budgetRemaining>7730.40</my:budgetRemaining>
+	<my:needsAccounting>true</my:needsAccounting>
+	<my:justification>Project need</my:justification>
+</my:purchaseRequest>

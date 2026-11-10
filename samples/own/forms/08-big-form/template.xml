@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Big-Form:-myXSD-2026-11-03T09-00-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="manifest.xsf" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:bigForm xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T09:00:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:section1>
+		<my:s1f01 xsi:nil="true"></my:s1f01>
+		<my:s1f02></my:s1f02>
+		<my:s1f03 xsi:nil="true"></my:s1f03>
+		<my:s1f04>false</my:s1f04>
+		<my:s1f05 xsi:nil="true"></my:s1f05>
+		<my:s1f06></my:s1f06>
+		<my:s1f07></my:s1f07>
+		<my:s1f08></my:s1f08>
+		<my:s1f09></my:s1f09>
+		<my:s1f10></my:s1f10>
+		<my:s1f11 xsi:nil="true"></my:s1f11>
+		<my:s1f12></my:s1f12>
+		<my:s1f13 xsi:nil="true"></my:s1f13>
+		<my:s1f14>false</my:s1f14>
+		<my:s1f15 xsi:nil="true"></my:s1f15>
+		<my:s1f16></my:s1f16>
+		<my:s1f17></my:s1f17>
+		<my:s1f18></my:s1f18>
+		<my:s1f19></my:s1f19>
+		<my:s1f20></my:s1f20>
+		<my:s1f21 xsi:nil="true"></my:s1f21>
+		<my:s1f22></my:s1f22>
+		<my:s1f23 xsi:nil="true"></my:s1f23>
+		<my:s1f24>false</my:s1f24>
+		<my:s1f25 xsi:nil="true"></my:s1f25>
+	</my:section1>
+	<my:section2>
+		<my:s2f01></my:s2f01>
+		<my:s2f02 xsi:nil="true"></my:s2f02>
+		<my:s2f03>false</my:s2f03>
+		<my:s2f04 xsi:nil="true"></my:s2f04>
+		<my:s2f05></my:s2f05>
+		<my:s2f06></my:s2f06>
+		<my:s2f07></my:s2f07>
+		<my:s2f08></my:s2f08>
+		<my:s2f09></my:s2f09>
+		<my:s2f10 xsi:nil="true"></my:s2f10>
+		<my:s2f11></my:s2f11>
+		<my:s2f12 xsi:nil="true"></my:s2f12>
+		<my:s2f13>false</my:s2f13>
+		<my:s2f14 xsi:nil="true"></my:s2f14>
+		<my:s2f15></my:s2f15>
+		<my:s2f16></my:s2f16>
+		<my:s2f17></my:s2f17>
+		<my:s2f18></my:s2f18>
+		<my:s2f19></my:s2f19>
+		<my:s2f20 xsi:nil="true"></my:s2f20>
+		<my:s2f21></my:s2f21>
+		<my:s2f22 xsi:nil="true"></my:s2f22>
+		<my:s2f23>false</my:s2f23>
+		<my:s2f24 xsi:nil="true"></my:s2f24>
+		<my:s2f25></my:s2f25>
+	</my:section2>
+	<my:section3>
+		<my:s3f01 xsi:nil="true"></my:s3f01>
+		<my:s3f02>false</my:s3f02>
+		<my:s3f03 xsi:nil="true"></my:s3f03>
+		<my:s3f04></my:s3f04>
+		<my:s3f05></my:s3f05>
+		<my:s3f06></my:s3f06>
+		<my:s3f07></my:s3f07>
+		<my:s3f08></my:s3f08>
+		<my:s3f09 xsi:nil="true"></my:s3f09>
+		<my:s3f10></my:s3f10>
+		<my:s3f11 xsi:nil="true"></my:s3f11>
+		<my:s3f12>false</my:s3f12>
+		<my:s3f13 xsi:nil="true"></my:s3f13>
+		<my:s3f14></my:s3f14>
+		<my:s3f15></my:s3f15>
+		<my:s3f16></my:s3f16>
+		<my:s3f17></my:s3f17>
+		<my:s3f18></my:s3f18>
+		<my:s3f19 xsi:nil="true"></my:s3f19>
+		<my:s3f20></my:s3f20>
+		<my:s3f21 xsi:nil="true"></my:s3f21>
+		<my:s3f22>false</my:s3f22>
+		<my:s3f23 xsi:nil="true"></my:s3f23>
+		<my:s3f24></my:s3f24>
+		<my:s3f25></my:s3f25>
+	</my:section3>
+	<my:section4>
+		<my:s4f01>false</my:s4f01>
+		<my:s4f02 xsi:nil="true"></my:s4f02>
+		<my:s4f03></my:s4f03>
+		<my:s4f04></my:s4f04>
+		<my:s4f05></my:s4f05>
+		<my:s4f06></my:s4f06>
+		<my:s4f07></my:s4f07>
+		<my:s4f08 xsi:nil="true"></my:s4f08>
+		<my:s4f09></my:s4f09>
+		<my:s4f10 xsi:nil="true"></my:s4f10>
+		<my:s4f11>false</my:s4f11>
+		<my:s4f12 xsi:nil="true"></my:s4f12>
+		<my:s4f13></my:s4f13>
+		<my:s4f14></my:s4f14>
+		<my:s4f15></my:s4f15>
+		<my:s4f16></my:s4f16>
+		<my:s4f17></my:s4f17>
+		<my:s4f18 xsi:nil="true"></my:s4f18>
+		<my:s4f19></my:s4f19>
+		<my:s4f20 xsi:nil="true"></my:s4f20>
+		<my:s4f21>false</my:s4f21>
+		<my:s4f22 xsi:nil="true"></my:s4f22>
+		<my:s4f23></my:s4f23>
+		<my:s4f24></my:s4f24>
+		<my:s4f25></my:s4f25>
+	</my:section4>
+	<my:section5>
+		<my:s5f01 xsi:nil="true"></my:s5f01>
+		<my:s5f02></my:s5f02>
+		<my:s5f03></my:s5f03>
+		<my:s5f04></my:s5f04>
+		<my:s5f05></my:s5f05>
+		<my:s5f06></my:s5f06>
+		<my:s5f07 xsi:nil="true"></my:s5f07>
+		<my:s5f08></my:s5f08>
+		<my:s5f09 xsi:nil="true"></my:s5f09>
+		<my:s5f10>false</my:s5f10>
+		<my:s5f11 xsi:nil="true"></my:s5f11>
+		<my:s5f12></my:s5f12>
+		<my:s5f13></my:s5f13>
+		<my:s5f14></my:s5f14>
+		<my:s5f15></my:s5f15>
+		<my:s5f16></my:s5f16>
+		<my:s5f17 xsi:nil="true"></my:s5f17>
+		<my:s5f18></my:s5f18>
+		<my:s5f19 xsi:nil="true"></my:s5f19>
+		<my:s5f20>false</my:s5f20>
+		<my:s5f21 xsi:nil="true"></my:s5f21>
+		<my:s5f22></my:s5f22>
+		<my:s5f23></my:s5f23>
+		<my:s5f24></my:s5f24>
+		<my:s5f25></my:s5f25>
+	</my:section5>
+	<my:section6>
+		<my:s6f01></my:s6f01>
+		<my:s6f02></my:s6f02>
+		<my:s6f03></my:s6f03>
+		<my:s6f04></my:s6f04>
+		<my:s6f05></my:s6f05>
+		<my:s6f06 xsi:nil="true"></my:s6f06>
+		<my:s6f07></my:s6f07>
+		<my:s6f08 xsi:nil="true"></my:s6f08>
+		<my:s6f09>false</my:s6f09>
+		<my:s6f10 xsi:nil="true"></my:s6f10>
+		<my:s6f11></my:s6f11>
+		<my:s6f12></my:s6f12>
+		<my:s6f13></my:s6f13>
+		<my:s6f14></my:s6f14>
+		<my:s6f15></my:s6f15>
+		<my:s6f16 xsi:nil="true"></my:s6f16>
+		<my:s6f17></my:s6f17>
+		<my:s6f18 xsi:nil="true"></my:s6f18>
+		<my:s6f19>false</my:s6f19>
+		<my:s6f20 xsi:nil="true"></my:s6f20>
+		<my:s6f21></my:s6f21>
+		<my:s6f22></my:s6f22>
+		<my:s6f23></my:s6f23>
+		<my:s6f24></my:s6f24>
+		<my:s6f25></my:s6f25>
+	</my:section6>
+	<my:section7>
+		<my:s7f01></my:s7f01>
+		<my:s7f02></my:s7f02>
+		<my:s7f03></my:s7f03>
+		<my:s7f04></my:s7f04>
+		<my:s7f05 xsi:nil="true"></my:s7f05>
+		<my:s7f06></my:s7f06>
+		<my:s7f07 xsi:nil="true"></my:s7f07>
+		<my:s7f08>false</my:s7f08>
+		<my:s7f09 xsi:nil="true"></my:s7f09>
+		<my:s7f10></my:s7f10>
+		<my:s7f11></my:s7f11>
+		<my:s7f12></my:s7f12>
+		<my:s7f13></my:s7f13>
+		<my:s7f14></my:s7f14>
+		<my:s7f15 xsi:nil="true"></my:s7f15>
+		<my:s7f16></my:s7f16>
+		<my:s7f17 xsi:nil="true"></my:s7f17>
+		<my:s7f18>false</my:s7f18>
+		<my:s7f19 xsi:nil="true"></my:s7f19>
+		<my:s7f20></my:s7f20>
+		<my:s7f21></my:s7f21>
+		<my:s7f22></my:s7f22>
+		<my:s7f23></my:s7f23>
+		<my:s7f24></my:s7f24>
+		<my:s7f25 xsi:nil="true"></my:s7f25>
+	</my:section7>
+	<my:section8>
+		<my:s8f01></my:s8f01>
+		<my:s8f02></my:s8f02>
+		<my:s8f03></my:s8f03>
+		<my:s8f04 xsi:nil="true"></my:s8f04>
+		<my:s8f05></my:s8f05>
+		<my:s8f06 xsi:nil="true"></my:s8f06>
+		<my:s8f07>false</my:s8f07>
+		<my:s8f08 xsi:nil="true"></my:s8f08>
+		<my:s8f09></my:s8f09>
+		<my:s8f10></my:s8f10>
+		<my:s8f11></my:s8f11>
+		<my:s8f12></my:s8f12>
+		<my:s8f13></my:s8f13>
+		<my:s8f14 xsi:nil="true"></my:s8f14>
+		<my:s8f15></my:s8f15>
+		<my:s8f16 xsi:nil="true"></my:s8f16>
+		<my:s8f17>false</my:s8f17>
+		<my:s8f18 xsi:nil="true"></my:s8f18>
+		<my:s8f19></my:s8f19>
+		<my:s8f20></my:s8f20>
+		<my:s8f21></my:s8f21>
+		<my:s8f22></my:s8f22>
+		<my:s8f23></my:s8f23>
+		<my:s8f24 xsi:nil="true"></my:s8f24>
+		<my:s8f25></my:s8f25>
+	</my:section8>
+</my:bigForm>

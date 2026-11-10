@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Expense-Claim:-myXSD-2026-11-03T08-10-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/02-expense-report.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:expenseClaim xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:claimant>
+		<my:claimantName>Yara Ingram</my:claimantName>
+		<my:claimantId>E20011</my:claimantId>
+		<my:claimantDept>OPS</my:claimantDept>
+	</my:claimant>
+	<my:businessPurpose>Site audit</my:businessPurpose>
+	<my:claimCurrency>USD</my:claimCurrency>
+	<my:expenses>
+		<my:expense>
+			<my:expenseDate>2026-02-11</my:expenseDate>
+			<my:expenseType>Meals</my:expenseType>
+			<my:expenseDescription>Meals - Blue Fern Cafe</my:expenseDescription>
+			<my:amount>253.43</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGYAAAARAAAAcgBlAGMAZQBpAHAAdAAtADEAMQAtADEALgB0AHgAdAAAAFJFQ0VJUFQKQmx1ZSBGZXJuIENhZmUKRGF0ZTogMjAyNi0wMi0xMQpUb3RhbDogMjUzLjQzClJlZjogODE1NTA0NzEKVGhpcyBpcyBhIGZpY3Rpb25hbCB0ZXN0IHJlY2VpcHQuCg==</my:receipt>
+		</my:expense>
+		<my:expense>
+			<my:expenseDate>2025-06-30</my:expenseDate>
+			<my:expenseType>Supplies</my:expenseType>
+			<my:expenseDescription>Supplies - Metro Rail</my:expenseDescription>
+			<my:amount>189.11</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGIAAAARAAAAcgBlAGMAZQBpAHAAdAAtADEAMQAtADIALgB0AHgAdAAAAFJFQ0VJUFQKTWV0cm8gUmFpbApEYXRlOiAyMDI1LTA2LTMwClRvdGFsOiAxODkuMTEKUmVmOiAzMjk5MjEwMQpUaGlzIGlzIGEgZmljdGlvbmFsIHRlc3QgcmVjZWlwdC4K</my:receipt>
+		</my:expense>
+		<my:expense>
+			<my:expenseDate>2025-06-24</my:expenseDate>
+			<my:expenseType>Meals</my:expenseType>
+			<my:expenseDescription>Meals - Harbor Inn</my:expenseDescription>
+			<my:amount>292.96</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGIAAAARAAAAcgBlAGMAZQBpAHAAdAAtADEAMQAtADMALgB0AHgAdAAAAFJFQ0VJUFQKSGFyYm9yIElubgpEYXRlOiAyMDI1LTA2LTI0ClRvdGFsOiAyOTIuOTYKUmVmOiA5NzMwNjYzNApUaGlzIGlzIGEgZmljdGlvbmFsIHRlc3QgcmVjZWlwdC4K</my:receipt>
+		</my:expense>
+		<my:expense>
+			<my:expenseDate>2025-04-14</my:expenseDate>
+			<my:expenseType>Supplies</my:expenseType>
+			<my:expenseDescription>Supplies - Paper Lantern Supplies</my:expenseDescription>
+			<my:amount>249.92</my:amount>
+			<my:receipt xsi:nil="true"></my:receipt>
+		</my:expense>
+		<my:expense>
+			<my:expenseDate>2026-03-06</my:expenseDate>
+			<my:expenseType>Meals</my:expenseType>
+			<my:expenseDescription>Meals - Blue Fern Cafe</my:expenseDescription>
+			<my:amount>285.95</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGYAAAARAAAAcgBlAGMAZQBpAHAAdAAtADEAMQAtADUALgB0AHgAdAAAAFJFQ0VJUFQKQmx1ZSBGZXJuIENhZmUKRGF0ZTogMjAyNi0wMy0wNgpUb3RhbDogMjg1Ljk1ClJlZjogMzgxMDAxODAKVGhpcyBpcyBhIGZpY3Rpb25hbCB0ZXN0IHJlY2VpcHQuCg==</my:receipt>
+		</my:expense>
+	</my:expenses>
+	<my:totalAmount>1271.37</my:totalAmount>
+	<my:approverEmail>sanne.keel@contoso-fictional.example</my:approverEmail>
+</my:expenseClaim>

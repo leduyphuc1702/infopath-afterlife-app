@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:32:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:32:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="visitorRegistration">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:visitorName"/>
+				<xsd:element ref="my:visitorCompany"/>
+				<xsd:element ref="my:visitDate"/>
+				<xsd:element ref="my:hostName"/>
+				<xsd:element ref="my:site"/>
+				<xsd:element ref="my:badgeIssued"/>
+				<xsd:element ref="my:safetyBriefed"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="visitorName" type="xsd:string"/>
+	<xsd:element name="visitorCompany" type="xsd:string"/>
+	<xsd:element name="visitDate" nillable="true" type="xsd:date"/>
+	<xsd:element name="hostName" type="xsd:string"/>
+	<xsd:element name="site" type="xsd:string"/>
+	<xsd:element name="badgeIssued" type="xsd:boolean"/>
+	<xsd:element name="safetyBriefed" type="xsd:boolean"/>
+</xsd:schema>

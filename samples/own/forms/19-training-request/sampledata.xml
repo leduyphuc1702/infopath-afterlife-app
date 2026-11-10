@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Training-Request:-myXSD-2026-11-04T09-19-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="manifest.xsf" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:trainingRequest xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:19:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:requester>
+		<my:requesterName>Delta 29</my:requesterName>
+		<my:requesterEmail>Alpha 81</my:requesterEmail>
+		<my:requesterDept>HR</my:requesterDept>
+	</my:requester>
+	<my:subject>Ember 66</my:subject>
+	<my:neededBy>2026-10-08</my:neededBy>
+	<my:provider>Falcon 57</my:provider>
+	<my:courseStart>2025-10-29</my:courseStart>
+	<my:courseEnd>2026-04-22</my:courseEnd>
+	<my:cost>118.63</my:cost>
+	<my:mandatory>false</my:mandatory>
+	<my:justification>Falcon 26</my:justification>
+	<my:ownerEmail>Alpha 12</my:ownerEmail>
+</my:trainingRequest>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://forms-legacy/budget/" xmlns:tns="http://forms-legacy/budget/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:element name="GetRemainingBudget">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="costCenter" type="xsd:string" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="GetRemainingBudgetResponse">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="GetRemainingBudgetResult" type="xsd:decimal"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

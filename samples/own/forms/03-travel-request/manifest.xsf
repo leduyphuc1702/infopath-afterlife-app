@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is automatically created and modified by Microsoft InfoPath.
+Changes made to the file outside of InfoPath might be lost if the form template is modified in InfoPath.
+-->
+<xsf:xDocumentClass trustSetting="automatic" solutionFormatVersion="2.0.0.0" solutionVersion="1.0.0.1" productVersion="15.0.0" name="urn:schemas-microsoft-com:office:infopath:Travel-Request:-myXSD-2026-11-03T08-20-00" publishUrl="C:\forms\03-travel-request.xsn" xmlns:xsf="http://schemas.microsoft.com/office/infopath/2003/solutionDefinition" xmlns:xsf2="http://schemas.microsoft.com/office/infopath/2006/solutionDefinition/extensions" xmlns:xsf3="http://schemas.microsoft.com/office/infopath/2009/solutionDefinition/extensions" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xdUtil="http://schemas.microsoft.com/office/infopath/2003/xslt/Util" xmlns:xdXDocument="http://schemas.microsoft.com/office/infopath/2003/xslt/xDocument" xmlns:xdMath="http://schemas.microsoft.com/office/infopath/2003/xslt/Math" xmlns:xdDate="http://schemas.microsoft.com/office/infopath/2003/xslt/Date" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xdExtension="http://schemas.microsoft.com/office/infopath/2003/xslt/extension" xmlns:xdEnvironment="http://schemas.microsoft.com/office/infopath/2006/xslt/environment" xmlns:xdUser="http://schemas.microsoft.com/office/infopath/2006/xslt/User" xmlns:xdServerInfo="http://schemas.microsoft.com/office/infopath/2009/xslt/ServerInfo" xmlns:dfs="http://schemas.microsoft.com/office/infopath/2003/dataFormSolution" xmlns:d="http://schemas.microsoft.com/office/infopath/2003/ado/dataFields" xmlns:tns="http://forms-legacy/budget/" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00">
+	<xsf:package>
+		<xsf:files>
+			<xsf:file name="myschema.xsd"><xsf:fileProperties><xsf:property name="namespace" type="string" value="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00"></xsf:property><xsf:property name="editability" type="string" value="full"></xsf:property><xsf:property name="rootElement" type="string" value="travelRequest"></xsf:property><xsf:property name="useOnDemandAlgorithm" type="string" value="yes"></xsf:property></xsf:fileProperties></xsf:file>
+			<xsf:file name="template.xml"></xsf:file>
+			<xsf:file name="sampledata.xml"><xsf:fileProperties><xsf:property name="fileType" type="string" value="sampleData"></xsf:property></xsf:fileProperties></xsf:file>
+			<xsf:file name="upgrade.xsl"></xsf:file>
+			<xsf:file name="view1.xsl"><xsf:fileProperties><xsf:property name="lang" type="string" value="1033"></xsf:property><xsf:property name="mode" type="string" value="1"></xsf:property></xsf:fileProperties></xsf:file>
+			<xsf:file name="view2.xsl"><xsf:fileProperties><xsf:property name="lang" type="string" value="1033"></xsf:property><xsf:property name="mode" type="string" value="1"></xsf:property></xsf:fileProperties></xsf:file>
+			<xsf:file name="locations.xml"></xsf:file>
+			<xsf:file name="locations.xsd"></xsf:file>
+		</xsf:files>
+	</xsf:package>
+	<xsf:importParameters enabled="yes"></xsf:importParameters>
+	<xsf:documentVersionUpgrade>
+		<xsf:useTransform transform="upgrade.xsl" minVersionToUpgrade="0.0.0.0" maxVersionToUpgrade="1.0.0.1"></xsf:useTransform>
+	</xsf:documentVersionUpgrade>
+	<xsf:extensions>
+		<xsf:extension name="SolutionDefinitionExtensions">
+			<xsf2:solutionDefinition runtimeCompatibility="client" allowClientOnlyCode="no">
+				<xsf2:offline openIfQueryFails="yes" cacheQueries="yes"></xsf2:offline>
+				<xsf2:server isPreSubmitPostBackEnabled="no" formLocale="en-US" isMobileEnabled="no"></xsf2:server>
+				<xsf2:dataConnections></xsf2:dataConnections>
+				<xsf2:viewsExtension><xsf2:viewExtension ref="Employee" designMode="normal" clientOnly="no"></xsf2:viewExtension><xsf2:viewExtension ref="Accounting" designMode="normal" clientOnly="no"></xsf2:viewExtension></xsf2:viewsExtension>
+			</xsf2:solutionDefinition>
+		</xsf:extension>
+	</xsf:extensions>
+	<xsf:views default="Employee">
+		<xsf:view name="Employee" caption="Employee">
+			<xsf:editing>
+				<xsf:xmlToEdit name="travelerName_1" item="/my:travelRequest/my:traveler/my:travelerName"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="travelerEmail_2" item="/my:travelRequest/my:traveler/my:travelerEmail"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="travelerDept_3" item="/my:travelRequest/my:traveler/my:travelerDept"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="tripType_4" item="/my:travelRequest/my:tripType"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="destCountry_5" item="/my:travelRequest/my:destCountry"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="destCity_6" item="/my:travelRequest/my:destCity"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="departDate_7" item="/my:travelRequest/my:departDate"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="returnDate_8" item="/my:travelRequest/my:returnDate"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="purpose_9" item="/my:travelRequest/my:purpose"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="passportNumber_10" item="/my:travelRequest/my:international/my:passportNumber"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="passportExpiry_11" item="/my:travelRequest/my:international/my:passportExpiry"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="visaRequired_12" item="/my:travelRequest/my:international/my:visaRequired"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="travelInsurance_13" item="/my:travelRequest/my:international/my:travelInsurance"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+			</xsf:editing>
+			<xsf:mainpane transform="view1.xsl"></xsf:mainpane>
+			<xsf:menuArea name="msoStructuralEditingContextMenu">
+
+			</xsf:menuArea>
+		</xsf:view>
+		<xsf:view name="Accounting" caption="Accounting">
+			<xsf:editing>
+				<xsf:xmlToEdit name="travelerName_1" item="/my:travelRequest/my:traveler/my:travelerName"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="travelerEmail_2" item="/my:travelRequest/my:traveler/my:travelerEmail"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="travelerDept_3" item="/my:travelRequest/my:traveler/my:travelerDept"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="tripType_4" item="/my:travelRequest/my:tripType"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="destCountry_5" item="/my:travelRequest/my:destCountry"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="destCity_6" item="/my:travelRequest/my:destCity"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="departDate_7" item="/my:travelRequest/my:departDate"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="returnDate_8" item="/my:travelRequest/my:returnDate"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="purpose_9" item="/my:travelRequest/my:purpose"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="passportNumber_10" item="/my:travelRequest/my:international/my:passportNumber"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="passportExpiry_11" item="/my:travelRequest/my:international/my:passportExpiry"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="visaRequired_12" item="/my:travelRequest/my:international/my:visaRequired"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="travelInsurance_13" item="/my:travelRequest/my:international/my:travelInsurance"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="costCenter_14" item="/my:travelRequest/my:accounting/my:costCenter"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="estimatedCost_15" item="/my:travelRequest/my:accounting/my:estimatedCost"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="advanceAmount_16" item="/my:travelRequest/my:accounting/my:advanceAmount"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="accountingApprover_17" item="/my:travelRequest/my:accounting/my:accountingApprover"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="accountingStatus_18" item="/my:travelRequest/my:accounting/my:accountingStatus"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+			</xsf:editing>
+			<xsf:mainpane transform="view2.xsl"></xsf:mainpane>
+			<xsf:menuArea name="msoStructuralEditingContextMenu">
+
+			</xsf:menuArea>
+		</xsf:view>
+	</xsf:views>
+	<xsf:applicationParameters application="InfoPath Design Mode">
+		<xsf:solutionProperties fullyEditableNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00" lastOpenView="view1.xsl" automaticallyCreateNodes="yes"></xsf:solutionProperties>
+	</xsf:applicationParameters>
+	<xsf:documentSchemas>
+		<xsf:documentSchema rootSchema="yes" location="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00 myschema.xsd"></xsf:documentSchema>
+	</xsf:documentSchemas>
+	<xsf:fileNew>
+		<xsf:initialXmlDocument caption="Travel Request" href="template.xml"></xsf:initialXmlDocument>
+	</xsf:fileNew>
+	<xsf:dataObjects>
+		<xsf:dataObject name="Locations" schema="locations.xsd" initOnLoad="yes">
+			<xsf:query>
+				<xsf:xmlFileAdapter fileUrl="locations.xml"></xsf:xmlFileAdapter>
+			</xsf:query>
+		</xsf:dataObject></xsf:dataObjects>
+	<xsf:ruleSets>
+		<xsf:ruleSet name="clearCity">
+			<xsf:rule caption="Clear city when country changes" isEnabled="yes">
+				<xsf:assignmentAction targetField="../my:destCity" expression="&quot;&quot;"></xsf:assignmentAction>
+			</xsf:rule>
+		</xsf:ruleSet></xsf:ruleSets>
+	<xsf:calculations>
+	</xsf:calculations>
+	<xsf:domEventHandlers>
+		<xsf:domEventHandler match="/my:travelRequest/my:destCountry"><xsf:ruleSetAction ruleSet="clearCity"></xsf:ruleSetAction></xsf:domEventHandler>
+	</xsf:domEventHandlers>
+	<xsf:customValidation>
+		<xsf:errorCondition match="/my:travelRequest/my:traveler/my:travelerName" expressionContext="." expression=". = &quot;&quot;"><xsf:errorMessage type="modeless" shortMessage="Cannot be blank">This field is required.</xsf:errorMessage></xsf:errorCondition>
+		<xsf:errorCondition match="/my:travelRequest/my:destCountry" expressionContext="." expression=". = &quot;&quot;"><xsf:errorMessage type="modeless" shortMessage="Cannot be blank">This field is required.</xsf:errorMessage></xsf:errorCondition>
+		<xsf:errorCondition match="/my:travelRequest/my:departDate" expressionContext="." expression=". = &quot;&quot;"><xsf:errorMessage type="modeless" shortMessage="Cannot be blank">This field is required.</xsf:errorMessage></xsf:errorCondition>
+		<xsf:errorCondition match="/my:travelRequest/my:returnDate" expressionContext="." expression="msxsl:string-compare(., ../my:departDate) &lt; 0"><xsf:errorMessage type="modeless" shortMessage="Return before departure">Return date cannot be before the departure date.</xsf:errorMessage></xsf:errorCondition>
+	</xsf:customValidation>
+</xsf:xDocumentClass>

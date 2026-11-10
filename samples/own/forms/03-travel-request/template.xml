@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Travel-Request:-myXSD-2026-11-03T08-20-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="manifest.xsf" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:travelRequest xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:traveler>
+		<my:travelerName></my:travelerName>
+		<my:travelerEmail></my:travelerEmail>
+		<my:travelerDept></my:travelerDept>
+	</my:traveler>
+	<my:tripType>Domestic</my:tripType>
+	<my:destCountry></my:destCountry>
+	<my:destCity></my:destCity>
+	<my:departDate xsi:nil="true"></my:departDate>
+	<my:returnDate xsi:nil="true"></my:returnDate>
+	<my:purpose></my:purpose>
+	<my:international>
+		<my:passportNumber></my:passportNumber>
+		<my:passportExpiry xsi:nil="true"></my:passportExpiry>
+		<my:visaRequired>false</my:visaRequired>
+		<my:travelInsurance>false</my:travelInsurance>
+	</my:international>
+	<my:accounting>
+		<my:costCenter></my:costCenter>
+		<my:estimatedCost xsi:nil="true"></my:estimatedCost>
+		<my:advanceAmount xsi:nil="true"></my:advanceAmount>
+		<my:accountingApprover></my:accountingApprover>
+		<my:accountingStatus>Pending</my:accountingStatus>
+	</my:accounting>
+</my:travelRequest>

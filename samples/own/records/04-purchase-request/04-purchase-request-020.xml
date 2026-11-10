@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Purchase-Request:-myXSD-2026-11-03T08-30-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/04-purchase-request.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:purchaseRequest xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:requester>
+		<my:requesterName>Priya Quill</my:requesterName>
+		<my:requesterEmail>priya.quill@contoso-fictional.example</my:requesterEmail>
+		<my:costCenterCode>CC-633</my:costCenterCode>
+	</my:requester>
+	<my:vendorId>V102</my:vendorId>
+	<my:neededBy>2025-11-26</my:neededBy>
+	<my:lines>
+		<my:line>
+			<my:lineDescription>USB dock</my:lineDescription>
+			<my:quantity>1</my:quantity>
+			<my:unitPrice>84.57</my:unitPrice>
+			<my:lineTotal>84.57</my:lineTotal>
+		</my:line>
+		<my:line>
+			<my:lineDescription>Office chair</my:lineDescription>
+			<my:quantity>11</my:quantity>
+			<my:unitPrice>343.40</my:unitPrice>
+			<my:lineTotal>3777.40</my:lineTotal>
+		</my:line>
+		<my:line>
+			<my:lineDescription>Label printer</my:lineDescription>
+			<my:quantity>2</my:quantity>
+			<my:unitPrice>70.80</my:unitPrice>
+			<my:lineTotal>141.60</my:lineTotal>
+		</my:line>
+	</my:lines>
+	<my:subtotal>4003.57</my:subtotal>
+	<my:vatRate>0.1</my:vatRate>
+	<my:vatAmount>400.36</my:vatAmount>
+	<my:grandTotal>4403.93</my:grandTotal>
+	<my:budgetRemaining>11344.92</my:budgetRemaining>
+	<my:needsAccounting>true</my:needsAccounting>
+	<my:justification>Project need</my:justification>
+</my:purchaseRequest>

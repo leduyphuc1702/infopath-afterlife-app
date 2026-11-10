@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Change-Request:-myXSD-2026-11-04T09-14-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/14-change-request.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:changeRequest xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:14:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:change>
+		<my:changeTitle>Cedar 48</my:changeTitle>
+		<my:systemAffected>Alpha 17</my:systemAffected>
+		<my:riskLevel>Low</my:riskLevel>
+		<my:plannedDate>2026-08-24</my:plannedDate>
+		<my:rollbackPlan>Bravo 19</my:rollbackPlan>
+	</my:change>
+	<my:steps>
+		<my:step>
+			<my:stepOrder>14</my:stepOrder>
+			<my:stepText>Ember 75</my:stepText>
+			<my:stepOwner>Delta 31</my:stepOwner>
+		</my:step>
+	</my:steps>
+	<my:cabApproved>false</my:cabApproved>
+</my:changeRequest>

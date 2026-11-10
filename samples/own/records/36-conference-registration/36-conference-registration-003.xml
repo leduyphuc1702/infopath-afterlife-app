@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Conference-Registration:-myXSD-2026-11-04T09-36-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/36-conference-registration.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:conferenceRegistration xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:36:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:requester>
+		<my:requesterName>Ember 66</my:requesterName>
+		<my:requesterEmail>Falcon 79</my:requesterEmail>
+		<my:requesterDept>HR</my:requesterDept>
+	</my:requester>
+	<my:subject>Delta 28</my:subject>
+	<my:neededBy>2025-10-24</my:neededBy>
+	<my:conferenceDate>2025-06-10</my:conferenceDate>
+	<my:city>Ember 10</my:city>
+	<my:ticketType>Standard</my:ticketType>
+	<my:dietary>Ember 47</my:dietary>
+	<my:justification>Ember 24</my:justification>
+	<my:ownerEmail>Falcon 76</my:ownerEmail>
+</my:conferenceRegistration>

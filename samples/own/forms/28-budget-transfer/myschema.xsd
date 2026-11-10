@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:28:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:28:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="budgetTransfer">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:fromCostCenter"/>
+				<xsd:element ref="my:toCostCenter"/>
+				<xsd:element ref="my:amount"/>
+				<xsd:element ref="my:period"/>
+				<xsd:element ref="my:reason"/>
+				<xsd:element ref="my:financeApproved"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="fromCostCenter" type="xsd:string"/>
+	<xsd:element name="toCostCenter" type="xsd:string"/>
+	<xsd:element name="amount" nillable="true" type="xsd:double"/>
+	<xsd:element name="period" type="xsd:string"/>
+	<xsd:element name="reason" type="xsd:string"/>
+	<xsd:element name="financeApproved" type="xsd:boolean"/>
+</xsd:schema>

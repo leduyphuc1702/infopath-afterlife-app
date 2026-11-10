@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Expense-Claim:-myXSD-2026-11-03T08-10-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/02-expense-report.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:expenseClaim xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:claimant>
+		<my:claimantName>Bao Ingram</my:claimantName>
+		<my:claimantId>E20023</my:claimantId>
+		<my:claimantDept>HR</my:claimantDept>
+	</my:claimant>
+	<my:businessPurpose>Client visit</my:businessPurpose>
+	<my:claimCurrency>GBP</my:claimCurrency>
+	<my:expenses>
+		<my:expense>
+			<my:expenseDate>2026-06-12</my:expenseDate>
+			<my:expenseType>Other</my:expenseType>
+			<my:expenseDescription>Other - Northwind Taxi</my:expenseDescription>
+			<my:amount>386.88</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGYAAAARAAAAcgBlAGMAZQBpAHAAdAAtADIAMwAtADEALgB0AHgAdAAAAFJFQ0VJUFQKTm9ydGh3aW5kIFRheGkKRGF0ZTogMjAyNi0wNi0xMgpUb3RhbDogMzg2Ljg4ClJlZjogNDMxMzcyMzIKVGhpcyBpcyBhIGZpY3Rpb25hbCB0ZXN0IHJlY2VpcHQuCg==</my:receipt>
+		</my:expense>
+	</my:expenses>
+	<my:totalAmount>386.88</my:totalAmount>
+	<my:approverEmail>tobin.keel@contoso-fictional.example</my:approverEmail>
+</my:expenseClaim>

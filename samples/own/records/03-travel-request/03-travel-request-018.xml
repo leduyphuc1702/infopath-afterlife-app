@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Travel-Request:-myXSD-2026-11-03T08-20-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/03-travel-request.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:travelRequest xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:traveler>
+		<my:travelerName>Bao Juniper</my:travelerName>
+		<my:travelerEmail>bao.juniper@contoso-fictional.example</my:travelerEmail>
+		<my:travelerDept>FIN</my:travelerDept>
+	</my:traveler>
+	<my:tripType>International</my:tripType>
+	<my:destCountry>DE</my:destCountry>
+	<my:destCity>Berlin</my:destCity>
+	<my:departDate>2025-08-10</my:departDate>
+	<my:returnDate>2025-08-17</my:returnDate>
+	<my:purpose>Trade fair</my:purpose>
+	<my:international>
+		<my:passportNumber>X57025772</my:passportNumber>
+		<my:passportExpiry>2027-01-04</my:passportExpiry>
+		<my:visaRequired>false</my:visaRequired>
+		<my:travelInsurance>true</my:travelInsurance>
+	</my:international>
+	<my:accounting>
+		<my:costCenter>CC-105</my:costCenter>
+		<my:estimatedCost>1835.16</my:estimatedCost>
+		<my:advanceAmount>500.00</my:advanceAmount>
+		<my:accountingApprover></my:accountingApprover>
+		<my:accountingStatus>Approved</my:accountingStatus>
+	</my:accounting>
+</my:travelRequest>

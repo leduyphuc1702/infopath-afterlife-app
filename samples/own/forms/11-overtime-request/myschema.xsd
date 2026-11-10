@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:11:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:11:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="overtimeRequest">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:requester"/>
+				<xsd:element ref="my:subject"/>
+				<xsd:element ref="my:neededBy"/>
+				<xsd:element ref="my:overtimeDate"/>
+				<xsd:element ref="my:fromTime"/>
+				<xsd:element ref="my:toTime"/>
+				<xsd:element ref="my:rateCode"/>
+				<xsd:element ref="my:approvedByManager"/>
+				<xsd:element ref="my:justification"/>
+				<xsd:element ref="my:ownerEmail"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="requester">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:requesterName"/>
+				<xsd:element ref="my:requesterEmail"/>
+				<xsd:element ref="my:requesterDept"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="requesterName" type="xsd:string"/>
+	<xsd:element name="requesterEmail" type="xsd:string"/>
+	<xsd:element name="requesterDept" type="xsd:string"/>
+	<xsd:element name="subject" type="xsd:string"/>
+	<xsd:element name="neededBy" nillable="true" type="xsd:date"/>
+	<xsd:element name="overtimeDate" nillable="true" type="xsd:date"/>
+	<xsd:element name="fromTime" type="xsd:string"/>
+	<xsd:element name="toTime" type="xsd:string"/>
+	<xsd:element name="rateCode" type="xsd:string"/>
+	<xsd:element name="approvedByManager" type="xsd:boolean"/>
+	<xsd:element name="justification" type="xsd:string"/>
+	<xsd:element name="ownerEmail" type="xsd:string"/>
+</xsd:schema>

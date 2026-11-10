@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Petty-Cash:-myXSD-2026-11-04T09-30-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="manifest.xsf" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:pettyCash xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:30:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:claimantName>Alpha 33</my:claimantName>
+	<my:claimDate>2025-09-16</my:claimDate>
+	<my:items>
+		<my:item>
+			<my:itemDate>2025-08-21</my:itemDate>
+			<my:itemText>Alpha 59</my:itemText>
+			<my:itemAmount>551.91</my:itemAmount>
+			<my:itemReceipt xsi:nil="true"></my:itemReceipt>
+		</my:item>
+		<my:item>
+			<my:itemDate>2026-09-04</my:itemDate>
+			<my:itemText>Ember 30</my:itemText>
+			<my:itemAmount>32.31</my:itemAmount>
+			<my:itemReceipt xsi:nil="true"></my:itemReceipt>
+		</my:item>
+	</my:items>
+	<my:amountTotal xsi:nil="true"></my:amountTotal>
+	<my:cashierName>Cedar 90</my:cashierName>
+</my:pettyCash>

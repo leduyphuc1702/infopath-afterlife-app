@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Contract-Renewal:-myXSD-2026-11-04T09-13-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="manifest.xsf" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:contractRenewal xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:13:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:contract>
+		<my:contractNumber>Bravo 61</my:contractNumber>
+		<my:counterparty>Delta 68</my:counterparty>
+		<my:annualValue>636.75</my:annualValue>
+		<my:expiryDate>2025-09-20</my:expiryDate>
+	</my:contract>
+	<my:renewalTerm>12</my:renewalTerm>
+	<my:priceChange>390.10</my:priceChange>
+	<my:legalReviewed>false</my:legalReviewed>
+	<my:comments>Delta 92</my:comments>
+</my:contractRenewal>

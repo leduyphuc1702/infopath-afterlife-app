@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Problem-Report:-myXSD-2026-11-04T09-15-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/15-problem-report.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:problemReport xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:15:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:reportedBy>Falcon 47</my:reportedBy>
+	<my:detectedAt>2026-03-02T14:43:00</my:detectedAt>
+	<my:service>ERP</my:service>
+	<my:impact>Low</my:impact>
+	<my:description><div xmlns="http://www.w3.org/1999/xhtml"><p>Test record, fictional.</p></div></my:description>
+	<my:actions>
+		<my:action>
+			<my:actionAt>2026-02-13T11:09:00</my:actionAt>
+			<my:actionText>Ember 69</my:actionText>
+		</my:action>
+		<my:action>
+			<my:actionAt>2026-02-09T17:17:00</my:actionAt>
+			<my:actionText>Falcon 67</my:actionText>
+		</my:action>
+	</my:actions>
+	<my:resolved>false</my:resolved>
+</my:problemReport>

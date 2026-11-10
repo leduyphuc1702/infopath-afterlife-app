@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:42:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:42:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="incidentRca">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:incidentRef"/>
+				<xsd:element ref="my:rootCause"/>
+				<xsd:element ref="my:contributing"/>
+				<xsd:element ref="my:preventive"/>
+				<xsd:element ref="my:ownerEmail"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="incidentRef" type="xsd:string"/>
+	<xsd:element name="rootCause">
+		<xsd:complexType mixed="true">
+			<xsd:sequence>
+				<xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/1999/xhtml" processContents="lax"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="contributing" type="xsd:string"/>
+	<xsd:element name="preventive" type="xsd:string"/>
+	<xsd:element name="ownerEmail" type="xsd:string"/>
+</xsd:schema>

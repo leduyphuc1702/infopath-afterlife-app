@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:38:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:38:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="assetDisposal">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:assetTag"/>
+				<xsd:element ref="my:assetType"/>
+				<xsd:element ref="my:purchaseDate"/>
+				<xsd:element ref="my:bookValue"/>
+				<xsd:element ref="my:reason"/>
+				<xsd:element ref="my:dataWiped"/>
+				<xsd:element ref="my:approvedBy"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="assetTag" type="xsd:string"/>
+	<xsd:element name="assetType" type="xsd:string"/>
+	<xsd:element name="purchaseDate" nillable="true" type="xsd:date"/>
+	<xsd:element name="bookValue" nillable="true" type="xsd:double"/>
+	<xsd:element name="reason" type="xsd:string"/>
+	<xsd:element name="dataWiped" type="xsd:boolean"/>
+	<xsd:element name="approvedBy" type="xsd:string"/>
+</xsd:schema>

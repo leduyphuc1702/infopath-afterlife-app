@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Expense-Claim:-myXSD-2026-11-03T08-10-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/02-expense-report.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:expenseClaim xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:claimant>
+		<my:claimantName>Oscar Quill</my:claimantName>
+		<my:claimantId>E20008</my:claimantId>
+		<my:claimantDept>FIN</my:claimantDept>
+	</my:claimant>
+	<my:businessPurpose>Conference</my:businessPurpose>
+	<my:claimCurrency>USD</my:claimCurrency>
+	<my:expenses>
+		<my:expense>
+			<my:expenseDate>2025-10-09</my:expenseDate>
+			<my:expenseType>Lodging</my:expenseType>
+			<my:expenseDescription>Lodging - Metro Rail</my:expenseDescription>
+			<my:amount>232.74</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGIAAAARAAAAcgBlAGMAZQBpAHAAdAAtADAAOAAtADEALgB0AHgAdAAAAFJFQ0VJUFQKTWV0cm8gUmFpbApEYXRlOiAyMDI1LTEwLTA5ClRvdGFsOiAyMzIuNzQKUmVmOiA5NDM5MzU4NQpUaGlzIGlzIGEgZmljdGlvbmFsIHRlc3QgcmVjZWlwdC4K</my:receipt>
+		</my:expense>
+		<my:expense>
+			<my:expenseDate>2026-08-07</my:expenseDate>
+			<my:expenseType>Travel</my:expenseType>
+			<my:expenseDescription>Travel - Northwind Taxi</my:expenseDescription>
+			<my:amount>407.15</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGYAAAARAAAAcgBlAGMAZQBpAHAAdAAtADAAOAAtADIALgB0AHgAdAAAAFJFQ0VJUFQKTm9ydGh3aW5kIFRheGkKRGF0ZTogMjAyNi0wOC0wNwpUb3RhbDogNDA3LjE1ClJlZjogMjI5Mzk2NzIKVGhpcyBpcyBhIGZpY3Rpb25hbCB0ZXN0IHJlY2VpcHQuCg==</my:receipt>
+		</my:expense>
+		<my:expense>
+			<my:expenseDate>2026-03-12</my:expenseDate>
+			<my:expenseType>Meals</my:expenseType>
+			<my:expenseDescription>Meals - Blue Fern Cafe</my:expenseDescription>
+			<my:amount>319.87</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGYAAAARAAAAcgBlAGMAZQBpAHAAdAAtADAAOAAtADMALgB0AHgAdAAAAFJFQ0VJUFQKQmx1ZSBGZXJuIENhZmUKRGF0ZTogMjAyNi0wMy0xMgpUb3RhbDogMzE5Ljg3ClJlZjogMjIwMDg5MzMKVGhpcyBpcyBhIGZpY3Rpb25hbCB0ZXN0IHJlY2VpcHQuCg==</my:receipt>
+		</my:expense>
+		<my:expense>
+			<my:expenseDate>2026-07-11</my:expenseDate>
+			<my:expenseType>Travel</my:expenseType>
+			<my:expenseDescription>Travel - Metro Rail</my:expenseDescription>
+			<my:amount>157.73</my:amount>
+			<my:receipt>x0lGQRQAAAABAAAAAAAAAGIAAAARAAAAcgBlAGMAZQBpAHAAdAAtADAAOAAtADQALgB0AHgAdAAAAFJFQ0VJUFQKTWV0cm8gUmFpbApEYXRlOiAyMDI2LTA3LTExClRvdGFsOiAxNTcuNzMKUmVmOiA0MzExMjk0NgpUaGlzIGlzIGEgZmljdGlvbmFsIHRlc3QgcmVjZWlwdC4K</my:receipt>
+		</my:expense>
+	</my:expenses>
+	<my:totalAmount>1117.49</my:totalAmount>
+	<my:approverEmail>emeka.fenwick@contoso-fictional.example</my:approverEmail>
+</my:expenseClaim>

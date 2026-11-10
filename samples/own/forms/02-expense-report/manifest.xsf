@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is automatically created and modified by Microsoft InfoPath.
+Changes made to the file outside of InfoPath might be lost if the form template is modified in InfoPath.
+-->
+<xsf:xDocumentClass trustSetting="automatic" solutionFormatVersion="2.0.0.0" solutionVersion="1.0.0.1" productVersion="15.0.0" name="urn:schemas-microsoft-com:office:infopath:Expense-Claim:-myXSD-2026-11-03T08-10-00" publishUrl="C:\forms\02-expense-report.xsn" xmlns:xsf="http://schemas.microsoft.com/office/infopath/2003/solutionDefinition" xmlns:xsf2="http://schemas.microsoft.com/office/infopath/2006/solutionDefinition/extensions" xmlns:xsf3="http://schemas.microsoft.com/office/infopath/2009/solutionDefinition/extensions" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xdUtil="http://schemas.microsoft.com/office/infopath/2003/xslt/Util" xmlns:xdXDocument="http://schemas.microsoft.com/office/infopath/2003/xslt/xDocument" xmlns:xdMath="http://schemas.microsoft.com/office/infopath/2003/xslt/Math" xmlns:xdDate="http://schemas.microsoft.com/office/infopath/2003/xslt/Date" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xdExtension="http://schemas.microsoft.com/office/infopath/2003/xslt/extension" xmlns:xdEnvironment="http://schemas.microsoft.com/office/infopath/2006/xslt/environment" xmlns:xdUser="http://schemas.microsoft.com/office/infopath/2006/xslt/User" xmlns:xdServerInfo="http://schemas.microsoft.com/office/infopath/2009/xslt/ServerInfo" xmlns:dfs="http://schemas.microsoft.com/office/infopath/2003/dataFormSolution" xmlns:d="http://schemas.microsoft.com/office/infopath/2003/ado/dataFields" xmlns:tns="http://forms-legacy/budget/" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00">
+	<xsf:package>
+		<xsf:files>
+			<xsf:file name="myschema.xsd"><xsf:fileProperties><xsf:property name="namespace" type="string" value="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00"></xsf:property><xsf:property name="editability" type="string" value="full"></xsf:property><xsf:property name="rootElement" type="string" value="expenseClaim"></xsf:property><xsf:property name="useOnDemandAlgorithm" type="string" value="yes"></xsf:property></xsf:fileProperties></xsf:file>
+			<xsf:file name="template.xml"></xsf:file>
+			<xsf:file name="sampledata.xml"><xsf:fileProperties><xsf:property name="fileType" type="string" value="sampleData"></xsf:property></xsf:fileProperties></xsf:file>
+			<xsf:file name="upgrade.xsl"></xsf:file>
+			<xsf:file name="view1.xsl"><xsf:fileProperties><xsf:property name="lang" type="string" value="1033"></xsf:property><xsf:property name="mode" type="string" value="1"></xsf:property></xsf:fileProperties></xsf:file>
+		</xsf:files>
+	</xsf:package>
+	<xsf:importParameters enabled="yes"></xsf:importParameters>
+	<xsf:documentVersionUpgrade>
+		<xsf:useTransform transform="upgrade.xsl" minVersionToUpgrade="0.0.0.0" maxVersionToUpgrade="1.0.0.1"></xsf:useTransform>
+	</xsf:documentVersionUpgrade>
+	<xsf:extensions>
+		<xsf:extension name="SolutionDefinitionExtensions">
+			<xsf2:solutionDefinition runtimeCompatibility="client" allowClientOnlyCode="no">
+				<xsf2:offline openIfQueryFails="yes" cacheQueries="yes"></xsf2:offline>
+				<xsf2:server isPreSubmitPostBackEnabled="no" formLocale="en-US" isMobileEnabled="no"></xsf2:server>
+				<xsf2:dataConnections><xsf2:emailAdapterExtension ref="Main submit" emailAttachmentType="xml"></xsf2:emailAdapterExtension></xsf2:dataConnections>
+				<xsf2:viewsExtension><xsf2:viewExtension ref="Claim" designMode="normal" clientOnly="no"></xsf2:viewExtension></xsf2:viewsExtension>
+			</xsf2:solutionDefinition>
+		</xsf:extension>
+	</xsf:extensions>
+	<xsf:views default="Claim">
+		<xsf:view name="Claim" caption="Claim">
+			<xsf:editing>
+				<xsf:xmlToEdit name="claimantName_1" item="/my:expenseClaim/my:claimant/my:claimantName"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="claimantId_2" item="/my:expenseClaim/my:claimant/my:claimantId"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="claimantDept_3" item="/my:expenseClaim/my:claimant/my:claimantDept"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="businessPurpose_4" item="/my:expenseClaim/my:businessPurpose"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="claimCurrency_5" item="/my:expenseClaim/my:claimCurrency"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="expense_6" item="/my:expenseClaim/my:expenses/my:expense" container="/my:expenseClaim"><xsf:editWith caption="expense" xd:autogeneration="template" component="xCollection"><xsf:fragmentToInsert><xsf:chooseFragment innerFragment="my:expenses/my:expense"><my:expenses><my:expense>
+	<my:expenseDate xsi:nil="true"></my:expenseDate>
+	<my:expenseType></my:expenseType>
+	<my:expenseDescription></my:expenseDescription>
+	<my:amount xsi:nil="true"></my:amount>
+	<my:receipt xsi:nil="true"></my:receipt>
+</my:expense></my:expenses></xsf:chooseFragment></xsf:fragmentToInsert></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="expenseDate_7" item="/my:expenseClaim/my:expenses/my:expense/my:expenseDate"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="expenseType_8" item="/my:expenseClaim/my:expenses/my:expense/my:expenseType"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="expenseDescription_9" item="/my:expenseClaim/my:expenses/my:expense/my:expenseDescription"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="amount_10" item="/my:expenseClaim/my:expenses/my:expense/my:amount"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="receipt_11" item="/my:expenseClaim/my:expenses/my:expense/my:receipt"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="totalAmount_12" item="/my:expenseClaim/my:totalAmount"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+				<xsf:xmlToEdit name="approverEmail_13" item="/my:expenseClaim/my:approverEmail"><xsf:editWith proofing="no" autoComplete="no" component="xField"></xsf:editWith></xsf:xmlToEdit>
+			</xsf:editing>
+			<xsf:mainpane transform="view1.xsl"></xsf:mainpane>
+			<xsf:menuArea name="msoStructuralEditingContextMenu">
+				<xsf:button action="xCollection::insertBefore" xmlToEdit="expense_6" caption="Insert expense above" showIf="immediate"></xsf:button>
+				<xsf:button action="xCollection::insertAfter" xmlToEdit="expense_6" caption="Insert expense below" showIf="immediate"></xsf:button>
+				<xsf:button action="xCollection::remove" xmlToEdit="expense_6" caption="Remove expense" showIf="immediate"></xsf:button>
+				<xsf:button action="xCollection::insert" xmlToEdit="expense_6" caption="Insert expense" showIf="immediate"></xsf:button>
+			</xsf:menuArea>
+		</xsf:view>
+	</xsf:views>
+	<xsf:applicationParameters application="InfoPath Design Mode">
+		<xsf:solutionProperties fullyEditableNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00" lastOpenView="view1.xsl" automaticallyCreateNodes="yes"></xsf:solutionProperties>
+	</xsf:applicationParameters>
+	<xsf:documentSchemas>
+		<xsf:documentSchema rootSchema="yes" location="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00 myschema.xsd"></xsf:documentSchema>
+	</xsf:documentSchemas>
+	<xsf:fileNew>
+		<xsf:initialXmlDocument caption="Expense Report" href="template.xml"></xsf:initialXmlDocument>
+	</xsf:fileNew>
+	<xsf:submit caption="Su&amp;bmit" disableMenuItem="no" onAfterSubmit="keepOpen" showStatusDialog="yes">
+		<xsf:emailAdapter name="Main submit" submitAllowed="yes">
+			<xsf:to value="my:approverEmail" valueType="expression"></xsf:to>
+			<xsf:subject value="Expense Report" valueType="literal"></xsf:subject>
+			<xsf:intro value="This message was created by a Microsoft InfoPath form."></xsf:intro>
+			<xsf:attachmentFileName value="Expense Report" valueType="literal"></xsf:attachmentFileName>
+		</xsf:emailAdapter>
+	</xsf:submit>
+	<xsf:ruleSets></xsf:ruleSets>
+	<xsf:calculations>
+		<xsf:calculatedField target="/my:expenseClaim/my:totalAmount" expression="sum(xdMath:Nz(../my:expenses/my:expense/my:amount))" refresh="onChange"></xsf:calculatedField>
+	</xsf:calculations>
+	<xsf:domEventHandlers>
+	</xsf:domEventHandlers>
+	<xsf:customValidation>
+		<xsf:errorCondition match="/my:expenseClaim/my:claimant/my:claimantName" expressionContext="." expression=". = &quot;&quot;"><xsf:errorMessage type="modeless" shortMessage="Cannot be blank">This field is required.</xsf:errorMessage></xsf:errorCondition>
+		<xsf:errorCondition match="/my:expenseClaim/my:businessPurpose" expressionContext="." expression=". = &quot;&quot;"><xsf:errorMessage type="modeless" shortMessage="Cannot be blank">This field is required.</xsf:errorMessage></xsf:errorCondition>
+		<xsf:errorCondition match="/my:expenseClaim/my:expenses/my:expense/my:amount" expressionContext="." expression=". &lt;= 0"><xsf:errorMessage type="modeless" shortMessage="Must be &gt; 0">Amount must be greater than zero.</xsf:errorMessage></xsf:errorCondition>
+	</xsf:customValidation>
+</xsf:xDocumentClass>

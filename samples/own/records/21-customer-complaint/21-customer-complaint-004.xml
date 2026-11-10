@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Customer-Complaint:-myXSD-2026-11-04T09-21-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/21-customer-complaint.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:customerComplaint xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:21:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:customerName>Alpha 53</my:customerName>
+	<my:customerRef>Bravo 96</my:customerRef>
+	<my:receivedAt>2025-10-11T15:14:00</my:receivedAt>
+	<my:channel>Email</my:channel>
+	<my:severity>Low</my:severity>
+	<my:complaintText><div xmlns="http://www.w3.org/1999/xhtml"><p>Test record, fictional.</p></div></my:complaintText>
+	<my:responseDue>2026-04-03</my:responseDue>
+</my:customerComplaint>

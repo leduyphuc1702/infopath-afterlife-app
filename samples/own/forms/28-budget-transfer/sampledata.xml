@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Budget-Transfer:-myXSD-2026-11-04T09-28-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="manifest.xsf" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:budgetTransfer xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:28:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:fromCostCenter>Cedar 24</my:fromCostCenter>
+	<my:toCostCenter>Cedar 35</my:toCostCenter>
+	<my:amount>277.07</my:amount>
+	<my:period>Q1</my:period>
+	<my:reason>Delta 14</my:reason>
+	<my:financeApproved>true</my:financeApproved>
+</my:budgetTransfer>

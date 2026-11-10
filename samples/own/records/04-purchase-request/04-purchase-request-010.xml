@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Purchase-Request:-myXSD-2026-11-03T08-30-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/04-purchase-request.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:purchaseRequest xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:requester>
+		<my:requesterName>Tobin Dallow</my:requesterName>
+		<my:requesterEmail>tobin.dallow@contoso-fictional.example</my:requesterEmail>
+		<my:costCenterCode>CC-938</my:costCenterCode>
+	</my:requester>
+	<my:vendorId>V133</my:vendorId>
+	<my:neededBy>2025-08-08</my:neededBy>
+	<my:lines>
+		<my:line>
+			<my:lineDescription>USB dock</my:lineDescription>
+			<my:quantity>7</my:quantity>
+			<my:unitPrice>215.85</my:unitPrice>
+			<my:lineTotal>1510.95</my:lineTotal>
+		</my:line>
+	</my:lines>
+	<my:subtotal>1510.95</my:subtotal>
+	<my:vatRate>0.1</my:vatRate>
+	<my:vatAmount>151.09</my:vatAmount>
+	<my:grandTotal>1662.04</my:grandTotal>
+	<my:budgetRemaining>11902.49</my:budgetRemaining>
+	<my:needsAccounting>true</my:needsAccounting>
+	<my:justification>New starter</my:justification>
+</my:purchaseRequest>
