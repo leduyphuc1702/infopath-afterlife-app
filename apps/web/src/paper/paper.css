@@ -20,3 +20,23 @@
   color-scheme: light;
   box-shadow: var(--ds-shadow-raised);
 }
+
+.afl-xray {
+  cursor: crosshair;
+}
+
+.afl-outlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.afl-outline {
+  position: absolute;
+  box-sizing: border-box;
+  border: 2px solid var(--ds-border-focused);
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px var(--ds-surface);
+  pointer-events: none;
+}

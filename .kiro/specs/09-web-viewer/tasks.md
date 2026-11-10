@@ -37,20 +37,20 @@ Every task from 3 on leaves `pnpm --filter web build` producing a working, shipp
   - Requirements: R3.1 (default view), R3.3, R7.1, R9.1 (first measure)
   - Done when: `pnpm --filter web test && pnpm --filter web e2e` green.
 
-- [ ] 4. Open files, record matching, pager and views
+- [x] 4. Open files, record matching, pager and views
   - `files/collect.ts`, `store.ts`, `messages.ts`, `ErrorBanner.tsx`, `TemplateList.tsx`,
     `Unmatched.tsx`, `PaperToolbar.tsx`, `Landing.tsx`.
   - `test/messages.test.ts`; `e2e/open.spec.ts`; the rest of `e2e/paper.spec.ts`.
   - Requirements: R1.1, R1.2, R1.3, R2.1, R2.2, R3.1, R3.2
   - Done when: `pnpm --filter web test && pnpm --filter web e2e` green.
 
-- [ ] 5. Field tree and markers
+- [x] 5. Field tree and markers
   - `side/tree.ts`, `side/markers.ts`, `FieldTree.tsx` (ARIA tree, roving `tabindex`).
   - `test/tree.test.ts`, `test/markers.test.ts`.
   - Requirements: R4.1, R4.2
   - Done when: `pnpm --filter web test` green.
 
-- [ ] 6. X-ray
+- [x] 6. X-ray
   - `paper/geometry.ts`, `XrayOverlay.tsx`, `side/card.ts`, `DetailsCard.tsx`, the X-ray switch.
   - `test/geometry.browser.test.ts` (scroll, resize, font load; marks ↔ elements on forms 01–08;
     inert hit-through), `test/card.test.ts`, `e2e/xray.spec.ts`.

@@ -18,9 +18,16 @@ body {
   color: var(--ds-text);
 }
 
+h2 {
+  margin: 0 0 var(--ds-space-100);
+  font-size: 16px;
+  line-height: 20px;
+}
+
 .afl-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--ds-space-200);
   padding: var(--ds-space-150) var(--ds-space-300);
   border-bottom: 1px solid var(--ds-border);
@@ -32,39 +39,13 @@ body {
   line-height: 24px;
 }
 
-.afl-main {
-  padding: var(--ds-space-300);
-}
-
-.afl-landing {
-  max-width: 720px;
-}
-
-.afl-lead {
-  margin: 0 0 var(--ds-space-100);
-  font-size: 16px;
-  line-height: 24px;
-}
-
-.afl-note {
-  margin: 0 0 var(--ds-space-300);
-  color: var(--ds-text-subtle);
-}
-
-.afl-landing h2 {
-  margin: 0 0 var(--ds-space-100);
-  font-size: 16px;
-}
-
-.afl-samples {
+.afl-header-actions {
   display: flex;
-  flex-wrap: wrap;
   gap: var(--ds-space-100);
-  margin: 0 0 var(--ds-space-300);
-  padding: 0;
-  list-style: none;
+  align-items: center;
 }
 
+.afl-button,
 .afl-samples button {
   display: inline-flex;
   gap: var(--ds-space-100);
@@ -78,24 +59,148 @@ body {
   cursor: pointer;
 }
 
+.afl-button:hover,
 .afl-samples button:hover {
   background: var(--ds-background-neutral-subtle-hovered);
 }
 
-.afl-samples button:focus-visible {
+.afl-button:disabled {
+  color: var(--ds-text-disabled);
+  cursor: not-allowed;
+}
+
+.afl-toggle[aria-pressed='true'] {
+  border-color: var(--ds-border-selected);
+  background: var(--ds-background-selected);
+  color: var(--ds-text-selected);
+}
+
+:focus-visible {
   outline: 2px solid var(--ds-border-focused);
   outline-offset: 2px;
 }
 
-.afl-count {
+.afl-menu {
+  position: relative;
+}
+
+.afl-menu summary {
+  list-style: none;
+}
+
+.afl-menu summary::after {
+  content: '▾';
+}
+
+.afl-menu ul {
+  position: absolute;
+  z-index: 10;
+  right: 0;
+  min-width: 240px;
+  margin: var(--ds-space-050) 0 0;
+  padding: var(--ds-space-050) 0;
+  border-radius: 4px;
+  background: var(--ds-surface-overlay);
+  box-shadow: var(--ds-shadow-overlay);
+  list-style: none;
+}
+
+.afl-menu li button {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--ds-space-075) var(--ds-space-150);
+  border: 0;
+  background: none;
+  color: var(--ds-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.afl-menu li button:hover {
+  background: var(--ds-background-neutral-subtle-hovered);
+}
+
+.afl-main {
+  padding: var(--ds-space-200) var(--ds-space-300);
+}
+
+.afl-landing {
+  max-width: 720px;
+}
+
+.afl-lead {
+  margin: 0 0 var(--ds-space-100);
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.afl-note,
+.afl-drop {
+  margin: 0 0 var(--ds-space-200);
+  color: var(--ds-text-subtle);
+}
+
+.afl-samples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-100);
+  margin: 0 0 var(--ds-space-300);
+  padding: 0;
+  list-style: none;
+}
+
+.afl-count,
+.afl-sub {
   color: var(--ds-text-subtle);
   font-size: 12px;
 }
 
+.afl-status:empty {
+  display: none;
+}
+
 .afl-status {
-  min-height: 20px;
   margin-bottom: var(--ds-space-100);
   color: var(--ds-text-subtle);
+}
+
+.afl-problems {
+  display: grid;
+  gap: var(--ds-space-100);
+  margin-bottom: var(--ds-space-200);
+}
+
+.afl-problem {
+  padding: var(--ds-space-100) var(--ds-space-150);
+  border-left: 4px solid var(--ds-border-danger);
+  border-radius: 4px;
+  background: var(--ds-background-danger);
+  color: var(--ds-text);
+}
+
+.afl-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: var(--ds-space-300);
+  align-items: start;
+}
+
+@media (width < 720px) {
+  .afl-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.afl-work {
+  min-width: 0;
+}
+
+.afl-side {
+  display: grid;
+  gap: var(--ds-space-200);
+  min-width: 0;
 }
 
 .afl-toolbar {
@@ -107,25 +212,187 @@ body {
 }
 
 .afl-form-name {
+  margin-right: var(--ds-space-100);
   font-weight: 600;
 }
 
-.afl-toolbar button {
-  padding: var(--ds-space-050) var(--ds-space-150);
-  border: 1px solid var(--ds-border);
+.afl-field {
+  display: inline-flex;
+  gap: var(--ds-space-075);
+  align-items: center;
+}
+
+.afl-field select {
+  padding: var(--ds-space-050) var(--ds-space-100);
+  border: 1px solid var(--ds-border-input);
   border-radius: 4px;
-  background: var(--ds-background-neutral-subtle);
+  background: var(--ds-background-input);
   color: var(--ds-text);
   font: inherit;
+}
+
+.afl-badge {
+  padding: 0 var(--ds-space-075);
+  border-radius: 3px;
+  background: var(--ds-background-warning);
+  color: var(--ds-text-warning);
+  font-size: 12px;
+}
+
+.afl-notes {
+  margin-top: var(--ds-space-100);
+  color: var(--ds-text-subtle);
+}
+
+.afl-panel {
+  padding: var(--ds-space-150);
+  border: 1px solid var(--ds-border);
+  border-radius: 4px;
+  background: var(--ds-surface-raised);
+}
+
+.afl-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.afl-table th,
+.afl-table td {
+  padding: var(--ds-space-050);
+  border-bottom: 1px solid var(--ds-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.afl-table tr[aria-current='true'] {
+  background: var(--ds-background-selected);
+}
+
+.afl-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ds-link);
+  font: inherit;
+  text-align: left;
   cursor: pointer;
 }
 
-.afl-toolbar button:disabled {
-  color: var(--ds-text-disabled);
-  cursor: not-allowed;
+.afl-list {
+  display: grid;
+  gap: var(--ds-space-075);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.afl-toolbar button:focus-visible {
-  outline: 2px solid var(--ds-border-focused);
-  outline-offset: 2px;
+.afl-list li {
+  display: grid;
+  overflow-wrap: anywhere;
+}
+
+.afl-tree {
+  max-height: 480px;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+}
+
+.afl-tree-row {
+  display: flex;
+  gap: var(--ds-space-050);
+  align-items: baseline;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.afl-tree-row:hover {
+  background: var(--ds-background-neutral-subtle-hovered);
+}
+
+.afl-tree-row[aria-selected='true'] {
+  background: var(--ds-background-selected);
+  color: var(--ds-text-selected);
+}
+
+.afl-tree-row:focus-visible {
+  outline-offset: -2px;
+}
+
+.afl-tree-twist {
+  flex: none;
+  width: 12px;
+  color: var(--ds-icon-subtle);
+}
+
+.afl-tree-node {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--ds-space-075);
+  align-items: baseline;
+  min-width: 0;
+}
+
+.afl-tree-source {
+  font-weight: 600;
+}
+
+.afl-chip {
+  padding: 0 var(--ds-space-050);
+  border-radius: 3px;
+  background: var(--ds-background-neutral);
+  color: var(--ds-text-subtle);
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.afl-card h3 {
+  margin: var(--ds-space-150) 0 var(--ds-space-050);
+  font-size: 14px;
+}
+
+.afl-facts {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--ds-space-025) var(--ds-space-150);
+  margin: 0;
+}
+
+.afl-facts dt {
+  color: var(--ds-text-subtle);
+}
+
+.afl-facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.afl-refs {
+  display: grid;
+  gap: var(--ds-space-075);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.afl-refs li {
+  overflow-wrap: anywhere;
+}
+
+.afl-expr {
+  display: block;
+  margin-top: var(--ds-space-025);
+  padding: var(--ds-space-050);
+  border-radius: 3px;
+  background: var(--ds-background-neutral);
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+
+code {
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 12px;
 }

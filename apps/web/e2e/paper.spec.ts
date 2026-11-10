@@ -68,3 +68,26 @@ test('sample 02 record 1 matches core baseline 02-expense-report-Claim-first', a
   console.log(`R3.3: ${diff} of ${base.width * base.height} pixels differ`);
   expect(diff).toBeLessThanOrEqual(Math.floor(base.width * base.height * 0.001));
 });
+
+// R3.1: the view selector lists every view by caption; choosing one re-renders the same record.
+for (const [label, count] of [
+  ['New hire onboarding', 3],
+  ['Travel request', 2],
+] as const) {
+  test(`sample "${label}": ${count} views, each one renders`, async ({ page }) => {
+    await page.goto('./');
+    await page.getByRole('button', { name: new RegExp(`^${label}`) }).click();
+    const select = page.getByRole('toolbar', { name: 'Views and records' }).getByLabel('View');
+    await expect(page.locator('.afl-root')).toBeVisible();
+    const captions = await select.locator('option').allTextContents();
+    expect(captions).toHaveLength(count);
+    await page.getByRole('button', { name: 'Next' }).click();
+    for (const caption of captions) {
+      await select.selectOption({ label: caption });
+      const region = page.getByRole('region', {
+        name: new RegExp(`${caption} view, .*-001\\.xml$`),
+      });
+      await expect(region.locator('.afl-root')).toBeVisible();
+    }
+  });
+}

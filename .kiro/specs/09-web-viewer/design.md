@@ -47,8 +47,8 @@ main thread (React 18)                              Web Worker (module)
 | D4 | **Native HTML controls styled with tokens; no `@atlaskit/*` components.** | Atlaskit `Select`, `Tabs`, `Tree` | Bundle and Lighthouse budget. Native elements give keyboard and accessibility for free. |
 | D5 | `Changed in task 1:` **the theme CSS strings `@atlaskit/tokens` ships, imported directly** (`dist/esm/artifacts/themes/atlassian-{light,dark,spacing}.js`; no `exports` map blocks it), put in one `<style>`; `shell/theme.ts` sets `<html data-theme="light:light dark:dark spacing:spacing" data-color-mode>` from `prefers-color-scheme` and follows its changes. CSS uses `var(--ds-…)`. | `setGlobalTheme` | Measured 2026-11-11: `setGlobalTheme` raised the entry chunk from 45.7 to 91.6 KB gzip and emitted 25 theme chunks; it raised no violation in the smoke test. The three strings cost 6.4 KB gzip in the entry, with no request and no violation. |
 | D6 | **Samples as one lazy JS chunk imported by the Worker** (`virtual:sample-files`, base64), and a tiny `virtual:sample-list` (names, counts) for the menu. | fetch asset files | One cached chunk, no `fetch`; the Worker decodes it where the bytes are used. |
-| D7 | **Offline by warm-up, not a service worker**: after `load`, the app starts the Worker, which imports the samples chunk, and loads the Latin and Latin Extended Calibri faces (4 styles); then sets `<html data-ready>`. | service worker precache | Meets R8.1 (offline after load) with no cache-update logic. Reload while offline is Later. Other scripts (Greek, Cyrillic) fall back to a system font offline. |
-| D8 | **Hit testing from cached boxes** of `[data-afl-ctrl]`, in paper-content coordinates (§5). | DOM events on the paper | The root is `inert`; per HTML, inert nodes are not hit-test targets, so events reach the host [VERIFY in task 6]. |
+| D7 | **Offline by warm-up, not a service worker**: after `load`, the app starts the Worker, which imports the samples chunk, and loads the four Latin Calibri faces (123 KB); then sets `<html data-ready>`. `Changed at review (2026-11-11):` Latin only. Latin Extended, Vietnamese, Greek and Cyrillic keep their `unicode-range` and load on demand while online; offline they fall back to a system font, and the notes under the paper say so when a render uses those characters. | service worker precache; all subsets (459 KB more) | Meets R8.1 (offline after load) with no cache-update logic and inside the font budget. Reload while offline is Later. |
+| D8 | **Hit testing from cached boxes** of `[data-afl-ctrl]`, in paper-content coordinates (§5). | DOM events on the paper | The root is `inert`; per HTML, inert nodes are not hit-test targets, so events reach the host. Checked in task 6: inside a control's box, `shadowRoot.elementFromPoint` hits nothing in the root, and a real pointer moved there by Playwright reaches the frame's `pointermove` (`e2e/xray.spec.ts`). |
 | D9 | **CSP added to `index.html` at build only** (a `transformIndexHtml` plugin, `apply: 'build'`), from one `csp.ts` that also writes `_headers`. | always in `index.html` | Vite's dev server and React refresh use inline scripts. One source keeps the two policies equal (R8.2). |
 | D10 | **No DOMPurify** (§6). | DOMPurify on the main thread | Human decision 8. |
 | D11 | **Render input**: `now` is the page's local time with offset, taken once per session; `locale: 'en-US'`. | per-render `now` | Same input gives the same paper while paging. Locale: open question 7. |
@@ -162,7 +162,8 @@ function hitTest(boxes: readonly Box[], px: number, py: number): number | undefi
 ```
 
 - The i-th `[data-afl-ctrl]` element in document order is `marks[i]` (both are document order,
-  spec 03 §4) [VERIFY in task 6, asserted for forms 01–08].
+  spec 03 §4). Checked in task 6: `data-afl-ctrl` and `data-afl-path` of the i-th element equal
+  `marks[i]` for forms 01–08, empty form and first record (16 renders).
 - `measure` runs after each render, on a `ResizeObserver` of the host, and on
   `document.fonts` `loadingdone`, in one `requestAnimationFrame`.
 - `pointermove` on the frame (rAF-throttled) converts `clientX/Y` with the same formula, then
@@ -175,11 +176,16 @@ function hitTest(boxes: readonly Box[], px: number, py: number): number | undefi
 **Tree, markers, card, connections** are pure functions of FormIR (and marks), unit-tested in Node
 on the samples:
 
-- `tree.ts`: roots by `dataSource` (`main` first), children by `groupId`, document order.
-- `markers.ts` (R4.2): Rule = an element of `readBy`/`writtenBy` is a rule, action or trigger id;
+- `tree.ts`: roots by `dataSource` (`main` first, then by name), children by `groupId`. FormIR
+  keeps fields and groups in two arrays; siblings are merged back into document order by the
+  index of each group's first field (form 02's expense row comes out in schema order).
+- `Changed in task 6:` selecting from the paper scrolls only the tree's own box, never the page
+  (`scrollIntoView` moved the page under the pointer by 39 px in the X-ray test).
+- `markers.ts` (R4.2): Rule = an element of `readBy`/`writtenBy` is a rule or action id;
   Calculated = a calculation's `targetId`; Validated = a validation's `matchId`; From data
   connection = a control with `choicesFrom.connectionId` targets the field, or an element in
-  `writtenBy` is in a connection's `lineage.usedBy`.
+  `writtenBy` is in a connection's `lineage.usedBy`, or (`Changed in task 5:`) the field is in a
+  connection's `lineage.fieldIds`, the secondary tree the connection fills.
 - `card.ts`: an id index over rules (and actions), calculations, validations, connections and
   controls; each `DepRef` becomes `{kind, role, caption, expression as written}`.
 - `connections.ts`: kind words (`adoAdapter` "Database (SQL)", `webServiceAdapter` "Web service",
@@ -240,7 +246,7 @@ R8.2's tests.
 | Theme chunks | 0 | none: the themes are in the entry (D5) |
 | Worker | 160 KB | 126.1 measured at task 3 |
 | Samples chunk | 120 KB | 96.1 measured at task 3 |
-| Fonts fetched for an English form | 260 KB raw | 123 KB measured at task 3: the 4 Latin faces. Latin Extended's 4 faces are 336 KB more; task 8 decides whether warm-up takes them (D7) |
+| Fonts fetched for an English form | 260 KB raw | 123 KB measured at task 3: the 4 Latin faces. Latin Extended (336 KB) loads on demand only (D7) |
 
 `test/budget.test.ts` reads `dist/.vite/manifest.json` and gzips each file (gzip -9).
 

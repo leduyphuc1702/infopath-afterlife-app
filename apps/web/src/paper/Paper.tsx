@@ -1,33 +1,105 @@
 // Spec 09 D2, design §5: the paper. The render goes into a shadow root on a host that resets
 // every inherited property, so neither the page's CSS nor its colour scheme reaches the form.
 // Core has sanitised the HTML in the Worker (spec 03 P5); the root it returns is `inert`.
-import { useEffect, useLayoutEffect, useRef } from 'react';
+// X-ray (R5): outlines over the controls, from their measured boxes.
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { RenderedRes } from '../worker/protocol';
 import { loadPaperFonts } from '../shell/fonts';
+import { hitTest, measure, toFrame, type Box } from './geometry';
 import './paper.css';
 
 interface Props {
   readonly result: RenderedRes;
-  /** Accessible name of the paper region, e.g. "Expense report, Claim view, empty form". */
+  /** Accessible name of the paper region, e.g. "Expense Report, Claim view, empty form". */
   readonly label: string;
+  readonly xray?: boolean;
+  /** Controls to outline, by mark index. */
+  readonly outlined?: readonly number[];
+  /** Bring this control into view when it changes. */
+  readonly reveal?: number;
+  readonly onPoint?: (index: number | undefined) => void;
 }
 
-export function Paper({ result, label }: Props) {
+export function Paper({ result, label, xray = false, outlined = [], reveal, onPoint }: Props) {
+  const frame = useRef<HTMLElement>(null);
   const host = useRef<HTMLDivElement>(null);
+  const [boxes, setBoxes] = useState<readonly Box[]>([]);
+  const pending = useRef(0);
+
+  const remeasure = useCallback(() => {
+    cancelAnimationFrame(pending.current);
+    pending.current = requestAnimationFrame(() => {
+      const root = host.current?.shadowRoot;
+      if (frame.current && root) setBoxes(measure(frame.current, root));
+    });
+  }, []);
 
   useLayoutEffect(() => {
     const el = host.current!;
     const root = el.shadowRoot ?? el.attachShadow({ mode: 'open' });
     root.innerHTML = `<style>${result.css}</style>${result.html}`;
-  }, [result]);
+    remeasure();
+  }, [result, remeasure]);
 
   useEffect(() => {
     void loadPaperFonts();
-  }, []);
+    const ro = new ResizeObserver(remeasure);
+    ro.observe(host.current!);
+    ro.observe(frame.current!);
+    document.fonts.addEventListener('loadingdone', remeasure);
+    return () => {
+      ro.disconnect();
+      document.fonts.removeEventListener('loadingdone', remeasure);
+      cancelAnimationFrame(pending.current);
+    };
+  }, [remeasure]);
 
+  useEffect(() => {
+    const b = boxes.find((x) => x.index === reveal);
+    const f = frame.current;
+    if (!b || !f) return;
+    const visible =
+      b.y >= f.scrollTop &&
+      b.y + b.h <= f.scrollTop + f.clientHeight &&
+      b.x >= f.scrollLeft &&
+      b.x + b.w <= f.scrollLeft + f.clientWidth;
+    if (!visible) f.scrollTo({ top: Math.max(0, b.y - 48), left: Math.max(0, b.x - 48) });
+    const rect = f.getBoundingClientRect();
+    if (rect.top < 0 || rect.bottom > innerHeight) f.scrollIntoView({ block: 'nearest' });
+  }, [reveal, boxes]);
+
+  const frameRaf = useRef(0);
+  const onMove = (e: React.PointerEvent) => {
+    if (!xray || !onPoint) return;
+    const { clientX, clientY } = e;
+    cancelAnimationFrame(frameRaf.current);
+    frameRaf.current = requestAnimationFrame(() => {
+      if (!frame.current) return;
+      const p = toFrame(frame.current, clientX, clientY);
+      onPoint(hitTest(boxes, p.x, p.y));
+    });
+  };
+
+  const shown = xray ? boxes.filter((b) => outlined.includes(b.index)) : [];
   return (
-    <section className="afl-paper-frame" aria-label={label}>
+    <section
+      className={`afl-paper-frame${xray ? ' afl-xray' : ''}`}
+      aria-label={label}
+      ref={frame}
+      onPointerMove={onMove}
+      onPointerLeave={() => xray && onPoint?.(undefined)}
+    >
       <div className="afl-paper-host" ref={host} data-afl-paper="" />
+      <div className="afl-outlines" aria-hidden="true">
+        {shown.map((b) => (
+          <div
+            key={b.index}
+            className="afl-outline"
+            data-index={b.index}
+            style={{ left: b.x - 3, top: b.y - 3, width: b.w + 6, height: b.h + 6 }}
+          />
+        ))}
+      </div>
     </section>
   );
 }

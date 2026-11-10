@@ -1,0 +1,30 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`form 03: the city and country lists come from locations.xml 1`] = `
+[
+  "/my:travelRequest/my:destCountry",
+  "/my:travelRequest/my:destCity",
+  "/locations/country/city",
+  "/locations/country/@code",
+]
+`;
+
+exports[`form 04: rules and data connections 1`] = `
+[
+  "/my:purchaseRequest/my:requester/my:costCenterCode",
+  "/my:purchaseRequest/my:grandTotal",
+  "/my:purchaseRequest/my:budgetRemaining",
+  "/my:purchaseRequest/my:needsAccounting",
+  "/dfs:myFields/dfs:queryFields/tns:GetRemainingBudget/tns:costCenter",
+  "/dfs:myFields/dfs:dataFields/tns:GetRemainingBudgetResponse/tns:GetRemainingBudgetResult",
+]
+`;
+
+exports[`form 04: rules and data connections 2`] = `
+[
+  "/my:purchaseRequest/my:vendorId",
+  "/my:purchaseRequest/my:budgetRemaining",
+  "/dfs:myFields/dfs:queryFields/tns:GetRemainingBudget/tns:costCenter",
+  "/dfs:myFields/dfs:dataFields/tns:GetRemainingBudgetResponse/tns:GetRemainingBudgetResult",
+]
+`;

@@ -1,135 +1,249 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import sampleList from 'virtual:sample-list';
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import { fromDataTransfer, sortInput } from './files/collect';
 import { Paper } from './paper/Paper';
-import { localNow, WorkerClient } from './worker/client';
-import type { RecordSummary, RenderedRes, TemplateSummary } from './worker/protocol';
+import { PaperToolbar, viewCaption } from './paper/PaperToolbar';
+import { ErrorBanner } from './shell/ErrorBanner';
+import { Header } from './shell/Header';
+import { Landing } from './shell/Landing';
 import { loadPaperFonts } from './shell/fonts';
+import { sampleName } from './shell/sample-names';
+import { cardFor, cardForControl } from './side/card';
+import { DetailsCard } from './side/DetailsCard';
+import { FieldTree } from './side/FieldTree';
+import { TemplateList } from './side/TemplateList';
+import { Unmatched } from './side/Unmatched';
+import { initialState, openTemplate, recordsOf, reducer, unmatched, type Problem } from './store';
+import { localNow, WorkerClient } from './worker/client';
+import type { FailedRes, RenderedRes, ResBody } from './worker/protocol';
 
-/** `02-expense-report` → `Expense report`; `theill-weight-keeper` → `Weight keeper`. */
-const sampleName = (id: string) => {
-  const words = id.replace(/^\d+-|^theill-/, '').replaceAll('-', ' ');
-  return words.charAt(0).toUpperCase() + words.slice(1);
-};
-
-type Status =
-  { state: 'idle' } | { state: 'loading'; what: string } | { state: 'error'; message: string };
-
-interface Open {
-  readonly template: TemplateSummary;
-  /** Matched records, in file name order (R3.2). */
-  readonly records: readonly RecordSummary[];
-}
+/** The latest render answer; the previous paper stays up while the next one is drawn. */
+type Render = RenderedRes | FailedRes;
 
 export function App() {
   const client = useMemo(() => new WorkerClient(), []);
   const [now] = useState(localNow);
-  const [status, setStatus] = useState<Status>({ state: 'idle' });
-  const [open, setOpen] = useState<Open>();
-  const [recordIndex, setRecordIndex] = useState(0);
-  const [result, setResult] = useState<RenderedRes>();
+  const [s, dispatch] = useReducer(reducer, initialState);
+  const [render, setRender] = useState<Render>();
+  const known = useRef(new Set<string>());
   const latest = useRef(0);
 
   useEffect(() => () => client.terminate(), [client]);
 
-  const view =
-    open && (open.template.ir.views.find((v) => v.isDefault) ?? open.template.ir.views[0]);
-  const record = recordIndex === 0 ? undefined : open?.records[recordIndex - 1];
+  /** Applies a Worker answer to an open request; opens the first template it added. */
+  const applySession = useCallback((res: ResBody, what: string) => {
+    dispatch({ type: 'busy' });
+    if (res.type !== 'session') {
+      if (res.type === 'failed')
+        dispatch({ type: 'input', ignored: [], problems: [{ fileName: what, error: res.error }] });
+      return;
+    }
+    const added = res.templates.find((t) => !known.current.has(t.templateId));
+    for (const t of res.templates) known.current.add(t.templateId);
+    dispatch({ type: 'session', session: res, ...(added && { open: added.templateId }) });
+  }, []);
+
+  const openFiles = useCallback(
+    async (files: File[]) => {
+      const c = sortInput(files);
+      const problems: Problem[] = [
+        ...c.rejected,
+        ...(c.tooMany ? [{ fileName: '', error: c.tooMany }] : []),
+      ];
+      dispatch({ type: 'input', ignored: c.ignored, problems });
+      if (c.files.length === 0) return;
+      dispatch({
+        type: 'busy',
+        what: c.files.length === 1 ? c.files[0]!.name : `${c.files.length} files`,
+      });
+      const [res] = await Promise.all([client.open(c.files), loadPaperFonts()]);
+      applySession(res, 'the files');
+    },
+    [client, applySession],
+  );
+
+  const openSample = useCallback(
+    async (id: string) => {
+      dispatch({ type: 'busy', what: sampleName(id) });
+      const [res] = await Promise.all([client.openSample(id), loadPaperFonts()]);
+      applySession(res, sampleName(id));
+    },
+    [client, applySession],
+  );
+
+  // R1.1: drop anywhere on the page.
+  useEffect(() => {
+    const over = (e: DragEvent) => e.preventDefault();
+    const drop = (e: DragEvent) => {
+      e.preventDefault();
+      if (e.dataTransfer) void fromDataTransfer(e.dataTransfer).then(openFiles);
+    };
+    window.addEventListener('dragover', over);
+    window.addEventListener('drop', drop);
+    return () => {
+      window.removeEventListener('dragover', over);
+      window.removeEventListener('drop', drop);
+    };
+  }, [openFiles]);
+
+  const template = openTemplate(s);
+  const records = useMemo(() => recordsOf(s, s.openId), [s]);
+  const record = s.recordIndex === 0 ? undefined : records[s.recordIndex - 1];
+  const view = template?.ir.views.find((v) => v.name === s.view);
+  const failures = useMemo(
+    () => [...s.failures.map((f) => ({ fileName: f.fileName, error: f.error })), ...s.problems],
+    [s.failures, s.problems],
+  );
 
   useEffect(() => {
-    if (!open || !view) return;
+    if (!template || !view) return;
     const ticket = ++latest.current;
-    void client.render(open.template.templateId, view.name, record?.recordId, now).then((r) => {
+    void client.render(template.templateId, view.name, record?.recordId, now).then((r) => {
       if (ticket !== latest.current) return; // a newer request is on its way
-      if (r.type === 'rendered') {
-        setResult(r);
-        setStatus({ state: 'idle' });
-      } else setStatus({ state: 'error', message: describe(r) });
+      if (r.type === 'rendered' || r.type === 'failed') setRender(r);
     });
-  }, [client, now, open, view, record]);
+  }, [client, now, template, view, record]);
 
-  async function openSample(id: string) {
-    setStatus({ state: 'loading', what: sampleName(id) });
-    const [session] = await Promise.all([client.openSample(id), loadPaperFonts()]);
-    if (session.type !== 'session')
-      return setStatus({ state: 'error', message: describe(session) });
-    const template = session.templates[0]!;
-    const records = session.records.filter(
-      (r) => r.match.kind !== 'unmatched' && r.match.templateId === template.templateId,
-    );
-    setResult(undefined);
-    setRecordIndex(0);
-    setOpen({ template, records });
-  }
+  // X-ray (R5): marks[i] is the i-th `[data-afl-ctrl]` element (design §5).
+  const rendered = render?.type === 'rendered' ? render : undefined;
+  const targetOf = useMemo(
+    () =>
+      new Map(template?.ir.views.flatMap((v) => v.controls.map((c) => [c.id, c.targetId])) ?? []),
+    [template],
+  );
+  const fieldOfMark = useCallback(
+    (i: number) => {
+      const m = rendered?.marks[i];
+      return m && (m.fieldId ?? targetOf.get(m.controlId));
+    },
+    [rendered, targetOf],
+  );
+  const [hover, setHover] = useState<number>();
+  const hoverRef = useRef<number>(undefined);
+  const outlined = useMemo(() => {
+    if (!rendered) return [];
+    const id = s.selection.fieldId;
+    const out =
+      id === undefined ? [] : rendered.marks.flatMap((_m, i) => (fieldOfMark(i) === id ? [i] : []));
+    return hover !== undefined && !out.includes(hover) ? [...out, hover] : out;
+  }, [rendered, s.selection.fieldId, hover, fieldOfMark]);
+  const reveal = s.selection.from === 'tree' ? outlined[0] : undefined;
+  const onPoint = useCallback(
+    (i: number | undefined) => {
+      if (i === hoverRef.current) return;
+      hoverRef.current = i;
+      setHover(i);
+      if (i === undefined) return;
+      const m = rendered?.marks[i];
+      if (!m) return;
+      const fieldId = fieldOfMark(i);
+      dispatch({
+        type: 'select',
+        selection: {
+          controlId: m.controlId,
+          from: 'paper',
+          ...(fieldId !== undefined && { fieldId }),
+        },
+      });
+    },
+    [rendered, fieldOfMark],
+  );
+  const card =
+    template &&
+    (s.selection.fieldId !== undefined
+      ? cardFor(template.ir, s.selection.fieldId)
+      : s.selection.controlId !== undefined
+        ? cardForControl(template.ir, s.selection.controlId)
+        : undefined);
 
-  const count = open ? open.records.length : 0;
-  const position = record ? `Record ${recordIndex} of ${count}, ${record.fileName}` : 'Empty form';
+  const label =
+    template && view
+      ? `${template.ir.meta.name}, ${viewCaption(view)} view, ${record ? record.fileName : 'empty form'}`
+      : '';
 
   return (
     <>
-      <header className="afl-header">
-        <h1>InfoPath Afterlife</h1>
-      </header>
+      <Header
+        onFiles={(f) => void openFiles(f)}
+        onSample={(id) => void openSample(id)}
+        {...(template && {
+          xray: { on: s.xray, toggle: () => dispatch({ type: 'xray', on: !s.xray }) },
+        })}
+      />
       <main className="afl-main">
-        <section className="afl-landing" aria-labelledby="afl-try">
-          <p className="afl-lead">
-            Open old InfoPath forms and their filled-in records in your browser, drawn the way
-            InfoPath drew them.
-          </p>
-          <p className="afl-note">Nothing is uploaded. Your files never leave this computer.</p>
-          <h2 id="afl-try">Try a sample</h2>
-          <ul className="afl-samples">
-            {sampleList.map((s) => (
-              <li key={s.id}>
-                <button type="button" onClick={() => void openSample(s.id)}>
-                  {sampleName(s.id)}
-                  <span className="afl-count">
-                    {s.records === 0
-                      ? 'No records'
-                      : s.records === 1
-                        ? '1 record'
-                        : `${s.records} records`}
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </section>
         <div aria-live="polite" className="afl-status">
-          {status.state === 'loading' && `Opening ${status.what}…`}
-          {status.state === 'error' && status.message}
+          {s.busy !== undefined && `Opening ${s.busy}…`}
         </div>
-        {open && view && (
-          <nav className="afl-toolbar" aria-label="Records">
-            <span className="afl-form-name">{open.template.ir.meta.name}</span>
-            <span>{view.caption ?? view.name} view</span>
-            <button
-              type="button"
-              disabled={recordIndex === 0}
-              onClick={() => setRecordIndex((i) => i - 1)}
-            >
-              Previous
-            </button>
-            <span aria-live="polite">{position}</span>
-            <button
-              type="button"
-              disabled={recordIndex >= count}
-              onClick={() => setRecordIndex((i) => i + 1)}
-            >
-              Next
-            </button>
-          </nav>
-        )}
-        {open && view && result && (
-          <Paper
-            result={result}
-            label={`${open.template.ir.meta.name}, ${view.caption ?? view.name} view, ${record ? record.fileName : 'empty form'}`}
-          />
+        <ErrorBanner problems={failures} />
+        {!template ? (
+          <>
+            <Landing onSample={(id) => void openSample(id)} />
+            <Unmatched records={unmatched(s)} ignored={s.ignored} />
+          </>
+        ) : (
+          <div className="afl-workspace">
+            <div className="afl-work">
+              {view && (
+                <PaperToolbar
+                  formName={template.ir.meta.name}
+                  views={template.ir.views}
+                  view={view.name}
+                  onView={(v) => dispatch({ type: 'view', view: v })}
+                  records={records}
+                  index={s.recordIndex}
+                  onIndex={(i) => dispatch({ type: 'record', index: i })}
+                />
+              )}
+              {render?.type === 'failed' && (
+                <ErrorBanner problems={[{ fileName: template.fileName, error: render.error }]} />
+              )}
+              {render?.type === 'rendered' && (
+                <>
+                  <Paper
+                    result={render}
+                    label={label}
+                    xray={s.xray}
+                    outlined={outlined}
+                    {...(reveal !== undefined && { reveal })}
+                    onPoint={onPoint}
+                  />
+                  {render.issues.length > 0 && (
+                    <details className="afl-notes">
+                      <summary>Notes ({render.issues.length})</summary>
+                      <ul>
+                        {render.issues.map((i, n) => (
+                          <li key={n}>{i.message}</li>
+                        ))}
+                      </ul>
+                    </details>
+                  )}
+                </>
+              )}
+            </div>
+            <aside className="afl-side" aria-label="About this form">
+              {s.templates.length > 1 && (
+                <TemplateList
+                  templates={s.templates}
+                  openId={s.openId}
+                  recordsOf={(id) => recordsOf(s, id).length}
+                  onOpen={(id) => dispatch({ type: 'open', templateId: id })}
+                />
+              )}
+              {card && <DetailsCard card={card} />}
+              <section className="afl-panel" aria-labelledby="afl-fields">
+                <h2 id="afl-fields">Fields</h2>
+                <FieldTree
+                  ir={template.ir}
+                  selected={s.selection.fieldId}
+                  onSelect={(fieldId) =>
+                    dispatch({ type: 'select', selection: { fieldId, from: 'tree' } })
+                  }
+                />
+              </section>
+              <Unmatched records={unmatched(s)} ignored={s.ignored} />
+            </aside>
+          </div>
         )}
       </main>
     </>
   );
 }
-
-/** Task 4 replaces this with the three-part messages of messages.ts. */
-const describe = (r: { type: string; error?: { code: string } }) =>
-  `We couldn't open the form (${r.error?.code ?? r.type}).`;
