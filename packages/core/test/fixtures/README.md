@@ -47,5 +47,6 @@ is fictional.
   called twice, a mode never called, `call-template`, a view that is not well-formed, an unbound
   `object`, ExpressionBoxes (a repeating average and a string literal), a `GetDOM` binding and a
   filtered `GetDOM` list, `DropDown` next to `dropdown`, an ActiveX person picker (`{{…}}` in
-  `xd:xctname`, a group binding, `xd:server` on a single-label host) and a dynamic `title`. The
+  `xd:xctname`, a group binding, `xd:server` on a single-label host), a dynamic `title`, and
+  (spec 02 task 10) `button-row.xsl`, a button in a repeating row whose rule writes `../x`. The
   shapes follow counts recorded from the private corpus; the wording, names and GUIDs are ours.

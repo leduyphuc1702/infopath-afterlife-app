@@ -46,6 +46,12 @@ function fromConnectionString(v: string): Located2 {
 function locate(attribute: string, v: string, packageFiles: ReadonlySet<string>): Located2 {
   const value = v.trim();
   if (attribute === 'connectionString') return fromConnectionString(value);
+  // `x-soln:///<name>` is InfoPath's URL for a file inside the template: a relative name.
+  const soln = /^x-soln:\/\/\/?(.*)$/i.exec(value);
+  if (soln) {
+    const last = soln[1]!.split(/[\\/]/).pop()!.toLowerCase();
+    return last && packageFiles.has(last) ? { kind: 'package' } : { kind: 'none' };
+  }
   if (isFilePath(value)) return { kind: 'file' };
   if (/^[a-z][a-z0-9+.-]+:/i.test(value)) return fromUrl(value);
   const last = value.split(/[\\/]/).pop()!.toLowerCase();

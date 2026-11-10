@@ -752,7 +752,7 @@
         {
           "binding": "my:containmentDate",
           "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/div[1]/span[1]",
-          "inRepeat": false,
+          "inRepeat": true,
           "readOnly": false,
           "source": {
             "column": 10451,
@@ -768,7 +768,7 @@
           "binding": "my:containmentText",
           "ctrlId": "CTRL7",
           "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
-          "inRepeat": false,
+          "inRepeat": true,
           "readOnly": false,
           "source": {
             "column": 11429,

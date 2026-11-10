@@ -52,7 +52,6 @@ interface Occurrence {
   readonly where: Where;
   /** The node `current()` names. */
   readonly current: Where;
-  readonly inRepeat: boolean;
   /** View root to the element; a moded template follows the `apply-templates` that called it. */
   readonly chain: readonly XmlElement[];
   /** Index in `chain` of the innermost repeat point (`apply-templates` or `for-each`), or -1. */
@@ -83,6 +82,11 @@ export interface ViewScan {
   readonly controls: ScannedControl[];
   readonly activeX: ActiveXControl[];
   readonly issues: Issue[];
+  /**
+   * Scan contexts of every view element with a static `xd:CtrlId`, keyed `view\u0000ctrlId`,
+   * distinct, in document order: the context of a button trigger (design §7.2).
+   */
+  readonly ctrlContexts: Map<string, Ctx[]>;
 }
 
 export interface ViewScanInput {
@@ -105,7 +109,13 @@ export function scanViews(input: ViewScanInput): ViewScan {
   const env: ResolveEnv = { index: tree.index, parentOf: tree.parentOf };
   const files = new Set(t.files.map((f) => f.name.toLowerCase()));
   const xml = xmlContext(resolveLimits({ xmlBytes: input.viewXmlBytes ?? VIEW_XML_BYTES }));
-  const out: ViewScan = { views: [], controls: [], activeX: [], issues: [] };
+  const out: ViewScan = {
+    views: [],
+    controls: [],
+    activeX: [],
+    issues: [],
+    ctrlContexts: new Map(),
+  };
   let limitHit = false;
 
   for (const v of t.manifest.views) {
@@ -158,6 +168,8 @@ export function scanViews(input: ViewScanInput): ViewScan {
       continue;
     }
     const scanned = scanOne(root, file.name, name, env, input, files, ids, out.issues);
+    for (const [ctrlId, ctxs] of scanned.ctrlContexts)
+      out.ctrlContexts.set(`${name}\u0000${ctrlId}`, ctxs);
     out.views.push({ ...base, scanned: true, controls: scanned.controls.map((c) => c.control) });
     out.controls.push(...scanned.controls);
     out.activeX.push(...scanned.activeX);
@@ -174,7 +186,11 @@ function scanOne(
   packageFiles: ReadonlySet<string>,
   ids: IdRegistry,
   issues: Issue[],
-): { controls: ScannedControl[]; activeX: ActiveXControl[] } {
+): {
+  controls: ScannedControl[];
+  activeX: ActiveXControl[];
+  ctrlContexts: Map<string, Ctx[]>;
+} {
   const order = new Map<XmlElement, number>();
   const number = (e: XmlElement) => {
     order.set(e, order.size);
@@ -214,6 +230,7 @@ function scanOne(
   const axOccurrences = new Map<XmlElement, Occurrence[]>();
   const callSites = new Map<string, Set<XmlElement>>();
   const walked = new Set<XmlElement>();
+  const ctrlContexts = new Map<string, Ctx[]>();
   const add = (m: Map<XmlElement, Occurrence[]>, e: XmlElement, o: Occurrence) =>
     m.set(e, [...(m.get(e) ?? []), o]);
 
@@ -259,7 +276,6 @@ function scanOne(
             walkChildren(tpl, {
               where,
               current: where,
-              inRepeat: s.inRepeat || repeat,
               chain: [...chain, tpl],
               repeatAt: repeat ? chain.length - 1 : s.repeatAt,
               modes: [...s.modes, mode],
@@ -274,7 +290,6 @@ function scanOne(
             ...o,
             where,
             current: where,
-            inRepeat: s.inRepeat || repeat,
             repeatAt: repeat ? chain.length - 1 : s.repeatAt,
           });
           return;
@@ -293,6 +308,13 @@ function scanOne(
       }
     }
     if (bindingOf(e) !== undefined) add(occurrences, e, o);
+    const ctrlId = staticAvt(attrOf(e, XD, 'CtrlId')?.value ?? '');
+    if (ctrlId && 'ctx' in s.where) {
+      const at = s.where.ctx;
+      const list = ctrlContexts.get(ctrlId) ?? [];
+      if (!list.some((x) => x.ds === at.ds && x.node === at.node)) list.push(at);
+      ctrlContexts.set(ctrlId, list);
+    }
     if (isActiveX(e)) add(axOccurrences, e, o);
     walkChildren(e, o);
   };
@@ -308,7 +330,6 @@ function scanOne(
     walkChildren(tpl, {
       where,
       current: where,
-      inRepeat: false,
       chain: [root, tpl],
       repeatAt: -1,
       modes: [],
@@ -321,7 +342,6 @@ function scanOne(
     walkChildren(tpl, {
       where,
       current: where,
-      inRepeat: false,
       chain: [root, tpl],
       repeatAt: -1,
       modes: [],
@@ -355,7 +375,16 @@ function scanOne(
       source: locOf(file, e),
     };
   });
-  return { controls, activeX };
+  return { controls, activeX, ctrlContexts };
+}
+
+/** R4.2 (changed at task 10): the scan context node, or an ancestor of it, repeats. */
+function repeatingContext(w: Where, tree: DataTree): boolean {
+  if (!('ctx' in w)) return false;
+  for (let id = w.ctx.node ?? undefined; id !== undefined; id = tree.parentOf.get(id)) {
+    if (tree.nodeOf.get(id)?.repeating) return true;
+  }
+  return false;
 }
 
 const isActiveX = (e: XmlElement): boolean =>
@@ -454,7 +483,7 @@ function buildControl(e: XmlElement, occs: readonly Occurrence[], c: ControlEnv)
     readOnly,
     ...(title === undefined ? {} : { title: title.value }),
     ...(dynamic.length ? { dynamicAttrs: dynamic } : {}),
-    inRepeat: first.inRepeat,
+    inRepeat: repeatingContext(first.where, c.input.tree),
     ...(choice === undefined ? {} : { choice }),
     ...(choices === undefined ? {} : { choicesFrom: choices.from }),
     source: locOf(c.file, e),

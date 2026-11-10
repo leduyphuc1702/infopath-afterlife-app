@@ -333,6 +333,7 @@ export const DEP_ROLES = [
   'codeHandler',
   'trigger',
   'signedData',
+  'signatureLocation',
 ] as const;
 export type DepRole = (typeof DEP_ROLES)[number];
 

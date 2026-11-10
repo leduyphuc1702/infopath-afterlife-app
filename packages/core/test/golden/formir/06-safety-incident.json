@@ -1496,7 +1496,7 @@
           "binding": "my:personName",
           "ctrlId": "CTRL12",
           "id": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
-          "inRepeat": false,
+          "inRepeat": true,
           "readOnly": false,
           "source": {
             "column": 14928,
@@ -1512,7 +1512,7 @@
           "binding": "my:personRole",
           "ctrlId": "CTRL13",
           "id": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]",
-          "inRepeat": false,
+          "inRepeat": true,
           "readOnly": false,
           "source": {
             "column": 15346,
@@ -1528,7 +1528,7 @@
           "binding": "my:injuryType",
           "ctrlId": "CTRL14",
           "id": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
-          "inRepeat": false,
+          "inRepeat": true,
           "readOnly": false,
           "source": {
             "column": 16397,

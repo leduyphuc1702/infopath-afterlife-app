@@ -46,3 +46,33 @@ describe('packages/core/src restrictions', () => {
     ]);
   });
 });
+
+describe('packages/core/src/ir restrictions (spec 02 R1.1)', () => {
+  const files = [
+    'packages/core/src/ir/x.ts',
+    'packages/core/src/ir/views/x.ts',
+    'packages/core/src/ir/xpath/x.ts',
+  ];
+  const cases: [string, string, string][] = [
+    ["import 'node:fs'", "import 'node:fs';\n", 'no-restricted-imports'],
+    ["import '@xmldom/xmldom'", "import '@xmldom/xmldom';\n", 'no-restricted-imports'],
+    ['fetch(…)', "void fetch('https://example.invalid/');\n", 'no-restricted-globals'],
+    ['new DOMParser()', 'export const p = new DOMParser();\n', 'no-restricted-globals'],
+    ['Date.now()', 'export const d = Date.now();\n', 'no-restricted-globals'],
+    ['new Date()', 'export const d = new Date();\n', 'no-restricted-globals'],
+    ['performance.now()', 'export const t = performance.now();\n', 'no-restricted-globals'],
+    ['crypto.randomUUID()', 'export const u = crypto.randomUUID();\n', 'no-restricted-globals'],
+    ['Math.random()', 'export const r = Math.random();\n', 'no-restricted-properties'],
+  ];
+
+  test.each(files.flatMap((f) => cases.map(([n, c, r]) => [`${f}: ${n}`, c, r, f] as const)))(
+    '%s is an error',
+    async (_name, code, rule, file) => {
+      expect(await ruleIds(code, file)).toEqual([rule]);
+    },
+  );
+
+  test('the clock rules apply to src/ir only', async () => {
+    expect(await ruleIds('export const d = Date.now();\n', 'packages/core/src/x.ts')).toEqual([]);
+  });
+});

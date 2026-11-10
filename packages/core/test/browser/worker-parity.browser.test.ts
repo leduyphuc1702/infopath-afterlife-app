@@ -2,12 +2,14 @@
 import { commands } from 'vitest/browser';
 import { expect, test } from 'vitest';
 import type { Snapshot } from '../helpers/snapshot';
+import type { FormIRReply } from './formir.worker';
 import type { ParseReply } from './parse.worker';
 import { runWorker } from './run-worker';
 
 // R17.3: every cabinet parsed in a dedicated Worker equals its Node golden file. This project
 // only reads the golden files; the Node project writes them. R17.1: the Worker entry is bundled
-// by Vite with every Node built-in refused, and the build must succeed.
+// by Vite with every Node built-in refused, and the build must succeed. Spec 02 R13.1: the
+// FormIR JSON built in a Worker equals its Node golden file byte for byte.
 
 const cabinets = await commands.sampleCabinets();
 const golden = import.meta.glob<Snapshot>('../golden/*.json', { import: 'default' });
@@ -30,6 +32,31 @@ test.each(cabinets.map((c) => [c.slug, c.path]))(
     );
     expect(reply.error).toBeUndefined();
     expect(reply.snap).toEqual(await golden[goldenPath(slug)]!());
+  },
+);
+
+const goldenIR = import.meta.glob<string>('../golden/formir/*.json', {
+  query: '?raw',
+  import: 'default',
+});
+const goldenIRPath = (slug: string) => `../golden/formir/${slug}.json`;
+
+test('one golden FormIR file per cabinet, and no other', () => {
+  expect(Object.keys(goldenIR).sort()).toEqual(cabinets.map((c) => goldenIRPath(c.slug)).sort());
+});
+
+test.each(cabinets.map((c) => [c.slug, c.path]))(
+  '%s: FormIR JSON built in a Worker equals the golden file (spec 02 R13.1)',
+  async (slug, path) => {
+    const base64 = await commands.readFile(path, 'base64');
+    const bytes = Uint8Array.from(atob(base64), (ch) => ch.charCodeAt(0));
+    const reply = await runWorker<FormIRReply>(
+      new URL('./formir.worker.ts', import.meta.url),
+      bytes,
+      [bytes.buffer],
+    );
+    expect(reply.error).toBeUndefined();
+    expect(reply.json).toBe(await goldenIR[goldenIRPath(slug)]!());
   },
 );
 

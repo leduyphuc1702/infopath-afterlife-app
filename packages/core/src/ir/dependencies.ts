@@ -29,7 +29,7 @@ import {
 } from './xpath/resolve';
 
 /** Roles that write their target (design §5 notes); `binding` writes unless read-only. */
-const WRITES = new Set<DepRole>(['assignmentTarget', 'calcTarget', 'binding']);
+const WRITES = new Set<DepRole>(['assignmentTarget', 'calcTarget', 'binding', 'signatureLocation']);
 
 export interface DependencyInput {
   readonly t: ParsedTemplate;
@@ -39,6 +39,8 @@ export interface DependencyInput {
   readonly connections: readonly IrConnection[];
   readonly connectionPending: readonly PendingExpr[];
   readonly controls: readonly ScannedControl[];
+  /** View scan contexts by `view\u0000ctrlId` (button triggers). */
+  readonly ctrlContexts: ReadonlyMap<string, readonly Ctx[]>;
 }
 
 export interface DependencyParts {
@@ -70,15 +72,28 @@ export function buildDependencies(input: DependencyInput): DependencyParts {
   const mainRoot = tree.index.roots.get('main');
   const nowhere: Ctx = { ds: '\u0000', node: null };
 
-  // Each rule set's contexts: the nodes of its fieldChange triggers, else the main root.
+  // Each rule set's contexts (design §7.2): the node of each fieldChange trigger; for each button
+  // trigger, the scan contexts of the view elements whose xd:CtrlId is the button name (the main
+  // root when none matches); with neither, the main root.
+  const rootCtx: Ctx = mainRoot === undefined ? nowhere : { ds: 'main', node: mainRoot };
   const ruleSetContexts = new Map<string, Ctx[]>();
   for (const r of elements.rules) {
     if (ruleSetContexts.has(r.ruleSet)) continue;
     const ctxs: Ctx[] = [];
+    const addCtx = (c: Ctx) => {
+      if (!ctxs.some((x) => x.ds === c.ds && x.node === c.node)) ctxs.push(c);
+    };
     for (const tr of r.triggers) {
-      if (tr.kind !== 'fieldChange') continue;
-      const c = contextFor(tr.match, undefined, scope, env);
-      if ('node' in c && !ctxs.some((x) => x.ds === c.ds && x.node === c.node)) ctxs.push(c);
+      if (tr.kind === 'fieldChange') {
+        const c = contextFor(tr.match, undefined, scope, env);
+        if ('node' in c) addCtx(c);
+      } else if (tr.kind === 'button') {
+        const found =
+          tr.view === undefined || tr.button === undefined
+            ? undefined
+            : input.ctrlContexts.get(`${tr.view}\u0000${tr.button}`);
+        for (const c of found?.length ? found : [rootCtx]) addCtx(c);
+      }
     }
     ruleSetContexts.set(r.ruleSet, ctxs);
   }
@@ -87,7 +102,7 @@ export function buildDependencies(input: DependencyInput): DependencyParts {
       case 'document':
         return [doc];
       case 'mainRoot':
-        return [mainRoot === undefined ? nowhere : { ds: 'main', node: mainRoot }];
+        return [rootCtx];
       case 'node': {
         const at = contextFor(c.path, c.then, scope, env);
         return ['node' in at ? at : nowhere];

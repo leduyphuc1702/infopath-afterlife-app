@@ -43,11 +43,10 @@ const strings = (row: keyof ReturnType<typeof stringCounts>) =>
 
 /**
  * The absolute-path row of the Evidence table: strings FormIR keeps as elements
- * (`domEventHandler/@match`, `signedDataBlock/@data`) and strings it does not
- * (`xmlToEdit` `item`/`container`, promoted field `node`, `signedDataBlock/@signatureLocation`),
- * all resolved from the document node. The row's label omits `signatureLocation`; with it the row
- * is 684 (656 item, 21 container, 3 match, 1 data, 1 signatureLocation, and the public sample's
- * item and node), without it 683.
+ * (`domEventHandler/@match`, `signedDataBlock/@data` and `@signatureLocation`) and strings it
+ * does not (`xmlToEdit` `item`/`container`, promoted field `node`),
+ * all resolved from the document node: 656 item, 21 container, 3 match, 1 data, 1
+ * signatureLocation (a `DepRole` since task 10), and the public sample's item and node.
  */
 function absolutePaths(t: ParsedTemplate): { strings: number; resolved: number; refs: number } {
   const m = t.manifest;

@@ -235,7 +235,7 @@ export interface ActiveX {                                                      
 
 export type DepRole = 'condition' | 'actionExpression' | 'dialogText' | 'assignmentTarget'
   | 'calcExpression' | 'calcTarget' | 'validationMatch' | 'validationExpression' | 'binding'
-  | 'choicesFilter' | 'submitValue' | 'codeHandler' | 'trigger' | 'signedData';
+  | 'choicesFilter' | 'submitValue' | 'codeHandler' | 'trigger' | 'signedData' | 'signatureLocation';
 export interface DepRef { elementId: string; role: DepRole }
 export interface Reference extends DepRef { targetId: string; text: string }
 export interface UnresolvedRef {
@@ -246,7 +246,8 @@ export interface UnresolvedRef {
 ```
 
 Rules the types do not show:
-- `writtenBy` holds `assignmentTarget`, `calcTarget` and `binding` (a control reads and writes);
+- `writtenBy` holds `assignmentTarget`, `calcTarget`, `binding` (a control reads and writes) and
+  `signatureLocation` (where a signature is written; `DepRole` gained it at task 10);
   `readBy` holds the rest and `binding` again. Order: `DepRole` order above, then element order.
 - `isQuery`: spec 01 `role` is `query` or `queryAllowed="yes"`. `isSubmit`: `role` is `submit` or
   `submitAllowed="yes"`. `dataSource` is the data object name, or `main` for `mainQuery`.
@@ -282,7 +283,11 @@ Only these, each seen in our 53 views or recorded for the private corpus in requ
 Changed at task 7: "called from inside a `table`" means the repeat point's nearest table
 ancestor (`td`, `th`, `tr`, `tbody`, `thead`, `tfoot`, `table`) is not a cell. A moded template
 called from inside a layout cell (form 02's claimant section) is not a repeating row; one called
-from a `tbody` (form 02's expense rows) is. Reasons on `UNRESOLVED_BINDING` are the §7.3 ones plus
+from a `tbody` (form 02's expense rows) is. Changed at task 10 (review decision 3): this table rule
+now only finds the header row for `columnHeader` (§6.2). `inRepeat` comes from the data tree: a
+control is `inRepeat` when its scan context node, or an ancestor of it, is `repeating`. Five
+sample controls changed to `inRepeat: true` (form 06: 3, form 23: 2, repeating sections called
+from layout cells); no label changed. Reasons on `UNRESOLVED_BINDING` are the §7.3 ones plus
 `modeCallSites`, `modeNotCalled`, `namedTemplate`, `matchPattern`, `noSelect`, `notOnePath` and
 `xsl:<name>` for a control under another XSL instruction. A view whose XSL file is missing keeps
 `scanned: false` and adds no issue of its own: spec 01's `MISSING_FILE` already names it.
@@ -341,9 +346,9 @@ second argument gives one `UnresolvedRef` with reason `stringExpression` (R11.4)
 |---|---|
 | calculation `expression` | the node of `target` |
 | validation `expression` | the node of `match`, then `expressionContext` applied as a relative path |
-| rule `condition`, action `expression`, `targetField`, dialog text | per `fieldChange` trigger: the node of its `match`; with no such trigger, the main root. Several distinct contexts → resolved once each, references merged |
+| rule `condition`, action `expression`, `targetField`, dialog text | per `fieldChange` trigger: the node of its `match`; per `button` trigger: the scan context (§6) of each element in the button's view whose `xd:CtrlId` equals the button name, or the main root when none matches; with neither kind of trigger, the main root. Several distinct contexts → resolved once each, references merged |
 | submit value with `valueType="expression"` | the main root |
-| absolute-only strings (`target`, `match`, `domEventHandler/@match`, `signedDataBlock/@data`) | the document node |
+| absolute-only strings (`target`, `match`, `domEventHandler/@match`, `signedDataBlock/@data` and `@signatureLocation`) | the document node |
 | view binding, `for-each` select | the scan context (§6) |
 
 `current()` is the context of the whole expression (for a view select, the template context).
@@ -389,7 +394,9 @@ Sources: `xd:server` on ActiveX controls (static values only; private: `http://<
 - a connection string is split on `;` into `key=value` pairs (keys case-insensitive, quoted values
   `"…"`/`'…'` kept whole). The host is the first of `Data Source`, `Server`, `Address`, `Addr`,
   `Network Address`, with `tcp:`, `,port` and `\instance` removed;
-- a relative name is checked against `t.files` (case-insensitive, last segment).
+- a relative name is checked against `t.files` (case-insensitive, last segment). Changed at
+  task 10: `x-soln:///<name>`, InfoPath's URL for a file inside the template, is a relative name
+  after the scheme is removed.
 
 **Liveness**, first match wins:
 

@@ -3,6 +3,8 @@
 
 import type { P1Input } from './p1-inputs';
 import type { P12Input } from './p12-inputs';
+import type { P13Input } from './p13-inputs';
+import type { FormIR } from '../../src/index';
 
 export interface P1Regression {
   /** What went wrong before the fix, and where it was fixed. */
@@ -19,3 +21,19 @@ export interface P12Regression {
 }
 
 export const P12_REGRESSIONS: readonly P12Regression[] = [];
+
+export interface P6Regression {
+  /** What went wrong before the fix, and where it was fixed. */
+  readonly note: string;
+  readonly case: FormIR;
+}
+
+export const P6_REGRESSIONS: readonly P6Regression[] = [];
+
+export interface P13Regression {
+  /** What went wrong before the fix, and where it was fixed. */
+  readonly note: string;
+  readonly case: P13Input;
+}
+
+export const P13_REGRESSIONS: readonly P13Regression[] = [];

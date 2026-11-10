@@ -209,6 +209,7 @@ export function buildElements(t: ParsedTemplate, ids: IdRegistry): ElementParts 
   const blocks = (m.signatures?.blocks ?? []).map((b) => {
     const id = ids.claim(manifestId('sig', b.path), b);
     add(id, 'signedData', b.attrs.data, DOCUMENT);
+    add(id, 'signatureLocation', b.attrs.signatureLocation, DOCUMENT);
     return {
       id,
       ...opt('name', b.attrs.name),

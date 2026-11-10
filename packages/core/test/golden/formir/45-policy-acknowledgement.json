@@ -66,6 +66,12 @@
         "role": "signedData",
         "targetId": "g:main:/my:policyAcknowledgement",
         "text": "/my:policyAcknowledgement"
+      },
+      {
+        "elementId": "sig:/xsf:documentSignatures[1]/xsf:signedDataBlock[1]",
+        "role": "signatureLocation",
+        "targetId": "g:main:/my:policyAcknowledgement/my:signatures1/my:signatures2",
+        "text": "/my:policyAcknowledgement/my:signatures1/my:signatures2"
       }
     ]
   },
@@ -484,7 +490,12 @@
       "dataSource": "main",
       "dependencies": {
         "readBy": [],
-        "writtenBy": []
+        "writtenBy": [
+          {
+            "elementId": "sig:/xsf:documentSignatures[1]/xsf:signedDataBlock[1]",
+            "role": "signatureLocation"
+          }
+        ]
       },
       "groupId": "g:main:/my:policyAcknowledgement/my:signatures1",
       "id": "g:main:/my:policyAcknowledgement/my:signatures1/my:signatures2",

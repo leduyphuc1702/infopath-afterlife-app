@@ -57,6 +57,23 @@ export default defineConfig(
     },
   },
   {
+    // Spec 02 R1.1: buildFormIR is pure, so FormIR has no clock and no randomness either.
+    files: ['packages/core/src/ir/**/*.ts'],
+    rules: {
+      'no-restricted-globals': [
+        'error',
+        ...restrictedGlobals,
+        { name: 'Date', message: 'FormIR depends on the template alone (spec 02 R1.1).' },
+        { name: 'performance', message: 'FormIR depends on the template alone (spec 02 R1.1).' },
+        { name: 'crypto', message: 'FormIR depends on the template alone (spec 02 R1.1).' },
+      ],
+      'no-restricted-properties': [
+        'error',
+        { object: 'Math', property: 'random', message: 'FormIR has no randomness (spec 02 R1.1).' },
+      ],
+    },
+  },
+  {
     files: ['packages/core/src/xml/parse.ts'],
     rules: {
       'no-restricted-imports': ['error', { paths: restrictedModules, patterns: [nodeBuiltins] }],

@@ -20,6 +20,8 @@ describe('liveness, one case per row', () => {
     ['fileUrl', 'locations.xml', ['package', 'packageFile', undefined]],
     ['fileUrl', 'sub/Locations.XML', ['package', 'packageFile', undefined]],
     ['fileUrl', 'missing.xml', ['unknown', 'unparsed', undefined]],
+    ['fileUrl', 'x-soln:///Locations.xml', ['package', 'packageFile', undefined]],
+    ['fileUrl', 'x-soln:///missing.xml', ['unknown', 'unparsed', undefined]],
     [
       'connectionString',
       'Data Source=(local);Initial Catalog=x',

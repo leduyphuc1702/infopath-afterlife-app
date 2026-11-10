@@ -167,7 +167,7 @@ describe('R4.3 synthetic views (test/fixtures/synthetic/views/)', () => {
   test('a mode called from two places: kept, resolved at each, one issue per failure', () => {
     const { ir, issues } = viewIR([{ name: 'V', file: 'mode-twice.xsl' }]);
     const [c] = controls(ir);
-    expect(c).toMatchObject({ binding: 'my:item', xctname: 'PlainText', inRepeat: false });
+    expect(c).toMatchObject({ binding: 'my:item', xctname: 'PlainText', inRepeat: true });
     expect(c).not.toHaveProperty('targetId');
     expect(reasons(issues)).toEqual([
       ['UNRESOLVED_BINDING', 'my:item', 'notInTree'],

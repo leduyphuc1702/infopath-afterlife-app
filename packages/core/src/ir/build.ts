@@ -44,6 +44,7 @@ export function buildFormIR(t: ParsedTemplate, options: FormIROptions = {}): For
     connections: connections.connections,
     connectionPending: connections.pending,
     controls: scan.controls,
+    ctrlContexts: scan.ctrlContexts,
   }); // stage 7
   return {
     irVersion: FORMIR_VERSION,

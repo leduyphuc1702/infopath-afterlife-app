@@ -17,6 +17,8 @@ export interface PackageOptions {
   readonly defaultView?: string;
   /** A sub-folder of the fixture folder, e.g. `labels/`: its own `myschema.xsd`, no `Depots`. */
   readonly dir?: string;
+  /** More manifest content at the root, e.g. `xsf:ruleSets`. */
+  readonly manifest?: string;
 }
 
 export interface FixtureView {
@@ -24,11 +26,13 @@ export interface FixtureView {
   /** The `mainpane/@transform`; the file is read from the fixture folder unless `missing`. */
   readonly file: string;
   readonly missing?: boolean;
+  /** Manifest content inside this `xsf:view`, after the `mainpane`. */
+  readonly inner?: string;
 }
 
 export function viewPackage(
   views: readonly FixtureView[],
-  { defaultView = views[0]?.name, dir = '' }: PackageOptions = {},
+  { defaultView = views[0]?.name, dir = '', manifest = '' }: PackageOptions = {},
 ): ParsedTemplate {
   const present = views.filter((v) => !v.missing).map((v) => v.file);
   const secondary = dir === '';
@@ -42,9 +46,9 @@ ${secondary ? '<xsf:dataObjects><xsf:dataObject name="Depots" schema="rows.xsd" 
 <xsf:views${defaultView === undefined ? '' : ` default="${defaultView}"`}>${views
     .map(
       (v) =>
-        `<xsf:view name="${v.name}" caption="${v.name}"><xsf:mainpane transform="${v.file}"/></xsf:view>`,
+        `<xsf:view name="${v.name}" caption="${v.name}"><xsf:mainpane transform="${v.file}"/>${v.inner ?? ''}</xsf:view>`,
     )
-    .join('')}</xsf:views>`;
+    .join('')}</xsf:views>${manifest}`;
   const files: PackageFile[] = [
     packageFile('manifest.xsf', manifestBytes(inner)),
     ...listed.map((f) => packageFile(f, viewFixture(f, dir))),

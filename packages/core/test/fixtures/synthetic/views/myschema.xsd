@@ -17,9 +17,11 @@
 		<xsd:complexType>
 			<xsd:sequence>
 				<xsd:element ref="my:line" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="my:selectedRow" minOccurs="0"/>
 			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
+	<xsd:element name="selectedRow" type="xsd:string"/>
 	<xsd:element name="line">
 		<xsd:complexType>
 			<xsd:sequence>

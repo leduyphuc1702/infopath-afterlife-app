@@ -112,33 +112,42 @@ every task ends green, so every batch does.
   - Requirements: R11.3, R11.5, R1.2, R1.3, R13.2, R13.3.
   - Note at task 9: the Evidence row "Absolute paths" is 684 only with
     `signedDataBlock/@signatureLocation` (form 45, 1 string), which its label omits; the test
-    counts it. FormIR carries no reference for it (no `DepRole`). Form 04 `grandTotal` is also
-    in `writtenBy` of its view control (role `binding`, design §5 notes), besides the calculation.
+    counts it. Form 04 `grandTotal` is also in `writtenBy` of its view control (role `binding`,
+    design §5 notes), besides the calculation.
+  - Changed at task 10 (review): `signatureLocation` is a `DepRole` in `writtenBy`; `inRepeat`
+    comes from the data tree; button-run rules resolve from the button's scan context (design
+    §7.2, fixture `views/button-row.xsl`); `x-soln:///<name>` is a package file (design §8).
 
-- [ ] 10. Property P6: JSON round trip
+- [x] 10. Property P6: JSON round trip
   - Test: `test/property/p6.property.test.ts` (generator of design §10; 500 runs; the 48 golden
     FormIRs round-trip; `serialise(parse(s)) === s`).
   - Requirements: R14.
 
-- [ ] 11. Property P13: dependency completeness
+- [x] 11. Property P13: dependency completeness
   - Test: `test/property/p13.property.test.ts` (generator of design §10; 500 runs).
   - Requirements: R12.
 
-- [ ] 12. Worker parity, performance and purity
+- [x] 12. Worker parity, performance and purity
   - Extend `test/browser/worker-parity.browser.test.ts` to build FormIR in the Worker and compare
     with the golden files; add `test/perf/formir.perf.test.ts` (`parseXsn` + `buildFormIR`, 20
     runs, p95 under 300 ms, form 08 reported); extend `test/lint/restricted.test.ts` to
     `src/ir/**`.
   - Requirements: R13.1, R15, R1.1 (purity).
   - Done when: `pnpm check` and `pnpm test:perf` green.
+  - Result (2026-11-10, Node 22): form 08 `parseXsn` + `buildFormIR` p50 24.14 ms, p95
+    28.54 ms (the slowest of the 48). The purity lint for `src/ir/**` adds `Date`,
+    `performance`, `crypto` and `Math.random` to the spec 01 restrictions.
 
 - [ ] 13. Local private check
   - Extend `test/private-corpus.local.test.ts` (design §10): `buildFormIR` returns for every file;
     `afterAll` prints FormIR issue codes, generations, `labelSource` counts, and
     `UNRESOLVED_BINDING` and `UNRESOLVED_REFERENCE` counts by reason and by `xctname`. Run once
     with `AFTERLIFE_PRIVATE_SAMPLES=$HOME/Desktop/infopath-afterlife/samples` and paste the lines.
-    The aim is 0 for the review shapes; if anything else remains, list it (shapes and counts only)
-    and stop, without modelling more.
+    Expected (review of tasks 7–9, after the task 10 fixes): `UNRESOLVED_REFERENCE` exactly
+    `stringExpression` 12 (`xdMath:Eval`) and `axis` 3 (`preceding-sibling::*`), no `notInTree`
+    reference; `UNRESOLVED_BINDING` exactly `notInTree` 3 (bindings to fields absent from the
+    schema); no other FormIR issue. The test asserts these counts; if anything else remains, list
+    it (shapes and counts only) and stop, without modelling more.
   - Requirements: R1.4.
 
 - [ ] 14. Verification pass

@@ -479,11 +479,15 @@ uses it, so I can change a form without breaking something I cannot see.
    `expression` reads and `target` writes; validation `match` and `expression` read; view bindings
    read and write; `choicesFrom` predicates read; submit values read; code handlers read
    (`match`); `fieldChange` triggers read (the handler's `match`); signed data blocks read
-   (`data`). A data connection SHALL list the fields of its data
+   (`data`) and write (`signatureLocation`). A data connection SHALL list the fields of its data
    source that are read or written, so the UI can show lineage. Oracle: form 04 `grandTotal` is
-   written by one calculation and read by 2 rule conditions, 1 dialog action and the view
-   `Request`; form 03 `destCountry` is read by a validation, the `destCity` `choicesFrom`
+   written by one calculation and its control in the view `Request`, and read by 2 rule
+   conditions, 1 dialog action and that control; form 03 `destCountry` is read by a validation, the `destCity` `choicesFrom`
    predicate, the `clearCity` trigger and both views.
+   Changed at task 10: a bound control reads and writes, so `grandTotal`'s control is in both
+   lists (design §5 notes); the text said "written by one calculation". Signed data blocks gained
+   the write role `signatureLocation` (review decision 1), which brings the Evidence row
+   "Absolute paths" to 684 (`signatureLocation` was counted there but not named).
 4. IF a location path cannot be resolved to one field-tree node (a variable, `//`, `*`, an axis
    other than `child`, `attribute`, `self` or `parent`, a `GetDOM` argument that is not a string
    literal, `..` above the root, a path not in the tree), or a string argument holds an expression
