@@ -18,6 +18,10 @@ const REQUIRED = [
     'margin:0 0 0 -11px;vertical-align:middle}',
 ];
 
+/** The containers whose first heading or paragraph has no top margin, and that element. */
+const FIRST_IN = ':is(.afl-root,.afl-root :is(td,th,[data-afl-ctrl]))';
+const FIRST = ':is(h1,h2,h3,h4,h5,h6,p):first-child';
+
 /**
  * InfoPath laid views out in MSHTML quirks mode (no view has a DOCTYPE). The rules below give
  * the render root the quirks layout the screenshots show, inside a standards-mode page
@@ -46,12 +50,12 @@ const QUIRKS = [
   // Heading margins of 14pt above and below [VERIFY: IE's default style sheet is not published;
   // 14pt reproduces the 42 px Expenses row of forms 02 and 04]. Quirks mode ignores the default
   // top margin of the first element of a cell or the body (MS-CSS21 §7.2, "Default margins"),
-  // also through the leading `div`s InfoPath wraps content in.
+  // also through the leading `div`s InfoPath wraps content in. The same holds for a first `p`, and
+  // inside a control: form 06's rich text box holds `<div><p>…</p></div>`, and
+  // `06-safety-incident-Report-filled.png` shows its text at the top of the box [seen].
   ':where(.afl-root :is(h1,h2,h3,h4,h5,h6)){margin-top:14pt;margin-bottom:14pt}',
-  ':where(:is(.afl-root,.afl-root td,.afl-root th)>:is(h1,h2,h3,h4,h5,h6):first-child,' +
-    ':is(.afl-root,.afl-root td,.afl-root th)>div:first-child>:is(h1,h2,h3,h4,h5,h6):first-child,' +
-    ':is(.afl-root,.afl-root td,.afl-root th)>div:first-child>div:first-child>' +
-    ':is(h1,h2,h3,h4,h5,h6):first-child){margin-top:0}',
+  `:where(${FIRST_IN}>${FIRST},${FIRST_IN}>div:first-child>${FIRST},` +
+    `${FIRST_IN}>div:first-child>div:first-child>${FIRST}){margin-top:0}`,
   // A drop-down is one line of its text plus 6 px, as in the screenshots' 30 px drop-down rows.
   ':where(.afl-root select:not([multiple]):is(:not([size]),[size="0"],[size="1"]))' +
     '{min-height:calc(1lh + 6px)}',

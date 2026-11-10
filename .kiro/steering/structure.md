@@ -4,8 +4,8 @@ inclusion: always
 
 # Repository structure
 
-`packages/` and `apps/` are planned and do not exist yet. Everything else below exists today
-unless marked "to be written".
+`packages/core` exists; `apps/web` starts with spec 09 and `apps/forge` later. Everything else
+below exists today unless marked "to be written".
 
 ```
 /
@@ -23,6 +23,9 @@ unless marked "to be written".
 │  ├─ src/convert/            FormIR → JSM Forms design JSON + CoverageReport
 │  ├─ src/triage/             Triage, death certificates, waves (spec brief 12)
 │  ├─ src/legacy/             filled .xml → answers, upgrade.xsl, embedded attachments
+│  ├─ host/                   helpers for host apps and core's own tests, not core API: the Vite stubs
+│  │                          for the Worker build, the Carlito @font-face rules (package exports
+│  │                          `@afterlife/core/host/*`, spec 09 D3)
 │  └─ test/                   unit, property-based, golden snapshots
 ├─ apps/forge/                Forge app (manifest.yml, src/ resolvers & triggers, static/ Custom UI bundles)
 │  ├─ static/studio/          admin page (Custom UI, React + Atlaskit)

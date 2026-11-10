@@ -238,3 +238,28 @@ test.each(cabinets.flatMap((c) => [[c.slug, 'empty'] as const, [c.slug, 'first']
     r.parentElement!.remove();
   },
 );
+
+// Spec 09 preamble (design §8.1 step 9): a first `p` in a control or a cell has no top margin.
+// Form 06's "What happened" rich text box holds `<div><p>…</p></div>`; InfoPath draws the text at
+// the top of the box (`06-safety-incident-Report-filled.png`) [seen].
+test("form 06's rich text starts at the top of its box; a cell's first p has no top margin", async () => {
+  const r = await mount('06-safety-incident', 'first');
+  const box = r.querySelector<HTMLElement>(
+    '[data-afl-path="/my:incidentReport[1]/my:incidentDescription[1]"]',
+  )!;
+  const p = box.querySelector('p')!;
+  expect(p.textContent).toMatch(/^Incident at 20:54\./);
+  expect(getComputedStyle(p).marginTop).toBe('0px');
+  const cs = getComputedStyle(box);
+  const inset = parseFloat(cs.borderTopWidth) + parseFloat(cs.paddingTop);
+  expect(p.getBoundingClientRect().top - box.getBoundingClientRect().top).toBeCloseTo(inset, 0);
+  // A cell, directly and through InfoPath's wrapping div; a second p keeps its margin.
+  const cell = document.createElement('table');
+  cell.innerHTML =
+    '<tbody><tr><td><p id="c1">a</p><p id="c2">b</p></td><td><div><p id="c3">c</p></div></td></tr></tbody>';
+  r.append(cell);
+  expect(getComputedStyle(cell.querySelector('#c1')!).marginTop).toBe('0px');
+  expect(getComputedStyle(cell.querySelector('#c3')!).marginTop).toBe('0px');
+  expect(getComputedStyle(cell.querySelector('#c2')!).marginTop).not.toBe('0px');
+  r.parentElement!.remove();
+});
