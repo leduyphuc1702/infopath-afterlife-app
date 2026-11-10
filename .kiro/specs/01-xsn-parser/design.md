@@ -129,7 +129,8 @@ export interface TemplateCounts {      // R16.1, one field per README column
 ```ts
 export interface ParsedTemplate {
   readonly parserVersion: 1;
-  readonly cabinet: CabinetInfo;
+  readonly cabinet?: CabinetInfo;                // from parseXsn only; parsePackage has no cabinet (task 21)
+  readonly manifestFile: string;                // the package file used as the manifest, R6.1 (task 21)
   readonly files: readonly PackageFile[];       // CFFILE order (R1.5)
   readonly manifest: Manifest;
   readonly schemas: {
@@ -138,7 +139,7 @@ export interface ParsedTemplate {
   };
   readonly codeFiles: readonly string[];        // *.dll, *.pdb, *.js, *.vbs (R12.4)
   readonly unknowns: readonly UnknownEntry[];   // manifest first, then schema files by name; document order within a file
-  readonly issues: readonly Issue[];
+  readonly issues: readonly Issue[];             // cabinet, manifest XML and repeats, package checks, schema loading, field trees
 }
 
 export interface CabinetInfo {
@@ -630,7 +631,19 @@ recover the modelled set from the result alone: collect every object with a `pat
   - `children` lists elements in content-model order, then attributes in declaration order;
   - `complexContent/extension`: the base type's elements, attributes and wildcards come first; a
     derived attribute with the same name replaces the base's. `complexContent/restriction` uses
-    only its own particles (a restriction restates them);
+    only its own particles and its own attribute wildcard (a restriction restates them);
+  - **attributes of a restriction** (corrected at the task 19 review), from XML Schema 1.0 Part 1
+    §3.4.2, the `{attribute uses}` mapping for complex content and for simple content, clause 3
+    (text checked 2026-11-10 at https://www.w3.org/TR/xmlschema-1/): the base type's attribute
+    uses are included for restriction too, except those whose name and target namespace equal an
+    attribute use of the restriction's own `<attribute>` or `<attributeGroup>` children (3.1), or
+    of an `<attribute>` child whose `use` is `prohibited` (3.2). Base attributes come first, then
+    the restriction's own. A `simpleContent/restriction` also keeps only its own attribute
+    wildcard (the complete wildcard of §3.4.2);
+  - **`use="prohibited"`** produces no attribute node and is not counted. Per the §3.2 note it
+    "does not correspond to any component"; its only effect is clause 3.2 above, which applies
+    only to an `<attribute>` directly in a restriction. Anywhere else (a plain complex type, an
+    extension, an attribute group) it declares nothing. Nothing is recorded for it;
   - a group `ref` adds `{ kind: 'group', ref, minOccurs?, maxOccurs? }` to `raw.groups` between the
     enclosing particle and the group's own particle; `choiceGroup` is the nearest enclosing
     `xsd:choice` (a group inside a choice gives its members their own id when the group holds a
@@ -651,8 +664,11 @@ spec 02.
 
 `acceptsEmpty(type)`:
 1. Built-in families: `string`, `normalizedString`, `token`, `anyURI`, `base64Binary`, `hexBinary`
-   and the built-in list types (`NMTOKENS`, `IDREFS`, `ENTITIES`) are true. Every other built-in is
-   false.
+   and `anySimpleType` are true. Every other built-in is false, including the built-in list types
+   `NMTOKENS`, `IDREFS` and `ENTITIES`: XML Schema 1.0 Part 2 §3.3 defines each as a list
+   restricted with `minLength value="1"` (checked 2026-11-10; corrected at task 20, the first
+   version of this rule had them true). `anySimpleType` is the type of an unresolved simple type
+   (§9.2), and its lexical space includes `''`.
 2. `xsd:list` (R14.4): true, since a list of zero items is the empty string. `xsd:union`: true when
    `acceptsEmpty` is true for any member type.
 3. A restriction can only narrow, whatever the variety: an `enumeration` makes it true iff `''` is
@@ -663,6 +679,15 @@ spec 02.
    issue records it. The facet itself is kept for spec 05.
 
 Groups and rich text are never `required` (R14.4). Their presence is in `effective`.
+
+Facets are grouped by restriction step (the facet's parent element). Enumerations and patterns of
+one step are alternatives; every step must accept `''`. A union member is evaluated with its own
+facets. A pattern is converted to a JavaScript `RegExp` (anchored, `u` flag; `^` and `$` escaped
+outside a character class, `\-` outside a class written `-`); `\i`, `\I`, `\c`, `\C`,
+`\p{Is…}`, class subtraction or a pattern that does not compile give "unknown", with one
+`PATTERN_NOT_EVALUATED` issue per pattern facet (`details`: `pattern`, `node`), however many
+elements use the type. A step that rejects `''` with an evaluable facet decides the answer even if
+another step is unknown.
 
 ### 9.4 Counts (`counts.ts`, R16.1)
 
@@ -681,7 +706,9 @@ definition.
 ## 10. Package checks (`xsn/package.ts`, R6)
 
 - Manifest discovery as R6.1. Duplicate names ignoring case, `..`, drive letters or leading `/`
-  or `\` record `DUPLICATE_NAME` or `UNSAFE_NAME`; the bytes are kept (R6.5).
+  or `\` record `DUPLICATE_NAME` or `UNSAFE_NAME`; the bytes are kept (R6.5). `..` counts as a
+  path segment (split on `/` and `\`), so `notes..v2.xml` is safe; `details.reason` is
+  `parentSegment`, `driveLetter` or `leadingSeparator` (task 21).
 - References (R6.2) are collected from the built `Manifest`, not from the DOM. The list in R6.2 is
   one function, `fileReferences(manifest)`. Each reference is looked up case-insensitively, and a
   miss records `MISSING_FILE` with the reference's path (R6.3). `xmlFileAdapter/@fileUrl` counts

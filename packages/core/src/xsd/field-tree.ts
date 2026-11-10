@@ -11,6 +11,7 @@ import type { ModelNode } from '../xsf/walk';
 import type { Global, GlobalKind, QName, SchemaDoc, SchemaRoot, SchemaTable } from './schema-set';
 import type { Facet, FieldNode, FieldTree, GroupStep, TypeName, Wildcard } from './types';
 import { FACETS, type Facet as FacetName } from './vocabulary';
+import { acceptsEmpty, type SimpleTypeInfo } from './empty-string';
 
 const XHTML = 'http://www.w3.org/1999/xhtml';
 const ANY_TYPE = 'xsd:anyType';
@@ -28,6 +29,8 @@ interface SimpleInfo {
   readonly itemType?: TypeName;
   readonly memberTypes?: readonly TypeName[];
   readonly facets: readonly Facet[];
+  /** Union only: each member type's own info, for the empty-string check (§9.3). */
+  readonly members?: readonly SimpleInfo[];
 }
 
 interface Content {
@@ -37,11 +40,14 @@ interface Content {
   readonly itemType?: TypeName;
   readonly memberTypes?: readonly TypeName[];
   readonly facets: readonly Facet[];
+  readonly members?: readonly SimpleInfo[];
   readonly elements: readonly FieldNode[];
   readonly attributes: readonly FieldNode[];
   readonly wildcards: readonly Wildcard[];
   /** A model group or attribute group referred back to itself inside this content. */
   readonly recursive: boolean;
+  /** `{ns}name` of the `use="prohibited"` attributes directly in this holder (R14 note, §9.2). */
+  readonly prohibited: ReadonlySet<string>;
 }
 
 interface Particle {
@@ -147,8 +153,15 @@ class Builder {
     } else {
       content = emptyComplex(ANY_TYPE);
     }
+    const required =
+      content.kind === 'field' &&
+      base.effective.minOccurs >= 1 &&
+      !base.effective.nillable &&
+      content.variety !== 'complex' &&
+      this.rejectsEmpty({ ...content, variety: content.variety }, base.source);
     return {
       ...base,
+      required,
       kind: content.kind,
       xsdType: {
         ...(declared === undefined ? {} : { declared }),
@@ -163,6 +176,31 @@ class Builder {
       children: [...content.elements, ...content.attributes],
     };
   }
+
+  /**
+   * R14.4: true when the type certainly rejects ''. A pattern in XML Schema syntax with no
+   * JavaScript equivalent makes the answer unknown: not required, plus one PATTERN_NOT_EVALUATED
+   * issue per pattern facet (a named type used many times is reported once).
+   */
+  private rejectsEmpty(info: SimpleInfo, node: Located): boolean {
+    const r = acceptsEmpty(toSimpleType(info));
+    if (r.accepts !== 'unknown') return !r.accepts;
+    for (const p of r.unevaluated) {
+      if (this.reportedPatterns.has(p.step)) continue;
+      this.reportedPatterns.add(p.step);
+      const [file, path] = splitStep(p.step);
+      this.issues.push({
+        code: 'PATTERN_NOT_EVALUATED',
+        message: `${file}: pattern ${p.pattern} at ${path} uses XML Schema regular-expression syntax with no JavaScript equivalent; required is left false for ${node.path}`,
+        file,
+        path,
+        details: { pattern: p.pattern, node: node.path },
+      });
+    }
+    return false;
+  }
+
+  private readonly reportedPatterns = new Set<string>();
 
   private elementBase(
     site: ModelNode,
@@ -278,8 +316,18 @@ class Builder {
       const isMixed = mixed || isTrue(cc.attrs.mixed);
       if (!derivation) return emptyComplex(ANY_TYPE);
       const own = this.model(derivation, doc, stack, isMixed);
-      if (derivation.key === 'xsd:restriction' || derivation.attrs.base === undefined) return own;
+      if (derivation.attrs.base === undefined) return own;
       const base = this.typeContent(derivation, doc, derivation.attrs.base, stack);
+      if (derivation.key === 'xsd:restriction') {
+        // XML Schema 1.0 Part 1 §3.4.2, complex content, {attribute uses} clause 3: a restriction
+        // restates its particles but inherits the base's attribute uses, except those it
+        // redeclares (3.1) or prohibits (3.2). Elements and the attribute wildcard are its own.
+        return {
+          ...own,
+          attributes: mergeAttributes(without(base.attributes, own.prohibited), own.attributes),
+          recursive: base.recursive || own.recursive,
+        };
+      }
       return {
         ...own,
         kind: own.kind === 'richText' || base.kind === 'richText' ? 'richText' : own.kind,
@@ -326,6 +374,7 @@ class Builder {
       attributes: attrs.nodes,
       wildcards: [...wildcards, ...attrs.wildcards],
       recursive: recursive || attrs.recursive,
+      prohibited: attrs.prohibited,
     };
   }
 
@@ -389,18 +438,22 @@ class Builder {
     let info: SimpleInfo = { builtin: ANY_SIMPLE, variety: 'atomic', facets: [] };
     let baseAttrs: readonly FieldNode[] = [];
     let baseWildcards: readonly Wildcard[] = [];
+    const restriction = d.key === 'xsd:restriction';
     if (d.attrs.base !== undefined) {
       const base = this.typeContent(d, doc, d.attrs.base, stack);
       info = { ...base, variety: base.variety === 'complex' ? 'atomic' : base.variety };
       baseAttrs = base.attributes;
-      baseWildcards = base.wildcards;
+      // A restriction's attribute wildcard is its own (§3.4.2, the complete wildcard).
+      baseWildcards = restriction ? [] : base.wildcards;
     }
     if (d.key === 'xsd:restriction')
       info = { ...info, facets: [...info.facets, ...facetsOf(d, doc)] };
     const attrs = this.attributeDecls(d, doc, stack, new Set());
+    // §3.4.2, simple content, {attribute uses} clause 3: as for complex content.
+    const inherited = restriction ? without(baseAttrs, attrs.prohibited) : baseAttrs;
     return {
       ...simpleContent(info),
-      attributes: mergeAttributes(baseAttrs, attrs.nodes),
+      attributes: mergeAttributes(inherited, attrs.nodes),
       wildcards: [...baseWildcards, ...attrs.wildcards],
       recursive: attrs.recursive,
     };
@@ -436,15 +489,24 @@ class Builder {
     const union = st.children.find((c) => c.key === 'xsd:union');
     if (union) {
       const members: TypeName[] = [];
+      const infos: SimpleInfo[] = [];
       for (const m of (union.attrs.memberTypes ?? '').split(/\s+/).filter(Boolean)) {
         const q = this.table.qname(union, doc, m);
         members.push(q ? this.name(q) : m);
-        this.simpleRef(union, doc, m, seen);
+        infos.push(this.simpleRef(union, doc, m, new Set(seen)));
       }
       for (const inline of union.children.filter((c) => c.key === 'xsd:simpleType')) {
-        members.push(this.simple(inline, doc, seen).builtin);
+        const info = this.simple(inline, doc, new Set(seen));
+        members.push(info.builtin);
+        infos.push(info);
       }
-      return { builtin: ANY_SIMPLE, variety: 'union', memberTypes: members, facets: [] };
+      return {
+        builtin: ANY_SIMPLE,
+        variety: 'union',
+        memberTypes: members,
+        members: infos,
+        facets: [],
+      };
     }
     return { builtin: ANY_SIMPLE, variety: 'atomic', facets: [] };
   }
@@ -466,13 +528,24 @@ class Builder {
     doc: SchemaDoc,
     stack: readonly string[],
     groups: Set<string>,
-  ): { nodes: FieldNode[]; wildcards: Wildcard[]; recursive: boolean } {
+  ): {
+    nodes: FieldNode[];
+    wildcards: Wildcard[];
+    recursive: boolean;
+    prohibited: Set<string>;
+  } {
     const nodes: FieldNode[] = [];
     const wildcards: Wildcard[] = [];
+    const prohibited = new Set<string>();
     let recursive = false;
     for (const c of holder.children) {
-      if (c.key === 'xsd:attribute') nodes.push(this.attribute(c, doc));
-      else if (c.key === 'xsd:anyAttribute') wildcards.push(wildcard('anyAttribute', c));
+      if (c.key === 'xsd:attribute') {
+        const node = this.attribute(c, doc);
+        // use="prohibited" declares nothing (§3.2 note); directly in a restriction it removes the
+        // inherited attribute of that name (§3.4.2 clause 3.2), which the caller applies.
+        if (c.attrs.use?.trim() === 'prohibited') prohibited.add(attrKey(node));
+        else nodes.push(node);
+      } else if (c.key === 'xsd:anyAttribute') wildcards.push(wildcard('anyAttribute', c));
       else if (c.key === 'xsd:attributeGroup' && c.attrs.ref !== undefined) {
         const g = this.resolve('attributeGroup', c, doc, c.attrs.ref);
         if (!g) continue;
@@ -487,7 +560,7 @@ class Builder {
         recursive ||= inner.recursive;
       }
     }
-    return { nodes, wildcards, recursive };
+    return { nodes, wildcards, recursive, prohibited };
   }
 
   private attribute(site: ModelNode, doc: SchemaDoc): FieldNode {
@@ -612,10 +685,18 @@ function facetsOf(r: ModelNode, doc: SchemaDoc): Facet[] {
   return out;
 }
 
+function attrKey(n: FieldNode): string {
+  return `{${n.namespace ?? ''}}${n.name}`;
+}
+
+/** Base attributes first, minus those `own` redeclares (§3.4.2 clause 3.1), then `own`. */
 function mergeAttributes(base: readonly FieldNode[], own: readonly FieldNode[]): FieldNode[] {
-  const key = (n: FieldNode) => `{${n.namespace ?? ''}}${n.name}`;
-  const ownKeys = new Set(own.map(key));
-  return [...base.filter((n) => !ownKeys.has(key(n))), ...own];
+  const ownKeys = new Set(own.map(attrKey));
+  return [...base.filter((n) => !ownKeys.has(attrKey(n))), ...own];
+}
+
+function without(attrs: readonly FieldNode[], keys: ReadonlySet<string>): FieldNode[] {
+  return attrs.filter((n) => !keys.has(attrKey(n)));
 }
 
 function builtinInfo(local: string): SimpleInfo {
@@ -629,11 +710,13 @@ function simpleContent(info: SimpleInfo): Content {
     builtin: info.builtin,
     ...(info.itemType === undefined ? {} : { itemType: info.itemType }),
     ...(info.memberTypes === undefined ? {} : { memberTypes: info.memberTypes }),
+    ...(info.members === undefined ? {} : { members: info.members }),
     facets: info.facets,
     elements: [],
     attributes: [],
     wildcards: [],
     recursive: false,
+    prohibited: new Set(),
   };
 }
 
@@ -648,6 +731,7 @@ function emptyComplex(builtin: TypeName, anyType = false): Content {
     attributes: [],
     wildcards: anyType ? [{ kind: 'any' }, { kind: 'anyAttribute' }] : [],
     recursive: false,
+    prohibited: new Set(),
   };
 }
 
@@ -661,4 +745,23 @@ function describe(decl: ModelNode): string | undefined {
 
 function deepText(el: XmlElement): string {
   return el.children.map((c) => (c.kind === 'text' ? c.text : deepText(c))).join('');
+}
+
+/** The restriction step a facet belongs to: its file and its parent element's path. */
+function stepOf(f: Facet): string {
+  return `${f.source.file}\u0000${f.source.path.slice(0, f.source.path.lastIndexOf('/'))}`;
+}
+
+function splitStep(step: string): [string, string] {
+  const i = step.indexOf('\u0000');
+  return [step.slice(0, i), step.slice(i + 1)];
+}
+
+function toSimpleType(info: SimpleInfo): SimpleTypeInfo {
+  return {
+    builtin: info.builtin,
+    variety: info.variety,
+    facets: info.facets.map((f) => ({ name: f.name, value: f.value, step: stepOf(f) })),
+    ...(info.members ? { members: info.members.map(toSimpleType) } : {}),
+  };
 }

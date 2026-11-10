@@ -388,7 +388,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
     R15.5 (synthetic group, attribute group, list, union).
   - Done when: `pnpm check` green.
 
-- [ ] 20. `required` and the empty-string check
+- [x] 20. `required` and the empty-string check
   - `src/xsd/empty-string.ts` (design §9.3: built-in families, list, union, enumeration,
     `length`/`minLength`, pattern to `RegExp`, XSD-only pattern → unknown with
     `PATTERN_NOT_EVALUATED`), and `required` set in `field-tree.ts` for `field` element nodes only.
@@ -402,7 +402,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R14.4, R14.8 (`required`).
   - Done when: `pnpm check` green.
 
-- [ ] 21. Package level: `parsePackage`, `parseXsn`, package checks
+- [x] 21. Package level: `parsePackage`, `parseXsn`, package checks
   - `src/xsn/package.ts` (design §10: manifest discovery, `fileReferences(manifest)`,
     `MISSING_FILE`, `UNLISTED_FILE`, `DUPLICATE_NAME`, `UNSAFE_NAME`, `URN_MISMATCH` from the first
     4 KB of `template.xml`), `src/xsn/parse.ts` (`parsePackage`, `parseXsn`; manifest errors fatal,
@@ -421,7 +421,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
     R12.4 (code files).
   - Done when: `pnpm check` green.
 
-- [ ] 22. Counts and the README oracle
+- [x] 22. Counts and the README oracle
   - `src/xsn/counts.ts` (`countTemplate`, design §9.4), `oracles/readme-table.ts` (design §13.1:
     first table with a `Folder` column, columns by header name, slugs from backticks, strict
     integer cells).

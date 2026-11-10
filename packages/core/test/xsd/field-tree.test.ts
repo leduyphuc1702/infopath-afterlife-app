@@ -40,7 +40,9 @@ describe('every sample', () => {
     const elements = nodes(t.root).filter((n) => n.nodeType === 'element');
     const expected = rows.get(slug)?.Fields ?? 5; // the public sample: R16.2
     expect(elements).toHaveLength(expected);
-    for (const n of nodes(t.root)) expect(n.required, n.name).toBe(false);
+    for (const n of nodes(t.root)) {
+      if (n.kind !== 'field' || n.nodeType !== 'element') expect(n.required, n.name).toBe(false);
+    }
   });
 });
 
@@ -260,5 +262,52 @@ describe('synthetic', () => {
       ['UNRESOLVED_REFERENCE', 'type', 'n:missing'],
       ['UNRESOLVED_REFERENCE', 'element', 'n:gone'],
     ]);
+  });
+});
+
+describe('R14.8 oracle (required)', () => {
+  const find = (slug: string, name: string) => nodes(main(slug).root).find((n) => n.name === name)!;
+
+  test('form 01: reason (non-nillable string, empty in template.xml) and daysRequested (nillable)', () => {
+    expect(find('01-leave-request', 'reason').required).toBe(false);
+    const days = find('01-leave-request', 'daysRequested');
+    expect(days.effective.nillable).toBe(true);
+    expect(days.required).toBe(false);
+  });
+
+  test('form 04 needsAccounting: a non-nillable boolean is required', () => {
+    expect(find('04-purchase-request', 'needsAccounting').required).toBe(true);
+  });
+
+  test('form 45 signatures1 and signatures2: groups are never required', () => {
+    expect(find('45-policy-acknowledgement', 'signatures1').required).toBe(false);
+    expect(find('45-policy-acknowledgement', 'signatures2').required).toBe(false);
+  });
+
+  test('form 47 assetTag (pattern) and assetCondition (enumeration) are required', () => {
+    expect(find('47-asset-checkout-script', 'assetTag').required).toBe(true);
+    expect(find('47-asset-checkout-script', 'assetCondition').required).toBe(true);
+    expect(find('47-asset-checkout-script', 'borrowerName').required).toBe(false);
+  });
+
+  test('every group and richText node in every sample tree is not required', () => {
+    for (const [slug, set] of sets) {
+      const roots = [set.main, ...Object.values(set.secondary)];
+      for (const r of roots) {
+        for (const n of nodes(tree(r).tree.root)) {
+          if (n.kind !== 'field') expect(n.required, `${slug} ${n.name}`).toBe(false);
+        }
+      }
+    }
+  });
+
+  test('attributes are never required, even with use="required" (raw.use keeps it)', () => {
+    for (const [, set] of sets) {
+      for (const r of [set.main, ...Object.values(set.secondary)]) {
+        for (const n of nodes(tree(r).tree.root)) {
+          if (n.nodeType === 'attribute') expect(n.required).toBe(false);
+        }
+      }
+    }
   });
 });

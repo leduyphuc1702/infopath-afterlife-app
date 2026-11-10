@@ -38,3 +38,6 @@ is fictional.
   recursion, and one element per row of the kind table (spec 01 task 18).
 - `xsd/group.xsd`, `xsd/attribute-group.xsd`, `xsd/list.xsd`, `xsd/union.xsd`: model groups,
   attribute groups, lists and unions (spec 01 task 19).
+- `xsd/restriction.xsd`: attributes in derived types (XML Schema 1.0 Part 1 §3.4.2): inherited,
+  redeclared with a narrower type, and prohibited in complex and simple content restrictions, and
+  a prohibited attribute outside any derivation.

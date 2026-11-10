@@ -117,3 +117,49 @@ test('unions (union.xsd): memberTypes and inline members; a restriction keeps it
   expect(limited.xsdType.variety).toBe('union');
   expect(limited.facets.map((f) => f.name)).toEqual(['pattern']);
 });
+
+describe('attributes in derived types (restriction.xsd, XML Schema 1.0 Part 1 §3.4.2)', () => {
+  const t = load('restriction.xsd');
+  const restricted = child(t.root, 'restricted');
+  const amount = child(t.root, 'amount');
+
+  test('a complexContent restriction keeps its own particles and inherits the base attributes', () => {
+    expect(restricted.children.map((c) => [c.name, c.nodeType])).toEqual([
+      ['a', 'element'],
+      ['id', 'attribute'],
+      ['status', 'attribute'],
+    ]);
+    expect(child(restricted, 'id')).toMatchObject({
+      optional: true,
+      xsdType: { builtin: 'xsd:string' },
+    });
+  });
+
+  test('a redeclared attribute takes the narrower type and use', () => {
+    const status = child(restricted, 'status');
+    expect(status.xsdType.declared).toBe('{urn:p}statusCode');
+    expect(status.facets.map((f) => f.value)).toEqual(['open', 'closed']);
+    expect(status).toMatchObject({ optional: false, raw: { use: 'required', groups: [] } });
+  });
+
+  test('a prohibited attribute removes the inherited one', () => {
+    expect(restricted.children.map((c) => c.name)).not.toContain('note');
+  });
+
+  test('the restriction has no attribute wildcard of its own, so none is inherited', () => {
+    expect(restricted.wildcards).toEqual([]);
+  });
+
+  test('a simpleContent restriction prohibits an inherited attribute and keeps the others', () => {
+    expect(amount.kind).toBe('field');
+    expect(amount.xsdType.builtin).toBe('xsd:decimal');
+    expect(amount.children.map((c) => c.name)).toEqual(['currency']);
+    expect(amount.facets.map((f) => [f.name, f.value])).toEqual([['maxInclusive', '1000']]);
+  });
+
+  test('a prohibited attribute outside any derivation declares nothing', () => {
+    expect(t.root.children.filter((c) => c.nodeType === 'attribute').map((c) => c.name)).toEqual([
+      'version',
+    ]);
+  });
+});

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 review after task 19): attributes in derived types, XML Schema 1.0 Part 1
+     §3.4.2 {attribute uses} clause 3: a restriction inherits the base's attributes except those it
+     redeclares (3.1) or prohibits (3.2); use="prohibited" elsewhere declares nothing. -->
+<xsd:schema targetNamespace="urn:p" xmlns:p="urn:p" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:complexType name="baseType">
+		<xsd:sequence>
+			<xsd:element name="a" type="xsd:string"/>
+			<xsd:element name="b" type="xsd:string" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="xsd:string"/>
+		<xsd:attribute name="status" type="xsd:string"/>
+		<xsd:attribute name="note" type="xsd:string"/>
+		<xsd:anyAttribute namespace="##other"/>
+	</xsd:complexType>
+	<xsd:simpleType name="statusCode"><xsd:restriction base="xsd:string"><xsd:enumeration value="open"/><xsd:enumeration value="closed"/></xsd:restriction></xsd:simpleType>
+	<xsd:complexType name="restrictedType">
+		<xsd:complexContent>
+			<xsd:restriction base="p:baseType">
+				<xsd:sequence><xsd:element name="a" type="xsd:string"/></xsd:sequence>
+				<xsd:attribute name="status" type="p:statusCode" use="required"/>
+				<xsd:attribute name="note" use="prohibited"/>
+			</xsd:restriction>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="amountType">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:decimal">
+				<xsd:attribute name="currency" type="xsd:string"/>
+				<xsd:attribute name="rate" type="xsd:decimal"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="localAmountType">
+		<xsd:simpleContent>
+			<xsd:restriction base="p:amountType">
+				<xsd:maxInclusive value="1000"/>
+				<xsd:attribute name="rate" use="prohibited"/>
+			</xsd:restriction>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:element name="root">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="restricted" type="p:restrictedType"/>
+				<xsd:element name="amount" type="p:localAmountType"/>
+			</xsd:sequence>
+			<xsd:attribute name="version" type="xsd:string"/>
+			<xsd:attribute name="legacy" type="xsd:string" use="prohibited"/>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

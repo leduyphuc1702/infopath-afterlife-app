@@ -1,7 +1,7 @@
 // The samples/own/README.md table as an oracle (design §13.1): the first Markdown table whose header
 // has a `Folder` column; columns are found by header name, so reordering them is harmless; the
 // slug is the text in backticks in `Folder`; every count cell must be a plain integer.
-// Written for task 13 (Checks per form); task 22 adds its own tests and the count oracle.
+// Written for task 13 (Checks per form); tested in oracles/readme-table.test.ts (task 22).
 
 import { readFileSync } from 'node:fs';
 import { repoRoot } from '../helpers/samples';
