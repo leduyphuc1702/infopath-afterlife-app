@@ -138,7 +138,7 @@ every task ends green, so every batch does.
     28.54 ms (the slowest of the 48). The purity lint for `src/ir/**` adds `Date`,
     `performance`, `crypto` and `Math.random` to the spec 01 restrictions.
 
-- [ ] 13. Local private check
+- [x] 13. Local private check
   - Extend `test/private-corpus.local.test.ts` (design §10): `buildFormIR` returns for every file;
     `afterAll` prints FormIR issue codes, generations, `labelSource` counts, and
     `UNRESOLVED_BINDING` and `UNRESOLVED_REFERENCE` counts by reason and by `xctname`. Run once

@@ -27,6 +27,10 @@ extracts that input from the `.xsn` and a test proves it (`.kiro/specs/01-xsn-pa
 the coverage state is still the owning spec's to deliver, and nothing past the parser is
 implemented yet. "Synthetic fixture only" means no in-repo form uses it, so a hand-written
 manifest is the evidence.
+`ir: spec 02` means FormIR carries that input, with the label, dependency index, data lineage and
+endpoint liveness built from it, and a spec 02 test proves it
+(`.kiro/specs/02-form-ir/verification.md`). These are the inputs of the X-ray, dependency map,
+data lineage and dead-connection check; the screens themselves belong to their specs.
 
 ---
 
@@ -39,15 +43,15 @@ manifest is the evidence.
 | Text (`PlainText`) | 602 | single-line input, type from schema | Native (`ts`/`tl`) | spec 05 |
 | Date picker (`DTPicker`) | 117 | `M/D/YYYY` + calendar button | Native (`da`/`dt`) | spec 05 |
 | Dropdown (`dropdown`) | 112 | fixed choices, no typing | Native (`cd`) | spec 05 |
-| Option buttons (`OptionButton`) | 104 | one of N, inline | Native (`cs`) | spec 05 |
-| Checkbox (`CheckBox`) | 72 | boolean | Native (`cm` single choice) | spec 05 |
+| Option buttons (`OptionButton`) | 104 | one of N, inline | Native (`cs`) | spec 05; ir: spec 02 (choice labels) |
+| Checkbox (`CheckBox`) | 72 | boolean | Native (`cm` single choice) | spec 05; ir: spec 02 (`checkboxText` label) |
 | Section (`Section`) | 59 | bordered group with title | Native (section) | spec 05 |
-| Repeating table (`RepeatingTable`) | 48 | N rows of fields, aggregate rows | App (repeating) | spec 03/04 |
+| Repeating table (`RepeatingTable`) | 48 | N rows of fields, aggregate rows | App (repeating) | spec 03/04; ir: spec 02 (`inRepeat`, `columnHeader` label) |
 | Rich text (`RichText`) | 45 | HTML-lite with inline toolbar | Native (`rt`) | spec 05 |
-| Button (`Button`) | 42 | runs rules, switches view, submits | App (action) | spec 04 |
-| Expression box (`ExpressionBox`) | 30 | computed text, no border | App (read-only field) | spec 03 |
-| Repeating section (`RepeatingSection`) | 16 | N sections | App | spec 03 |
-| ActiveX (GUID) | 7 | hosted COM control | Unsupported (no host) | spec 05 |
+| Button (`Button`) | 42 | runs rules, switches view, submits | App (action) | spec 04; ir: spec 02 (button triggers resolve from the row) |
+| Expression box (`ExpressionBox`) | 30 | computed text, no border | App (read-only field) | spec 03; ir: spec 02 (read-only references; synthetic fixture only) |
+| Repeating section (`RepeatingSection`) | 16 | N sections | App | spec 03; ir: spec 02 (`inRepeat`) |
+| ActiveX (GUID) | 7 | hosted COM control | Unsupported (no host) | spec 05; ir: spec 02 (form 44, `xd:server` endpoint) |
 | Attachment (`FileAttachment`) | 5 | file per field, icon + name + size | Native (`at`) | spec 05 |
 | Combobox (`combobox`) | 3 | dropdown that accepts typing | Native (`cd` + other) | spec 05 |
 | Choice section (`ChoiceSection`) | 2 | one of N sections | App | spec 05 |
@@ -65,13 +69,13 @@ control is the cheapest way to close this.
 
 | Capability | Evidence | Coverage | Status |
 |---|---|---|---|
-| Text, number, date, time, boolean, base64 in XSD | `myschema.xsd` in all 42 samples **[format]** | Native | spec 02; parsed: spec 01 |
+| Text, number, date, time, boolean, base64 in XSD | `myschema.xsd` in all 42 samples **[format]** | Native | spec 02; parsed: spec 01; ir: spec 02 |
 | Currency / integer / decimal formatting via `xdFormatting:formatString` | 556 uses | Native (JSM field formatting) or App | spec 04 |
 | Default values, including `xdDate:Today()` and `xdDate:Now()` | 30 + 2 uses | App (value on create) | spec 04 |
-| Read-only and calculated fields | 52 `calculatedField` | App | spec 04; parsed: spec 01 |
-| Repeating fields, optional fields | 59 / 4 declarations | App | spec 02; parsed: spec 01 |
+| Read-only and calculated fields | 52 `calculatedField` | App | spec 04; parsed: spec 01; ir: spec 02 |
+| Repeating fields, optional fields | 59 / 4 declarations | App | spec 02; parsed: spec 01; ir: spec 02 |
 | Promoted fields (`listProperties`) → Jira custom fields | format | Native (link by name) | spec 05 AC 9; parsed: spec 01 |
-| Field-level help text and tooltips | format | Native (description) | spec 05 |
+| Field-level help text and tooltips | format | Native (description) | spec 05; ir: spec 02 (ScreenTip is label step 1) |
 
 ## C. Rules and actions
 
@@ -80,13 +84,13 @@ action (see the `containmentAction` note below the table).
 
 | Action | Count | What it does | Coverage | Status |
 |---|---|---|---|---|
-| `ruleSetAction` | 37 | run another rule set | App (rule graph) | spec 04; parsed: spec 01 |
-| `assignmentAction` | 20 | set a field's value | App | spec 04; parsed: spec 01 |
+| `ruleSetAction` | 37 | run another rule set | App (rule graph) | spec 04; parsed: spec 01; ir: spec 02 (triggers) |
+| `assignmentAction` | 20 | set a field's value | App | spec 04; parsed: spec 01; ir: spec 02 |
 | `closeDocumentAction` | 16 | close the form | App (redirect to request) | spec 04; parsed: spec 01 (synthetic fixture only) |
 | `submitAction` | 12 | submit to a connection | Native (JSM submit) | spec 05; parsed: spec 01 (synthetic fixture only) |
-| `switchViewAction` | 7 | change view | App (view switcher) | spec 03; parsed: spec 01 |
-| `queryAction` | 1 | query a data connection | Manual → Automation/AQL | spec 05; parsed: spec 01 |
-| `dialogBoxExpressionAction` | 1 | modal message built from fields | App (inline notice) | spec 04; parsed: spec 01 |
+| `switchViewAction` | 7 | change view | App (view switcher) | spec 03; parsed: spec 01; ir: spec 02 |
+| `queryAction` | 1 | query a data connection | Manual → Automation/AQL | spec 05; parsed: spec 01; ir: spec 02 |
+| `dialogBoxExpressionAction` | 1 | modal message built from fields | App (inline notice) | spec 04; parsed: spec 01; ir: spec 02 |
 | `changeAdapterProperty`, `openNewDocumentAction`, `dialogBoxMessageAction`, `webPartConnectionAction`, `signSignatureLineAction` | 0 in corpus | defined in MS-IPFF2 2.2.1.2.114 | per action | spec 04/05 — **untested, no fixture**; parsed: spec 01 (synthetic fixture only) |
 | Conditional formatting (show/hide, colour, disable) | 38 rule sets | visual changes driven by conditions | App (live binding) | spec 03/04 |
 | Submit-only / "stop processing rules" (`xsf:exitRuleSet`) | format | short-circuits the rule chain | App | spec 04; parsed: spec 01 (synthetic fixture only) |
@@ -131,10 +135,10 @@ The 51 counted conditions are all `xsf:errorCondition` (MS-IPFF2 2.2.1.2.44).
 
 | Mechanism | Count | Coverage | Status |
 |---|---|---|---|
-| `xsf:errorCondition` | 51 | Native (`rq`) + App (message text) | spec 05; parsed: spec 01 |
-| `xsf3:errorBlank` ("cannot be blank", InfoPath 2010+; MS-IPFF2 2.2.3.2.18) | 0 in corpus | Native (`rq`) | spec 05 — **untested, no fixture**; parsed: spec 01 (synthetic fixture only) |
+| `xsf:errorCondition` | 51 | Native (`rq`) + App (message text) | spec 05; parsed: spec 01; ir: spec 02 |
+| `xsf3:errorBlank` ("cannot be blank", InfoPath 2010+; MS-IPFF2 2.2.3.2.18) | 0 in corpus | Native (`rq`) | spec 05 — **untested, no fixture**; parsed: spec 01 (synthetic fixture only); ir: spec 02 (synthetic fixture only) |
 | Schema type and facet checks (length, range, pattern) | format | Native (`mnc/mxc`, `mnn/mxn`, `rgx`) | spec 05; parsed: spec 01 |
-| Custom XPath validation with author message | 51 conditions, 13 distinct messages | App (validator) | spec 04; parsed: spec 01 — 25 conditions fall back to InfoPath's English `This field is required.`, so fallback text needs translating and authored text must not be |
+| Custom XPath validation with author message | 51 conditions, 13 distinct messages | App (validator) | spec 04; parsed: spec 01 — 25 conditions fall back to InfoPath's English `This field is required.`, so fallback text needs translating and authored text must not be; ir: spec 02 |
 | Submit blocked by validation | format | Native (JSM form blocks submit) | spec 05 |
 | Cross-field validation ("end after start") | format | App | spec 04 |
 
@@ -142,7 +146,7 @@ The 51 counted conditions are all `xsf:errorCondition` (MS-IPFF2 2.2.1.2.44).
 
 | Capability | Count | Coverage | Status |
 |---|---|---|---|
-| Multiple views per form | 9 forms, max 4 | App + always-visible switcher | spec 03; parsed: spec 01 |
+| Multiple views per form | 9 forms, max 4 | App + always-visible switcher | spec 03; parsed: spec 01; ir: spec 02 |
 | Sections, nested sections | 59 | Native/App | spec 03 |
 | Tables used purely for layout | format | App (CSS grid from XSL) | spec 03 |
 | Fixed page width, printing | format | App (print CSS) | spec 03 |
@@ -153,23 +157,23 @@ The 51 counted conditions are all `xsf:errorCondition` (MS-IPFF2 2.2.1.2.44).
 
 | Kind | Count | Coverage | Status |
 |---|---|---|---|
-| `adoAdapter` (SQL Server) | 4 forms | Manual — Assets/CMDB or Automation | spec 05; parsed: spec 01 |
-| `webServiceAdapter` (SOAP) | 1 form | Manual — Automation HTTP call | spec 05; parsed: spec 01 |
-| `xmlFileAdapter` | 6 forms | App (embedded XML becomes a choice list) | spec 05; parsed: spec 01 |
-| `emailAdapter` | format | Manual → Automation "send email" | spec 05; parsed: spec 01 |
-| Secondary data sources driving dropdowns | 6 forms | App (lookup source) | spec 05; parsed: spec 01 |
-| SharePoint list/library submit | format | Native (JSM request) | spec 05; parsed: spec 01 |
-| `submitToHostAdapter` (submit handed to the hosting application) | form 44 in `samples/own/`; `docs/corpus-facts.md` has no count for the third-party corpus | Native (JSM request): the host that receives the submit becomes the JSM request create, so no app code is needed; spec 05 owns the final class | spec 05; parsed: spec 01 |
-| Filtered / cascading dropdowns | format | Native (`cc`) when two-level | spec 05 AC 4 |
+| `adoAdapter` (SQL Server) | 4 forms | Manual — Assets/CMDB or Automation | spec 05; parsed: spec 01; ir: spec 02 (`internal`, password redacted) |
+| `webServiceAdapter` (SOAP) | 1 form | Manual — Automation HTTP call | spec 05; parsed: spec 01; ir: spec 02 (`internal`) |
+| `xmlFileAdapter` | 6 forms | App (embedded XML becomes a choice list) | spec 05; parsed: spec 01; ir: spec 02 (`package`) |
+| `emailAdapter` | format | Manual → Automation "send email" | spec 05; parsed: spec 01; ir: spec 02 |
+| Secondary data sources driving dropdowns | 6 forms | App (lookup source) | spec 05; parsed: spec 01; ir: spec 02 (`choicesFrom`, lineage) |
+| SharePoint list/library submit | format | Native (JSM request) | spec 05; parsed: spec 01; ir: spec 02 (synthetic fixture only) |
+| `submitToHostAdapter` (submit handed to the hosting application) | form 44 in `samples/own/`; `docs/corpus-facts.md` has no count for the third-party corpus | Native (JSM request): the host that receives the submit becomes the JSM request create, so no app code is needed; spec 05 owns the final class | spec 05; parsed: spec 01; ir: spec 02 |
+| Filtered / cascading dropdowns | format | Native (`cc`) when two-level | spec 05 AC 4; ir: spec 02 (`choicesFrom.filterIds`, form 03) |
 
 ## H. Runtime, code, security
 
 | Capability | Count | Coverage | Status |
 |---|---|---|---|
-| InfoPath Forms Services (browser forms) | 12 forms | Gone; that is the reason for the project | —; parsed: spec 01 (`runtimeCompatibility`) |
-| Managed code / VBA / script | 3 forms | Manual — rewrite as Automation or accept App emulation | spec 04; parsed: spec 01 |
-| ActiveX controls | 7 | Unsupported, named in the Coverage Report | spec 05; parsed: spec 01 (manifest `allowedControl` only, synthetic fixture) |
-| Digital signatures | 1 form | Manual — JSM approval + audit log | spec 05; parsed: spec 01 |
+| InfoPath Forms Services (browser forms) | 12 forms | Gone; that is the reason for the project | —; parsed: spec 01 (`runtimeCompatibility`); ir: spec 02 (`browserCompatible`) |
+| Managed code / VBA / script | 3 forms | Manual — rewrite as Automation or accept App emulation | spec 04; parsed: spec 01; ir: spec 02 |
+| ActiveX controls | 7 | Unsupported, named in the Coverage Report | spec 05; parsed: spec 01 (manifest `allowedControl` only, synthetic fixture); ir: spec 02 (form 44 view control) |
+| Digital signatures | 1 form | Manual — JSM approval + audit log | spec 05; parsed: spec 01; ir: spec 02 |
 | User roles (`userRoles`) | format | Native — JSM project roles | spec 05; parsed: spec 01 (synthetic fixture only) |
 | Trust levels, full-trust forms, `.xsn` signing | format | Not applicable once we stop trusting the template | —; parsed: spec 01 |
 
