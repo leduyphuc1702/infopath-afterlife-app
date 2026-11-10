@@ -71,6 +71,14 @@ export function fileReferences(manifest: Manifest): FileReference[] {
     for (const c of a.children) if (c.key === 'xsf:input') add(c, 'source', 'input');
   }
   for (const s of manifest.scripts?.scripts ?? []) add(s, 'src', 'script');
+  // R21.2: import sources and a relative task pane.
+  for (const i of manifest.importSources) {
+    add(i, 'transform', 'importSource');
+    add(i, 'schema', 'importSource');
+  }
+  const pane = manifest.taskpane?.attrs.href;
+  const paneAt = pane === undefined ? undefined : classifyLocation(pane);
+  if (paneAt?.kind === 'file') add(manifest.taskpane, 'href', 'taskpane', paneAt.name);
 
   return refs.sort((x, y) => x.line - y.line || x.column - y.column);
 }

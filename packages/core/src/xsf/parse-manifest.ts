@@ -5,6 +5,7 @@
 import type { Issue } from '../errors';
 import { DEFAULT_LIMITS } from '../limits';
 import type { UnknownEntry } from '../unknown';
+import type { XmlElement } from '../xml/node';
 import { parseXml, xmlContext, type XmlContext } from '../xml/parse';
 import { buildManifest } from './build';
 import type { Manifest } from './types';
@@ -26,7 +27,7 @@ export function parseManifest(
 ): ParsedManifest {
   const { root, issues } = parseXml(bytes, file, ctx);
   const walked = walkManifest(root, file, XSF_VOCABULARY);
-  const built = buildManifest(walked.root);
+  const built = buildManifest(walked.root, namespacesOf(root));
   // A walker entry inside a repeated subtree is part of that subtree's one entry (R13.1).
   const inside = (path: string) =>
     built.repeatedPaths.some((p) => path === p || path.startsWith(`${p}/`));
@@ -34,4 +35,14 @@ export function parseManifest(
     (a, b) => a.line - b.line || a.column - b.column,
   );
   return { manifest: built.manifest, unknowns, issues: [...issues, ...built.issues] };
+}
+
+/**
+ * The root element's namespace declarations, prefix → URI, in the order written; the default
+ * namespace is the key `''` (R21.1, design §15.1). Declarations below the root are not included.
+ */
+function namespacesOf(root: XmlElement): Readonly<Record<string, string>> {
+  const out: Record<string, string> = {};
+  for (const d of root.namespaceDeclarations) out[d.prefix] = d.uri;
+  return out;
 }

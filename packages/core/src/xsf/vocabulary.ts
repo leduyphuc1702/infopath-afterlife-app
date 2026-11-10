@@ -46,8 +46,10 @@ const XD_AUTOGENERATION = '{http://schemas.microsoft.com/office/infopath/2003}au
 /**
  * Every position R7–R12 model, with its requirement id (design §8.1). Attributes are all those
  * MS-IPFF2 declares on the position, with the same value spaces (`ms-ipff2.ts`); children are the
- * modelled subset. MS-IPFF2 children left out (`taskpane`, `featureRestrictions`,
- * `externalViews`, `hwsWorkflow`, `masterDetail`, `menu`, …) are unknown with `documented: true`.
+ * modelled subset. MS-IPFF2 children left out (`featureRestrictions`, `externalViews`,
+ * `hwsWorkflow`, `masterDetail`, …) are unknown with `documented: true`. R21.2 added the names
+ * found in real InfoPath files (`importSource`, `menu`, `taskpane`, `xsf2:preview`,
+ * `xsf2:solutionPropertiesExtension`, `xsf2:toolbar`, `xsf2:xmlToEditExtension`).
  */
 export const XSF_VOCABULARY = {
   // R7.1
@@ -88,6 +90,7 @@ export const XSF_VOCABULARY = {
       'xsf:schemaErrorMessages': 'xsf:schemaErrorMessages',
       'xsf:scripts': 'xsf:scripts',
       'xsf:submit': 'xsf:submit',
+      'xsf:taskpane': 'xsf:taskpane',
       'xsf:views': 'xsf:views',
     },
     content: 'elements',
@@ -105,6 +108,11 @@ export const XSF_VOCABULARY = {
     children: {
       'xsf2:solutionDefinition': { key: 'xsf2:solutionDefinition', viaWildcard: true },
       'xsf3:solutionDefinition': { key: 'xsf3:solutionDefinition', viaWildcard: true },
+      // R21.3: real files write it here; MS-IPFF2 5.3 declares it globally and places it nowhere.
+      'xsf3:solutionPropertiesExtension2009': {
+        key: 'xsf3:solutionPropertiesExtension2009',
+        viaWildcard: true,
+      },
     },
     content: 'elements',
     req: 'R7.2',
@@ -124,7 +132,9 @@ export const XSF_VOCABULARY = {
       'xsf2:managedCode': 'xsf2:managedCode',
       'xsf2:mergedPrintView': 'xsf2:mergedPrintView',
       'xsf2:offline': 'xsf2:offline',
+      'xsf2:preview': 'xsf2:preview',
       'xsf2:server': 'xsf2:server',
+      'xsf2:solutionPropertiesExtension': 'xsf2:solutionPropertiesExtension',
       'xsf2:viewsExtension': 'xsf2:viewsExtension',
     },
     content: 'elements',
@@ -132,7 +142,7 @@ export const XSF_VOCABULARY = {
   },
   'xsf2:server': {
     attrs: { formLocale: S, isMobileEnabled: Y, isPreSubmitPostBackEnabled: Y },
-    children: {},
+    children: { 'xsf2:toolbar': 'xsf2:toolbar' },
     content: 'elements',
     req: 'R7.2',
   },
@@ -228,9 +238,164 @@ export const XSF_VOCABULARY = {
   },
   'xsf:importParameters': {
     attrs: { enabled: Y, useScriptHandler: Y },
-    children: {},
+    children: { 'xsf:importSource': 'xsf:importSource' },
     content: 'elements',
     req: 'R7.4',
+  },
+  // R21.2: names found in real InfoPath files (spec 01 addendum, design §15.2)
+  'xsf:importSource': {
+    attrs: {
+      authoringOfTransform: { enum: ['manual', 'automatic'] },
+      name: S,
+      schema: S,
+      transform: S,
+    },
+    children: {},
+    content: 'elements',
+    req: 'R21.2',
+  },
+  'xsf:taskpane': {
+    attrs: { caption: S, href: S },
+    children: {},
+    content: 'elements',
+    req: 'R21.2',
+  },
+  'xsf2:preview': {
+    attrs: { domain: S, sampleData: S, userRole: S },
+    children: {},
+    content: 'elements',
+    req: 'R21.2',
+  },
+  'xsf2:solutionPropertiesExtension': {
+    attrs: {
+      branch: {
+        enum: [
+          'install',
+          'wss',
+          'contentType',
+          'share',
+          'mail',
+          'admin',
+          'contentTypeTemplate',
+          'list',
+          'entity',
+          'workflowInitAssoc',
+          'groove',
+        ],
+      },
+    },
+    children: {
+      'xsf2:admin': 'xsf2:admin',
+      'xsf2:contentType': 'xsf2:contentType',
+      'xsf2:contentTypeTemplate': 'xsf2:contentTypeTemplate',
+      'xsf2:entity': 'xsf2:entity',
+      'xsf2:groove': 'xsf2:groove',
+      'xsf2:install': 'xsf2:install',
+      'xsf2:list': 'xsf2:list',
+      'xsf2:mail': 'xsf2:mail',
+      'xsf2:share': 'xsf2:share',
+      'xsf2:workflowInitAssoc': 'xsf2:workflowInitAssoc',
+      'xsf2:wss': 'xsf2:wss',
+    },
+    content: 'elements',
+    req: 'R21.2',
+  },
+  'xsf2:admin': { attrs: { path: S, site: S }, children: {}, content: 'elements', req: 'R21.2' },
+  'xsf2:contentType': {
+    attrs: { path: S, sharepointContentTypeId: S },
+    children: {},
+    content: 'elements',
+    req: 'R21.2',
+  },
+  'xsf2:contentTypeTemplate': {
+    attrs: { browserEnable: Y, description: S, name: S, path: S, site: S },
+    children: {},
+    content: 'elements',
+    req: 'R21.2',
+  },
+  'xsf2:entity': { attrs: { path: S }, children: {}, content: 'elements', req: 'R21.2' },
+  'xsf2:groove': { attrs: { path: S }, children: {}, content: 'elements', req: 'R21.2' },
+  'xsf2:install': {
+    attrs: { companyName: S, language: S, path: S, updatePath: S },
+    children: {},
+    content: 'elements',
+    req: 'R21.2',
+  },
+  'xsf2:list': { attrs: { path: S }, children: {}, content: 'elements', req: 'R21.2' },
+  'xsf2:mail': { attrs: { formName: S }, children: {}, content: 'elements', req: 'R21.2' },
+  'xsf2:share': {
+    attrs: { accessPath: S, formName: S, path: S },
+    children: {},
+    content: 'elements',
+    req: 'R21.2',
+  },
+  'xsf2:workflowInitAssoc': {
+    attrs: { path: S },
+    children: {},
+    content: 'elements',
+    req: 'R21.2',
+  },
+  'xsf2:wss': {
+    attrs: { browserEnable: Y, description: S, name: S, path: S },
+    children: {},
+    content: 'elements',
+    req: 'R21.2',
+  },
+  'xsf2:toolbar': {
+    attrs: { enabledBottom: Y, enabledTop: Y },
+    children: { 'xsf2:commands': 'xsf2:commands' },
+    content: 'elements',
+    req: 'R21.2',
+  },
+  'xsf2:commands': {
+    attrs: {},
+    children: { 'xsf2:command': 'xsf2:command' },
+    content: 'elements',
+    req: 'R21.2',
+  },
+  'xsf2:command': {
+    attrs: { action: S, caption: S },
+    children: {},
+    content: 'elements',
+    req: 'R21.2',
+  },
+  'xsf2:xmlToEditExtension': {
+    // allowedLinkImages: real files write it; MS-IPFF2 admits it by anyAttribute ##any (R21.4).
+    attrs: {
+      allowLinkedImages: Y,
+      allowedLinkImages: VIA_WILDCARD,
+      excludeEmbeddedImages: Y,
+      ref: S,
+    },
+    children: {},
+    content: 'elements',
+    req: 'R21.2',
+  },
+  // R21.3
+  'xsf3:solutionPropertiesExtension2009': {
+    attrs: {},
+    children: { 'xsf3:solutionMode': 'xsf3:solutionMode' },
+    content: 'elements',
+    req: 'R21.3',
+  },
+  'xsf3:solutionMode': {
+    attrs: {
+      autogenerated: Y,
+      isListEditForm: Y,
+      mode: { enum: ['entity', 'groove', 'list', 'workflowInitAssoc'] },
+      originalCtid: S,
+      originalPublishUrl: S,
+      originalPublishUrlFriendlyName: S,
+    },
+    children: {},
+    content: 'elements',
+    req: 'R21.3',
+  },
+  'xsf:menu': {
+    attrs: { caption: S },
+    children: { 'xsf:button': 'xsf:button', 'xsf:menu': 'xsf:menu' },
+    content: 'elements',
+    req: 'R21.2',
   },
   'xsf:applicationParameters': {
     attrs: { application: { enum: ['InfoPath Design Mode'] } },
@@ -270,6 +435,7 @@ export const XSF_VOCABULARY = {
     children: {
       'xsf:editing': 'xsf:editing',
       'xsf:mainpane': 'xsf:mainpane',
+      'xsf:menu': 'xsf:menu',
       'xsf:menuArea': 'xsf:menuArea',
       'xsf:printSettings': 'xsf:printSettings',
       'xsf:toolbar': 'xsf:toolbar',
@@ -328,7 +494,7 @@ export const XSF_VOCABULARY = {
   },
   'xsf2:viewExtension': {
     attrs: { clientOnly: Y, designMode: S, readOnly: Y, ref: S },
-    children: {},
+    children: { 'xsf2:xmlToEditExtension': 'xsf2:xmlToEditExtension' },
     content: 'elements',
     req: 'R8.2',
   },
@@ -437,13 +603,13 @@ export const XSF_VOCABULARY = {
         ],
       },
     },
-    children: { 'xsf:button': 'xsf:button' },
+    children: { 'xsf:button': 'xsf:button', 'xsf:menu': 'xsf:menu' },
     content: 'elements',
     req: 'R8.4',
   },
   'xsf:toolbar': {
     attrs: { caption: S, name: S },
-    children: { 'xsf:button': 'xsf:button' },
+    children: { 'xsf:button': 'xsf:button', 'xsf:menu': 'xsf:menu' },
     content: 'elements',
     req: 'R8.4',
   },

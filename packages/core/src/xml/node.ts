@@ -34,6 +34,11 @@ export interface XmlElement {
   readonly name: string;
   /** In document order, without namespace declarations. */
   readonly attributes: readonly XmlAttribute[];
+  /**
+   * The namespace declarations written on this element, in document order: `xmlns` gives prefix
+   * `''`, `xmlns:p` gives `p`. Values as written (spec 01 R21.1).
+   */
+  readonly namespaceDeclarations: readonly { readonly prefix: string; readonly uri: string }[];
   /** Elements and text that is not only whitespace, in document order. */
   readonly children: readonly (XmlElement | XmlText)[];
   readonly line: number;
@@ -77,8 +82,11 @@ export function buildTree(root: DomNode, serialize: (node: DomNode) => string): 
 
 function element(node: DomNode, path: string, serialize: (n: DomNode) => string): XmlElement {
   const attributes: XmlAttribute[] = [];
+  const namespaceDeclarations: { prefix: string; uri: string }[] = [];
   for (const a of Array.from(node.attributes ?? [])) {
     if (a.namespaceURI === XMLNS || a.nodeName === 'xmlns' || a.nodeName.startsWith('xmlns:')) {
+      const prefix = a.nodeName === 'xmlns' ? '' : a.nodeName.slice('xmlns:'.length);
+      namespaceDeclarations.push({ prefix, uri: a.value });
       continue;
     }
     attributes.push({
@@ -128,6 +136,7 @@ function element(node: DomNode, path: string, serialize: (n: DomNode) => string)
     namespaceURI: ns(node),
     name: node.nodeName,
     attributes,
+    namespaceDeclarations,
     children,
     line: node.lineNumber ?? 0,
     column: node.columnNumber ?? 0,

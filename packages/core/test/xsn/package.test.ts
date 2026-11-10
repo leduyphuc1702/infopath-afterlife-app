@@ -81,6 +81,33 @@ describe('R6.2–R6.3: each reference kind, missing in turn', () => {
     ]);
   });
 
+  test('R21.2: importSource transform and schema, and a relative taskpane href, are references', () => {
+    const t = parsePackage(
+      minimalPackage(
+        '<xsf:importParameters enabled="yes"><xsf:importSource name="a" schema="old.xsd" transform="merge.xsl"/></xsf:importParameters><xsf:taskpane caption="Help" href="help/pane.htm"/>',
+        { listed: ['old.xsd'], extra: [packageFile('old.xsd', '<x/>')] },
+      ),
+    );
+    expect(fileReferences(t.manifest).map((r) => [r.kind, r.name])).toEqual([
+      ['file', 'old.xsd'],
+      ['importSource', 'merge.xsl'],
+      ['importSource', 'old.xsd'],
+      ['taskpane', 'pane.htm'],
+    ]);
+    const missing = t.issues.filter((i) => i.code === 'MISSING_FILE');
+    expect(missing.map((i) => [i.details?.kind, i.details?.name])).toEqual([
+      ['importSource', 'merge.xsl'],
+      ['taskpane', 'pane.htm'],
+    ]);
+  });
+
+  test('R21.2: a taskpane href that is a URL is not a package reference', () => {
+    const t = parsePackage(
+      minimalPackage('<xsf:taskpane caption="Help" href="http://forms-legacy/help.htm"/>'),
+    );
+    expect(fileReferences(t.manifest)).toEqual([]);
+  });
+
   test('documentSchema/@location: the last token is the file', async () => {
     const t = parsePackage(await sampleFiles('05-new-hire-onboarding'));
     expect(

@@ -16,6 +16,7 @@ import { MS_IPFF2 } from './ms-ipff2';
 import type {
   AnyModelled,
   ApplicationParameters,
+  BranchKey,
   ButtonArea,
   Action,
   ActionKey,
@@ -36,6 +37,7 @@ import type {
   PackageEntry,
   PrintSettings,
   RawXml,
+  Menu,
   MembershipKey,
   Roles,
   Rule,
@@ -44,7 +46,10 @@ import type {
   SignatureLine,
   Signatures,
   SchemaErrorMessages,
+  ServerToolbar,
   Solution,
+  SolutionPropertiesExtension,
+  SolutionPropertiesExtension2009,
   SpecKey,
   Submit,
   View,
@@ -241,7 +246,10 @@ export interface ManifestBuild {
   readonly repeatedPaths: readonly string[];
 }
 
-export function buildManifest(root: ModelNode): ManifestBuild {
+export function buildManifest(
+  root: ModelNode,
+  namespaces: Readonly<Record<string, string>>,
+): ManifestBuild {
   const ctx = new BuildContext(root);
   const R = root;
 
@@ -269,16 +277,15 @@ export function buildManifest(root: ModelNode): ManifestBuild {
     : [];
 
   const manifest: Manifest = {
+    namespaces,
     documentClass: modelled(R),
     solution: solution.solution,
     package: buildPackage(ctx, R),
     documentSchemas: buildDocumentSchemas(ctx, R),
     ...opt('fileNew', buildFileNew(ctx, R)),
     ...opt('upgrade', buildUpgrade(ctx, R)),
-    ...opt(
-      'importParameters',
-      mapOpt(ctx.one(R, 'xsf:importParameters'), modelled<'xsf:importParameters'>),
-    ),
+    ...importParts(ctx, R),
+    ...opt('taskpane', mapOpt(ctx.one(R, 'xsf:taskpane'), modelled<'xsf:taskpane'>)),
     applicationParameters: buildApplicationParameters(ctx, R),
     views: views.views,
     ...opt('defaultView', views.defaultView),
@@ -324,6 +331,57 @@ function mapOpt<T, U>(v: T | undefined, f: (t: T) => U): U | undefined {
   return v === undefined ? undefined : f(v);
 }
 
+/** `xsf:importParameters` and its `xsf:importSource` children (R7.4, R21.2). */
+function importParts(
+  ctx: BuildContext,
+  R: ModelNode,
+): Pick<Manifest, 'importParameters' | 'importSources'> {
+  const n = ctx.one(R, 'xsf:importParameters');
+  return {
+    ...opt('importParameters', mapOpt(n, modelled<'xsf:importParameters'>)),
+    importSources: n ? ctx.take(n, 'xsf:importSource').map(modelled<'xsf:importSource'>) : [],
+  };
+}
+
+const BRANCHES: readonly BranchKey[] = [
+  'xsf2:admin',
+  'xsf2:contentType',
+  'xsf2:contentTypeTemplate',
+  'xsf2:entity',
+  'xsf2:groove',
+  'xsf2:install',
+  'xsf2:list',
+  'xsf2:mail',
+  'xsf2:share',
+  'xsf2:workflowInitAssoc',
+  'xsf2:wss',
+];
+
+function buildPropertiesExtension(ctx: BuildContext, n: ModelNode): SolutionPropertiesExtension {
+  const branches = BRANCHES.flatMap((key) => {
+    const b = ctx.one(n, key);
+    return b ? [{ node: b, value: modelled<typeof key>(b) }] : [];
+  });
+  return { ...modelled<'xsf2:solutionPropertiesExtension'>(n), branches: ctx.inOrder(branches) };
+}
+
+function buildServerToolbar(ctx: BuildContext, n: ModelNode): ServerToolbar {
+  const commands = ctx.one(n, 'xsf2:commands');
+  if (commands) ctx.container(commands);
+  return {
+    ...modelled<'xsf2:toolbar'>(n),
+    commands: commands ? ctx.take(commands, 'xsf2:command').map(modelled<'xsf2:command'>) : [],
+  };
+}
+
+function buildMenu(ctx: BuildContext, n: ModelNode): Menu {
+  return {
+    ...modelled<'xsf:menu'>(n),
+    buttons: ctx.take(n, 'xsf:button').map(modelled<'xsf:button'>),
+    menus: ctx.take(n, 'xsf:menu').map((m) => buildMenu(ctx, m)),
+  };
+}
+
 // ---- R7: identity, package, schemas -----------------------------------------------------------
 
 interface SolutionParts {
@@ -349,21 +407,43 @@ function buildSolution(ctx: BuildContext, R: ModelNode): SolutionParts {
   const where = (extensions ?? R).path;
   const def2 = ctx.first(defs2, where, { rule: 'parser' });
   const def3 = ctx.first(defs3, where, { rule: 'parser' });
+  const props2009 = ctx.first(
+    extension.map((e) => ctx.one(e, 'xsf3:solutionPropertiesExtension2009')).filter(isDefined),
+    where,
+    { rule: 'parser' },
+  );
 
   const viewExtensions: SolutionParts['viewExtensions'] = [];
   let mergedPrintView: MergedPrintView | undefined;
   let server, offline;
   let dataConnections: ModelNode | undefined;
   let managedCode: Modelled<'xsf2:managedCode'> | undefined;
+  let preview: Modelled<'xsf2:preview'> | undefined;
+  let propertiesExtension: SolutionPropertiesExtension | undefined;
+  let serverToolbar: ServerToolbar | undefined;
   let promotedFieldExtensions: Modelled<'xsf2:fieldExtension'>[] = [];
   if (def2) {
-    server = mapOpt(ctx.one(def2, 'xsf2:server'), modelled<'xsf2:server'>);
+    const serverNode = ctx.one(def2, 'xsf2:server');
+    server = mapOpt(serverNode, modelled<'xsf2:server'>);
+    serverToolbar = mapOpt(serverNode && ctx.one(serverNode, 'xsf2:toolbar'), (t) =>
+      buildServerToolbar(ctx, t),
+    );
+    preview = mapOpt(ctx.one(def2, 'xsf2:preview'), modelled<'xsf2:preview'>);
+    propertiesExtension = mapOpt(ctx.one(def2, 'xsf2:solutionPropertiesExtension'), (p) =>
+      buildPropertiesExtension(ctx, p),
+    );
     offline = mapOpt(ctx.one(def2, 'xsf2:offline'), modelled<'xsf2:offline'>);
     const ve = ctx.one(def2, 'xsf2:viewsExtension');
     if (ve) {
       ctx.container(ve);
       for (const n of ctx.take(ve, 'xsf2:viewExtension')) {
-        viewExtensions.push({ node: n, value: modelled<'xsf2:viewExtension'>(n) });
+        const xmlToEditExtensions = ctx
+          .take(n, 'xsf2:xmlToEditExtension')
+          .map(modelled<'xsf2:xmlToEditExtension'>);
+        viewExtensions.push({
+          node: n,
+          value: { ...modelled<'xsf2:viewExtension'>(n), xmlToEditExtensions },
+        });
       }
     }
     const mpv = ctx.one(def2, 'xsf2:mergedPrintView');
@@ -416,6 +496,19 @@ function buildSolution(ctx: BuildContext, R: ModelNode): SolutionParts {
     ...opt('xsf3', mapOpt(def3, modelled<'xsf3:solutionDefinition'>)),
     ...opt('baseUrl', baseUrl),
     ...opt('managedCode', managedCode),
+    ...opt('preview', preview),
+    ...opt('propertiesExtension', propertiesExtension),
+    ...opt('serverToolbar', serverToolbar),
+    ...opt(
+      'propertiesExtension2009',
+      mapOpt(props2009, (p): SolutionPropertiesExtension2009 => ({
+        ...modelled<'xsf3:solutionPropertiesExtension2009'>(p),
+        ...opt(
+          'solutionMode',
+          mapOpt(ctx.one(p, 'xsf3:solutionMode'), modelled<'xsf3:solutionMode'>),
+        ),
+      })),
+    ),
   };
   return {
     solution,
@@ -505,25 +598,35 @@ function buildViews(
     else unlinked.push(ext);
   }
 
-  const views = nodes.map((v): View => ({
-    ...modelled<'xsf:view'>(v),
-    isDefault: v.attrs.name !== undefined && v.attrs.name === defaultView,
-    mainpanes: ctx.take(v, 'xsf:mainpane').map(modelled<'xsf:mainpane'>),
-    printSettings: ctx.take(v, 'xsf:printSettings').map((p) => buildPrintSettings(ctx, p)),
-    xmlToEdit: ctx
-      .takeContainers(v, 'xsf:editing')
-      .flatMap((e) => ctx.take(e, 'xsf:xmlToEdit').map((x) => buildXmlToEdit(ctx, x))),
-    menuAreas: ctx.take(v, 'xsf:menuArea').map((m) => buildButtonArea<'xsf:menuArea'>(ctx, m)),
-    toolbars: ctx.take(v, 'xsf:toolbar').map((t) => buildButtonArea<'xsf:toolbar'>(ctx, t)),
-    unboundButtons: ctx.takeContainers(v, 'xsf:unboundControls').flatMap((u) =>
-      ctx.take(u, 'xsf:unboundControls/button').map((b) => {
-        const button = modelled<'xsf:unboundControls/button'>(b);
-        binding(ctx, b, bindings, { kind: 'button', ...opt('view', v.attrs.name), button });
-        return button;
-      }),
-    ),
-    extensions: ctx.inOrder(linked.get(v) ?? []),
-  }));
+  const views = nodes.map((v): View => {
+    const extensions = ctx.inOrder(linked.get(v) ?? []);
+    // xmlToEditExtension → the view's xmlToEdit of the same name (R21.2).
+    const editExtensions = extensions.flatMap((e) =>
+      e.key === 'xsf2:viewExtension' ? e.xmlToEditExtensions : [],
+    );
+    return {
+      ...modelled<'xsf:view'>(v),
+      isDefault: v.attrs.name !== undefined && v.attrs.name === defaultView,
+      mainpanes: ctx.take(v, 'xsf:mainpane').map(modelled<'xsf:mainpane'>),
+      printSettings: ctx.take(v, 'xsf:printSettings').map((p) => buildPrintSettings(ctx, p)),
+      xmlToEdit: ctx
+        .takeContainers(v, 'xsf:editing')
+        .flatMap((e) =>
+          ctx.take(e, 'xsf:xmlToEdit').map((x) => buildXmlToEdit(ctx, x, editExtensions)),
+        ),
+      menuAreas: ctx.take(v, 'xsf:menuArea').map((m) => buildButtonArea<'xsf:menuArea'>(ctx, m)),
+      toolbars: ctx.take(v, 'xsf:toolbar').map((t) => buildButtonArea<'xsf:toolbar'>(ctx, t)),
+      menus: ctx.take(v, 'xsf:menu').map((m) => buildMenu(ctx, m)),
+      unboundButtons: ctx.takeContainers(v, 'xsf:unboundControls').flatMap((u) =>
+        ctx.take(u, 'xsf:unboundControls/button').map((b) => {
+          const button = modelled<'xsf:unboundControls/button'>(b);
+          binding(ctx, b, bindings, { kind: 'button', ...opt('view', v.attrs.name), button });
+          return button;
+        }),
+      ),
+      extensions,
+    };
+  });
   return { views, ...opt('defaultView', defaultView), unlinked: ctx.inOrder(unlinked) };
 }
 
@@ -550,12 +653,19 @@ function buildMergedPrintView(ctx: BuildContext, m: ModelNode): MergedPrintView 
   };
 }
 
-function buildXmlToEdit(ctx: BuildContext, x: ModelNode): XmlToEdit {
+function buildXmlToEdit(
+  ctx: BuildContext,
+  x: ModelNode,
+  editExtensions: readonly Modelled<'xsf2:xmlToEditExtension'>[],
+): XmlToEdit {
   return {
     ...modelled<'xsf:xmlToEdit'>(x),
     ...opt(
       'editWith',
       mapOpt(ctx.one(x, 'xsf:editWith'), (e) => buildEditWith(ctx, e)),
+    ),
+    extensions: editExtensions.filter(
+      (e) => x.attrs.name !== undefined && e.attrs.ref === x.attrs.name,
     ),
   };
 }
@@ -578,6 +688,7 @@ function buildButtonArea<K extends 'xsf:menuArea' | 'xsf:toolbar'>(
   return {
     ...modelled<K>(n),
     buttons: ctx.take(n, 'xsf:button').map(modelled<'xsf:button'>),
+    menus: ctx.take(n, 'xsf:menu').map((m) => buildMenu(ctx, m)),
   };
 }
 

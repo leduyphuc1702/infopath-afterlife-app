@@ -1,9 +1,9 @@
 # Requirements: 02 FormIR (intermediate representation)
 
 Source brief: `docs/spec-briefs/02-form-ir.md`. Phase 1 of 3 (requirements → design → tasks).
-Status: **draft revision 2, 2026-11-10**, waiting for approval. Revision 2 applies the
-maintainer's decisions 1–10 on the first draft (listed at the end) and the private-corpus
-evidence. Depends on spec 01 (committed `f8582a3`) **and on its addendum R21** (spec 01 tasks
+Status: **approved 2026-11-10** (revision 2, with the answers to its open questions applied).
+Revision 2 applies the maintainer's decisions 1–10 on the first draft (listed at the end) and the
+private-corpus evidence. Depends on spec 01 (committed `f8582a3`) **and on its addendum R21** (spec 01 tasks
 29–34: `Manifest.namespaces`, the real-file manifest elements, `FieldNode.sharePoint`), which is
 done before spec 02 starts.
 
@@ -82,7 +82,7 @@ Out of scope, and the spec that owns each item (approved, decision 6):
 - **Golden harness**: `packages/core/test/helpers/snapshot.ts` with `toMatchFileSnapshot`
   (spec 01 R16.4).
 - **The 48 samples**: the 47 templates in `samples/own/xsn/` and the public sample.
-- **Private corpus**: the 29 InfoPath-saved templates named by `AFTERLIFE_PRIVATE_CORPUS` (spec 01
+- **Private corpus**: the 29 InfoPath-saved templates named by `AFTERLIFE_PRIVATE_SAMPLES` (spec 01
   R21.6). They never enter the repo, and no text from them is copied into it; only counts are.
 
 ## Evidence checked for this spec (2026-11-10)
@@ -214,7 +214,7 @@ Rovo agree on what a form contains.
    SHALL NOT throw for any `ParsedTemplate` that `parseXsn` returned. Oracle: the 48 samples give
    zero FormIR issues; synthetic `ParsedTemplate`s (missing main schema, a view with broken XSL, an
    unresolved binding) give one issue each and a FormIR.
-4. WHERE `AFTERLIFE_PRIVATE_CORPUS` is set, THE SYSTEM SHALL build FormIR for every template in it
+4. WHERE `AFTERLIFE_PRIVATE_SAMPLES` is set, THE SYSTEM SHALL build FormIR for every template in it
    with no throw, and the spec 01 local check (R21.6) SHALL also print, as counts only, the
    FormIR issue codes, the `meta.generation` values and the `labelSource` values. Oracle: run
    locally by the maintainer, compared with the Evidence section; CI skips it.
@@ -324,7 +324,9 @@ from, so the converted question and the X-ray use words people know instead of `
       word capitalised; runs of capitals kept).
 
    Text means literal text and `xsl:text`, without other XSL instructions and without bound
-   controls. Groups always use step 8. Oracle: forms 01–08 default views, 290 of 290 equal the
+   controls. Groups always use step 8. For a field bound to option buttons, THE SYSTEM SHALL take
+   steps 1–3 and 5 from the first button only, skip step 4, and keep each button's own text as
+   that choice's label on its bound control record (R4.2), with the button's value (decision 11). Oracle: forms 01–08 default views, 290 of 290 equal the
    human label (98 checked against the screenshots); over the 606 fields of the 48 samples,
    `labelSource` is `title` 585, `leftCell` 2 (the public sample), `otherView` 14 and `name` 5
    (form 44's three `Person` children; the public sample's `field1` and `field2`). These four
@@ -340,10 +342,11 @@ from, so the converted question and the X-ray use words people know instead of `
    cell; no visible text but a ScreenTip; two checkboxes in one cell, with and without ScreenTips;
    a repeating table by moded template; a repeating table by `xsl:for-each` in
    `tbody xd:xctname="repeatingtable"`; a field with only `ma:displayName`; a field shown only in a
-   second view; a field with no label anywhere. Oracle: `labels.test.ts` over those fixtures;
-   locally, the private-corpus `labelSource` counts (R1.4), which the maintainer compares with the
-   Evidence table. [VERIFY: option buttons take the ScreenTip of their first button; whether real
-   forms put the option's own text there is not measured.]
+   second view; a field with no label anywhere; two option-button groups in one view, one labelled
+   by its left cell and one by the first button's ScreenTip, with empty ScreenTips on the other
+   buttons, where each button's text becomes its choice label and never the field label. Oracle:
+   `labels.test.ts` over those fixtures; locally, the private-corpus `labelSource` counts (R1.4),
+   which the maintainer compares with the Evidence table.
 
 ### R6. Rules
 Traces: brief AC1 `rules[]`; brief 12 counts.
@@ -561,7 +564,9 @@ As Mai, I want a folder of templates to triage in minutes, so FormIR must not be
 | Depends on spec 01 R21 | R3.2, R5.1 step 6, R11.4 (`Manifest.namespaces`, `FieldNode.sharePoint`) |
 | Added | R1.2–R1.4, R4.2–R4.5, R8.4, R15; `activeX` (R4.5) for brief 12 cause `activex` |
 
-## Decisions on the first draft (2026-11-10)
+## Decisions (2026-11-10)
+
+Decisions 1–10 answer the first draft; 11–14 answer revision 2.
 
 1. `Manifest.namespaces` is added to spec 01 first (spec 01 R21.1, tasks 29–34, with the other
    real-file fixes).
@@ -575,21 +580,18 @@ As Mai, I want a folder of templates to triage in minutes, so FormIR must not be
 9. `.internal`, `.local`, `.localhost` and `.home.arpa` hosts are `internal` (R8.3).
 10. The Node and Web Worker JSON parity check stays (R13.1).
 
+11. Option buttons (answer to open question 2): the one real form with option buttons has
+    `title=""` on every button, and each button's text is a choice label. The field takes steps
+    1–3 and 5 from its first button, skips step 4, and keeps each button's text as that choice's
+    label (R5.1, fixture in R5.4).
+12. The private folder variable is `AFTERLIFE_PRIVATE_SAMPLES`, as in steering (R1.4, spec 01
+    R21.6).
+13. Publish paths in `xsf2:solutionPropertiesExtension`, `xsf3:solutionMode` and
+    `xsf:taskpane/@href` are not endpoints in FormIR.
+14. The spec 01 out-of-scope line now gives the static view-XSL scan to spec 02 and rendering to
+    spec 03 (spec 01 requirements, `Changed:` note); briefs 02 and 03 were edited by the
+    maintainer (`88e05c3`).
+
 ## Open questions
 
-Each has the default I will assume in design.md if there is no answer.
-
-1. **Brief and spec 01 text.** Brief 02 AC1 (`dead`), AC2 (the label rule) and AC4, the spec 01
-   out-of-scope line (view XSL "controls, `xd:binding`" → spec 03) and brief 03 still say the old
-   thing. Default: I list the edits in design.md and you make them, since I do not edit briefs.
-2. **Option buttons and ScreenTips.** InfoPath writes one control per option. Default: the field
-   takes the ScreenTip of its first option button, as for any control; marked `[VERIFY]` in R5.4
-   until the private corpus shows what real forms put there.
-3. **Two names for the private folder.** Steering (`testing.md`, `structure.md`) says
-   `AFTERLIFE_PRIVATE_SAMPLES`; this spec and spec 01 R21.6 use `AFTERLIFE_PRIVATE_CORPUS`, as you
-   asked. Default: keep `AFTERLIFE_PRIVATE_CORPUS` and you update steering, or tell me to use the
-   steering name.
-4. **Publish locations other than `publishUrl`.** Real forms also carry publish paths in
-   `xsf2:solutionPropertiesExtension` branches and `xsf3:solutionMode/@originalPublishUrl`, and a
-   task pane URL in `xsf:taskpane/@href` (spec 01 R21.2). Default: not endpoints in FormIR; the
-   dead-connection list covers data connections and `publishUrl` only.
+None open. The four questions of revision 2 are answered by decisions 11–14.

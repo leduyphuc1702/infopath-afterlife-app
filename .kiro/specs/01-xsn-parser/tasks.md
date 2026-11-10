@@ -501,7 +501,7 @@ approval.
 
 Same rules as above: one task per turn, `pnpm check` green, no commits. Design ยง15.
 
-- [ ] 29. `Manifest.namespaces`
+- [x] 29. `Manifest.namespaces`
   - `xsf/parse-manifest.ts`, `xsf/types.ts`: collect the root element's namespace declarations
     (ยง15.1).
   - Tests: `xsf/build.identity.test.ts` (form 01 `my`; the public sample's prefixes; a synthetic
@@ -511,7 +511,7 @@ Same rules as above: one task per turn, `pnpm check` green, no commits. Design ย
   - Requirements: R21.1, R21.7.
   - Done when: `pnpm check` green.
 
-- [ ] 30. The seven documented manifest elements
+- [x] 30. The seven documented manifest elements
   - `xsf/vocabulary.ts`, `xsf/build.ts`, `xsf/types.ts`: the keys and builder outputs of the ยง15.2
     table except the 2009 extension (`importSource`, `menu`, `taskpane`, `xsf2:preview`,
     `xsf2:solutionPropertiesExtension` and its 11 branches, `xsf2:toolbar` with `commands` and
@@ -528,7 +528,7 @@ Same rules as above: one task per turn, `pnpm check` green, no commits. Design ย
   - Requirements: R21.2, R21.7 (amends R6.2, R8.4).
   - Done when: `pnpm check` green.
 
-- [ ] 31. Wildcard exceptions: the 2009 extension and `allowedLinkImages`
+- [x] 31. Wildcard exceptions: the 2009 extension and `allowedLinkImages`
   - `xsf/vocabulary.ts`: `xsf3:solutionPropertiesExtension2009` (`viaWildcard` child of
     `xsf:extension`) with `xsf3:solutionMode`; `allowedLinkImages` (`viaWildcard` attribute) on
     `xsf2:xmlToEditExtension`. `xsf/build.ts`: `Solution.propertiesExtension2009`, held once by the
@@ -553,10 +553,10 @@ Same rules as above: one task per turn, `pnpm check` green, no commits. Design ย
   - Done when: `pnpm check` green.
 
 - [ ] 33. Local-only private-corpus check
-  - `test/private-corpus.local.test.ts` as in ยง15.4: skipped unless `AFTERLIFE_PRIVATE_CORPUS`
+  - `test/private-corpus.local.test.ts` as in ยง15.4: skipped unless `AFTERLIFE_PRIVATE_SAMPLES`
     is set; recursive `*.xsn`; no throw, zero issues, zero unknowns; messages and the summary line
     carry codes, kinds, namespaces, names, paths and counts only; no snapshots and no writes.
-  - Run it once with `AFTERLIFE_PRIVATE_CORPUS=$HOME/Desktop/infopath-afterlife/samples` (read
+  - Run it once with `AFTERLIFE_PRIVATE_SAMPLES=$HOME/Desktop/infopath-afterlife/samples` (read
     only) and put the summary line in the report; the maintainer runs it too.
   - Requirements: R21.6.
   - Done when: `pnpm check` green (the check skipped), and the local run reports 0 issues and 0

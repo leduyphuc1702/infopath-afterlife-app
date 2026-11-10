@@ -979,7 +979,7 @@ An `ma:` attribute on an `xsd:element` with `ref` stays unknown (0 in the corpus
 ### 15.4 Local-only private-corpus check (R21.6)
 
 `test/private-corpus.local.test.ts`, in the Vitest `node` project:
-- `describe.skipIf(!process.env.AFTERLIFE_PRIVATE_CORPUS)`; the folder is read with `readdirSync`
+- `describe.skipIf(!process.env.AFTERLIFE_PRIVATE_SAMPLES)`; the folder is read with `readdirSync`
   recursively; files whose name ends in `.xsn` (any case) are sorted by relative path;
 - one test per file: `parseXsn` resolves, `issues` is empty, `unknowns` is empty. The assertion
   message is built from `{ code }` and `{ kind, namespace, name, path }` only;
@@ -987,8 +987,8 @@ An `ma:` attribute on an `xsd:element` with `ref` stays unknown (0 in the corpus
 - no `toMatchSnapshot`, no `toMatchFileSnapshot`, no file writes. A lint rule is not needed; the
   test file is reviewed.
 
-Steering (`testing.md`, `structure.md`) names the variable `AFTERLIFE_PRIVATE_SAMPLES`; this check
-uses `AFTERLIFE_PRIVATE_CORPUS`, as the maintainer asked. The maintainer's folder also holds a copy
+The variable is `AFTERLIFE_PRIVATE_SAMPLES`, the name steering (`testing.md`, `structure.md`) uses
+for the folder of unlicensed samples. The maintainer's folder also holds a copy
 of forms 01–42 under `own/xsn/`; the recursive search parses them too, and they must pass.
 
 ### 15.5 Fixtures and tests
@@ -1006,7 +1006,7 @@ file): `import-source.xsf`, `menus.xsf` (a menu inside a menu area, a toolbar an
 | R21.2 | unit | one fixture per element | `xsf/build.real-infopath.test.ts`, `xsn/package.test.ts` (new references) |
 | R21.3, R21.4 | unit | `solution-properties-2009.xsf`, `xml-to-edit-extension.xsf` | `xsf/build.real-infopath.test.ts`, `xsf/vocabulary.ms-ipff2.test.ts` (five exceptions) |
 | R21.5 | unit | `sharepoint-meta.xsd` | `xsd/sharepoint-meta.test.ts` |
-| R21.6 | local only | `AFTERLIFE_PRIVATE_CORPUS` | `private-corpus.local.test.ts` |
+| R21.6 | local only | `AFTERLIFE_PRIVATE_SAMPLES` | `private-corpus.local.test.ts` |
 | R21.7 | golden, existing | the 48 samples | `golden.samples.test.ts`, `unknowns.samples.test.ts`, `counts.samples.test.ts` |
 
 P12 (R20) needs no change: its generator inserts nodes into the in-repo manifests, and the new

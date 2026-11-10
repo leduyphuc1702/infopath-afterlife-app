@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 30, R21.2): xsf:menu in a view, in a menu area, in a toolbar, and
+     nested in another menu. Captions and names are fictional. -->
+<xsf:xDocumentClass solutionFormatVersion="2.0.0.0" xmlns:xsf="http://schemas.microsoft.com/office/infopath/2003/solutionDefinition" xmlns:xsf2="http://schemas.microsoft.com/office/infopath/2006/solutionDefinition/extensions" xmlns:xsf3="http://schemas.microsoft.com/office/infopath/2009/solutionDefinition/extensions">
+	<xsf:views default="Main">
+		<xsf:view name="Main" caption="Main">
+			<xsf:mainpane transform="view1.xsl"/>
+			<xsf:menu caption="Rows">
+				<xsf:button action="xCollection::insert" xmlToEdit="row_1" caption="Add a row"/>
+			</xsf:menu>
+			<xsf:menuArea name="msoInsertMenu">
+				<xsf:button action="xCollection::insert" xmlToEdit="row_1" caption="Row"/>
+				<xsf:menu caption="Section">
+					<xsf:button action="xOptional::insert" xmlToEdit="notes_2" caption="Notes"/>
+					<xsf:menu caption="More">
+						<xsf:button action="xOptional::remove" xmlToEdit="notes_2" caption="Remove notes"/>
+					</xsf:menu>
+				</xsf:menu>
+			</xsf:menuArea>
+			<xsf:toolbar caption="Rows" name="Rows">
+				<xsf:menu caption="Insert">
+					<xsf:button action="xCollection::insertBefore" xmlToEdit="row_1" caption="Above"/>
+					<xsf:button action="xCollection::insertAfter" xmlToEdit="row_1" caption="Below"/>
+				</xsf:menu>
+			</xsf:toolbar>
+		</xsf:view>
+	</xsf:views>
+</xsf:xDocumentClass>

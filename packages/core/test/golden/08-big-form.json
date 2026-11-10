@@ -322,6 +322,28 @@
       "line": 16,
       "path": "/xsf:xDocumentClass[1]/xsf:importParameters[1]"
     },
+    "importSources": [],
+    "namespaces": {
+      "d": "http://schemas.microsoft.com/office/infopath/2003/ado/dataFields",
+      "dfs": "http://schemas.microsoft.com/office/infopath/2003/dataFormSolution",
+      "msxsl": "urn:schemas-microsoft-com:xslt",
+      "my": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T09:00:00",
+      "tns": "http://forms-legacy/budget/",
+      "xd": "http://schemas.microsoft.com/office/infopath/2003",
+      "xdDate": "http://schemas.microsoft.com/office/infopath/2003/xslt/Date",
+      "xdEnvironment": "http://schemas.microsoft.com/office/infopath/2006/xslt/environment",
+      "xdExtension": "http://schemas.microsoft.com/office/infopath/2003/xslt/extension",
+      "xdMath": "http://schemas.microsoft.com/office/infopath/2003/xslt/Math",
+      "xdServerInfo": "http://schemas.microsoft.com/office/infopath/2009/xslt/ServerInfo",
+      "xdUser": "http://schemas.microsoft.com/office/infopath/2006/xslt/User",
+      "xdUtil": "http://schemas.microsoft.com/office/infopath/2003/xslt/Util",
+      "xdXDocument": "http://schemas.microsoft.com/office/infopath/2003/xslt/xDocument",
+      "xhtml": "http://www.w3.org/1999/xhtml",
+      "xsf": "http://schemas.microsoft.com/office/infopath/2003/solutionDefinition",
+      "xsf2": "http://schemas.microsoft.com/office/infopath/2006/solutionDefinition/extensions",
+      "xsf3": "http://schemas.microsoft.com/office/infopath/2009/solutionDefinition/extensions",
+      "xsi": "http://www.w3.org/2001/XMLSchema-instance"
+    },
     "package": [
       {
         "attrs": {
@@ -540,7 +562,8 @@
             "file": "manifest.xsf",
             "key": "xsf2:viewExtension",
             "line": 26,
-            "path": "/xsf:xDocumentClass[1]/xsf:extensions[1]/xsf:extension[1]/xsf2:solutionDefinition[1]/xsf2:viewsExtension[1]/xsf2:viewExtension[1]"
+            "path": "/xsf:xDocumentClass[1]/xsf:extensions[1]/xsf:extension[1]/xsf2:solutionDefinition[1]/xsf2:viewsExtension[1]/xsf2:viewExtension[1]",
+            "xmlToEditExtensions": []
           }
         ],
         "file": "manifest.xsf",
@@ -569,9 +592,11 @@
             "file": "manifest.xsf",
             "key": "xsf:menuArea",
             "line": 235,
+            "menus": [],
             "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:menuArea[1]"
           }
         ],
+        "menus": [],
         "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]",
         "printSettings": [],
         "toolbars": [],
@@ -596,6 +621,7 @@
               "line": 33,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[1]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 33,
@@ -620,6 +646,7 @@
               "line": 34,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[2]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 34,
@@ -644,6 +671,7 @@
               "line": 35,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[3]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 35,
@@ -668,6 +696,7 @@
               "line": 36,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[4]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 36,
@@ -692,6 +721,7 @@
               "line": 37,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[5]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 37,
@@ -716,6 +746,7 @@
               "line": 38,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[6]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 38,
@@ -740,6 +771,7 @@
               "line": 39,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[7]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 39,
@@ -764,6 +796,7 @@
               "line": 40,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[8]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 40,
@@ -788,6 +821,7 @@
               "line": 41,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[9]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 41,
@@ -812,6 +846,7 @@
               "line": 42,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[10]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 42,
@@ -836,6 +871,7 @@
               "line": 43,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[11]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 43,
@@ -860,6 +896,7 @@
               "line": 44,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[12]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 44,
@@ -884,6 +921,7 @@
               "line": 45,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[13]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 45,
@@ -908,6 +946,7 @@
               "line": 46,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[14]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 46,
@@ -932,6 +971,7 @@
               "line": 47,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[15]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 47,
@@ -956,6 +996,7 @@
               "line": 48,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[16]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 48,
@@ -980,6 +1021,7 @@
               "line": 49,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[17]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 49,
@@ -1004,6 +1046,7 @@
               "line": 50,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[18]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 50,
@@ -1028,6 +1071,7 @@
               "line": 51,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[19]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 51,
@@ -1052,6 +1096,7 @@
               "line": 52,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[20]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 52,
@@ -1076,6 +1121,7 @@
               "line": 53,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[21]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 53,
@@ -1100,6 +1146,7 @@
               "line": 54,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[22]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 54,
@@ -1124,6 +1171,7 @@
               "line": 55,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[23]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 55,
@@ -1148,6 +1196,7 @@
               "line": 56,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[24]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 56,
@@ -1172,6 +1221,7 @@
               "line": 57,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[25]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 57,
@@ -1196,6 +1246,7 @@
               "line": 58,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[26]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 58,
@@ -1220,6 +1271,7 @@
               "line": 59,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[27]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 59,
@@ -1244,6 +1296,7 @@
               "line": 60,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[28]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 60,
@@ -1268,6 +1321,7 @@
               "line": 61,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[29]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 61,
@@ -1292,6 +1346,7 @@
               "line": 62,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[30]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 62,
@@ -1316,6 +1371,7 @@
               "line": 63,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[31]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 63,
@@ -1340,6 +1396,7 @@
               "line": 64,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[32]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 64,
@@ -1364,6 +1421,7 @@
               "line": 65,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[33]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 65,
@@ -1388,6 +1446,7 @@
               "line": 66,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[34]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 66,
@@ -1412,6 +1471,7 @@
               "line": 67,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[35]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 67,
@@ -1436,6 +1496,7 @@
               "line": 68,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[36]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 68,
@@ -1460,6 +1521,7 @@
               "line": 69,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[37]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 69,
@@ -1484,6 +1546,7 @@
               "line": 70,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[38]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 70,
@@ -1508,6 +1571,7 @@
               "line": 71,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[39]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 71,
@@ -1532,6 +1596,7 @@
               "line": 72,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[40]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 72,
@@ -1556,6 +1621,7 @@
               "line": 73,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[41]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 73,
@@ -1580,6 +1646,7 @@
               "line": 74,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[42]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 74,
@@ -1604,6 +1671,7 @@
               "line": 75,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[43]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 75,
@@ -1628,6 +1696,7 @@
               "line": 76,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[44]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 76,
@@ -1652,6 +1721,7 @@
               "line": 77,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[45]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 77,
@@ -1676,6 +1746,7 @@
               "line": 78,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[46]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 78,
@@ -1700,6 +1771,7 @@
               "line": 79,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[47]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 79,
@@ -1724,6 +1796,7 @@
               "line": 80,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[48]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 80,
@@ -1748,6 +1821,7 @@
               "line": 81,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[49]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 81,
@@ -1772,6 +1846,7 @@
               "line": 82,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[50]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 82,
@@ -1796,6 +1871,7 @@
               "line": 83,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[51]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 83,
@@ -1820,6 +1896,7 @@
               "line": 84,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[52]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 84,
@@ -1844,6 +1921,7 @@
               "line": 85,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[53]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 85,
@@ -1868,6 +1946,7 @@
               "line": 86,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[54]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 86,
@@ -1892,6 +1971,7 @@
               "line": 87,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[55]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 87,
@@ -1916,6 +1996,7 @@
               "line": 88,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[56]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 88,
@@ -1940,6 +2021,7 @@
               "line": 89,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[57]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 89,
@@ -1964,6 +2046,7 @@
               "line": 90,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[58]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 90,
@@ -1988,6 +2071,7 @@
               "line": 91,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[59]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 91,
@@ -2012,6 +2096,7 @@
               "line": 92,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[60]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 92,
@@ -2036,6 +2121,7 @@
               "line": 93,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[61]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 93,
@@ -2060,6 +2146,7 @@
               "line": 94,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[62]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 94,
@@ -2084,6 +2171,7 @@
               "line": 95,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[63]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 95,
@@ -2108,6 +2196,7 @@
               "line": 96,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[64]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 96,
@@ -2132,6 +2221,7 @@
               "line": 97,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[65]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 97,
@@ -2156,6 +2246,7 @@
               "line": 98,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[66]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 98,
@@ -2180,6 +2271,7 @@
               "line": 99,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[67]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 99,
@@ -2204,6 +2296,7 @@
               "line": 100,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[68]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 100,
@@ -2228,6 +2321,7 @@
               "line": 101,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[69]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 101,
@@ -2252,6 +2346,7 @@
               "line": 102,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[70]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 102,
@@ -2276,6 +2371,7 @@
               "line": 103,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[71]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 103,
@@ -2300,6 +2396,7 @@
               "line": 104,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[72]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 104,
@@ -2324,6 +2421,7 @@
               "line": 105,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[73]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 105,
@@ -2348,6 +2446,7 @@
               "line": 106,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[74]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 106,
@@ -2372,6 +2471,7 @@
               "line": 107,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[75]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 107,
@@ -2396,6 +2496,7 @@
               "line": 108,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[76]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 108,
@@ -2420,6 +2521,7 @@
               "line": 109,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[77]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 109,
@@ -2444,6 +2546,7 @@
               "line": 110,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[78]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 110,
@@ -2468,6 +2571,7 @@
               "line": 111,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[79]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 111,
@@ -2492,6 +2596,7 @@
               "line": 112,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[80]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 112,
@@ -2516,6 +2621,7 @@
               "line": 113,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[81]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 113,
@@ -2540,6 +2646,7 @@
               "line": 114,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[82]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 114,
@@ -2564,6 +2671,7 @@
               "line": 115,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[83]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 115,
@@ -2588,6 +2696,7 @@
               "line": 116,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[84]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 116,
@@ -2612,6 +2721,7 @@
               "line": 117,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[85]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 117,
@@ -2636,6 +2746,7 @@
               "line": 118,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[86]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 118,
@@ -2660,6 +2771,7 @@
               "line": 119,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[87]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 119,
@@ -2684,6 +2796,7 @@
               "line": 120,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[88]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 120,
@@ -2708,6 +2821,7 @@
               "line": 121,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[89]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 121,
@@ -2732,6 +2846,7 @@
               "line": 122,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[90]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 122,
@@ -2756,6 +2871,7 @@
               "line": 123,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[91]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 123,
@@ -2780,6 +2896,7 @@
               "line": 124,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[92]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 124,
@@ -2804,6 +2921,7 @@
               "line": 125,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[93]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 125,
@@ -2828,6 +2946,7 @@
               "line": 126,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[94]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 126,
@@ -2852,6 +2971,7 @@
               "line": 127,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[95]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 127,
@@ -2876,6 +2996,7 @@
               "line": 128,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[96]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 128,
@@ -2900,6 +3021,7 @@
               "line": 129,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[97]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 129,
@@ -2924,6 +3046,7 @@
               "line": 130,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[98]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 130,
@@ -2948,6 +3071,7 @@
               "line": 131,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[99]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 131,
@@ -2972,6 +3096,7 @@
               "line": 132,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[100]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 132,
@@ -2996,6 +3121,7 @@
               "line": 133,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[101]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 133,
@@ -3020,6 +3146,7 @@
               "line": 134,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[102]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 134,
@@ -3044,6 +3171,7 @@
               "line": 135,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[103]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 135,
@@ -3068,6 +3196,7 @@
               "line": 136,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[104]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 136,
@@ -3092,6 +3221,7 @@
               "line": 137,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[105]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 137,
@@ -3116,6 +3246,7 @@
               "line": 138,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[106]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 138,
@@ -3140,6 +3271,7 @@
               "line": 139,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[107]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 139,
@@ -3164,6 +3296,7 @@
               "line": 140,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[108]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 140,
@@ -3188,6 +3321,7 @@
               "line": 141,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[109]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 141,
@@ -3212,6 +3346,7 @@
               "line": 142,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[110]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 142,
@@ -3236,6 +3371,7 @@
               "line": 143,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[111]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 143,
@@ -3260,6 +3396,7 @@
               "line": 144,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[112]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 144,
@@ -3284,6 +3421,7 @@
               "line": 145,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[113]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 145,
@@ -3308,6 +3446,7 @@
               "line": 146,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[114]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 146,
@@ -3332,6 +3471,7 @@
               "line": 147,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[115]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 147,
@@ -3356,6 +3496,7 @@
               "line": 148,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[116]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 148,
@@ -3380,6 +3521,7 @@
               "line": 149,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[117]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 149,
@@ -3404,6 +3546,7 @@
               "line": 150,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[118]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 150,
@@ -3428,6 +3571,7 @@
               "line": 151,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[119]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 151,
@@ -3452,6 +3596,7 @@
               "line": 152,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[120]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 152,
@@ -3476,6 +3621,7 @@
               "line": 153,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[121]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 153,
@@ -3500,6 +3646,7 @@
               "line": 154,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[122]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 154,
@@ -3524,6 +3671,7 @@
               "line": 155,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[123]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 155,
@@ -3548,6 +3696,7 @@
               "line": 156,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[124]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 156,
@@ -3572,6 +3721,7 @@
               "line": 157,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[125]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 157,
@@ -3596,6 +3746,7 @@
               "line": 158,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[126]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 158,
@@ -3620,6 +3771,7 @@
               "line": 159,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[127]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 159,
@@ -3644,6 +3796,7 @@
               "line": 160,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[128]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 160,
@@ -3668,6 +3821,7 @@
               "line": 161,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[129]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 161,
@@ -3692,6 +3846,7 @@
               "line": 162,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[130]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 162,
@@ -3716,6 +3871,7 @@
               "line": 163,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[131]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 163,
@@ -3740,6 +3896,7 @@
               "line": 164,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[132]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 164,
@@ -3764,6 +3921,7 @@
               "line": 165,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[133]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 165,
@@ -3788,6 +3946,7 @@
               "line": 166,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[134]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 166,
@@ -3812,6 +3971,7 @@
               "line": 167,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[135]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 167,
@@ -3836,6 +3996,7 @@
               "line": 168,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[136]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 168,
@@ -3860,6 +4021,7 @@
               "line": 169,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[137]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 169,
@@ -3884,6 +4046,7 @@
               "line": 170,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[138]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 170,
@@ -3908,6 +4071,7 @@
               "line": 171,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[139]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 171,
@@ -3932,6 +4096,7 @@
               "line": 172,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[140]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 172,
@@ -3956,6 +4121,7 @@
               "line": 173,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[141]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 173,
@@ -3980,6 +4146,7 @@
               "line": 174,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[142]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 174,
@@ -4004,6 +4171,7 @@
               "line": 175,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[143]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 175,
@@ -4028,6 +4196,7 @@
               "line": 176,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[144]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 176,
@@ -4052,6 +4221,7 @@
               "line": 177,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[145]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 177,
@@ -4076,6 +4246,7 @@
               "line": 178,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[146]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 178,
@@ -4100,6 +4271,7 @@
               "line": 179,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[147]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 179,
@@ -4124,6 +4296,7 @@
               "line": 180,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[148]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 180,
@@ -4148,6 +4321,7 @@
               "line": 181,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[149]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 181,
@@ -4172,6 +4346,7 @@
               "line": 182,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[150]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 182,
@@ -4196,6 +4371,7 @@
               "line": 183,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[151]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 183,
@@ -4220,6 +4396,7 @@
               "line": 184,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[152]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 184,
@@ -4244,6 +4421,7 @@
               "line": 185,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[153]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 185,
@@ -4268,6 +4446,7 @@
               "line": 186,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[154]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 186,
@@ -4292,6 +4471,7 @@
               "line": 187,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[155]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 187,
@@ -4316,6 +4496,7 @@
               "line": 188,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[156]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 188,
@@ -4340,6 +4521,7 @@
               "line": 189,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[157]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 189,
@@ -4364,6 +4546,7 @@
               "line": 190,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[158]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 190,
@@ -4388,6 +4571,7 @@
               "line": 191,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[159]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 191,
@@ -4412,6 +4596,7 @@
               "line": 192,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[160]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 192,
@@ -4436,6 +4621,7 @@
               "line": 193,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[161]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 193,
@@ -4460,6 +4646,7 @@
               "line": 194,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[162]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 194,
@@ -4484,6 +4671,7 @@
               "line": 195,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[163]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 195,
@@ -4508,6 +4696,7 @@
               "line": 196,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[164]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 196,
@@ -4532,6 +4721,7 @@
               "line": 197,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[165]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 197,
@@ -4556,6 +4746,7 @@
               "line": 198,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[166]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 198,
@@ -4580,6 +4771,7 @@
               "line": 199,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[167]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 199,
@@ -4604,6 +4796,7 @@
               "line": 200,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[168]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 200,
@@ -4628,6 +4821,7 @@
               "line": 201,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[169]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 201,
@@ -4652,6 +4846,7 @@
               "line": 202,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[170]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 202,
@@ -4676,6 +4871,7 @@
               "line": 203,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[171]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 203,
@@ -4700,6 +4896,7 @@
               "line": 204,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[172]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 204,
@@ -4724,6 +4921,7 @@
               "line": 205,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[173]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 205,
@@ -4748,6 +4946,7 @@
               "line": 206,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[174]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 206,
@@ -4772,6 +4971,7 @@
               "line": 207,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[175]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 207,
@@ -4796,6 +4996,7 @@
               "line": 208,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[176]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 208,
@@ -4820,6 +5021,7 @@
               "line": 209,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[177]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 209,
@@ -4844,6 +5046,7 @@
               "line": 210,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[178]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 210,
@@ -4868,6 +5071,7 @@
               "line": 211,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[179]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 211,
@@ -4892,6 +5096,7 @@
               "line": 212,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[180]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 212,
@@ -4916,6 +5121,7 @@
               "line": 213,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[181]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 213,
@@ -4940,6 +5146,7 @@
               "line": 214,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[182]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 214,
@@ -4964,6 +5171,7 @@
               "line": 215,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[183]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 215,
@@ -4988,6 +5196,7 @@
               "line": 216,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[184]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 216,
@@ -5012,6 +5221,7 @@
               "line": 217,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[185]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 217,
@@ -5036,6 +5246,7 @@
               "line": 218,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[186]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 218,
@@ -5060,6 +5271,7 @@
               "line": 219,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[187]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 219,
@@ -5084,6 +5296,7 @@
               "line": 220,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[188]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 220,
@@ -5108,6 +5321,7 @@
               "line": 221,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[189]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 221,
@@ -5132,6 +5346,7 @@
               "line": 222,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[190]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 222,
@@ -5156,6 +5371,7 @@
               "line": 223,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[191]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 223,
@@ -5180,6 +5396,7 @@
               "line": 224,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[192]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 224,
@@ -5204,6 +5421,7 @@
               "line": 225,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[193]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 225,
@@ -5228,6 +5446,7 @@
               "line": 226,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[194]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 226,
@@ -5252,6 +5471,7 @@
               "line": 227,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[195]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 227,
@@ -5276,6 +5496,7 @@
               "line": 228,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[196]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 228,
@@ -5300,6 +5521,7 @@
               "line": 229,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[197]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 229,
@@ -5324,6 +5546,7 @@
               "line": 230,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[198]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 230,
@@ -5348,6 +5571,7 @@
               "line": 231,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[199]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 231,
@@ -5372,6 +5596,7 @@
               "line": 232,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[200]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 232,

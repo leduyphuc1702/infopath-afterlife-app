@@ -62,9 +62,15 @@ export type ContainerKey =
   | 'xsf2:fieldsExtension'
   | 'xsf:permissions'
   | 'xsf:membership'
-  | 'xsf3:signatureLines';
+  | 'xsf3:signatureLines'
+  | 'xsf2:commands';
 
 export interface Manifest {
+  /**
+   * Namespace declarations on the root element, prefix → URI as written; the default namespace
+   * is the key `''`. Spec 02 resolves expression prefixes with it (R21.1).
+   */
+  readonly namespaces: Readonly<Record<string, string>>;
   readonly documentClass: Modelled<'xsf:xDocumentClass'>; // R7.1
   readonly solution: Solution; // R7.2
   readonly package: readonly PackageEntry[]; // R7.4
@@ -72,6 +78,10 @@ export interface Manifest {
   readonly fileNew?: Modelled<'xsf:initialXmlDocument'>;
   readonly upgrade?: Modelled<'xsf:useTransform'>; // R7.3
   readonly importParameters?: Modelled<'xsf:importParameters'>;
+  /** `xsf:importParameters/xsf:importSource`, in document order (R21.2). */
+  readonly importSources: readonly Modelled<'xsf:importSource'>[];
+  /** `xsf:taskpane` (R21.2). */
+  readonly taskpane?: Modelled<'xsf:taskpane'>;
   readonly applicationParameters: readonly ApplicationParameters[];
   readonly views: readonly View[]; // R8
   /** `xsf:views/@default`, as written. */
@@ -119,6 +129,41 @@ export interface Solution {
   readonly baseUrl?: Modelled<'xsf3:baseUrl'>;
   /** `xsf2:managedCode` (R12.4). */
   readonly managedCode?: Modelled<'xsf2:managedCode'>;
+  /** `xsf2:preview` (R21.2). */
+  readonly preview?: Modelled<'xsf2:preview'>;
+  /** `xsf2:solutionPropertiesExtension` with its branch elements (R21.2). */
+  readonly propertiesExtension?: SolutionPropertiesExtension;
+  /** `xsf2:server/xsf2:toolbar` with its commands (R21.2). */
+  readonly serverToolbar?: ServerToolbar;
+  /** `xsf3:solutionPropertiesExtension2009`, held once across `xsf:extension`s (R21.3). */
+  readonly propertiesExtension2009?: SolutionPropertiesExtension2009;
+}
+
+export interface SolutionPropertiesExtension2009 extends Modelled<'xsf3:solutionPropertiesExtension2009'> {
+  readonly solutionMode?: Modelled<'xsf3:solutionMode'>;
+}
+
+export type BranchKey =
+  | 'xsf2:admin'
+  | 'xsf2:contentType'
+  | 'xsf2:contentTypeTemplate'
+  | 'xsf2:entity'
+  | 'xsf2:groove'
+  | 'xsf2:install'
+  | 'xsf2:list'
+  | 'xsf2:mail'
+  | 'xsf2:share'
+  | 'xsf2:workflowInitAssoc'
+  | 'xsf2:wss';
+
+export interface SolutionPropertiesExtension extends Modelled<'xsf2:solutionPropertiesExtension'> {
+  /** The branch elements, in document order. */
+  readonly branches: readonly AnyModelled<BranchKey>[];
+}
+
+export interface ServerToolbar extends Modelled<'xsf2:toolbar'> {
+  /** `xsf2:commands/xsf2:command`, in document order. */
+  readonly commands: readonly Modelled<'xsf2:command'>[];
 }
 
 export interface PackageEntry extends Modelled<'xsf:file'> {
@@ -143,6 +188,8 @@ export interface View extends Modelled<'xsf:view'> {
   readonly xmlToEdit: readonly XmlToEdit[];
   readonly menuAreas: readonly ButtonArea<'xsf:menuArea'>[];
   readonly toolbars: readonly ButtonArea<'xsf:toolbar'>[];
+  /** `xsf:menu` directly in the view (R21.2). */
+  readonly menus: readonly Menu[];
   readonly unboundButtons: readonly UnboundButton[];
   /** `xsf2:viewExtension` and `xsf3:viewExtension` whose `ref` is this view's name. */
   readonly extensions: readonly ViewExtension[];
@@ -155,6 +202,11 @@ export interface PrintSettings extends Modelled<'xsf:printSettings'> {
 
 export interface XmlToEdit extends Modelled<'xsf:xmlToEdit'> {
   readonly editWith?: EditWith;
+  /**
+   * `xsf2:xmlToEditExtension`s of this view whose `ref` equals this element's `name` (R21.2).
+   * The same objects are also on the view extension that holds them.
+   */
+  readonly extensions: readonly Modelled<'xsf2:xmlToEditExtension'>[];
 }
 
 export interface EditWith extends Modelled<'xsf:editWith'> {
@@ -164,11 +216,24 @@ export interface EditWith extends Modelled<'xsf:editWith'> {
 
 export type ButtonArea<K extends 'xsf:menuArea' | 'xsf:toolbar'> = Modelled<K> & {
   readonly buttons: readonly Modelled<'xsf:button'>[];
+  /** `xsf:menu` children; their buttons are not repeated in `buttons` (R21.2). */
+  readonly menus: readonly Menu[];
 };
+
+/** `xsf:menu`: buttons and nested menus, in document order within each list (R21.2). */
+export interface Menu extends Modelled<'xsf:menu'> {
+  readonly buttons: readonly Modelled<'xsf:button'>[];
+  readonly menus: readonly Menu[];
+}
 
 export type UnboundButton = Modelled<'xsf:unboundControls/button'>;
 
-export type ViewExtension = Modelled<'xsf2:viewExtension'> | Xsf3ViewExtension;
+export type ViewExtension = Xsf2ViewExtension | Xsf3ViewExtension;
+
+export interface Xsf2ViewExtension extends Modelled<'xsf2:viewExtension'> {
+  /** `xsf2:xmlToEditExtension`, in document order (R21.2). */
+  readonly xmlToEditExtensions: readonly Modelled<'xsf2:xmlToEditExtension'>[];
+}
 
 export interface Xsf3ViewExtension extends Modelled<'xsf3:viewExtension'> {
   /** `xsf3:signatureLines/xsf3:signatureLine`, in document order (R12.2). */

@@ -61,13 +61,13 @@ test('MS-IPFF2 elements left out on purpose report documented: true', () => {
   const text = edit(
     form05,
     '</xsf:xDocumentClass>',
-    `<xsf:taskpane caption="Help" href="help.htm"/>
+    `<xsf:externalViews/>
 <xsf:featureRestrictions><xsf:print ui="disabled"/></xsf:featureRestrictions>
 </xsf:xDocumentClass>`,
   );
   const { unknowns } = parse(text);
   expect(unknowns.map((u) => [u.name, u.reason, u.documented])).toEqual([
-    ['taskpane', 'notModelled', true],
+    ['externalViews', 'notModelled', true],
     ['featureRestrictions', 'notModelled', true],
   ]);
 });

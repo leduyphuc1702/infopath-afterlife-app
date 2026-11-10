@@ -302,6 +302,19 @@
       "line": 35,
       "path": "/xsf:xDocumentClass[1]/xsf:importParameters[1]"
     },
+    "importSources": [],
+    "namespaces": {
+      "msxsl": "urn:schemas-microsoft-com:xslt",
+      "my": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2004-11-19T20:56:25",
+      "xd": "http://schemas.microsoft.com/office/infopath/2003",
+      "xdDate": "http://schemas.microsoft.com/office/infopath/2003/xslt/Date",
+      "xdMath": "http://schemas.microsoft.com/office/infopath/2003/xslt/Math",
+      "xdUtil": "http://schemas.microsoft.com/office/infopath/2003/xslt/Util",
+      "xdXDocument": "http://schemas.microsoft.com/office/infopath/2003/xslt/xDocument",
+      "xhtml": "http://www.w3.org/1999/xhtml",
+      "xsf": "http://schemas.microsoft.com/office/infopath/2003/solutionDefinition",
+      "xsi": "http://www.w3.org/2001/XMLSchema-instance"
+    },
     "package": [
       {
         "attrs": {
@@ -541,6 +554,7 @@
           }
         ],
         "menuAreas": [],
+        "menus": [],
         "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]",
         "printSettings": [],
         "toolbars": [],
@@ -576,6 +590,7 @@
               "line": 43,
               "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[1]/xsf:editWith[1]"
             },
+            "extensions": [],
             "file": "manifest.xsf",
             "key": "xsf:xmlToEdit",
             "line": 42,

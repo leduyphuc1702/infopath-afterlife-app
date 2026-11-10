@@ -2,7 +2,7 @@ import { expect, test } from 'vitest';
 import { MS_IPFF2 } from '../../src/xsf/ms-ipff2';
 import { XSF_VOCABULARY } from '../../src/xsf/vocabulary';
 
-// Design §8.5: every element R7–R12 name is a table key with that requirement id. The list is
+// Design §8.5: every element R7–R12 and R21.2 name is a table key with that requirement id. The list is
 // copied from requirements.md by hand, so a table edit cannot silently drop a requirement item.
 
 const NAMED: Record<string, readonly string[]> = {
@@ -94,6 +94,28 @@ const NAMED: Record<string, readonly string[]> = {
   'R12.3': ['xsf:roles', 'xsf:role', 'xsf:membership'],
   'R12.4': ['xsf2:managedCode', 'xsf:scripts', 'xsf:script'],
   'R12.5': ['xsf:permissions', 'xsf:allowedControl'],
+  'R21.2': [
+    'xsf:importSource',
+    'xsf:menu',
+    'xsf:taskpane',
+    'xsf2:preview',
+    'xsf2:solutionPropertiesExtension',
+    'xsf2:admin',
+    'xsf2:contentType',
+    'xsf2:contentTypeTemplate',
+    'xsf2:entity',
+    'xsf2:groove',
+    'xsf2:install',
+    'xsf2:list',
+    'xsf2:mail',
+    'xsf2:share',
+    'xsf2:workflowInitAssoc',
+    'xsf2:wss',
+    'xsf2:toolbar',
+    'xsf2:commands',
+    'xsf2:command',
+    'xsf2:xmlToEditExtension',
+  ],
 };
 
 const rows = Object.entries(NAMED).flatMap(([req, keys]) => keys.map((key) => [key, req]));

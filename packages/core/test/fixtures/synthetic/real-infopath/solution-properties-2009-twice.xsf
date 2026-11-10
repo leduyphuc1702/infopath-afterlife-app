@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 31, R21.3, R13.9): the 2009 properties extension written twice, in two
+     xsf:extension elements. The parser keeps the first. -->
+<xsf:xDocumentClass solutionFormatVersion="3.0.0.0" xmlns:xsf="http://schemas.microsoft.com/office/infopath/2003/solutionDefinition" xmlns:xsf2="http://schemas.microsoft.com/office/infopath/2006/solutionDefinition/extensions" xmlns:xsf3="http://schemas.microsoft.com/office/infopath/2009/solutionDefinition/extensions">
+	<xsf:extensions>
+		<xsf:extension name="SolutionPropertiesExtension2009">
+			<xsf3:solutionPropertiesExtension2009>
+				<xsf3:solutionMode mode="list"/>
+			</xsf3:solutionPropertiesExtension2009>
+		</xsf:extension>
+		<xsf:extension name="SolutionPropertiesExtension2009">
+			<xsf3:solutionPropertiesExtension2009>
+				<xsf3:solutionMode mode="workflowInitAssoc"/>
+			</xsf3:solutionPropertiesExtension2009>
+		</xsf:extension>
+	</xsf:extensions>
+</xsf:xDocumentClass>

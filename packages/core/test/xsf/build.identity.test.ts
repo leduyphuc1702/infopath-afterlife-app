@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { parseManifest } from '../../src/xsf/parse-manifest';
 import { formNumber, sampleManifests } from '../helpers/manifests';
-import { manifestBytes } from '../helpers/synthetic-manifest';
+import { manifestBytes, XSF, XSF2, XSF3 } from '../helpers/synthetic-manifest';
 
 // R7.1–R7.6: identity, versions, runtime settings, package, schemas.
 
@@ -156,12 +156,20 @@ describe('R7.3 and R7.4: upgrade, package, schemas, fileNew, parameters', () => 
   test('an empty manifest root gives empty lists and no optional parts', () => {
     const m = parseManifest(manifestBytes('')).manifest;
     expect(m).toEqual({
+      namespaces: {
+        xsf: XSF,
+        xsf2: XSF2,
+        xsf3: XSF3,
+        xd: 'http://schemas.microsoft.com/office/infopath/2003',
+        my: 'urn:my',
+      },
       documentClass: expect.objectContaining({
         attrs: { solutionFormatVersion: '3.0.0.0' },
       }) as object,
       solution: { runtimeCompatibility: [] },
       package: [],
       documentSchemas: [],
+      importSources: [],
       applicationParameters: [],
       views: [],
       unlinkedViewExtensions: [],
@@ -214,5 +222,50 @@ describe('containers', () => {
         'xsf2:dataConnections',
       ]),
     );
+  });
+});
+
+describe('R21.1 namespaces', () => {
+  test('form 01: my is the form namespace, and xsf is declared', () => {
+    const ns = form(1).namespaces;
+    expect(ns.my).toBe(
+      'http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:00:00',
+    );
+    expect(ns.xsf).toBe(XSF);
+  });
+
+  test('the public sample: every root declaration, in the order written', () => {
+    expect(Object.keys(parsed.get('theill-weight-keeper')!.namespaces)).toEqual([
+      'xsf',
+      'msxsl',
+      'xd',
+      'xsi',
+      'xdUtil',
+      'xdXDocument',
+      'xdMath',
+      'xdDate',
+      'my',
+      'xhtml',
+    ]);
+  });
+
+  test('every sample declares a prefix for its main schema namespace', () => {
+    for (const [slug, m] of parsed) {
+      const target = m.package
+        .find((f) => f.attrs.name === 'myschema.xsd')
+        ?.properties.find((p) => p.attrs.name === 'namespace')?.attrs.value;
+      expect(Object.values(m.namespaces), slug).toContain(target);
+    }
+  });
+
+  test('a default namespace is the key "", and a declaration below the root is not collected', () => {
+    const m = parseManifest(
+      manifestBytes(
+        `<xsf:extensions xmlns:below="urn:below"><xsf:extension name="x"/></xsf:extensions>`,
+        'xmlns="urn:default"',
+      ),
+    ).manifest;
+    expect(m.namespaces['']).toBe('urn:default');
+    expect(m.namespaces).not.toHaveProperty('below');
   });
 });

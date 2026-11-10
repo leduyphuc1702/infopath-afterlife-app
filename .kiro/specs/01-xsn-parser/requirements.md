@@ -24,7 +24,11 @@ The parser runs in Node 22 and in a browser Web Worker, with no native tools and
 
 Out of scope, and the spec that owns each item:
 - writing or repacking `.xsn` files (none); LZX and Quantum decompression (none, rejected by R2);
-- parsing view XSL: controls, `xd:binding`, conditional formatting, label text (spec 03; labels in spec 02 AC2);
+- reading view XSL: the static scan of controls, `xd:binding`, labels and ActiveX objects (spec 02);
+  rendering views and conditional formatting (spec 03);
+  Changed 2026-11-10 (spec 02 decision 2): the line gave controls, `xd:binding` and label text to
+  spec 03; spec 02 needs the static scan for labels, the dependency index, data lineage and the
+  `activex` cause before any rendering exists.
 - evaluating XPath in rules, calculations and validations (spec 04);
 - FormIR ids, dependency index, endpoint `internal`/`dead` classification, InfoPath generation (spec 02);
 - coverage states for each element, including unknown entries (spec 05);
@@ -758,7 +762,7 @@ Checked by the agent inside those entries (names and enumerated values only):
    and every other foreign attribute stay unknown entries (`documented: false`). Oracle: a
    synthetic schema with all 11, one unlisted `ma:` attribute and one attribute in another
    namespace.
-6. WHEN the template is in the folder named by the environment variable `AFTERLIFE_PRIVATE_CORPUS`,
+6. WHEN the template is in the folder named by the environment variable `AFTERLIFE_PRIVATE_SAMPLES`,
    THE SYSTEM SHALL parse it with no throw, zero issues and zero unknown entries. The check
    (`private-corpus.local.test.ts`) SHALL find every `*.xsn` under that folder, recursively, read
    only; SHALL be skipped when the variable is unset; SHALL print counts, and on failure the

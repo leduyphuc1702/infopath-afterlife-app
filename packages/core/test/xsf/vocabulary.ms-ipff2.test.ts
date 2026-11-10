@@ -34,15 +34,16 @@ describe.each(table)('%s', (key, spec) => {
   test('every attribute exists there with the same value space', () => {
     for (const [name, attr] of Object.entries(spec.attrs)) {
       if (typeof attr === 'object' && 'viaWildcard' in attr) {
-        // Admitted by an xsd:anyAttribute whose namespace constraint covers the attribute.
+        // Admitted by an xsd:anyAttribute whose namespace constraint covers the attribute
+        // (design §15.2): a qualified name by ##any or its namespace; an unqualified name only by
+        // ##any or ##local. ##other never admits an unqualified name.
         const ns = attrNamespace(name);
-        const allowed = (ipff2!.anyAttribute ?? '').split(/\s+/);
+        const allowed = (ipff2!.anyAttribute ?? '').split(/\s+/).filter(Boolean);
         expect(ipff2!.attrs[name], `${key}/@${name} is named by MS-IPFF2`).toBeUndefined();
-        expect(ns, `${key}/@${name} is qualified`).not.toBeNull();
-        expect(
-          allowed.includes('##any') || allowed.includes(ns!),
-          `${key} anyAttribute (${ipff2!.anyAttribute}) admits ${name}`,
-        ).toBe(true);
+        const admits =
+          allowed.includes('##any') ||
+          (ns === null ? allowed.includes('##local') : allowed.includes(ns));
+        expect(admits, `${key} anyAttribute (${ipff2!.anyAttribute}) admits ${name}`).toBe(true);
         continue;
       }
       expect(ipff2!.attrs[name], `${key}/@${name}`).toEqual(attr);
@@ -78,7 +79,7 @@ describe.each(table)('%s', (key, spec) => {
 });
 
 describe('the exceptions', () => {
-  test('viaWildcard children: exactly the two solution definitions inside xsf:extension', () => {
+  test('viaWildcard children: the two solution definitions and the 2009 properties extension', () => {
     const marked = table.flatMap(([key, spec]) =>
       Object.values(spec.children)
         .filter((c) => typeof c === 'object')
@@ -87,18 +88,28 @@ describe('the exceptions', () => {
     expect(marked).toEqual([
       'xsf:extension → xsf2:solutionDefinition',
       'xsf:extension → xsf3:solutionDefinition',
+      'xsf:extension → xsf3:solutionPropertiesExtension2009',
     ]);
   });
 
-  test('viaWildcard attributes: exactly xd:autogeneration on xsf:editWith', () => {
+  test('viaWildcard attributes: xd:autogeneration and allowedLinkImages', () => {
     const marked = table.flatMap(([key, spec]) =>
       Object.entries(spec.attrs)
         .filter(([, a]) => typeof a === 'object' && 'viaWildcard' in a)
         .map(([name]) => `${key}/@${name}`),
     );
     expect(marked).toEqual([
+      'xsf2:xmlToEditExtension/@allowedLinkImages',
       'xsf:editWith/@{http://schemas.microsoft.com/office/infopath/2003}autogeneration',
     ]);
+  });
+
+  test('an unqualified viaWildcard attribute needs ##any or ##local (the rule, by example)', () => {
+    // xsf:editWith admits only the xd namespace; xsf2:xmlToEditExtension admits ##any.
+    expect(MS_IPFF2['xsf:editWith']!.anyAttribute).toBe(
+      'http://schemas.microsoft.com/office/infopath/2003',
+    );
+    expect(MS_IPFF2['xsf2:xmlToEditExtension']!.anyAttribute).toBe('##any');
   });
 });
 
