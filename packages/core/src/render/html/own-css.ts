@@ -44,7 +44,15 @@ const ICONS = [
   '.afl-root .afl-icon-signature{width:20px;border-bottom:2px solid #44546f;' +
     'background:linear-gradient(150deg,transparent 45%,#44546f 45%,#44546f 55%,transparent 55%)}',
   '.afl-root .afl-icon-unknown{border:1px dotted #8590a2}',
+  '.afl-root .afl-icon-file{width:12px;border:1px solid #626f86;border-radius:0 4px 0 0;' +
+    'background:#fff linear-gradient(#8590a2,#8590a2) 2px 5px/6px 1px no-repeat}',
 ];
+
+/** R6.7: a filled FileAttachment: icon, name, size, on one line as InfoPath showed it. */
+const ATTACHMENT =
+  '.afl-root .afl-attachment{display:inline-flex;align-items:center;gap:4px;white-space:nowrap;' +
+  'max-width:100%;overflow:hidden}.afl-root .afl-attachment-name{overflow:hidden;' +
+  'text-overflow:ellipsis}.afl-root .afl-attachment-size{color:#626f86}';
 
 /** R6.2: the grey placeholder box drawn for an ActiveX control. */
 const PLACEHOLDER =
@@ -72,6 +80,7 @@ export const OWN_CSS = [
   ...REQUIRED,
   ...CONTROL_SIZE,
   ...ICONS,
+  ATTACHMENT,
   PLACEHOLDER,
   ...DATE_PICKER,
 ].join('\n');

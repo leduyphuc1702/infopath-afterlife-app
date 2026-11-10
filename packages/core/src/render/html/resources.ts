@@ -81,6 +81,11 @@ const MAGIC: readonly [string, readonly number[]][] = [
   ['bmp', [0x42, 0x4d]],
 ];
 
+/** PNG, GIF, JPEG or BMP by magic bytes, as used in a data URL; undefined for anything else. */
+export function imageType(bytes: Uint8Array): string | undefined {
+  return MAGIC.find(([, m]) => m.every((b, i) => bytes[i] === b))?.[0];
+}
+
 /**
  * Step 4: a relative `src` naming a package file whose magic bytes say PNG, GIF, JPEG or BMP
  * becomes a base64 data URL; anything else gives undefined.
@@ -95,7 +100,7 @@ export function packageImage(src: string, r: Resources): string | undefined {
   }
   if (name === '' || /[\\/]/.test(name)) return undefined;
   const bytes = r.file(name);
-  const type = bytes && MAGIC.find(([, m]) => m.every((b, i) => bytes[i] === b))?.[0];
+  const type = bytes && imageType(bytes);
   if (!bytes || type === undefined) return undefined;
   const url = `data:image/${type};base64,${base64(bytes)}`;
   r.chargeOutput(url.length);

@@ -337,6 +337,18 @@ built, so that I can trust the comparison.
    mark; a synthetic `xsf3:errorBlank` and a non-nillable `xsd:date` field are each marked when
    empty. `Changed at review:` added (was open question 7, defaulted to spec 04).
 
+7. WHEN a bound FileAttachment control's node holds an InfoPath file attachment, THE SYSTEM
+   SHALL show in the control our own CSS file icon, the file name and the size in bytes, read from
+   the attachment header only (the file metadata of [MS-IPFFX] §2.1.3.1, cited in the design).
+   The file content SHALL NOT be decoded (spec 11). IF the header is truncated, too long or
+   otherwise invalid, THEN THE SYSTEM SHALL show the icon alone and record one
+   `ATTACHMENT_UNREADABLE` issue, and SHALL NOT throw. The file name is record data and is
+   written as escaped text. Oracle: form 02's first record shows `receipt-01-1.txt`, `109 bytes`
+   and `receipt-01-2.txt`, `110 bytes` (`02-expense-report-Claim-filled.png`); unit cases for a
+   truncated header and for a name-length overflow; a name holding markup is escaped (P5).
+   `Changed at review:` added (2026-11-10, after the forms 01–08 comparison). Our generator wrote
+   these headers, and InfoPath Filler 2013 opened them; the screenshot shows the result.
+
 ### R7. Property P4: rendering is deterministic
 Traces: brief P4 (testing.md).
 
@@ -415,9 +427,9 @@ compare means something.
 | P4 deterministic | R7.1 |
 | P5 sanitiser | R8.1 |
 | Visual acceptance | R10.1–R10.2 (changed: default views only; `xsltproc` as a structural oracle, not a picture reference) |
-| Added | R1.2–R1.5, R2, R3.2–R3.4, R5.4–R5.5, R6.5, R6.6, R10.3 |
+| Added | R1.2–R1.5, R2, R3.2–R3.4, R5.4–R5.5, R6.5, R6.6, R6.7, R10.3 |
 
-**Total: 33 criteria** (R1.1–R10.3). `Changed at review:` R6.6 added.
+**Total: 34 criteria** (R1.1–R10.3). `Changed at review:` R6.6 added; R6.7 added.
 
 ## Review answers (2026-11-10)
 

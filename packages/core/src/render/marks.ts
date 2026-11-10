@@ -8,6 +8,7 @@
 
 import { dataStep } from '../ir/ids';
 import type { BoundControl, FormIR, IrView } from '../ir/types';
+import { attachmentHeader, sizeText, type Attachment } from './attachment';
 import type { MarkedElement } from './engine/xsltjs';
 import type { ControlMark } from './render';
 import type { HElement, HNode } from './html/serialise';
@@ -68,23 +69,32 @@ export function requiredTargets(ir: FormIR): ReadonlySet<string> {
   return out;
 }
 
-/** The ControlMark of one rendered control. */
+/** A rendered control: its mark, and for a filled FileAttachment its header (R6.7). */
+export interface Rendered {
+  readonly mark: ControlMark;
+  readonly attachment?: Attachment;
+}
+
+/** The ControlMark of one rendered control, and its attachment header when it has one. */
 export function controlMark(
   m: MarkedElement,
   namespaces: Readonly<Record<string, string>>,
   required: ReadonlySet<string>,
-): ControlMark {
+): Rendered {
   const { control } = m;
   const node = m.node as SourceNode | undefined;
   const path = node && dataPath(node, namespaces);
   const empty = node !== undefined && isEmpty(node);
-  return {
+  const mark: ControlMark = {
     controlId: control.id,
     ...(path === undefined ? {} : { path }),
     ...(control.targetId === undefined ? {} : { fieldId: control.targetId }),
     empty,
     required: empty && control.targetId !== undefined && required.has(control.targetId),
   };
+  const isAttachment = control.xctname?.toLowerCase() === 'fileattachment';
+  if (!isAttachment || !node || empty) return { mark };
+  return { mark, attachment: attachmentHeader(node.textContent ?? node.value ?? '') };
 }
 
 /** No element children and an empty string value (design §9.2). */
@@ -133,14 +143,21 @@ const REPLACED = new Set(['input', 'select', 'textarea']);
  */
 export function applyMarks(
   root: HElement,
-  markOf: (origin: object) => ControlMark | undefined,
-): ControlMark[] {
+  markOf: (origin: object) => Rendered | undefined,
+): { marks: ControlMark[]; unreadable: Map<string, number> } {
   const marks: ControlMark[] = [];
+  const unreadable = new Map<string, number>();
   const walk = (children: HNode[]) => {
     for (let i = 0; i < children.length; i++) {
       const el = children[i]!;
       if (el.kind !== 'element') continue;
-      const mark = el.origin && markOf(el.origin);
+      const rendered = el.origin && markOf(el.origin);
+      const mark = rendered?.mark;
+      if (rendered?.attachment) {
+        const a = rendered.attachment;
+        if ('problem' in a) unreadable.set(a.problem, (unreadable.get(a.problem) ?? 0) + 1);
+        el.children.push(attachmentView(a));
+      }
       if (mark) {
         marks.push(mark);
         if (mark.required) {
@@ -167,5 +184,25 @@ export function applyMarks(
     }
   };
   walk(root.children);
-  return marks;
+  return { marks, unreadable };
+}
+
+/**
+ * R6.7: our file icon, the name and the size, as InfoPath showed a filled FileAttachment; the
+ * icon alone when the header is unreadable. The name is record data: it is a text node, which the
+ * serialiser escapes.
+ */
+function attachmentView(a: Attachment): HElement {
+  const span = (cls: string, text?: string, hidden = false): HElement => ({
+    kind: 'element',
+    name: 'span',
+    attrs: [['class', cls], ...(hidden ? [['aria-hidden', 'true'] as [string, string]] : [])],
+    children: text === undefined ? [] : [{ kind: 'text', text }],
+  });
+  const icon = span('afl-icon afl-icon-file', undefined, true);
+  const children: HNode[] =
+    'problem' in a
+      ? [icon]
+      : [icon, span('afl-attachment-name', a.name), span('afl-attachment-size', sizeText(a.size))];
+  return { kind: 'element', name: 'span', attrs: [['class', 'afl-attachment']], children };
 }

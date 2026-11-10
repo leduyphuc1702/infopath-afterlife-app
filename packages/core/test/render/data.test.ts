@@ -4,7 +4,7 @@ import { buildFormIR, parseXsn, prepareView, renderView, type PreparedView } fro
 import { readSample, repoRoot, sampleCabinets } from '../helpers/samples';
 
 // Spec 03 R2.1: a record made with another template version renders, with one
-// RECORD_TEMPLATE_MISMATCH naming both. Task 6 adds R2.2 (secondary data).
+// RECORD_TEMPLATE_MISMATCH naming both; R2.2 (secondary data, task 6) at the end.
 
 const NOW = '2026-11-03T09:00:00-08:00';
 const records = `${repoRoot}samples/own/records/`;
@@ -71,4 +71,44 @@ test('a record with no mso-infoPathSolution names nothing, so it gives none', ()
     '<my:leaveRequest xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:00:00"/>',
   );
   expect(mismatches('01-leave-request', plain)).toEqual([]);
+});
+
+// --- Task 6: R2.2, secondary data through xdXDocument:GetDOM -----------------------------------
+
+const optionsOf = (html: string, binding: string) => {
+  const select = new RegExp(`<select[^>]*xd:binding="${binding}"[^>]*>(.*?)</select>`).exec(html);
+  return [
+    ...(select?.[1] ?? '').matchAll(/<option(?: value="([^"]*)")?[^>]*>([^<]*)<\/option>/g),
+  ].map((m) => [m[1] ?? '', m[2]]);
+};
+
+test("form 03's country list holds the countries of locations.xml", () => {
+  const r = renderView(prepared.get('03-travel-request')!, {
+    now: NOW,
+    record: read(`${records}03-travel-request/03-travel-request-001.xml`),
+  });
+  const xml = read(`${repoRoot}samples/own/forms/03-travel-request/locations.xml`);
+  const countries = [
+    ...new TextDecoder().decode(xml).matchAll(/<country code="([^"]*)" name="([^"]*)"/g),
+  ].map((m) => [m[1], m[2]]);
+  expect(countries.length).toBeGreaterThan(3);
+  expect(optionsOf(r.html, 'my:destCountry')).toEqual([['', 'Select...'], ...countries]);
+  expect(r.issues.filter((i) => i.code === 'SECONDARY_DATA_UNAVAILABLE')).toEqual([]);
+});
+
+test("form 04's Vendors list is empty, with one SECONDARY_DATA_UNAVAILABLE", () => {
+  const r = renderView(prepared.get('04-purchase-request')!, {
+    now: NOW,
+    record: read(`${records}04-purchase-request/04-purchase-request-001.xml`),
+  });
+  expect(optionsOf(r.html, 'my:vendorId')).toEqual([['', 'Select...']]);
+  expect(r.issues.filter((i) => i.code === 'SECONDARY_DATA_UNAVAILABLE')).toEqual([
+    {
+      code: 'SECONDARY_DATA_UNAVAILABLE',
+      message:
+        'view1.xsl: data source Vendors is not a package XML file; GetDOM gave an empty document',
+      file: 'view1.xsl',
+      details: { dataSource: 'Vendors' },
+    },
+  ]);
 });

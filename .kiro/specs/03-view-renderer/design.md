@@ -273,6 +273,15 @@ Bindings live in `render/functions.ts` over `FnHost`, which the adapter implemen
 `nodes`, `evalXPath(text, contextNode)`, `makeNodes(values)` (text-only elements in a per-render
 scratch fragment), and `issue`. Value logic is in `xpath-fns/`.
 
+`Changed at task 6:` as built, each argument is an `FnArg` (`string()`, `number()`, `nodes()`,
+`nodeSet()`) and `FnHost` has `report`, `makeNodes`, `document(file)`, `emptyDocument()`,
+`evaluate(expr, node)` (the calling element's namespaces, from the XPath context `xsltjs`
+passes), `nested(fn)` (one `templateDepth` level) and `chargeOutput`. The scratch elements are
+children of one `values` document per render (`xml/parse.ts` `scratchDocument()`), and each
+`makeNodes` call charges `outputBytes` like result nodes (64 per node plus characters); a nested
+`Eval` over 100 nodes stops there, in about 0.6 s. `Nz` treats a value of XML whitespace only as
+blank. Per-render issue sets live in the table `functionTable()` builds for each render.
+
 | Function | Our semantics | Source | Edge cases |
 |---|---|---|---|
 | `xdFormatting:formatString(value, type, options)` | Types `date`, `datetime`, `time`, `number`, `currency`, `percentage`, `string`. Options are `key:value;` pairs: `dateFormat`, `timeFormat`, `numDigits` (n or `auto`), `grouping`, `negativeOrder`, `positiveOrder`, `currencyLocale`, `plainMultiline`. en-US tables: Short Date `M/d/yyyy`, time `h:mm:ss tt`, Windows NEGCURR orders. Rounding is half away from zero on the decimal string. | MS-IPFF2 §2.4.3 [VERIFY: subsection]; the 12 corpus patterns (`docs/feature-coverage.md`); `docs/infopath-ux.md` §3–4 **[seen]** `11/3/2026`, `$350.30` | Empty → ''. Unparseable value → unchanged (R4.3). Unknown type or option → value unchanged + `FORMAT_UNSUPPORTED {type, option}`. Date and time values are shown as written, with no time-zone conversion. A locale other than en-US → en-US + one `LOCALE_UNSUPPORTED`. `currencyLocale` other than 1033 → same. [VERIFY: InfoPath's rounding mode; one unit case per corpus pattern decides it.] |
@@ -287,6 +296,33 @@ scratch fragment), and `issue`. Value logic is in `xpath-fns/`.
 | `xdUser:get-UserName()` | `input.userName ?? ''` | MS-IPFF2 §2.4.3 [VERIFY]; R4.5 | — |
 | `msxsl:node-set(x)` | Result tree fragment → its nodes; node-set → itself; other values → one text node | MSXML "msxsl:node-set Function" [VERIFY: URL] | — |
 | `msxsl:string-compare(a, b[, lang[, opts]])` | -1 / 0 / 1 by UTF-16 code units; `opts` containing `i` compares lowercased ASCII | MSXML "ms:string-compare Function" [VERIFY: URL] | `lang` is ignored, since there is no `Intl` (D8). MSXML compares by locale, so non-ASCII order can differ; form 01 compares ISO dates, where code units agree. |
+
+`Changed at task 7:` `formatString` as built (`xpath-fns/format.ts`):
+
+- **Patterns.** Counted as distinct type + options strings, the corpus has 14, one unit case each;
+  `docs/feature-coverage.md` D groups some of them (the `datetime` and `number` variants) and
+  says 12. Beyond the five of the 53 views: `datetime` with `timeFormat:none` and with the
+  pictures `dd MMMM, yyyy` and `dd-MMM-yy`; `time` with no options; `number` with
+  `negativeOrder:1` and no `grouping`, and with `numDigits:auto`; `percentage`; `string` with
+  `plainMultiline`.
+- **Dates and times.** Named formats `Short Date` (`M/d/yyyy`) and `Long Date`
+  (`dddd, MMMM d, yyyy`); otherwise a Windows picture (`d`–`dddd`, `M`–`MMMM`, `y`, `yy`, `yyyy`,
+  `h`, `hh`, `H`, `HH`, `m`, `mm`, `s`, `ss`, `t`, `tt`, `'quoted'` text). An unquoted letter
+  outside that set, or a longer run, is `FORMAT_UNSUPPORTED {option: 'dateFormat'}`. `time`
+  with no `timeFormat` uses `h:mm:ss tt`. [VERIFY: InfoPath's default for `time` with no
+  options; no screenshot shows one.]
+- **Numbers.** `numDigits:auto` keeps the fraction as written. `grouping` absent means none.
+  Order tables: LOCALE_INEGNUMBER 0–4 (default 1), LOCALE_ICURRENCY 0–3 (default 0),
+  LOCALE_INEGCURR 0–15 (default 0), LOCALE_IPOSITIVEPERCENT 0–3 (default 1, `n%`),
+  LOCALE_INEGATIVEPERCENT 0–11 (default 1). A percentage is the value × 100 on its digits.
+  [VERIFY: the default positive percent order; the corpus writes only `negativeOrder:1`.]
+- **Issues.** `FORMAT_UNSUPPORTED {type, option}` (option `type` for an unknown type) once per
+  pair per render; `LOCALE_UNSUPPORTED {locale}` once per locale per render, for a render locale
+  other than en-US and for a `currencyLocale` other than 1033. Both format as en-US or leave the
+  value unchanged as the table says; an unparseable value is unchanged with no issue (R4.3).
+- **Rounding stays `[VERIFY]`.** Half away from zero on the digits is kept. No value in the
+  first records of forms 01–08, the ones with screenshots, has more fraction digits than its
+  `numDigits`, so no screenshot can settle it. A record built for it, opened in InfoPath, would.
 
 ### 7.2 `function-available` and unknown functions (R4.2, R4.4)
 
@@ -403,7 +439,7 @@ One walk over the result tree, in this order; each step needs what the one befor
   becomes the root scope `.afl-root[data-afl-scope="sX"]`; any other selector gets the scope as an
   ancestor prefix; one that does not tokenize cleanly is dropped (`CONTENT_REMOVED`).
 
-## 9. Control marks (R6.5, R6.6)
+## 9. Control marks (R6.5, R6.6, R6.7)
 
 ### 9.1 Technique
 
@@ -438,6 +474,38 @@ value), and the field is `required` or the target of a blank check: a validation
 or `kind: errorCondition` with `expressionContext` `.` and expression `.=""` once whitespace is
 removed. Form 01: four marks with the empty record (`manifest.xsf` lines 79–82), none with
 `-001.xml`.
+
+### 9.3 File attachments (R6.7)
+
+`Changed at review:` added with R6.7. When a marked control's FormIR `xctname` is
+`FileAttachment` and its node is not empty, `render/attachment.ts` reads the node's text as
+base64 of the file attachment structure of [MS-IPFFX] §2.1.3.1 "File Metadata"
+(learn.microsoft.com/openspecs/sharepoint_protocols/ms-ipffx/4cae5bf1-f3a0-4592-87d8-fe457e7951af),
+little-endian:
+
+| Offset | Field | Rule (MS-IPFFX) |
+|---|---|---|
+| 0 | signature | bytes `C7 49 46 41` |
+| 4 | header size | 20 |
+| 8 | version | 1 |
+| 12 | reserved | 0 |
+| 16 | file size | bytes in the file part |
+| 20 | file name length | UTF-16 code units, one terminating zero included, greater than 1 |
+| 24 | file name | length × 2 bytes, UTF-16LE, ending with zero |
+
+- Only the first `24 + 2 × length` bytes are decoded (`atob` on that many base64 characters).
+  The declared size is checked against the base64 length, so the file bytes are never decoded.
+- Problems, each giving the icon alone and one `ATTACHMENT_UNREADABLE {problem, count}` per
+  problem per render: `base64`, `truncated` (data ends inside the header or the name), `signature`,
+  `header` (size, version or reserved), `nameLength` (below 2 or above 1,024 units, our cap;
+  MS-IPFFX sets none), `name` (a zero inside or none at the end), `size` (declared size is not
+  the data size).
+- After step 6, the control gets `<span class="afl-attachment">` holding
+  `span.afl-icon.afl-icon-file` (CSS, no Microsoft asset), `span.afl-attachment-name` (a text
+  node: the serialiser escapes it) and `span.afl-attachment-size` (`109 bytes`). Lone surrogates
+  in the name become U+FFFD.
+- The view's own `xd:inline` attribute on the control still carries the base64 text, as R5.2
+  keeps `xd:*` attributes; it is an attribute value, escaped, never decoded.
 
 ## 10. References, goldens, determinism, performance (R1.1, R5.3, R7, R9, R10.1)
 
@@ -490,6 +558,7 @@ removed. Form 01: four marks with the empty record (`manifest.xsf` lines 79–82
 | R5.4, R5.5, R6.3 | browser | forms 01–08 inside a page | `test/browser/render-dom.browser.test.ts` |
 | R6.1–R6.4 | unit | synthetic package image; form 44; forms 02, 08 | `test/render/resources.test.ts` |
 | R6.5, R6.6 | unit + golden | form 02 first record; form 01 both records; synthetic `errorBlank` and non-nillable date | `test/render/marks.test.ts` |
+| R6.7 | unit | form 02 first record; truncated header; name-length overflow; markup in a name | `test/render/attachment.test.ts` |
 | R7.1 (P4) | property, 200 runs | sample record with text values replaced by generated strings; generated `now`, locale, user name; permuted view order | `test/property/p4.property.test.ts` |
 | R8.1 (P5) | property, 500 runs, Chromium | generated XSL + records from the R8.1 shapes. Oracle: `template.innerHTML` and `CSSStyleSheet.replaceSync` in Chromium, then a walk for R5.1 items | `test/browser/p5.browser.test.ts` |
 | R9.1 | perf | 106 renders, Node and Worker | §10 |

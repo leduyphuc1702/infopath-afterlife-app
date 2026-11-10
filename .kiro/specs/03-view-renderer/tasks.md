@@ -139,13 +139,20 @@ limits, properties, references and performance.
   - Done when: `V --project node test/render/limits.test.ts` and `V --project browser
     test/browser/render-limits.browser.test.ts`, then `pnpm check`.
 
-- [ ] 6. Secondary data and the other extension functions
+- [x] 6. Secondary data and the other extension functions
   - `src/render/functions.ts` and `src/xpath-fns/values.ts`: `GetDOM`, `GetNamedNodeProperty`,
     `getImageUrl`, `Today`, `Now`, `Avg`, `Nz`, `Eval`, `get-UserName`, `node-set`,
     `string-compare` (§7.1).
   - Tests: `test/render/functions.test.ts` (one case per row and per edge case) and
     `test/render/data.test.ts` (R2.2).
-  - Requirements: R2.2, R4.1, R4.5.
+  - `Changed at review:` R6.7: `src/render/attachment.ts` and the attachment display in
+    `marks.ts` (design §9.3); `test/render/attachment.test.ts`. Oracle: form 02's first record
+    shows `receipt-01-1.txt`, `109 bytes` and `receipt-01-2.txt`, `110 bytes`; a truncated header
+    and a name-length overflow show the icon alone with `ATTACHMENT_UNREADABLE`; a name holding
+    markup is escaped.
+  - `Changed at review:` the nested `xdMath:Eval` bombs left over from task 5, in
+    `test/render/limits.test.ts`.
+  - Requirements: R2.2, R4.1, R4.5, R6.7.
   - Oracle:
     - form 03's country list holds the countries of `locations.xml`;
     - form 04's `Vendors` list is empty, with one `SECONDARY_DATA_UNAVAILABLE`;
@@ -155,7 +162,7 @@ limits, properties, references and performance.
       a global if it did.
   - Done when: `V --project node test/render test/xpath-fns`, then `pnpm check`.
 
-- [ ] 7. `formatString` in full
+- [x] 7. `formatString` in full
   - `src/xpath-fns/format.ts`: the 12 corpus patterns (`docs/feature-coverage.md` D):
     - `negativeOrder` and `positiveOrder`;
     - `currencyLocale`;
@@ -283,6 +290,7 @@ limits, properties, references and performance.
 | R5.4, R5.5 | 3, 4, 8 |
 | R6.1–R6.4 | 8 |
 | R6.5, R6.6 | 4 |
+| R6.7 | 6 |
 | R7.1 (P4) | 11 |
 | R8.1 (P5) | 12 |
 | R9.1 | 13 |

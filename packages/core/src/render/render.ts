@@ -4,6 +4,7 @@
 // mark controls (§9), make inert, serialise, and scope the view's CSS to the render root.
 
 import { AfterlifeError, type Issue } from '../errors';
+import type { FormIR } from '../ir/types';
 import { resolveLimits, resolveRenderLimits, type Limits, type RenderLimits } from '../limits';
 import { parseXmlDom, xmlContext, type DomDocument } from '../xml/parse';
 import { solutionAttribute } from '../xsn/package';
@@ -15,7 +16,7 @@ import { OWN_CSS } from './html/own-css';
 import { REMOVED_KINDS, sanitiseResult, type ResultNode } from './html/sanitise';
 import { NO_RESOURCES, type Resources } from './html/resources';
 import { serialiseHtml } from './html/serialise';
-import { applyMarks, controlMark } from './marks';
+import { applyMarks, controlMark, type Rendered } from './marks';
 import { preparedInternals, type PreparedView } from './prepare';
 
 export interface RenderInput {
@@ -81,7 +82,13 @@ export function renderView(prepared: PreparedView, input: RenderInput): RenderRe
   const documents = new Map<string, DomDocument | undefined>();
   const budget = new Budget(resolveRenderLimits(input.limits));
   const run = runView(compiled, record.doc, {
-    functions: functionTable({ now: input.now, locale, userName: input.userName ?? '' }),
+    functions: functionTable({
+      now: input.now,
+      locale,
+      userName: input.userName ?? '',
+      secondary: packageSources(ir),
+      file: compiled.xslFile,
+    }),
     host: { report: (i) => issues.push(i) },
     loadDocument: (docName) => {
       const key = docName.toLowerCase();
@@ -139,13 +146,13 @@ export function postProcess(
   scope: string,
   xslFile: string,
   marked: ReadonlyMap<object, MarkedElement> = new Map(),
-  markOf: (m: MarkedElement) => ControlMark = () => {
+  markOf: (m: MarkedElement) => Rendered = () => {
     throw new AfterlifeError('INTERNAL', { path: 'postProcess', reason: 'no mark function' });
   },
   resources: Resources = NO_RESOURCES,
 ): { html: string; css: string; issues: Issue[]; marks: ControlMark[] } {
   const page = sanitiseResult(fragment as DomFragment & ResultNode, scope, resources);
-  const marks = applyMarks(page.root, (origin) => {
+  const { marks, unreadable } = applyMarks(page.root, (origin) => {
     const m = marked.get(origin);
     return m && markOf(m);
   });
@@ -157,6 +164,12 @@ export function postProcess(
     issues: [
       ...unsupportedIssues(xslFile, page.unsupported),
       ...postIssues(xslFile, page.rawTextNodes, removed),
+      ...[...unreadable].map(([problem, count]) => ({
+        code: 'ATTACHMENT_UNREADABLE' as const,
+        message: `${xslFile}: ${count} file attachment header(s) unreadable (${problem}); icon only`,
+        file: xslFile,
+        details: { problem, count },
+      })),
     ],
     marks,
   };
@@ -200,6 +213,17 @@ function postIssues(
       file,
       details: { kind, count: names.length },
     });
+  }
+  return out;
+}
+
+/** R2.2, spec 02 R8.3: `xmlFileAdapter` data objects whose file is in the package. */
+function packageSources(ir: FormIR): ReadonlyMap<string, string> {
+  const out = new Map<string, string>();
+  for (const c of ir.dataConnections) {
+    if (c.adapterKind !== 'xmlFileAdapter' || c.dataSource === undefined) continue;
+    const file = c.endpoints.find((e) => e.liveness === 'package')?.value;
+    if (file !== undefined && !out.has(c.dataSource)) out.set(c.dataSource, file);
   }
   return out;
 }

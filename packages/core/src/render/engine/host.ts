@@ -3,18 +3,50 @@
 
 import type { Issue } from '../../errors';
 
+/** A node of a node-set argument. */
+export interface FnNode {
+  /** An element node (not text, an attribute, a document or a fragment). */
+  readonly element: boolean;
+  /** Its XPath string value. */
+  string(): string;
+}
+
+/** A node-set built by the host; opaque to the bindings. */
+export interface FnNodeSet {
+  readonly kind: 'nodes';
+}
+
 /** One argument expression, evaluated at most once, when first asked. */
 export interface FnArg {
   string(): string;
   number(): number;
+  /** Its nodes in document order, or undefined when the value is not a node-set. */
+  nodes(): readonly FnNode[] | undefined;
+  /** `msxsl:node-set`: a fragment's root, a node-set itself, any other value as one text node. */
+  nodeSet(): FnNodeSet;
 }
 
 export interface FnHost {
   /** Records an issue for this render; the caller keeps one per kind. */
   report(issue: Issue): void;
+  /** Text-only elements in the render's scratch document, one per value, in order. */
+  makeNodes(values: readonly string[]): FnNodeSet;
+  /** A package XML file's document as a node-set, or undefined when there is none. */
+  document(file: string): FnNodeSet | undefined;
+  /** A document with no root element. */
+  emptyDocument(): FnNodeSet;
+  /**
+   * `expr` compiled with the calling element's namespaces and evaluated with `node` as context,
+   * as a string; undefined when it does not compile or fails. A limit still stops the render.
+   */
+  evaluate(expr: string, node: FnNode): string | undefined;
+  /** Runs `fn` one `templateDepth` level deeper (design §6). */
+  nested<T>(fn: () => T): T;
+  /** Characters added to the output by a value, such as a data URL (design §6). */
+  chargeOutput(chars: number): void;
 }
 
-export type FnValue = string | number | boolean;
+export type FnValue = string | number | boolean | FnNodeSet;
 export type FnImpl = (args: readonly FnArg[], host: FnHost) => FnValue;
 
 /** Namespace URI → local name → implementation. */

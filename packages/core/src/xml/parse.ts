@@ -2,7 +2,7 @@
 // parse (design §7.2 steps 1–4). Every problem is thrown as an AfterlifeError; whether that is
 // fatal (the manifest) or an issue (any other file) is the caller's decision (step 5, R5.4).
 
-import { DOMParser, ParseError, XMLSerializer } from '@xmldom/xmldom';
+import { DOMImplementation, DOMParser, ParseError, XMLSerializer } from '@xmldom/xmldom';
 import { AfterlifeError, type Issue } from '../errors';
 import type { Limits } from '../limits';
 import { decode } from './decode';
@@ -81,6 +81,19 @@ export interface ParsedDom {
 }
 
 /** Spec 03: the same steps and limits as `parseXml`, returning the DOM document itself. */
+/** A document with no root element: GetDOM of an unavailable data source (spec 03 R2.2). */
+export function emptyDocument(): DomDocument {
+  return new DOMImplementation().createDocument(null, '', null);
+}
+
+/**
+ * A document whose root `values` element holds the text-only elements that extension functions
+ * return (spec 03 design §7.1, `makeNodes`). One per render.
+ */
+export function scratchDocument(): DomDocument {
+  return new DOMImplementation().createDocument(null, 'values', null);
+}
+
 export function parseXmlDom(bytes: Uint8Array, file: string, ctx: XmlContext): ParsedDom {
   const { doc, encoding, issues } = parseDom(bytes, file, ctx);
   return { doc, encoding, issues };

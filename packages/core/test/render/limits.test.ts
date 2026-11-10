@@ -3,6 +3,7 @@ import { AfterlifeError, buildFormIR, prepareView, renderView } from '../../src/
 import { DEFAULT_RENDER_LIMITS, type RenderLimits } from '../../src/limits';
 import { STRING_CHARS_PER_STEP } from '../../src/render/engine/budget';
 import type { FunctionTable } from '../../src/render/engine/host';
+import { functionTable } from '../../src/render/functions';
 import { catchError } from '../helpers/catch-error';
 import { compileText, runCompiled } from '../helpers/engine';
 import { viewCases, type ViewCase } from '../helpers/render-cases';
@@ -134,6 +135,39 @@ describe('bombs, at the default limits', () => {
     expect(limit).toBe('outputBytes');
     // Charged per node, as each is added: the overrun is one node, not one doubling.
     expect(observed).toBeLessThan(4 * MiB + 1024);
+  });
+});
+
+describe('nested xdMath:Eval bombs (task 6)', () => {
+  const MATH = 'http://schemas.microsoft.com/office/infopath/2003/xslt/Math';
+  const functions = functionTable({
+    now: '2026-11-03T09:00:00-08:00',
+    locale: 'en-US',
+    userName: '',
+  });
+  const evalSheet = (select: string) =>
+    sheet(root(`<p><xsl:value-of select="${select}"/></p>`), ` xmlns:xdMath="${MATH}"`);
+
+  test('an expression that evaluates itself: templateDepth, one level per Eval call', async () => {
+    const self = 'xdMath:Eval(/r, string(/r/e))';
+    const e = await explode('Eval recursion', evalSheet(self), `<r><e>${self}</e></r>`, {
+      functions,
+    });
+    expect(e.details).toEqual({ limit: 'templateDepth', max: 128, observed: 129 });
+  });
+
+  test('Eval over 100 nodes, nested three deep: outputBytes, from the scratch nodes Eval returns', async () => {
+    // XPath 1.0 strings cannot nest three quote levels; the inner expressions live in the record.
+    const e1 = 'count(/r/a[xdMath:Eval(/r/a, string(/r/e2))])';
+    const e2 = "count(/r/a[xdMath:Eval(/r/a, '1')])";
+    const e = await explode(
+      'Eval breadth',
+      evalSheet('sum(xdMath:Eval(/r/a, string(/r/e1)))'),
+      `<r>${'<a/>'.repeat(100)}<e1>${e1}</e1><e2>${e2}</e2></r>`,
+      { functions },
+    );
+    // Each Eval result is a node-set of scratch elements, charged 64 bytes a node (design §6).
+    expect(e.details).toMatchObject({ limit: 'outputBytes', max: 4 * MiB });
   });
 });
 

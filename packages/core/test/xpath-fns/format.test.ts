@@ -2,12 +2,14 @@ import { expect, test } from 'vitest';
 import {
   formatOptions,
   formatString,
+  formatStringResult,
   parseDateTime,
   parseDecimal,
   roundDecimal,
 } from '../../src/xpath-fns/format';
 
-// Spec 03 R4.3 (task 2): the five formatString patterns of the 53 views, en-US. Values from
+// Spec 03 R4.3: task 2 covered the five formatString patterns of the 53 views; task 7 adds every
+// corpus pattern, the order tables and the issues (end of file). en-US. Values from
 // docs/infopath-ux.md §3–4 ([seen]): a date shows as 11/3/2026, a total as $350.30.
 
 const DATE = 'dateFormat:Short Date;';
@@ -66,10 +68,6 @@ test.each([
   ['plus sign (not XPath 1.0)', '+5', 'number', INT, '+5'],
   ['a lone point', '.', 'number', INT, '.'],
   ['two points', '1.2.3', 'number', INT, '1.2.3'],
-  ['another currency locale (task 7)', '5', 'currency', 'numDigits:2;currencyLocale:1036;', '5'],
-  ['an unknown type (task 7)', '5', 'percentage', 'numDigits:0;', '5'],
-  ['an unknown date format (task 7)', '2026-11-03', 'date', 'dateFormat:Long Date;', '2026-11-03'],
-  ['numDigits:auto (task 7)', '5.25', 'number', 'numDigits:auto;', '5.25'],
 ])('%s is returned unchanged', (_name, value, type, options, expected) => {
   expect(formatString(value, type, options)).toBe(expected);
 });
@@ -112,6 +110,138 @@ test('rounding works on the decimal digits, half away from zero', () => {
     year: 2026,
     month: 11,
     day: 3,
-    time: { hour: 14, minute: '05', second: '09' },
+    time: { hour: 14, minute: 5, second: 9 },
+  });
+});
+
+// --- Task 7: every corpus pattern, the order tables and the issues (design §7.1) ----------------
+
+const NUM0 = 'numDigits:0;negativeOrder:1;';
+const NUM2 = 'numDigits:2;negativeOrder:1;';
+const AUTO = 'numDigits:auto;negativeOrder:1;';
+const PCT = 'numDigits:0;negativeOrder:1;';
+
+test.each([
+  // The 14 type/options pairs of the corpus (docs/feature-coverage.md D), one case each.
+  ['date Short Date', '2026-11-03', 'date', DATE, '11/3/2026'],
+  ['datetime h:mm:ss tt', '2026-11-03T14:05:09', 'datetime', DATETIME, '11/3/2026 2:05:09 PM'],
+  [
+    'datetime timeFormat:none',
+    '2026-11-03T14:05:09',
+    'datetime',
+    'dateFormat:Short Date;timeFormat:none;',
+    '11/3/2026',
+  ],
+  [
+    'datetime dd MMMM, yyyy',
+    '2026-11-03T14:05:09',
+    'datetime',
+    'dateFormat:dd MMMM, yyyy;timeFormat:none;',
+    '03 November, 2026',
+  ],
+  [
+    'datetime dd-MMM-yy',
+    '2026-01-09',
+    'datetime',
+    'dateFormat:dd-MMM-yy;timeFormat:none;',
+    '09-Jan-26',
+  ],
+  ['time, no options', '09:30:00', 'time', '', '9:30:00 AM'],
+  ['number 0, grouped', '12345.5', 'number', INT, '12,346'],
+  ['number 2, grouped', '0.1', 'number', DEC2, '0.10'],
+  ['number 0, not grouped', '12345.4', 'number', NUM0, '12345'],
+  ['number 2, not grouped', '-1234.567', 'number', NUM2, '-1234.57'],
+  ['number auto', '-1234.50', 'number', AUTO, '-1234.50'],
+  ['currency 1033', '3021.6', 'currency', CURRENCY, '$3,021.60'],
+  ['percentage', '0.256', 'percentage', PCT, '26%'],
+  ['string plainMultiline', 'line 1\nline 2', 'string', 'plainMultiline', 'line 1\nline 2'],
+])('%s', (_name, value, type, options, expected) => {
+  expect(formatStringResult(value, type, options)).toEqual({ text: expected });
+});
+
+test.each([
+  ['Long Date', '2026-11-03', 'date', 'dateFormat:Long Date;', 'Tuesday, November 3, 2026'],
+  ['ddd d MMM', '2000-02-29', 'date', 'dateFormat:ddd d MMM yyyy;', 'Tue 29 Feb 2000'],
+  ['quoted text', '2026-11-03', 'date', "dateFormat:'Day' d 'of' MMMM;", 'Day 3 of November'],
+  ['y and yy', '2005-03-04', 'date', 'dateFormat:y/yy;', '5/05'],
+  [
+    'HH:mm',
+    '2026-11-03T00:07:00',
+    'datetime',
+    'dateFormat:Short Date;timeFormat:HH:mm;',
+    '11/3/2026 00:07',
+  ],
+  ['h at noon and midnight', '12:00:00', 'time', 'timeFormat:h tt;', '12 PM'],
+  ['h at midnight', '00:00:00', 'time', 'timeFormat:h tt;', '12 AM'],
+  ['t', '13:00:00', 'time', 'timeFormat:h t;', '1 P'],
+  ['time of a dateTime', '2026-11-03T23:59:59Z', 'time', '', '11:59:59 PM'],
+  ['datetime with a date only', '2026-11-03', 'datetime', DATETIME, '11/3/2026'],
+  [
+    'percentage, 2 digits, grouped',
+    '123.45678',
+    'percentage',
+    'numDigits:2;grouping:1;',
+    '12,345.68%',
+  ],
+  ['percentage, negative', '-0.5', 'percentage', PCT, '-50%'],
+  ['percentage, positiveOrder 0', '0.5', 'percentage', 'numDigits:0;positiveOrder:0;', '50 %'],
+  ['number auto, grouped', '1234567.125', 'number', 'numDigits:auto;grouping:1;', '1,234,567.125'],
+  ['negative zero after rounding', '-0.004', 'number', NUM2, '0.00'],
+])('%s', (_name, value, type, options, expected) => {
+  expect(formatString(value, type, options)).toBe(expected);
+});
+
+test('currency negative orders follow LOCALE_INEGCURR 0–15, positive orders LOCALE_ICURRENCY 0–3', () => {
+  const neg = (o: number) => formatString('-1234.5', 'currency', `numDigits:2;negativeOrder:${o};`);
+  expect(Array.from({ length: 16 }, (_, o) => neg(o))).toEqual([
+    ...['($1,234.50)', '-$1,234.50', '$-1,234.50', '$1,234.50-', '(1,234.50$)', '-1,234.50$'],
+    ...['1,234.50-$', '1,234.50$-', '-1,234.50 $', '-$ 1,234.50', '1,234.50 $-', '$ 1,234.50-'],
+    ...['$ -1,234.50', '1,234.50- $', '($ 1,234.50)', '(1,234.50 $)'],
+  ]);
+  const pos = (o: number) => formatString('1234.5', 'currency', `numDigits:2;positiveOrder:${o};`);
+  expect([0, 1, 2, 3].map(pos)).toEqual(['$1,234.50', '1,234.50$', '$ 1,234.50', '1,234.50 $']);
+});
+
+test('percentage negative orders follow LOCALE_INEGATIVEPERCENT 0–11', () => {
+  const neg = (o: number) => formatString('-0.25', 'percentage', `numDigits:0;negativeOrder:${o};`);
+  expect(Array.from({ length: 12 }, (_, o) => neg(o))).toEqual([
+    ...['-25 %', '-25%', '-%25', '%-25', '%25-', '25-%', '25%-', '-% 25', '25 %-', '% 25-'],
+    ...['% -25', '25- %'],
+  ]);
+});
+
+test.each([
+  ['an unknown type', '5', 'fraction', 'numDigits:0;', 'type'],
+  ['an unknown option', '5', 'number', 'numDigits:0;decimalSeparator:,;', 'decimalSeparator'],
+  ['an unknown named date format', '2026-11-03', 'date', 'dateFormat:Medium Date;', 'dateFormat'],
+  ['no dateFormat', '2026-11-03', 'date', '', 'dateFormat'],
+  ['a picture run the tables lack', '2026-11-03', 'date', 'dateFormat:ddddd;', 'dateFormat'],
+  ['numDigits out of range', '5', 'number', 'numDigits:100;', 'numDigits'],
+  ['negativeOrder out of range', '-5', 'number', 'numDigits:0;negativeOrder:5;', 'negativeOrder'],
+  ['currency negativeOrder 16', '-5', 'currency', 'numDigits:0;negativeOrder:16;', 'negativeOrder'],
+  ['grouping 2', '5', 'number', 'numDigits:0;grouping:2;', 'grouping'],
+  ['time with timeFormat:none', '09:30:00', 'time', 'timeFormat:none;', 'timeFormat'],
+])('%s: the value unchanged, with FORMAT_UNSUPPORTED', (_name, value, type, options, option) => {
+  expect(formatStringResult(value, type, options)).toEqual({
+    text: value,
+    unsupported: { type, option },
+  });
+});
+
+test('an unparseable value is returned unchanged, with no issue (R4.3)', () => {
+  for (const [value, type, options] of [
+    ['soon', 'date', DATE],
+    ['25:00:00', 'time', ''],
+    ['n/a', 'percentage', PCT],
+    ['1,234', 'currency', CURRENCY],
+  ] as const) {
+    expect(formatStringResult(value, type, options)).toEqual({ text: value });
+  }
+});
+
+test('currencyLocale other than 1033 formats as en-US and names the locale', () => {
+  expect(formatStringResult('5', 'currency', 'numDigits:2;currencyLocale:1036;')).toEqual({
+    text: '$5.00',
+    locale: '1036',
   });
 });

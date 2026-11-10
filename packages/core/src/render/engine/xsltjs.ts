@@ -9,7 +9,13 @@ import processorModule from 'xsltjs/scripts/Processor.js';
 import serializerModule from 'xsltjs/scripts/Serializer.js';
 import { AfterlifeError, type Issue } from '../../errors';
 import type { BoundControl } from '../../ir/types';
-import { xmlText, type DomDocument, type XmlContext } from '../../xml/parse';
+import {
+  emptyDocument,
+  scratchDocument,
+  xmlText,
+  type DomDocument,
+  type XmlContext,
+} from '../../xml/parse';
 import type { Budget } from './budget';
 import {
   CORE_FUNCTIONS,
@@ -17,6 +23,8 @@ import {
   functionName,
   type FnArg,
   type FnHost,
+  type FnNode,
+  type FnNodeSet,
   type FnValue,
   type FunctionTable,
 } from './host';
@@ -48,7 +56,11 @@ type ApplyStep = ((
 ) => unknown[]) & { [MARK]?: true; [ORIGINAL]?: ApplyStep };
 
 interface XPathInternals {
-  readonly XNodeSet: new () => { first(): unknown };
+  readonly XNodeSet: new () => {
+    first(): unknown;
+    toArray(): unknown[];
+    addArray(nodes: readonly unknown[]): void;
+  };
   readonly XString: new (s: string) => XValue;
   readonly XNumber: new (n: number) => XValue;
   readonly XBoolean: new (b: boolean) => XValue;
@@ -245,7 +257,8 @@ export interface RunOptions {
   readonly fallback?: boolean;
   /** Extension functions by namespace; ignored in fallback mode. */
   readonly functions: FunctionTable;
-  readonly host: FnHost;
+  /** Where the bindings' issues go; the adapter builds the rest of each call's FnHost. */
+  readonly host: Pick<FnHost, 'report'>;
   /** A package XML file for `document()`, by name, or undefined. */
   readonly loadDocument: (name: string) => DomDocument | undefined;
   readonly budget: Budget;
@@ -487,6 +500,58 @@ function installFunctions(
   const budget = options.budget;
   const core = (local: string, ns: string) =>
     ns === '' && CORE_FUNCTIONS.has(local) && find(local, ns) !== undefined;
+  let scratch: ScratchDoc | undefined;
+  const scratchRoot = () =>
+    (scratch ??= scratchDocument() as unknown as ScratchDoc).documentElement;
+
+  /** The host one call sees: its calling context `c` gives Eval its namespaces (§7.1). */
+  const hostFor = (c: XPathContextOf): FnHost => ({
+    report: (issue) => options.host.report(issue),
+    makeNodes: (values) => {
+      const root = scratchRoot();
+      const doc = root.ownerDocument;
+      const set = doc.createElement('set');
+      root.appendChild(set);
+      const nodes = values.map((v) => {
+        const el = doc.createElement('value');
+        if (v !== '') el.appendChild(doc.createTextNode(v));
+        set.appendChild(el);
+        return el;
+      });
+      budget.chargeOutput(
+        values.reduce((n, v) => n + v.length, 0),
+        values.length + 1,
+      );
+      return new NodeSetValue(nodes);
+    },
+    document: (file) => {
+      const doc = options.loadDocument(file);
+      return doc === undefined ? undefined : new NodeSetValue([doc]);
+    },
+    emptyDocument: () => new NodeSetValue([emptyDocument()]),
+    evaluate: (expr, node) => {
+      const x = c.xslt;
+      if (!x || !(node instanceof EngineNode)) return undefined;
+      const ctx = { ...x.ctx, node: node.node, position: 1, size: 1 };
+      try {
+        return (x.processor.evaluate(expr, ctx as LiteralCtx, x.styleNode) as XValue).stringValue();
+      } catch (e) {
+        if (budget.abort) throw budget.abort;
+        if (e instanceof AfterlifeError) throw e;
+        if ((e as { cause?: unknown } | undefined)?.cause instanceof AfterlifeError) throw e;
+        return undefined;
+      }
+    },
+    nested: (fn) => {
+      budget.enter();
+      try {
+        return fn();
+      } finally {
+        budget.depth--;
+      }
+    },
+    chargeOutput: (chars) => budget.chargeOutput(chars),
+  });
 
   fns.isAvailable = (local, ns) => core(local, ns) || table.get(ns)?.has(local) === true;
   fns.find = (local, ns) => {
@@ -504,7 +569,7 @@ function installFunctions(
       return (c, ...exprs) => {
         const value = impl(
           exprs.map((e) => lazyArg(c, e)),
-          options.host,
+          hostFor(c as XPathContextOf),
         );
         // formatString and the other string-valued extensions are charged like concat (§6).
         if (typeof value === 'string') budget.chargeString(value.length);
@@ -519,16 +584,88 @@ function installFunctions(
   };
 }
 
+/** The XPath context xsltjs passes to a function: who called it, and where (makeXPathContext). */
+interface XPathContextOf {
+  readonly xslt?: {
+    readonly processor: ProcessorLike;
+    readonly ctx: object;
+    readonly styleNode: XslElement;
+  };
+}
+
+interface ScratchDoc {
+  readonly documentElement: ScratchElement;
+}
+interface ScratchElement {
+  readonly ownerDocument: {
+    createElement(name: string): ScratchElement;
+    createTextNode(text: string): unknown;
+  };
+  appendChild(node: unknown): unknown;
+}
+
+/** A node handed to a binding: the engine node stays inside. */
+class EngineNode implements FnNode {
+  constructor(readonly node: DomNodeLike) {}
+  get element(): boolean {
+    return this.node.nodeType === 1;
+  }
+  string(): string {
+    return stringValue(this.node);
+  }
+}
+
+/** A node-set a binding returns: the engine nodes, in document order. */
+class NodeSetValue implements FnNodeSet {
+  readonly kind = 'nodes';
+  constructor(readonly nodes: readonly unknown[]) {}
+}
+
+interface DomNodeLike {
+  readonly nodeType: number;
+  readonly data?: string;
+  readonly value?: string;
+  readonly textContent?: string | null;
+}
+
+/** XPath 1.0 string value of a node. */
+function stringValue(n: DomNodeLike): string {
+  if (n.nodeType === 2) return n.value ?? '';
+  if (n.nodeType === 3 || n.nodeType === 4 || n.nodeType === 7 || n.nodeType === 8) {
+    return n.data ?? '';
+  }
+  return n.textContent ?? '';
+}
+
 function lazyArg(c: unknown, expr: XExpr): FnArg {
   let value: XValue | undefined;
   const get = () => (value ??= expr.evaluate(c));
-  return { string: () => get().stringValue(), number: () => get().numberValue() };
+  const asNodes = () => {
+    const v = get();
+    return v instanceof XPath.XNodeSet ? (v.toArray() as DomNodeLike[]) : undefined;
+  };
+  return {
+    string: () => get().stringValue(),
+    number: () => get().numberValue(),
+    nodes: () => asNodes()?.map((n) => new EngineNode(n)),
+    nodeSet: () => {
+      const nodes = asNodes();
+      if (nodes) return new NodeSetValue(nodes);
+      const doc = scratchDocument() as unknown as ScratchDoc;
+      return new NodeSetValue([
+        doc.documentElement.ownerDocument.createTextNode(get().stringValue()),
+      ]);
+    },
+  };
 }
 
 function toXValue(v: FnValue): XValue {
   if (typeof v === 'string') return new XPath.XString(v);
   if (typeof v === 'number') return new XPath.XNumber(v);
-  return new XPath.XBoolean(v);
+  if (typeof v === 'boolean') return new XPath.XBoolean(v);
+  const set = new XPath.XNodeSet();
+  set.addArray(v instanceof NodeSetValue ? v.nodes : []);
+  return set as unknown as XValue;
 }
 
 // --- Shared helpers ----------------------------------------------------------------------------
