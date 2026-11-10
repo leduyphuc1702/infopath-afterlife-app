@@ -6,7 +6,7 @@ Mai drops a whole folder of InfoPath templates (and, optionally, their filled .x
 - a death certificate per form: exactly what stops this form from working after the retirement dates, with evidence from the file, and what replaces each part;
 - a migration plan in waves, which Quang can print on one page or export as CSV.
 
-The logic lives in `packages/core/triage` with no Forge imports. The web viewer and the Forge Studio (S1 Library + Triage, S2 death-certificate card) both use it. The Rovo actions `plan_migration` and `get_death_certificate` read its output.
+The logic lives in `packages/core/src/triage/` with no Forge imports. The web viewer and the Forge Studio (S1 Library + Triage, S2 death-certificate card) both use it. The Rovo actions `plan_migration` and `get_death_certificate` read its output.
 
 ## Inputs
 - Any number of .xsn files, a .zip of them, or a dropped folder (web viewer).
@@ -48,7 +48,7 @@ The source column in the UI links to the vendor's lifecycle or release page. The
    - CSV: one row per form with all metrics, the wave and the cause ids;
    - a one-page print view (A4 and Letter): totals, forms per wave, the five most common causes, and the wave rules in plain words.
 5. THE triage of 40 templates SHALL finish in under 60 s in the browser, in a Web Worker, with per-file progress [measure on real hardware with the "Big Form" sample, then fix the number].
-6. THE `packages/core/triage` module SHALL NOT import Forge or DOM-only APIs, so the same code runs in Node, in the Forge resolver and in a Web Worker.
+6. THE `packages/core/src/triage/` module SHALL NOT import Forge or DOM-only APIs, so the same code runs in Node, in the Forge resolver and in a Web Worker.
 7. IN the web viewer, THE SYSTEM SHALL keep every file in the browser. No template, record or Triage result SHALL be sent over the network.
 
 ## Correctness properties (property-based tests)

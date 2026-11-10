@@ -8,7 +8,7 @@ Read an InfoPath template (.xsn) entirely in TypeScript, in both Node and the br
 - As a developer, I want typed errors for broken or unsupported files, so the UI can explain problems clearly.
 
 ## Acceptance criteria (EARS)
-1. WHEN given a .xsn that uses MSZIP compression, THE SYSTEM SHALL return every contained file with bytes identical to `bsdtar -xf` output, for all files in `samples/public`.
+1. WHEN given a .xsn that uses MSZIP compression, THE SYSTEM SHALL return every contained file with bytes identical to `bsdtar -xf` output, for every `.xsn` in `samples/own/xsn/` (42) and `samples/public/` (1).
 2. IF the cabinet uses LZX or Quantum compression, THEN THE SYSTEM SHALL fail with `UNSUPPORTED_COMPRESSION` naming the method.
 3. IF the input is not a cabinet, or is truncated, THEN THE SYSTEM SHALL fail with `CORRUPT_CAB` and the byte offset.
 4. IF the decompressed total exceeds 50 MB, or the entry count exceeds 2,000, THEN THE SYSTEM SHALL stop with `LIMIT_EXCEEDED` (zip-bomb guard).
@@ -32,7 +32,7 @@ Read an InfoPath template (.xsn) entirely in TypeScript, in both Node and the br
 
    It SHALL resolve `include`, `import`, `ref` and named complex types across the schema files in the package.
 7. THE SYSTEM SHALL disable external entity resolution and DTD loading for every XML document it parses.
-8. THE SYSTEM SHALL parse each public sample in under 300 ms (p95) on Node 22.
+8. THE SYSTEM SHALL parse each `.xsn` in `samples/own/` and `samples/public/` in under 300 ms (p95) on Node 22.
 
 ## Correctness properties
 - **P1:** for any random or mutated byte array of up to 2 MB, the parser returns a result or a typed `AfterlifeError` within 1 s. It never hangs and never throws an untyped exception.
@@ -43,4 +43,4 @@ Read an InfoPath template (.xsn) entirely in TypeScript, in both Node and the br
 
 ## Notes
 - MSZIP: each CFDATA block starts with the bytes `CK`. Deflate history continues across blocks in the same CFFOLDER.
-- Reference numbers for testing come from the research analysis of 29 samples (see infopath-domain steering).
+- Reference numbers: the per-form counts in `samples/own/README.md`. The 29 third-party samples summarised in the infopath-domain steering are not in the repo; tests over them read `AFTERLIFE_PRIVATE_SAMPLES` and skip when it is unset.

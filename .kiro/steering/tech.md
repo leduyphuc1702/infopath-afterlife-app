@@ -12,7 +12,7 @@ inclusion: always
 - Lint and format with the project defaults (eslint + prettier, or oxlint/oxfmt). Pick one on day 1 and do not mix.
 
 ## Key libraries
-- **XSLT 1.0:** `xslt-processor` (pure JS, LGPL-3.0; used unmodified as an npm dependency, which is fine with an MIT repo). It rendered all 5 Microsoft 2013 sample views in 12–23 ms in Node.
+- **XSLT 1.0:** `xslt-processor` (pure JS, LGPL-3.0; used unmodified as an npm dependency, which is fine with an MIT repo). It rendered all 5 views of Microsoft's 2013 sample templates in 12–23 ms in Node (measured locally; those templates are not in the repo).
   - Do NOT use the browser's native XSLTProcessor (Chrome is removing it).
   - Do NOT use `saxon-js` (proprietary licence).
 - **Deflate:** use built-in `zlib.inflateRawSync` in Node and `DecompressionStream('deflate-raw')` in the browser. Do not add a CAB library.
@@ -42,7 +42,26 @@ inclusion: always
 - **rovo:mcp (Preview):** one module per app, ≤ 50 actions, action name ≤ 30 characters. A site admin must enable external exposure.
 
 ## JSM Forms API facts
-- Create a template with `POST /project/{key}/form`. Through Forge, call `api.asUser().requestJira('/forms/…')` [VERIFY the path on day 1].
+Probed 2026-11-04 on a real Jira Cloud site; details in `docs/spec-briefs/05-jsm-converter.md`.
+Reference: Atlassian's ProForma Forms REST API reference (0.0.0-alpha), 27 endpoints. It is
+Atlassian's material and is not in this repo.
+
+- **Verified with `api.asApp().requestJira('/forms/...')`:** 200 for read, create and delete of a
+  form template. `asUser()` was never tried; it is a day-1 check.
+- `requestAtlassian` against the same API returned 400 `INVALID_TARGET_URL`. Do not use it.
+- Base URLs: `https://api.atlassian.com/ex/jira/{cloudId}/forms` and
+  `https://api.atlassian.com/jira/forms/cloud/{cloudId}`.
+- Endpoints and scopes:
+  - list project templates: `GET /forms/project/{projectIdOrKey}/form` (`read:jira-work`);
+  - create a template: `POST /forms/project/{projectIdOrKey}/form` (`manage:jira-project`);
+  - request type form: `GET /forms/servicedesk/{serviceDeskId}/requesttype/{requestTypeId}/form` (`read:servicedesk-request`);
+  - attach, submit, export: `/forms/issue/{key}/form`, `/forms/request/{key}/form/{formId}/action/submit`, `.../format/answers|pdf|xlsx`.
+- Create body: `FormTemplateRequest { design, publish }`. `design` needs `questions`, `sections`,
+  `conditions`, `layout` and `settings`. `settings` needs `name` and `submit`; `submit` needs both
+  `lock` and `pdf`.
+- Observed shapes: `questions` is a map keyed by numeric strings; each question is
+  `{label, type, choices[], description, questionKey, validation}`; `choices` is
+  `[{id, label, other}]`; `validation` is e.g. `{rq: true}`.
 - Question types:
   - at = attachment
   - cc = cascading dropdown
@@ -64,9 +83,18 @@ inclusion: always
   - um = multi user
   - us = single user
 - Validation fields: `rq`, `rgx {p, m}`, `mnc/mxc` (chars), `mnw/mxw` (words), `mnn/mxn` (number), `mnd/mxd` (date), `mns/mxs` (selections), `mnt/mxt` (time).
-- Section conditions can only depend on choice questions.
+- Show/hide conditions use `sh`/`hide`. Section conditions can only depend on choice questions.
 - **There is no repeating table type.** We fill that gap with a Forge custom field.
-- Publish with `publish.portal.portalRequestTypeIds` or `publish.jira.issueCreateRequestTypeIds`.
+- Publish through the create body:
+  - `publish.portal.portalRequestTypeIds` (`FormPublishingPortal`): request types on the portal;
+  - `publish.jira.issueCreateRequestTypeIds` (`FormPublishingJira`): JSM request types in the
+    create dialog. The converter uses this one for JSM service projects;
+  - `publish.jira.issueCreateIssueTypeIds` (`FormPublishingJira`): Jira issue types, for plain
+    Jira projects.
+
+  Only a read-back of an existing template
+  was seen (`portalRequestTypeIds: [129]`). Creating a template with `publish` set is untested; it
+  is a day-1 check.
 
 ## Security rules
 - Sanitise every HTML string produced from XSL before inserting it into the DOM. Never execute script from a form.

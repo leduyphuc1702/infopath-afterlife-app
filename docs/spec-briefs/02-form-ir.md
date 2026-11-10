@@ -33,7 +33,7 @@ One versioned JSON model that describes an InfoPath form. The converter, the Cla
 5. THE SYSTEM SHALL serialise FormIR to stable JSON: sorted keys and deterministic ids derived from source paths.
 
 ## Correctness properties
-- **P6:** `parse(serialise(ir))` deep-equals `ir` for every public sample, and for any FormIR built by the generator.
+- **P6:** `parse(serialise(ir))` deep-equals `ir` for every template in `samples/own/` and `samples/public/`, and for any FormIR built by the generator.
 - **Dependency index completeness:** every field id referenced in any rule expression appears in that field's dependency list.
 
 ## Out of scope

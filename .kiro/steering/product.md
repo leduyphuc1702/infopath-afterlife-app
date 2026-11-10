@@ -73,7 +73,7 @@ See the weakness list. In short:
 ## Product principles
 1. **Never lose a feature silently.** Every InfoPath element ends in exactly one state:
    - Native: a built-in JSM Forms feature.
-   - Emulated: our app does it.
+   - Emulated: our app does it (labelled "App" in the UI and in `docs/feature-coverage.md`).
    - Manual: we report it with guidance.
    - Unsupported: we say so in the UI.
 2. **No lock-in.** Prefer native JSM Forms. If the app is uninstalled, converted forms must keep working. Records can always be exported as CSV and as the original XML.

@@ -1,6 +1,6 @@
 # MCP servers for Kiro
 
-Config file: `.kiro/settings/mcp.json`, at workspace level, committed to the repo. Do not commit secrets; use `${ENV}` expansion instead.
+Config file: `.kiro/settings/mcp.json`, at workspace level. It is **gitignored** (see `.gitignore`) because it can hold tokens; this document is the committed description of it. Prefer `${ENV}` expansion over literal secrets even locally.
 
 | Server | Type | Why |
 |---|---|---|

@@ -4,14 +4,30 @@ inclusion: always
 
 # Samples and licensing
 
-- Repo licence: **MIT**. It must be visible in the GitHub About section.
-- `samples/public/` may contain only:
-  - Microsoft sample templates (Asset Tracking, Expense Report, Meeting Agenda, Status Report, Travel Request; 2007/2010/2013 versions), originally shared at spjeff.com;
-  - theill/weight-keeper (MIT).
+`docs/SAMPLE-LICENSES.md` decides what may enter the repo. A sample is committed only when its
+licence clearly allows redistribution; "no licence stated" means no. Before adding a sample, add
+its row there. The agent cannot write under `samples/`; ask the human to change files there.
 
-  Keep `samples/LICENSES.md` updated with the source and licence of every file.
-- `samples/own/` holds the sample set we built ourselves in InfoPath 2013 (created 2026-11-03 → 11-07, before the app repo existed; declare this as test data, not app code). MIT. Eight forms: Leave Request (+ v2), Expense Report, Travel Request, Purchase Request, New Hire Onboarding, Safety Incident, Big Form. Each has the .xsn, filled .xml records and screenshots of every view. All names, hosts (`sql-legacy01`, `forms-legacy`) and people in it are fictional. This set may be published as an open test dataset.
-- `samples/private/` holds unlicensed real-world samples (MARTA, Apress, openmrs, kastil, adnan). It is listed in `.gitignore` and `.kiroignore`. These files must never be committed, shown in videos or screenshots, or quoted in docs.
+- Repo licence: **MIT**. It must be visible in the GitHub About section.
+- `samples/own/`: our own sample set, MIT (`samples/own/LICENSE`). Written from scratch for this
+  project in a Windows VM on 2026-11-03 and 2026-11-04; declare it as test data, not app code.
+  - 42 templates: `xsn/<slug>.xsn`, the same files unpacked in `forms/<slug>/`.
+  - 323 filled records, plus one `<slug>-000-empty.xml` per template, in `records/<slug>/`.
+  - 22 screenshots in `screenshots/`: every view of forms 01–08, empty and filled, taken in
+    InfoPath Filler 2013 and cropped to the form canvas (1007x555). No Microsoft UI is left in
+    them. Forms 09–42 have none.
+  - All 42 opened in InfoPath Filler 2013 on 2026-11-04. Per-form counts are in
+    `samples/own/README.md`.
+  - Everything is fictional: people, companies, hosts (`sql-legacy01`, `forms-legacy`,
+    `contoso-fictional.example`) and files. The set may be published as an open test dataset.
+- `samples/public/`: third-party samples whose licence permits redistribution. Today that is one
+  file, `theill-weight-keeper/theill__weight-keeper.xsn` from `theill/iquomi` (MIT), with
+  attribution in its README.
+- Never in the repo: the spjeff.com pack of Microsoft's bundled templates (no licence stated),
+  MARTA, Apress, kastil, adnan and openmrs. They live outside the working tree, at the absolute
+  path in the env var `AFTERLIFE_PRIVATE_SAMPLES`. `samples/private/` stays in `.gitignore` and
+  `.kiroignore` only as a guard; do not store files there. Never show these files in videos or
+  screenshots, and never quote them in docs.
 - Dependencies:
   - `xslt-processor` (LGPL-3.0) is used unmodified as an npm dependency. Note this in README "Third-party licences".
   - Do not add GPL or proprietary dependencies.

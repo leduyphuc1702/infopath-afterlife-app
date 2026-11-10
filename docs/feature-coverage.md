@@ -5,8 +5,12 @@ That is easy to say and easy to fake, so this file does two things instead: it l
 capabilities, and every row carries a number from the corpus or a pointer to a spec. If a row has
 neither, it is a guess and is marked as one.
 
-Numbers come from `research/corpus/facts.json` (`python3 facts.py`), run over 71 unpacked
-templates: our 42 MIT samples plus 29 real third-party forms. Note the skew: 42 of the 71 were
+Numbers come from `facts.json` (`python3 facts.py`), run over 71 unpacked templates: our 42 MIT
+samples plus 29 real third-party forms. The script and its output live in a research workspace
+outside this repo, because 29 of the inputs may not be redistributed (`docs/SAMPLE-LICENSES.md`).
+The spec 01 parser will reproduce the counts for the in-repo samples (`samples/own/`,
+`samples/public/`); the third-party share can only be re-counted where `AFTERLIFE_PRIVATE_SAMPLES`
+is set. Note the skew: 42 of the 71 were
 written for this project, so the distribution describes our test set as much as the market.
 What it does prove is that the parser and renderer are exercised by every row marked with a
 count above zero.
@@ -179,8 +183,12 @@ Each line answers a defect recorded in `docs/infopath-ux.md`. None of these exis
 
 ## K. How to prove none of this regressed
 
-1. Every row above with a count above zero has a fixture in `samples/own/`; run the app over the
-   folder and the counts must match `facts.json`.
+1. Run the app over `samples/own/` and its per-form counts must match `samples/own/README.md`;
+   where `AFTERLIFE_PRIVATE_SAMPLES` is set, the 71-form totals must also match `facts.json`.
+   Not every row with a count above zero has an in-repo fixture: ActiveX, combobox, digital
+   signatures, code-behind, `xdMath:Min`/`Max` and `xdDate:AddDays`/`AddSeconds` occur only in the
+   third-party forms (checked 2026-11-10, zero matches under `samples/own/forms/`). Treat those
+   rows as "untested" in CI until a form is added to `samples/own/`.
 2. Every row marked "untested, no fixture" is a task, not a claim. Add a form, add a row.
 3. The demo video quotes only numbers from `facts.json`, so the claims and the evidence cannot
    drift apart.

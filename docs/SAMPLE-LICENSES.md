@@ -25,5 +25,7 @@ Notes for later:
 - The spjeff pack is Microsoft's own set of tutorial templates. Being Microsoft's does not make
   them MIT; if a demo needs one, run it from a private folder, do not commit it.
 - `samples/own/` deliberately contains no real health, HR or customer data. Names, addresses,
-  hostnames (`sql-legacy01.contoso.example`) and employee IDs are invented. `.example` is a
-  reserved TLD, so nothing in the samples can resolve to a real host.
+  hostnames and employee IDs are invented. Hosts are either under `contoso-fictional.example`
+  (`.example` is a reserved TLD) or bare single-label names such as `sql-legacy01` and
+  `forms-legacy`, which have no public DNS entry. Neither kind can resolve to a real host on the
+  public internet.

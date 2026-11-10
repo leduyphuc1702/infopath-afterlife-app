@@ -28,7 +28,7 @@ Everything runs in the browser and no data leaves the machine. It is useful even
 
    Column headers SHALL be the InfoPath field paths, so the export can be imported anywhere.
 5. THE SYSTEM SHALL work with no network after load. CSP `connect-src 'self'` SHALL apply, and there SHALL be no analytics in the MVP.
-6. THE SYSTEM SHALL offer "Try a sample" buttons for the bundled public samples (Microsoft templates and our own MIT sample set in `samples/own`).
+6. THE SYSTEM SHALL offer "Try a sample" buttons for the bundled samples: our own MIT set in `samples/own` and the MIT weight-keeper in `samples/public`. Microsoft's templates are not bundled (no licence; see `docs/SAMPLE-LICENSES.md`).
 7. THE SYSTEM SHALL offer a Classic "fill" mode with Rule Trace, using the same runtime as the Forge app. The filled XML SHALL be downloadable.
 8. THE SYSTEM SHALL include a call to action, "Bring this form into Jira Service Management", linking to the install or Marketplace page. The call to action SHALL NOT block any free feature.
 9. THE SYSTEM SHALL score at least 90 for Lighthouse accessibility and performance on desktop.

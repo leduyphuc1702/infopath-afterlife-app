@@ -18,7 +18,7 @@ fileMatchPattern: ["apps/forge/static/**", "apps/web/**"]
 3. **Speak InfoPath, then translate.** Labels such as "Rules", "Views", "Data connections" and "Repeating table" get a small grey hint with the Atlassian term ("= Form section", "= Request type").
 4. **Show coverage everywhere.** Every field shows one of four status chips: Native (green), App (blue), Manual (yellow), Unsupported (grey). Every chip has a reason on hover.
 5. **Errors have three parts:** what happened, why, and what to click. Add an "Ask Rovo" button where Rovo is available.
-6. **Empty states teach.** Studio's empty library offers "Try with a sample", which loads Microsoft's Expense Report and Travel Request templates.
+6. **Empty states teach.** Studio's empty library offers "Try with a sample", which loads our own Expense Report and Travel Request (`samples/own` forms 02 and 03, MIT). Microsoft's templates cannot be bundled.
 7. **Accessibility:**
    - every Classic control gets a label (from the preceding table cell text) and ARIA attributes;
    - focus is visible;

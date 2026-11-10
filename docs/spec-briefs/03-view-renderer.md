@@ -8,8 +8,8 @@ Render any InfoPath view (`viewN.xsl` + XML data) to safe HTML. Use a pure-JS XS
 - As Tim, I want to see my original form next to the converted version.
 
 ## Acceptance criteria (EARS)
-1. WHEN given a view XSL and an XML document, THE SYSTEM SHALL return HTML within 100 ms (p95) for every public sample.
-2. THE SYSTEM SHALL implement these functions, so that no public or private sample calls an unknown function:
+1. WHEN given a view XSL and an XML document, THE SYSTEM SHALL return HTML within 100 ms (p95) for every view in `samples/own/` and `samples/public/`.
+2. THE SYSTEM SHALL implement these functions, so that no sample in `samples/own/`, `samples/public/` or `AFTERLIFE_PRIVATE_SAMPLES` calls an unknown function:
    - `xdFormatting:formatString` (number, currency, percent, date, time, datetime; en-US by default, locale configurable);
    - `xdXDocument:GetDOM`;
    - `xdXDocument:GetNamedNodeProperty`;
@@ -30,4 +30,4 @@ Render any InfoPath view (`viewN.xsl` + XML data) to safe HTML. Use a pure-JS XS
 - **P5:** sanitised output never contains executable content (checked against a generator of hostile XSL and XML inputs).
 
 ## Visual acceptance
-Playwright compares renders of the 5 Microsoft 2013 templates against reference PNGs made by `xsltproc` from the same inputs. The difference must be below a threshold agreed after the first measurement, and recorded in the spec.
+Playwright compares renders of the 11 views of forms 01–08 in `samples/own/` (with the empty and a filled record) against reference PNGs made by `xsltproc` from the same inputs. The difference must be below a threshold agreed after the first measurement, and recorded in the spec. The 22 InfoPath Filler 2013 screenshots in `samples/own/screenshots/` are the human reference for fidelity review.

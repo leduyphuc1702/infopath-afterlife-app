@@ -9,31 +9,40 @@ Turn FormIR into a JSM Forms template (`FormTemplateRequest` JSON). Produce a Co
 
 ## API surface (verified 2026-11-04)
 
-Nguồn: `samples/atlassian-forms-openapi.json` — "ProForma Forms RESTful API", `0.0.0-alpha`, 27 endpoint.
+Source: Atlassian's ProForma Forms REST API reference (0.0.0-alpha), 27 endpoints. It is
+Atlassian's material, kept outside this repo on purpose and never committed.
 
-- Gốc: `https://api.atlassian.com/ex/jira/{cloudId}/forms` (trùng gốc sản phẩm của Forge) và
-  `https://api.atlassian.com/jira/forms/cloud/{cloudId}`.
-- Đọc template của project: `GET /forms/project/{projectIdOrKey}/form` — `read:jira-work`.
-- Tạo template: `POST /forms/project/{projectIdOrKey}/form` — `manage:jira-project`. Body là
-  `FormTemplateRequest { design, publish }`; `design` bắt buộc đủ `questions`, `sections`,
-  `conditions`, `layout`, `settings`.
-- Form của request type: `GET /forms/servicedesk/{serviceDeskId}/requesttype/{requestTypeId}/form`
+- Base URLs: `https://api.atlassian.com/ex/jira/{cloudId}/forms` (the same base as Forge's product
+  routes) and `https://api.atlassian.com/jira/forms/cloud/{cloudId}`.
+- Read a project's templates: `GET /forms/project/{projectIdOrKey}/form` — `read:jira-work`.
+- Create a template: `POST /forms/project/{projectIdOrKey}/form` — `manage:jira-project`. The body
+  is `FormTemplateRequest { design, publish }`; `design` must contain all of `questions`,
+  `sections`, `conditions`, `layout`, `settings`.
+- Form of a request type: `GET /forms/servicedesk/{serviceDeskId}/requesttype/{requestTypeId}/form`
   — `read:servicedesk-request`.
-- Gắn form vào issue/request, nộp, xuất: `/forms/issue/{key}/form`,
+- Attach a form to an issue or request, submit it, export it: `/forms/issue/{key}/form`,
   `/forms/request/{key}/form/{formId}/action/submit`, `.../format/answers|pdf|xlsx`.
-- `settings` bắt buộc có `name` và `submit`; `submit` bắt buộc đủ hai cờ `lock` và `pdf`.
-  Điều kiện hiện/ẩn dùng `sh`/`hide`.
-- Publish: `publish.portal.portalRequestTypeIds` (mảng id request type) là cách đưa form ra portal;
-  `publish.jira.issueCreateIssueTypeIds` là cách đưa vào hộp tạo issue. Đây chính là "publish lên
-  portal" trong PLAN §7, không cần gọi thêm API nào.
-- Chính tài liệu của API này trỏ tới `product-fetch-api/#requestjira` của Forge, tức Atlassian
-  thiết kế cho app Forge gọi bằng `requestJira`.
+- `settings` must contain `name` and `submit`; `submit` must contain both flags `lock` and `pdf`.
+  Show/hide conditions use `sh`/`hide`.
+- Publish, inside the create body (this is the S5 Publish step in spec brief 06; no extra API
+  call is needed):
+  - `publish.portal.portalRequestTypeIds` (`FormPublishingPortal`): array of request type ids;
+    puts the form on the help center portal.
+  - `publish.jira.issueCreateRequestTypeIds` (`FormPublishingJira`): JSM request types; puts the
+    form in the agent's create dialog for those request types. **This is the key the converter
+    uses for a JSM service project.**
+  - `publish.jira.issueCreateIssueTypeIds` (`FormPublishingJira`): Jira issue types; for plain
+    Jira projects only.
+- The API's own documentation links to Forge's `product-fetch-api/#requestjira`, so Atlassian
+  designed it to be called from Forge apps with `requestJira`.
 
-Đã kiểm trên site thật (2026-11-04): `requestJira('/forms/...')` trả 200 cho cả đọc, tạo và xoá
-template; `requestAtlassian` trả 400 INVALID_TARGET_URL nên không dùng. Shapes quan sát được:
-`questions` là map khoá chuỗi số; mỗi câu `{label, type, choices[], description, questionKey,
-validation}`; `choices` là `[{id, label, other}]`; `validation` ví dụ `{rq: true}`; template đã
-publish có `publish.portalRequestTypeIds: [129]`.
+Checked on a real site (2026-11-04): `api.asApp().requestJira('/forms/...')` returned 200 for
+read, create and delete of a template; `asUser()` was not tried (day-1 check). `requestAtlassian`
+returned 400 INVALID_TARGET_URL, so it is not used. Creating a template with `publish` already set
+was not tried (day-1 check). Observed shapes: `questions` is a map keyed by numeric strings; each
+question is `{label, type, choices[], description, questionKey, validation}`; `choices` is
+`[{id, label, other}]`; `validation` is e.g. `{rq: true}`; a published template read back with
+`publish.portalRequestTypeIds: [129]`.
 
 ## Acceptance criteria (EARS)
 1. THE SYSTEM SHALL map field and control types to Forms question types:

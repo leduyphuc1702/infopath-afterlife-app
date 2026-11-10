@@ -44,13 +44,12 @@ The Jira admin page where admins upload templates, triage them, inspect them (X-
 
 ## Acceptance criteria (EARS)
 1. WHEN an admin uploads up to 20 files at once, THE SYSTEM SHALL store them in 400 KB chunks, parse them in an async consumer, and show per-file progress.
-2. WHEN the library is empty, THE SYSTEM SHALL offer "Try with a sample", which loads the bundled Microsoft Expense Report and Travel Request templates.
+2. WHEN the library is empty, THE SYSTEM SHALL offer "Try with a sample", which loads our own Expense Report and Travel Request templates (`samples/own` forms 02 and 03, MIT).
 3. WHEN publishing, THE SYSTEM SHALL call the Forms API as the user. It SHALL show the created template id and the request type link, or a three-part error (what happened, why, what to do).
 4. THE SYSTEM SHALL keep a version history per template. Re-uploading the same URN creates a new version, and the previous mapping is carried over.
 5. THE SYSTEM SHALL follow the UX principles steering: Atlaskit, tokens, dark mode, empty, loading and error states for every screen.
-6. WHEN a template has been analysed, S1 SHALL show its Triage row and wave, and S2 SHALL show its death certificate, using `packages/core/triage` (the same code as the web viewer).
+6. WHEN a template has been analysed, S1 SHALL show its Triage row and wave, and S2 SHALL show its death certificate, using `packages/core/src/triage/` (the same code as the web viewer).
 7. WHEN suggesting an existing Jira field, THE SYSTEM SHALL only suggest fields of a compatible type, SHALL show the suggestion as editable, and SHALL never reuse a field without the admin seeing it in S4 before publish.
 
 ## Out of scope (MVP)
 - Rebinding connections to new sources (C phase).
-- Generating Confluence documentation (C phase).

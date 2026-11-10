@@ -7,7 +7,7 @@ fileMatchPattern: ["packages/core/**", "apps/**/classic/**"]
 
 ## .xsn container
 - A Microsoft Cabinet file (signature `MSCF`).
-- All 29 real samples use **MSZIP**: each CFDATA block starts with `CK`, followed by a raw deflate stream. The deflate history carries over between blocks inside one folder, so use one inflater per folder.
+- All 29 third-party samples (not in the repo) and all 42 in `samples/own/` use **MSZIP**: each CFDATA block starts with `CK`, followed by a raw deflate stream. The deflate history carries over between blocks inside one folder, so use one inflater per folder.
 - LZX and Quantum are possible in theory. Reject them with `UNSUPPORTED_COMPRESSION`.
 - Typical contents:
   - `manifest.xsf`: the form definition.
@@ -56,12 +56,13 @@ fileMatchPattern: ["packages/core/**", "apps/**/classic/**"]
   - `xd:boundProp` (e.g. `xd:num`, `value`);
   - class names `xdTextBox`, `xdDTPicker`, `xdRepeatingTable`, `xdSection`, `xdBehavior_*`.
 - **Extension namespaces and functions to shim:**
-  - `xdFormatting:formatString(value, type, options)`: number, currency, percentage, date, time and datetime formatting; used 49 times in the samples.
+  - `xdFormatting:formatString(value, type, options)`: number, currency, percentage, date, time and datetime formatting; the most-used extension function (556 uses across the 71-form corpus, `docs/corpus-facts.md`).
   - `xdXDocument:GetDOM("dataSourceName")`: returns a secondary DOM.
   - `xdImage:getImageUrl(base64)`.
   - `xdXDocument:GetNamedNodeProperty(node, name, default)`.
   - `xdDate:Today()`, `xdDate:Now()`.
   - `xdMath:Avg(nodes)`, `xdMath:Nz(nodes)`, `xdMath:Eval(nodes, expr)`.
+  - `xdMath:Min`, `xdMath:Max`, `xdDate:AddDays`, `xdDate:AddSeconds` (3 uses each, all in the third-party part of the corpus).
   - `xdUser:get-UserName()`.
 - Views re-render after each data change. Conditional formatting appears as `xsl:if`/`xsl:choose` blocks around `style` or `class` attributes.
 
@@ -69,7 +70,7 @@ fileMatchPattern: ["packages/core/**", "apps/**/classic/**"]
 - **XPath 1.0:** `sum`, `count`, `concat`, `contains`, `starts-with`, `substring`, `substring-before`, `substring-after`, `string-length`, `normalize-space`, `translate`, `number`, `boolean`, `not`, `floor`, `ceiling`, `round`.
 - **InfoPath additions:** `today()`, `now()`, `addDays(date, n)`, `addSeconds(dateTime, n)`, `nz(node)`, `eval(context, expr)`, `min(nodes)`, `max(nodes)`, `avg(nodes)`, `userName()`.
 
-## Field and control frequency in 29 real samples (deduped versions)
+## Field and control frequency in 29 third-party samples (deduped versions; not in the repo; counts over all 71 forms are in `docs/corpus-facts.md`)
 | Control | Occurrences / forms |
 |---|---|
 | PlainText | 130 / 19 |
@@ -108,7 +109,7 @@ fileMatchPattern: ["packages/core/**", "apps/**/classic/**"]
 Match a record to its template by the `name` URN first, and by `href` second. If `solutionVersion` is older than the template, apply `upgrade.xsl`.
 
 ## Mapping table (InfoPath → JSM)
-Use the matrix in the project plan (§5). Every element must be classified Native, Emulated, Manual or Unsupported, with a human-readable reason.
+Use `docs/feature-coverage.md`. Every element must be classified Native, Emulated (labelled "App"), Manual or Unsupported, with a human-readable reason.
 
 ## Traps verified against real InfoPath 2013 (2026-11-04)
 

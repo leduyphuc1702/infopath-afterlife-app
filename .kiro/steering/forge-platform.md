@@ -23,7 +23,8 @@ fileMatchPattern: ["apps/forge/**"]
 ## Rules
 - Run long work in async consumers, never in resolvers. Resolvers return within 25 s.
 - Chunk data across the bridge: 500 KB per request. Upload a .xsn in 400 KB chunks into SQL, then enqueue the parse.
-- Prefer `asUser()` for JSM and Forms calls so permissions follow the user. Use `asApp()` only where documented to work.
+- Call JSM Forms with `requestJira('/forms/...')`, never `requestAtlassian` (returns 400 `INVALID_TARGET_URL`; see tech.md).
+- Prefer `asUser()` for JSM and Forms calls so permissions follow the user. Use `asApp()` only where documented to work. For the Forms API only `asApp()` is verified so far; `asUser()` is day-1 check 1.
 - Keep the `afterlife` issue property under 32 KB. Put large payloads (full XML) in SQL, keyed by issue id.
 - Custom UI CSP: allow inline styles only if required for the InfoPath "paper" area (`permissions.content.styles: ['unsafe-inline']`, [VERIFY]). No remote scripts.
 - Egress: none in the MVP. Any later lookup connectors must be declared under `permissions.external.fetch`.
@@ -36,8 +37,10 @@ fileMatchPattern: ["apps/forge/**"]
   Generate the two manifests from one template (only `app.id` and the name differ), and deploy both from CI.
 - **Stay single-product (Jira/JSM).** Apps that are compatible with multiple Atlassian apps can only be listed as paid. Do not call Confluence APIs or declare extra `app.compatibility`.
 
-## Day-1 verifications (record results in docs/ARCHITECTURE.md)
-1. The Forms API is reachable from Forge (`asUser`): create a template, then publish it to a portal request type.
+## Day-1 verifications (record results in docs/ARCHITECTURE.md, to be written)
+1. Forms API from Forge. Done 2026-11-04 with `asApp()`: read, create and delete a template. Still
+   open: the same calls with `asUser()`, and creating a template with `publish.portal.portalRequestTypeIds`
+   set so it appears on a portal request type.
 2. `portalRequestCreatePropertyPanel` Custom UI can run `xslt-processor` and render inline styles.
 3. `customFieldType` object: maximum value size, and which experiences support edit on the portal.
 4. A Rovo agent runs on the dev site, and `rovo:mcp` can be enabled.

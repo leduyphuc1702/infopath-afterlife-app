@@ -21,12 +21,20 @@ fileMatchPattern: ["**/*.test.ts", "**/test/**", "packages/core/**"]
   - P9: every death-certificate cause has a non-empty evidence path and source, and the path exists in the parsed template.
   - P10: Triage output is deterministic; the same files in any order give the same rows in the same order.
   - P11: CSV export round-trip: parsing the exported CSV gives back every non-repeating field value of every record, and the flattened repeating rows add up to the original row counts.
-- **Reference images:** `samples/own` includes screenshots of every view taken in real InfoPath 2013 (empty and filled, 100% zoom). Use them to judge render fidelity alongside the `xsltproc` references.
+- **Reference images:** `samples/own/screenshots/` holds 22 screenshots from InfoPath Filler 2013:
+  every view of forms 01–08, empty and filled, 100% zoom, cropped to the form canvas (1007x555).
+  Forms 09–42 have none. Use them to judge render fidelity alongside the `xsltproc` references.
 - **Integration tests** against the Forge dev site are manual but scripted. Record a screen capture for the write-up.
 - **Visual tests** (Playwright):
-  - compare the web viewer render with reference PNGs made by `xsltproc` from the public samples;
+  - compare the web viewer render with reference PNGs made by `xsltproc` from `samples/own/` and `samples/public/`;
   - fail when the pixel difference is above the agreed threshold.
-- Private samples: tests auto-skip when `samples/private` is missing. Run them locally before each release.
-- **Coverage fixtures.** `docs/feature-coverage.md` is the checklist, `docs/corpus-facts.md` holds
-  the counts. Every capability marked with a number must have a fixture under `samples/own/` and
-  the app's own counts must match, or the row is downgraded to "untested" until it does.
+- **Private samples:** unlicensed samples never enter the repo (`docs/SAMPLE-LICENSES.md`). Tests
+  that use them read the absolute path in the env var `AFTERLIFE_PRIVATE_SAMPLES` and skip when it
+  is unset. Run them locally before each release.
+- **Coverage fixtures.** `docs/feature-coverage.md` is the checklist. `docs/corpus-facts.md` counts
+  71 forms, 29 of which are not in the repo, so CI cannot reproduce its totals. CI checks the
+  per-form counts in `samples/own/README.md` instead. A capability with a count above zero only in
+  the third-party corpus has no in-repo fixture and is "untested" until one is added to
+  `samples/own/`.
+- **Waves:** expected waves are the Triage's output under spec brief 12; there is no fixed wave
+  column to assert against.
