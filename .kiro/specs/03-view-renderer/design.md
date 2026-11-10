@@ -412,6 +412,20 @@ One walk over the result tree, in this order; each step needs what the one befor
     and control characters and lowercasing, as the URL parser does. SVG data URLs are refused;
   - `style` goes through the declaration filter (§8.4);
   - `class`, `title`, `xd:*` and the remaining HTML attributes stay (R5.2).
+- `Changed at task 12:` **Parser-safe nesting** (`html/nesting.ts`, the last part of step 5). P5
+  found `<select><div><select></select></div></select><p>`: the HTML parser lets the inner
+  `select` close the outer one, the `</div>` written for the inner `div` then closes the render
+  root, and the rest of the view stands outside it, outside `inert`, the scoped styles and
+  `contain` (so a `position: fixed` box from a hostile view could cover the host page). The same
+  holds for `button` in `button`, `li` outside a list, `dd`/`dt` outside `dl`, and a `table`
+  directly in a table part. The pass rewrites the tree so no start tag closes anything
+  implicitly: `select` holds only `option`/`optgroup` (an `option` in it only text); `a`,
+  `button` and `nobr` are not nested in themselves; `li` stays in `ul`/`ol`, `dd`/`dt` in `dl`;
+  table parts stay in their places (a cell directly in a section or `table` is kept, since the
+  parser only adds a `tr`); anything else inside `table`, a section, `tr` or `colgroup` moves
+  before the table, as foster parenting does. Unwrapped elements count as `CONTENT_REMOVED
+  {kind: element}`; moved ones do not. The 106 goldens are unchanged. Steps 6–7 and §9.3 add only
+  `span`s and text after the pass, which close nothing.
 
 ### 8.3 Serialiser
 
@@ -427,8 +441,9 @@ One walk over the result tree, in this order; each step needs what the one befor
 - **Tokenizer:** our own, for blocks, strings, comments, escapes and parentheses. CSS escapes
   (`e\78pression`) are decoded and comments removed before any check.
 - **Dropped declarations:** the properties `behavior`, `-ms-behavior` and `-moz-binding`; any
-  value containing `expression(`, `image(`, `image-set(`, `-webkit-image-set(`, `element(` or
-  `src(`; any `url()` that is not a raster data URL.
+  value containing `expression(`, `image(`, `image-set(`, `-webkit-image-set(`, `element(`,
+  `src(` or (`Changed at task 12:`, found by P5) `@import`; any `url()` that is not a raster
+  data URL. `@import` inside a value is inert in today's browsers, but R5.1 names it.
 - `Changed at review:` **InfoPath runtime constructs are dropped silently**, not counted in
   `CONTENT_REMOVED`: `behavior` declarations whose every `url()` is `#default#…` (all 47 own
   forms: `CalPopup`, `urn::controls/Binder`, `DTPicker`, `xOptional`, `urn::xdPicture`,
@@ -569,7 +584,7 @@ little-endian:
 | R6.5, R6.6 | unit + golden | form 02 first record; form 01 both records; synthetic `errorBlank` and non-nillable date | `test/render/marks.test.ts` |
 | R6.7 | unit | form 02 first record; truncated header; name-length overflow; markup in a name | `test/render/attachment.test.ts` |
 | R7.1 (P4) | property, 200 runs | sample record with text values replaced by generated strings; generated `now`, locale, user name; permuted view order | `test/property/p4.property.test.ts` |
-| R8.1 (P5) | property, 500 runs, Chromium | generated XSL + records from the R8.1 shapes. Oracle: `template.innerHTML` and `CSSStyleSheet.replaceSync` in Chromium, then a walk for R5.1 items | `test/browser/p5.browser.test.ts` |
+| R8.1 (P5) | property, 500 runs, Chromium | generated XSL + records from the R8.1 shapes. Oracle: `template.innerHTML` and `CSSStyleSheet.replaceSync` in Chromium, then a walk for R5.1 items; `Changed at task 12:` also one root holding everything, the tree re-parsed from Chromium's serialisation walked too, and the parser-closing cases as fixed examples | `test/browser/p5.browser.test.ts`, `test/render/nesting.test.ts` |
 | R9.1 | perf | 106 renders, Node and Worker | §10 |
 | R10.1 | golden | 106 `xsltproc` references; hooks-on vs bare `XSLT.run` | `test/render/xsltproc.test.ts` |
 | R10.2 | visual | 16 default-view renders | `test/browser/visual.browser.test.ts` |

@@ -37,6 +37,7 @@ export default defineConfig({
         optimizeDeps: {
           include: [
             '@xmldom/xmldom',
+            'fast-check',
             'xpath',
             'xsltjs',
             'xsltjs/scripts/Processor.js',

@@ -39,6 +39,8 @@ describe('declaration filter', () => {
     ['background:-webkit-image-set(url(x.png) 1x)', 'background'],
     ['background:element(#x)', 'background'],
     ['background:src("x.png")', 'background'],
+    ['font:red @IMPORT "x"', 'font'],
+    ['font:red @\\69mport "x"', 'font'],
     ['background:url(data:image/png;base64,AAAA', 'declaration'],
     ['content:"a', 'declaration'],
     ['content:"</style><script>x</script>"', 'declaration'],

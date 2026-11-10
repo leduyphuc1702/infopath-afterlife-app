@@ -223,7 +223,7 @@ limits, properties, references and performance.
   - Done when: `pnpm --filter @afterlife/core run gen:xsltproc-refs` (run once, by the agent)
     and `V --project node test/render/xsltproc.test.ts`, then `pnpm check`.
 
-- [ ] 11. Property P4: rendering is deterministic
+- [x] 11. Property P4: rendering is deterministic
   - `test/property/p4-inputs.ts` and `test/property/p4.property.test.ts`. Inputs: the 53 views
     with sample records whose text values are replaced by generated strings (quotes, `<`, `&`,
     non-BMP characters, whitespace runs, long values), and generated `now`, locale and user
@@ -233,7 +233,7 @@ limits, properties, references and performance.
   - Requirements: R7.1.
   - Done when: `V --project node test/property/p4.property.test.ts`, then `pnpm check`.
 
-- [ ] 12. Property P5: sanitised output never holds executable content
+- [x] 12. Property P5: sanitised output never holds executable content
   - `test/browser/p5-inputs.ts` and `test/browser/p5.browser.test.ts`. The generator covers the
     R8.1 shapes: literal elements and `xsl:element`/`xsl:attribute` with the R5.1 names, `on*`,
     mixed-case and encoded schemes, CSS `expression(`, rich text copied by `copy-of`, and
@@ -241,9 +241,12 @@ limits, properties, references and performance.
   - Oracle, in Chromium: parse `html` with `template.innerHTML` and `css` with
     `CSSStyleSheet.replaceSync`, then walk both for any R5.1 item. At least 500 runs.
   - Requirements: R8.1.
+  - `Changed at task 12:` P5 found two holes, both fixed with their seeds in `regressions.ts`:
+    the render root could be closed early by the HTML parser (`html/nesting.ts`, design §8.2),
+    and `@import` survived inside a declaration value (design §8.4).
   - Done when: `V --project browser test/browser/p5.browser.test.ts`, then `pnpm check`.
 
-- [ ] 13. Performance and the private check
+- [x] 13. Performance and the private check
   - `test/perf/render.perf.test.ts` and `test/browser/render-perf.browser.test.ts` (§10).
   - `test/render-private.local.test.ts`. It skips `own/` and prints names and counts only:
     - issues by code;

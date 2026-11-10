@@ -14,6 +14,7 @@ import {
   resourceIcon,
   type Resources,
 } from './resources';
+import { parserSafe } from './nesting';
 import type { HElement, HNode } from './serialise';
 
 /** The xmldom members read here. */
@@ -192,6 +193,7 @@ export function sanitiseResult(
 
   const root: HElement = { kind: 'element', name: 'div', attrs: rootAttrs, children: [] };
   walk(container, root.children);
+  parserSafe(root, (name) => remove('element', name));
   return { root, styles, removed, rawTextNodes, unsupported };
 }
 

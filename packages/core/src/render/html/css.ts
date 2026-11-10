@@ -11,7 +11,11 @@
 export type Removed = string[];
 
 const DENIED_PROPERTIES = new Set(['behavior', '-ms-behavior', '-moz-binding']);
-const DENIED_FUNCTIONS = ['expression(', 'image(', 'image-set(', 'element(', 'src('];
+/**
+ * Text a kept value may not hold. `@import` (`Changed at task 12:`, found by P5): inside a value it
+ * is inert in today's browsers, but R5.1 names it, so a value holding it goes.
+ */
+const DENIED_IN_VALUE = ['expression(', 'image(', 'image-set(', 'element(', 'src(', '@import'];
 const RASTER_DATA = /^data:image\/(?:png|gif|jpeg|bmp);base64,[a-z0-9+/=]*$/;
 
 export const scopeSelector = (scope: string) => `.afl-root[data-afl-scope="${scope}"]`;
@@ -180,7 +184,7 @@ export function filterDeclarations(text: string, removed: Removed): string {
     }
     const found = urls(v);
     if (
-      DENIED_FUNCTIONS.some((f) => v.includes(f)) ||
+      DENIED_IN_VALUE.some((f) => v.includes(f)) ||
       found === undefined ||
       !found.every((u) => RASTER_DATA.test(u))
     ) {
