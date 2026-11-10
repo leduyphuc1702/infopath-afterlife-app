@@ -6,7 +6,7 @@ capabilities, and every row carries a number from the corpus or a pointer to a s
 neither, it is a guess and is marked as one.
 
 Numbers come from `facts.json` (`python3 facts.py`), run over 71 unpacked templates: our 42 MIT
-samples plus 29 real third-party forms. The script and its output live in a research workspace
+samples (forms 01–42; forms 43–47 came later and are not counted) plus 29 real third-party forms. The script and its output live in a research workspace
 outside this repo, because 29 of the inputs may not be redistributed (`docs/SAMPLE-LICENSES.md`).
 The spec 01 parser will reproduce the counts for the in-repo samples (`samples/own/`,
 `samples/public/`); the third-party share can only be re-counted where `AFTERLIFE_PRIVATE_SAMPLES`
@@ -91,7 +91,8 @@ action (see the `containmentAction` note below the table).
 child list of `xsf:rule` in MS-IPFF2 2.2.1.2.114 has no such element, and the three MS-IPFF2 XSDs
 (sections 5.1–5.3) do not define it. The one occurrence is the form field `<my:containmentAction>`
 inside form 23's `xsf:fragmentToInsert`; counting tag names that end in `Action` reproduces it.
-`facts.py` and `docs/corpus-facts.md` still show it until the script is fixed and re-run.
+`docs/corpus-facts.md` was corrected by hand on 2026-11-10; `facts.py` still counts it until the
+script is fixed and re-run.
 Insert/remove of optional and repeating blocks is real, but it lives in `xsf:editWith`
 (`xCollection`, `xOptional`) and `xsf:menuArea` buttons, not in rules (spec 04 AC4).
 
@@ -171,7 +172,7 @@ The 51 counted conditions are all `xsf:errorCondition` (MS-IPFF2 2.2.1.2.44).
 
 | Capability | Evidence | Coverage | Status |
 |---|---|---|---|
-| 323 filled records, all opening in the original | `samples/own/records/` | App (import + render) | spec 11 |
+| 348 filled records in `samples/own/records/`; for forms 01–42, one record per template was opened in the original (forms 43–47 were never opened) | `samples/own/records/`, `samples/own/README.md` | App (import + render) | spec 11 |
 | Record knows its template by URN, then `href` | `mso-infoPathSolution` | App | spec 11 |
 | `upgrade.xsl` applied when the template version moved | form 07 vs 01 | App | spec 11 |
 | Attachments stored beside the record | 5 attachment controls | App | spec 11 |
@@ -199,10 +200,24 @@ Each line answers a defect recorded in `docs/infopath-ux.md`. None of these exis
 
 1. Run the app over `samples/own/` and its per-form counts must match `samples/own/README.md`;
    where `AFTERLIFE_PRIVATE_SAMPLES` is set, the 71-form totals must also match `facts.json`.
-   Not every row with a count above zero has an in-repo fixture: ActiveX, combobox, digital
-   signatures, code-behind, `xdMath:Min`/`Max` and `xdDate:AddDays`/`AddSeconds` occur only in the
-   third-party forms (checked 2026-11-10, zero matches under `samples/own/forms/`). Treat those
-   rows as "untested" in CI until a form is added to `samples/own/`.
+   Not every row with a count above zero has an in-repo fixture. Two groups:
+   - **No fixture:** combobox, `xdMath:Min`/`Max` and `xdDate:AddDays`/`AddSeconds` occur only in
+     the third-party forms (checked 2026-11-10, zero matches under `samples/own/forms/`, forms
+     01–47). Treat those rows as "untested" in CI until a form is added to `samples/own/`.
+   - **Fixture: form NN, generated, not opened in InfoPath.** Forms 43–47 were generated on
+     2026-11-10 after the InfoPath trial expired, so they test the parser and converter, not what
+     InfoPath accepts (`samples/own/README.md`):
+     - browser compatibility (`runtimeCompatibility="client server"`, SharePoint `publishUrl`):
+       form 43;
+     - ActiveX control (`object class="xdActiveX"` in the view): form 44;
+     - `submitToHostAdapter` submit: form 44;
+     - digital signatures (`xsf:documentSignatures`, countersigned `signedDataBlock`, XML-DSig
+       `xsd:any` containers): form 45;
+     - managed code (`xsf2:managedCode`, C#, no assembly): form 46;
+     - DAV submit (`davAdapter` with an expression file name): form 46;
+     - script (`xsf:scripts`, JScript `script.js`, `domEventHandler/@handlerObject`): form 47;
+     - named `simpleType`/`complexType` and facets (`pattern`, `enumeration`, `maxLength`):
+       form 47.
 2. Every row marked "untested, no fixture" is a task, not a claim. Add a form, add a row.
 3. The demo video quotes only numbers from `facts.json`, so the claims and the evidence cannot
    drift apart.

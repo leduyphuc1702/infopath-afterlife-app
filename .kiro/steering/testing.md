@@ -23,7 +23,7 @@ fileMatchPattern: ["**/*.test.ts", "**/test/**", "packages/core/**"]
   - P11: CSV export round-trip: parsing the exported CSV gives back every non-repeating field value of every record, and the flattened repeating rows add up to the original row counts.
 - **Reference images:** `samples/own/screenshots/` holds 22 screenshots from InfoPath Filler 2013:
   every view of forms 01–08, empty and filled, 100% zoom, cropped to the form canvas (1007x555).
-  Forms 09–42 have none. Use them to judge render fidelity alongside the `xsltproc` references.
+  Forms 09–47 have none. Use them to judge render fidelity alongside the `xsltproc` references.
 - **Integration tests** against the Forge dev site are manual but scripted. Record a screen capture for the write-up.
 - **Visual tests** (Playwright):
   - compare the web viewer render with reference PNGs made by `xsltproc` from `samples/own/` and `samples/public/`;

@@ -12,8 +12,10 @@ unless marked "to be written".
 ├─ .kiro/                     steering, specs, agents (committed; only .kiro/settings/mcp.json is gitignored)
 ├─ packages/core/             pure TypeScript, no Forge/React imports; runs in Node and browser
 │  ├─ src/cab/                CAB (MSCF) reader, MSZIP only
+│  ├─ src/xml/                the one XML abstraction: decoding, DOCTYPE/depth pre-scan, @xmldom/xmldom, paths
 │  ├─ src/xsf/                manifest.xsf reader (xsf, xsf2, xsf3 namespaces)
 │  ├─ src/xsd/                schema reader → field tree
+│  ├─ src/xsn/                package level: find the manifest, check file references, parseXsn(), counts
 │  ├─ src/ir/                 FormIR types + builder + JSON (de)serialisation
 │  ├─ src/render/             XSLT render + xd* extension-function shims + sanitise
 │  ├─ src/xpath-fns/          InfoPath function library (today, now, nz, eval, addDays…)
@@ -27,12 +29,12 @@ unless marked "to be written".
 │  ├─ static/classic/         portal create panel + Original view panel (shared renderer)
 │  └─ src/                    resolvers, async consumers, rovo actions, SQL migrations
 ├─ apps/web/                  standalone viewer (Vite + React), deployable as static site
-├─ samples/own/               our MIT set: 42 templates, 323 records, 22 screenshots (see its README)
+├─ samples/own/               our MIT set: 47 templates, 348 records, 22 screenshots (see its README; 01–42 opened in InfoPath, 43–47 generated)
 ├─ samples/public/            licensed third-party samples; today only theill's weight-keeper (MIT)
 ├─ docs/
 │  ├─ SAMPLE-LICENSES.md      licence of each sample source, and whether it is in the repo
 │  ├─ feature-coverage.md     the coverage document: InfoPath capability → Native/App/Manual/Unsupported
-│  ├─ corpus-facts.md         counts over the 71-form corpus (42 own + 29 third-party, not in repo)
+│  ├─ corpus-facts.md         counts over the 71-form corpus (our 42 + 29 third-party, not in repo; forms 43–47 came later and are not counted)
 │  ├─ infopath-ux.md          how InfoPath 2013 looks and behaves, with provenance tags
 │  ├─ spec-briefs/            the 12 briefs the Kiro specs are generated from
 │  ├─ kiro/                   hook and MCP descriptions

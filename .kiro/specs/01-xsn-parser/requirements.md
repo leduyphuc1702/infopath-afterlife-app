@@ -1,7 +1,9 @@
 # Requirements: 01 .xsn parser (CAB + manifest + schema)
 
 Source brief: `docs/spec-briefs/01-xsn-parser.md`. Phase 1 of 3 (requirements → design → tasks).
-Status: **approved 2026-11-10**, with the decisions listed at the end.
+Status: **approved 2026-11-10**, with the decisions listed at the end. Amended the same day at
+design approval (decisions 10–16): field kind (R14), encodings (R5.3), XSD groups, attribute
+groups, lists and unions (R14, R15), forms 43–47, and one inflater (R17.2).
 
 ## Introduction
 
@@ -44,8 +46,10 @@ Out of scope, and the spec that owns each item:
 - **Secondary schema**: a schema named by `xsf:dataObject/@schema` and the schemas it imports.
 - **Field tree**: one node per element or attribute that a form instance can contain, built from a
   schema starting at its root element.
-- **Field kind**: `group` (element with child elements), `field` (element or attribute with simple
-  content) or `richText` (mixed content holding XHTML through `xsd:any`).
+- **Field kind**: decided by the content model (R14.1). `field`: an attribute, or an element with a
+  simple type or simple content. `richText`: an element with mixed content holding an `xsd:any`
+  in the XHTML namespace. `group`: every other complex type, including content made only of
+  wildcards and empty content.
 - **Rule**: one `xsf:rule` inside an `xsf:ruleSet`. A rule set holds one or more rules.
 - **Event binding**: the place that runs a rule set: `xsf:domEventHandler` (field change),
   `xsf:onLoad`, a button, or `xsf:submit`.
@@ -61,7 +65,8 @@ Out of scope, and the spec that owns each item:
 
 ## Evidence checked for this spec (2026-11-10)
 
-Counted with Python over `samples/own/` (42 forms) and `samples/public/` (1 form) unless stated.
+Counted with Python over `samples/own/` (42 forms) and `samples/public/` (1 form) unless stated,
+before forms 43–47 arrived. The checks of forms 43–47 follow in a second list.
 
 - `bsdtar 3.5.3` (libarchive 3.7.4) extracted all 42 `samples/own/xsn/*.xsn`. The 265 files are
   SHA-256 identical to `samples/own/forms/<slug>/`, with the same file set per form. The public
@@ -89,9 +94,31 @@ Counted with Python over `samples/own/` (42 forms) and `samples/public/` (1 form
   validate against that element/attribute vocabulary with no exceptions.
 - The 59 non-zero CFDATA checksums all match the MS-CAB checksum algorithm (data bytes, then the
   4 bytes of `cbData` and `cbUncomp`).
-- The rows in `samples/own/README.md` will grow: forms 43–47 are being added, generated rather than
-  opened in InfoPath. Requirements that use the README as their oracle apply to every row, not to a
-  fixed count.
+- The rows in `samples/own/README.md` can grow. Requirements that use the README as their oracle
+  apply to every row, not to a fixed count.
+
+Forms 43–47 (commit `1917d34`; generated 2026-11-10, never opened in InfoPath), checked
+2026-11-10 after they arrived:
+- `bsdtar -xf` of each new `.xsn` is identical to its `forms/<slug>/` folder (6 files each, 7 for
+  form 47). All 48 cabinets inflate with the stored-block prefix in Node 22.23.4 and Node 26.13,
+  main thread and `worker_threads`, equal to the zlib-dictionary oracle. Still 7 multi-block
+  cabinets, none of them new.
+- Manifest vocabulary: every element and attribute in the five new manifests is declared by the
+  MS-IPFF2 5.1–5.3 XSDs at its position, and every enumerated value is inside its list. The new
+  names are in Appendix A. `xmllint` (libxml 2.9.13) validates all 48 manifests against the three
+  XSDs with no content errors; the only errors are `xsd:keyref` checks (`views_default` and the
+  `ruleSetAction` keyrefs), which fail the same way on the InfoPath-saved public sample and on
+  forms 01–42, so they are a validator limitation, not sample errors.
+- Schemas: 54 `.xsd` files in total. The new ones add a wildcard-only complex type (form 45
+  `signatures2`, `xsd:any` in the XML-DSig namespace), a named `complexType`, and named
+  `simpleType`s with `pattern`, `enumeration` and `maxLength` (form 47). No in-repo schema uses
+  `group`, `attributeGroup`, `list`, `union`, identity constraints, `redefine`, `notation` or
+  `substitutionGroup`; no element is untyped; no complex type has `simpleContent`.
+- The README counts of rows 43–47 follow from the R16.1 rules (Views, Fields, Rules, Calcs,
+  Checks). Repeating/optional for form 44 is 1 (`Person`), while form 44 has no `xsf:editWith`
+  for it (see R16.1).
+- Form 44's ActiveX control is in `view1.xsl` only (`object class="xdActiveX"`); its manifest has
+  no `xsf:permissions`. `handlerObject` occurs in form 47, not form 46.
 
 ## Requirements
 
@@ -110,8 +137,8 @@ form contains without Windows or InfoPath.
    Windows-1252.
 5. THE SYSTEM SHALL return files in CFFILE order.
 6. Oracle: for each `samples/own/xsn/<slug>.xsn`, the returned file set and bytes equal
-   `samples/own/forms/<slug>/`. For the 42 forms present today, that folder is byte-identical to
-   `bsdtar -xf` output (checked 2026-11-10). For the public sample, the SHA-256 of each file equals
+   `samples/own/forms/<slug>/`. For all 47 forms, that folder is byte-identical to
+   `bsdtar -xf` output (forms 01–42 and 43–47 checked separately on 2026-11-10). For the public sample, the SHA-256 of each file equals
    Appendix B. CI SHALL NOT need `bsdtar`. The test SHALL fail if an `.xsn` has no `forms/` folder,
    or a `forms/` folder has no `.xsn`.
 
@@ -181,9 +208,16 @@ files or exhaust memory.
 1. THE SYSTEM SHALL NOT load DTDs, resolve external entities or fetch any URL while parsing XML.
 2. IF a package file contains a document type declaration, THEN THE SYSTEM SHALL refuse that
    document with `UNSAFE_XML` without expanding any entity. No in-repo file has one.
-3. THE SYSTEM SHALL decode UTF-8 and UTF-16 (detected by byte-order mark or XML declaration). IF a
-   document declares another encoding, THEN THE SYSTEM SHALL refuse it with `INVALID_XML` naming
-   the encoding.
+3. THE SYSTEM SHALL detect UTF-8 and UTF-16 by byte-order mark, or by the first bytes of the XML
+   declaration when there is no BOM, and otherwise read the declared `encoding`. WHEN the declared
+   label is one that `TextDecoder` accepts (WHATWG Encoding Standard), THE SYSTEM SHALL decode the
+   document with it. IF the label is unknown to `TextDecoder`, or maps to the `replacement`
+   encoding, THEN THE SYSTEM SHALL refuse the document with `INVALID_XML` naming the label.
+   Decoding is not a safety risk; old schemas imported from other systems use `windows-1252`,
+   `iso-8859-1`, `shift_jis` or `windows-1251`. WHERE a label is accepted by `TextDecoder` in
+   only one of Node 22 and the Web Worker, THE SYSTEM SHALL refuse it in both with `INVALID_XML`,
+   so both runtimes give the same result (R17.3). That list is measured in the first tasks and
+   fixed in core.
 4. IF the manifest is refused or malformed, THEN THE SYSTEM SHALL fail with that error and the
    line and column. IF any other XML file is, THEN THE SYSTEM SHALL record an issue for that file
    and continue.
@@ -192,8 +226,11 @@ files or exhaust memory.
 6. THE SYSTEM SHALL report the line and column of every parse error and keep them on every
    element it extracts.
 7. Oracle: unit fixtures for billion laughs, an external entity (`file:///etc/passwd`), an
-   external DTD, a parameter entity, a Windows-1251 declaration, and deep nesting (257 levels,
-   and 100,000).
+   external DTD, a parameter entity, and deep nesting (257 levels, and 100,000). Encodings:
+   `windows-1251` with Cyrillic text, `windows-1252`, `iso-8859-1` and `shift_jis` decode to the
+   expected strings (positive cases); an unknown label and a label that maps to `replacement`
+   (`iso-2022-kr`) are refused. Measured 2026-11-10: Node 22.23.4 rejects `iso-8859-16` and
+   `x-user-defined`, which Node 26.13 accepts; Chromium is checked in the spike task.
 
 ### R6. Find the manifest and check package references
 Traces: Added. The brief assumes `manifest.xsf` exists and its references resolve; the
@@ -359,9 +396,11 @@ decision.
 5. + THE SYSTEM SHALL extract `xsf:permissions/xsf:allowedControl` (`clsid`, `cabFile`,
    `version`), the manifest's record of ActiveX controls. Controls placed in a view are found in
    the view XSL (spec 03).
-6. Oracle: the public sample has 1 promoted field (`Date`). Form 44 (ActiveX), form 45
-   (countersigned `signedDataBlock`), form 46 (`managedCode`, `handlerObject`) and form 47
-   (JScript `xsf:scripts`) are the in-repo fixtures. Roles have synthetic fixtures only.
+6. Oracle: the public sample has 1 promoted field (`Date`). Form 45 (countersigned
+   `signedDataBlock` with a `message`), form 46 (`managedCode`, C#, no assembly in the package) and
+   form 47 (JScript `xsf:scripts`, `script.js`, two `domEventHandler`s with `handlerObject`) are
+   the in-repo fixtures. Form 44's ActiveX control is placed in `view1.xsl` and its manifest has no
+   `xsf:permissions`, so `allowedControl` (R12.5) and roles have synthetic fixtures only.
 
 ### R13. Report unknown manifest content instead of dropping it
 Traces: Added (the user's requirement and the product principle "Never lose a feature silently").
@@ -389,7 +428,7 @@ unknown.
 5. THE SYSTEM SHALL NOT report comments, processing instructions or whitespace-only text.
    Payload content (`fragmentToInsert` XML, message text) is modelled as raw XML, not unknown.
 6. WHEN the manifest belongs to any form listed in the `samples/own/README.md` table, or to the
-   public sample, THE SYSTEM SHALL report zero unknown entries. Appendix A lists what forms 01–42
+   public sample, THE SYSTEM SHALL report zero unknown entries. Appendix A lists what forms 01–47
    use. IF a new sample produces unknown entries, THEN the fix is to model those nodes (when
    MS-IPFF2 defines them) or to correct the sample (when it does not). An allow-list that hides
    them is not a fix.
@@ -401,7 +440,8 @@ unknown.
 
 ### R14. Build the field tree
 Traces: brief AC6, with the corrected "required" rule (4), now also in the brief; Added: raw
-cardinality, optional, choice, attribute and rich-text nodes.
+cardinality, optional, choice, attribute and rich-text nodes; kind from the content model, groups,
+lists and unions (design approval, 2026-11-10).
 
 As Tim, I want every field with its type and cardinality, so the converter maps each one to the
 right Jira field.
@@ -410,59 +450,85 @@ right Jira field.
    property, else the first global element of the main schema). Each node SHALL have name,
    namespace, kind (`group`, `field`, `richText`), node type (element or attribute), XSD type
    (built-in QName or the resolved base type), default and fixed values, and its source (file and
-   line).
+   line). THE SYSTEM SHALL decide the kind from the content model only:
+   - `field`: an attribute, or an element whose type is a simple type or has simple content;
+   - `richText`: an element with mixed content holding an `xsd:any` in the XHTML namespace;
+   - `group`: an element of any other complex type, including element-only content made only of
+     wildcards, and empty content.
 2. THE SYSTEM SHALL keep `minOccurs`, `maxOccurs` and `nillable` on every node twice: raw (the
    attribute strings exactly as written on the declaration and on the `ref`, absent when absent)
    and effective (numbers and a boolean after applying XSD defaults and the enclosing particle).
    Nothing derived in 3–5 replaces the raw values.
 3. THE SYSTEM SHALL set `repeating` when the effective `maxOccurs` is greater than 1 or
    `unbounded`, and `optional` when the effective `minOccurs` is 0. Effective cardinality combines
-   the element with its enclosing `sequence` or `choice`.
-4. THE SYSTEM SHALL set `required` only when the element is present by schema (effective
-   `minOccurs` ≥ 1, not nillable) **and** the empty string is not a valid value of its type. A rule
-   of "minOccurs ≥ 1 and not nillable" alone would mark every text field required: in form 01,
-   `reason` is a non-nillable `xsd:string`, empty in `template.xml`, has no error condition, and
-   the record opens in InfoPath. Types that accept the empty string: `string` and types derived
-   from it without a `minLength` ≥ 1 or a pattern that rejects it, `anyURI`, `base64Binary`,
-   `hexBinary`. "Cannot be blank" checks written as validations are spec 02's job (R10 gives it
-   the raw data).
+   the element with its enclosing `sequence`, `choice` and `all`, and with every `xsd:group`
+   reference on the way, whose `minOccurs` and `maxOccurs` multiply like those of a `sequence`.
+4. THE SYSTEM SHALL set `required` only on a node of kind `field` that is present by schema
+   (effective `minOccurs` ≥ 1, not nillable) **and** whose type does not accept the empty string.
+   `group` and `richText` nodes are never `required`. A rule of "minOccurs ≥ 1 and not nillable"
+   alone would mark every text field required: in form 01, `reason` is a non-nillable
+   `xsd:string`, empty in `template.xml`, has no error condition, and the record opens in
+   InfoPath. Types that accept the empty string: `string` and types derived from it without a
+   `minLength` ≥ 1 or a pattern that rejects it, `anyURI`, `base64Binary`, `hexBinary`, every
+   `xsd:list` type (a list of zero items), and an `xsd:union` when any member type does. Facets on
+   a list or union restrict that result as they do for any other type. "Cannot be blank" checks
+   written as validations are spec 02's job (R10 gives it the raw data).
 5. THE SYSTEM SHALL mark the members of an `xsd:choice` as alternatives of one choice group.
 6. THE SYSTEM SHALL represent `xsd:any` with XHTML namespace in mixed content as kind `richText`
    and SHALL NOT count it as a separate node. Other `xsd:any` and `xsd:anyAttribute` SHALL be
-   recorded as wildcards on the parent.
+   recorded as wildcards on the parent, with their `namespace` and `processContents`.
 7. + THE SYSTEM SHALL record simple-type facets (`enumeration`, `pattern`, `length`, `minLength`,
    `maxLength`, `minInclusive`, `maxInclusive`, `minExclusive`, `maxExclusive`, `totalDigits`,
-   `fractionDigits`, `whiteSpace`) for the converter (feature-coverage E, spec 05). In-repo
-   fixture: form 47.
+   `fractionDigits`, `whiteSpace`) for the converter (feature-coverage E, spec 05), including
+   facets on `list` and `union` types, and record the variety (`atomic`, `list` with its item type,
+   `union` with its member types). In-repo fixture: form 47.
 8. Oracle: form 01 `reason` → `required: false`; `daysRequested` (nillable integer) → `required:
    false`; form 04 `needsAccounting` (non-nillable boolean) → `required: true`; form 04 `line` →
    `repeating: true`, raw `minOccurs "0"`, raw `maxOccurs "unbounded"`; form 05 `relocation` →
    `optional: true`, `fullTime`/`contractor` → one choice group; form 05 `welcomeNote` →
-   `richText`; form 47 named types and facets.
+   `richText`; form 45 `signatures1` → `group`, `required: false`; form 45 `signatures2` →
+   `group`, `required: false`, no child nodes, one `any` wildcard with namespace
+   `http://www.w3.org/2000/09/xmldsig#` and `processContents="lax"`; form 47 `assetTag`
+   (`pattern` `[A-Z]{3}-[0-9]{4}`) → `required: true`; `assetCondition` (`enumeration` New, Good,
+   Worn and `maxLength` 10) → `required: true`; `borrower` (named `complexType` `personType`) →
+   `group` with `borrowerName` and `borrowerEmail`. Synthetic schemas cover a group reference with
+   `maxOccurs="unbounded"`, an attribute group, a list and a union.
 
 ### R15. Resolve schema references and report unknown schema content
 Traces: brief AC6 (`include`, `import`, `ref`, named complex types); Added: cycles, unresolved
-references, unknown constructs.
+references, unknown constructs; groups, attribute groups, lists and unions (design approval,
+2026-11-10).
 
 As a developer, I want schema references resolved inside the package, so the tree is complete
 without network access.
 
 1. THE SYSTEM SHALL resolve `ref`, `type` (named `complexType` and `simpleType`, including
-   `extension` and `restriction` of them), `xsd:include` and `xsd:import` across the package's
-   `.xsd` files by target namespace and `schemaLocation`.
+   `extension` and `restriction` of them), `xsd:group` and `xsd:attributeGroup` (global
+   definitions and `ref`, resolved like named types), the `itemType` of an `xsd:list` and the
+   `memberTypes` and inline members of an `xsd:union`, `xsd:include` and `xsd:import` across the
+   package's `.xsd` files by target namespace and `schemaLocation`. An attribute group adds its
+   attributes and `anyAttribute` to the element that references it.
 2. THE SYSTEM SHALL NOT fetch a `schemaLocation` that is a URL or an absolute path. IF a reference
    cannot be resolved inside the package, THEN THE SYSTEM SHALL record an `UNRESOLVED_REFERENCE`
    issue and keep the node with its declared name.
 3. IF an element's content refers back to an ancestor, THEN THE SYSTEM SHALL stop expanding at the
-   repeat, mark the node `recursive` and continue.
-4. THE SYSTEM SHALL report every schema element and attribute it does not model (for example
-   `xsd:group`, `xsd:attributeGroup`, `substitutionGroup`, `xsd:union`, `xsd:key`, `xsd:redefine`)
-   as an unknown entry with path, as in R13. `xsd:annotation/xsd:documentation` text is kept on the
-   node as its description.
+   repeat, mark the node `recursive` and continue. A group that refers back to itself is cut the
+   same way.
+4. THE SYSTEM SHALL model `xsd:group`, `xsd:attributeGroup`, `xsd:list` and `xsd:union` (forms
+   built from existing web-service, line-of-business and government schemas use them, and an
+   unmodelled group would mean fields missing from the tree). THE SYSTEM SHALL report every other
+   schema element and attribute it does not model as an unknown entry with path, as in R13, with
+   `documented: true` when XML Schema 1.0 defines it at that position. Unknown with
+   `documented: true`: `xsd:key`, `xsd:keyref`, `xsd:unique`, `xsd:redefine`, `xsd:notation`, and
+   the attributes `substitutionGroup`, `abstract`, `block` and `final`.
+   `xsd:annotation/xsd:documentation` text is kept on the node as its description.
 5. Oracle: form 04 `Vendors.xsd` imports `Vendors1.xsd` and `Vendors2.xsd`, which declare
    attributes (as does form 03 `locations.xsd`); form 47 uses named `complexType` and
-   `simpleType` with facets. Synthetic schemas cover `include`, extension, recursion and a remote
-   `schemaLocation`.
+   `simpleType` with facets. Synthetic schemas cover `include`, extension, recursion, a remote
+   `schemaLocation`, a model group (global definition, `ref`, `minOccurs`/`maxOccurs` on the
+   reference, and a self-referencing group), an attribute group (nested in another attribute
+   group), a `list` (`itemType` and inline item type, with a `length` facet), a `union`
+   (`memberTypes` and inline members), and one schema with each construct that stays unknown.
 6. WHEN the schema belongs to any form listed in the `samples/own/README.md` table, or to the
    public sample, THE SYSTEM SHALL report zero unknown schema entries.
 
@@ -472,16 +538,17 @@ Traces: Added (testing.md "CI checks the per-form counts"; feature-coverage K.1)
 As Quang, I want the numbers in the Triage to be the numbers in the files, so I can trust the plan.
 
 1. THE SYSTEM SHALL produce, for every row of the README table, outputs whose counts equal the
-   row's columns as follows (each rule checked against rows 01–42 on 2026-11-10):
+   row's columns as follows (each rule checked against rows 01–42 and, separately, rows 43–47 on
+   2026-11-10):
 
    | README column | Parser output | Rule |
    |---|---|---|
    | Views | `manifest.views` | number of `xsf:view` |
-   | Fields | main field tree | number of element nodes, root included; attributes and `xsd:any` excluded. For forms 01–42 this equals the number of named `xsd:element` declarations in `myschema.xsd` |
+   | Fields | main field tree | number of element nodes, root included; attributes and `xsd:any` excluded. For forms 01–47 this equals the number of named `xsd:element` declarations in `myschema.xsd` |
    | Rules | `manifest.ruleSets[].rules` | number of `xsf:rule` (not rule sets, not actions) |
    | Calcs | `manifest.calculations` | number of `xsf:calculatedField` |
-   | Checks | `manifest.validations` | number of `xsf:errorCondition` (excludes schema checks and `xsf3:errorBlank`; none in forms 01–42) |
-   | Repeating/optional | main field tree | nodes with `repeating` **or** `optional`. Form 05 counts its optional `relocation` section. For forms 01–42 this equals the count of `editWith` with `component` `xCollection` or `xOptional` |
+   | Checks | `manifest.validations` | number of `xsf:errorCondition` (excludes schema checks and `xsf3:errorBlank`; none in forms 01–47) |
+   | Repeating/optional | main field tree | nodes with `repeating` **or** `optional`. Form 05 counts its optional `relocation` section. For forms 01–42 and 45–47 this equals the count of `editWith` with `component` `xCollection` or `xOptional`. It does not for form 44: its repeating `approvers/Person` group is edited through an ActiveX control, so the view has no `editWith` for it (README 1, `editWith` 0). The oracle is the field tree, not `editWith` |
    | Records | not this spec | files in `records/<slug>/` except `<slug>-000-empty.xml` (spec 11, spec 12) |
 
 2. THE SYSTEM SHALL produce for the public sample: Views 1, Fields 5, Rules 0, Calcs 1, Checks 0,
@@ -501,14 +568,14 @@ tests agree.
 
 1. THE SYSTEM SHALL run in Node 22 and in a dedicated Web Worker without native binaries, a CAB
    library, `DOMParser`, or Node-only modules in the browser bundle.
-2. THE SYSTEM SHALL inflate with `zlib.inflateRawSync` in Node and `DecompressionStream('deflate-raw')`
-   in the browser (tech.md), and carry history across blocks in both (R1.2) by putting the
+2. THE SYSTEM SHALL inflate with `DecompressionStream('deflate-raw')` in every runtime (design D1;
+   `zlib` is used only in tests, as an oracle), and carry history across blocks (R1.2) by putting the
    previous output (at most 32 KB) in front of each block as an uncompressed deflate block, then
    dropping that many bytes from the output. `DecompressionStream` has no preset-dictionary
    option; this method needs none. Proved on 2026-11-10 with a throwaway script: the 7 multi-block
    cabinets (and the other 36) gave the same bytes as a zlib-dictionary oracle in Node main
-   thread, Node `worker_threads` and a Chrome 157 dedicated Worker. Tasks repeat this proof in the
-   test suite first.
+   thread, Node `worker_threads` and a Chrome 157 dedicated Worker; re-run in Node on all 48
+   cabinets after forms 43–47 arrived. Tasks repeat this proof in the test suite first.
 3. WHEN the same bytes are parsed in Node and in a Web Worker, THE SYSTEM SHALL return deep-equal
    results. Oracle: the golden snapshots of R16.4, run in both.
 4. THE SYSTEM SHALL make no network request and read no file outside the input bytes.
@@ -588,24 +655,46 @@ These were the open questions of the first draft. Each is resolved in the requir
    adapters, `xsd:include` and `xsf3` stay synthetic fixtures in `packages/core/test/fixtures/`.
 9. **Node:** CI pins Node 22 (R18.1).
 
-## Appendix A: manifest vocabulary of forms 01–42 and the public sample (must give zero unknown entries)
+Added at design approval (2026-11-10):
 
-Forms 43–47 will add to this list; R13.6 applies to them as well.
+10. **Field kind** comes from the content model (R14.1). Only `field` nodes can be `required`
+    (R14.4). Form 45's wildcard-only `signatures2` is a `group`, not a required `field` (R14.8).
+11. **Encodings** (R5.3, replacing the first wording): any label `TextDecoder` accepts is decoded;
+    unknown and `replacement` labels are refused, and so is any label only one runtime accepts.
+    The Windows-1251 fixture is a positive case (R5.7).
+12. **XSD constructs** (R14.3, R14.4, R14.7, R15.1, R15.4, R15.5): `group`, `attributeGroup`,
+    `list` and `union` are modelled; identity constraints, `redefine`, `notation`,
+    `substitutionGroup`, `abstract`, `block` and `final` stay unknown with `documented: true`.
+13. **R16.1:** the `editWith` equality holds for forms 01–42 and 45–47, not 44.
+14. **Forms 43–47** are checked (evidence section) and their manifest names are in Appendix A.
+15. **R12.6 oracle corrected:** form 44's ActiveX control is in the view only (no
+    `xsf:permissions`), and `handlerObject` is in form 47, not form 46. `allowedControl` keeps a
+    synthetic fixture.
+16. **R17.2 follows D1:** one inflater, `DecompressionStream('deflate-raw')`, in every runtime;
+    tech.md updated to match.
+
+## Appendix A: manifest vocabulary of forms 01–47 and the public sample (must give zero unknown entries)
+
+Forms 01–42 and the public sample use the names below without a marker. Names marked † first
+appear in forms 43–47 (checked 2026-11-10 against MS-IPFF2 5.1–5.3: each is declared at that
+position, and each enumerated value is inside its list).
 
 Elements (`xsf`): `adoAdapter`, `applicationParameters`, `assignmentAction`, `attachmentFileName`,
 `button`, `calculatedField`, `calculations`, `chooseFragment`, `customValidation`, `dataObject`,
-`dataObjects`, `dialogBoxExpressionAction`, `documentSchema`, `documentSchemas`,
+`dataObjects`, `davAdapter` †, `davAdapter/fileName` †, `davAdapter/folderURL` †,
+`dialogBoxExpressionAction`, `documentSchema`, `documentSchemas`, `documentSignatures` †,
 `documentVersionUpgrade`, `domEventHandler`, `domEventHandlers`, `editWith`, `editing`,
-`emailAdapter`, `errorCondition`, `errorMessage`, `extension`, `extensions`, `field`, `fields`,
-`file`, `fileNew`, `fileProperties`, `files`, `fragmentToInsert`, `importParameters`,
-`initialXmlDocument`, `input`, `intro`, `listProperties`, `mainpane`, `menuArea`, `onLoad`,
-`operation`, `package`, `property`, `query`, `queryAction`, `rule`, `ruleSet`, `ruleSetAction`,
-`ruleSets`, `solutionProperties`, `subject`, `submit`, `switchViewAction`, `to`,
-`unboundControls`, `useTransform`, `view`, `views`, `webServiceAdapter`, `xDocumentClass`,
-`xmlFileAdapter`, `xmlToEdit`.
+`emailAdapter`, `errorCondition`, `errorMessage` (in `errorCondition`), `extension`, `extensions`,
+`field`, `fields`, `file`, `fileNew`, `fileProperties`, `files`, `fragmentToInsert`,
+`importParameters`, `initialXmlDocument`, `input`, `intro`, `listProperties`, `mainpane`,
+`menuArea`, `onLoad`, `operation`, `package`, `property`, `query`, `queryAction`, `rule`,
+`ruleSet`, `ruleSetAction`, `ruleSets`, `script` †, `scripts` †, `signedDataBlock` †,
+`signedDataBlock/message` †, `solutionProperties`, `subject`, `submit`, `submit/errorMessage` †,
+`submitToHostAdapter` †, `switchViewAction`, `to`, `unboundControls`, `useTransform`, `view`,
+`views`, `webServiceAdapter`, `xDocumentClass`, `xmlFileAdapter`, `xmlToEdit`.
 
-Elements (`xsf2`): `dataConnections`, `emailAdapterExtension`, `offline`, `server`,
-`solutionDefinition`, `viewExtension`, `viewsExtension`.
+Elements (`xsf2`): `dataConnections`, `emailAdapterExtension`, `managedCode` †, `offline`,
+`server`, `solutionDefinition`, `viewExtension`, `viewsExtension`.
 
 Attributes, by element:
 - `xDocumentClass`: `name`, `productVersion`, `publishUrl`, `solutionFormatVersion`,
@@ -616,6 +705,12 @@ Attributes, by element:
 - `xmlFileAdapter`: `fileUrl`; `emailAdapter`: `name`, `submitAllowed`;
   `to`, `subject`, `attachmentFileName`: `value`, `valueType`; `intro`: `value`
 - `submit`: `caption`, `disableMenuItem`, `onAfterSubmit`, `showStatusDialog`
+- `submitToHostAdapter` †: `name`, `submitAllowed`
+- `davAdapter` †: `name`, `overwriteAllowed`, `submitAllowed`; `davAdapter/folderURL` †: `value`;
+  `davAdapter/fileName` †: `value`, `valueType`
+- `signedDataBlock` †: `data`, `mode`, `name`, `signatureLocation` (`documentSignatures` and
+  `signedDataBlock/message` carry no attributes in form 45)
+- `scripts` †: `enforceScriptTimeout`, `language`; `script` †: `src`
 - `dataObject`: `initOnLoad`, `name`, `schema`; `queryAction`: `adapter`
 - `view`: `caption`, `name`; `views`: `default`; `mainpane`: `transform`; `menuArea`: `name`
 - `button`: `action`, `caption`, `name`, `showIf`, `xmlToEdit`
@@ -623,7 +718,8 @@ Attributes, by element:
 - `editWith`: `autoComplete`, `caption`, `component`, `proofing`, `type`, `xd:autogeneration`
 - `rule`: `caption`, `condition`, `isEnabled`; `ruleSet`: `name`; `ruleSetAction`: `ruleSet`
 - `assignmentAction`: `expression`, `targetField`; `switchViewAction`: `view`
-- `calculatedField`: `expression`, `refresh`, `target`; `domEventHandler`: `match`
+- `calculatedField`: `expression`, `refresh`, `target`; `domEventHandler`: `match`,
+  `handlerObject` †
 - `errorCondition`: `expression`, `expressionContext`, `match`; `errorMessage`: `shortMessage`, `type`
 - `field` (listProperties): `columnName`, `name`, `node`, `type`
 - `file`: `name`; `property`: `name`, `type`, `value`; `extension`: `name`
@@ -631,12 +727,13 @@ Attributes, by element:
 - `useTransform`: `maxVersionToUpgrade`, `minVersionToUpgrade`, `transform`
 - `importParameters`: `enabled`; `applicationParameters`: `application`
 - `solutionProperties`: `automaticallyCreateNodes`, `fullyEditableNamespace`, `lastOpenView`,
-  `lastVersionNeedingTransform`
+  `lastVersionNeedingTransform`, `scriptLanguage` †
 - `xsf2:solutionDefinition`: `allowClientOnlyCode`, `runtimeCompatibility`;
   `xsf2:offline`: `cacheQueries`, `openIfQueryFails`;
   `xsf2:server`: `formLocale`, `isMobileEnabled`, `isPreSubmitPostBackEnabled`;
   `xsf2:viewExtension`: `clientOnly`, `designMode`, `ref`;
-  `xsf2:emailAdapterExtension`: `emailAttachmentType`, `ref`
+  `xsf2:emailAdapterExtension`: `emailAttachmentType`, `ref`;
+  `xsf2:managedCode` †: `language`, `projectPath`, `version`
 
 ## Appendix B: oracle for the public sample
 

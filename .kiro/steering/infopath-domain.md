@@ -7,7 +7,7 @@ fileMatchPattern: ["packages/core/**", "apps/**/classic/**"]
 
 ## .xsn container
 - A Microsoft Cabinet file (signature `MSCF`).
-- All 29 third-party samples (not in the repo) and all 42 in `samples/own/` use **MSZIP**: each CFDATA block starts with `CK`, followed by a raw deflate stream. The deflate history carries over between blocks inside one folder, so use one inflater per folder.
+- All 29 third-party samples (not in the repo) and all 47 in `samples/own/` use **MSZIP**: each CFDATA block starts with `CK`, followed by a raw deflate stream. The deflate history carries over between blocks inside one folder, so use one inflater per folder.
 - LZX and Quantum are possible in theory. Reject them with `UNSUPPORTED_COMPRESSION`.
 - Typical contents:
   - `manifest.xsf`: the form definition.
@@ -19,8 +19,8 @@ fileMatchPattern: ["packages/core/**", "apps/**/classic/**"]
   - Images, and optionally `*.dll` (managed code) or `*.js`/`*.vbs` (script).
 
 ## manifest.xsf essentials (namespace `http://schemas.microsoft.com/office/infopath/2003/solutionDefinition`, plus xsf2/xsf3 extensions)
-- The authoritative vocabulary is the XSDs in Microsoft's public [MS-IPFF2] sections 5.1 (xsf), 5.2 (xsf2) and 5.3 (xsf3). All 43 in-repo manifests conform to them (checked 2026-11-10).
-- `xsf:xDocumentClass`: root. Attributes `name` (the URN), `solutionVersion`, `productVersion`, `solutionFormatVersion`, `publishUrl` (often a hard-coded local path or server), `trustSetting`, and optionally `trustLevel` and `requireFullTrust`. `trustLevel` is absent from all 42 own forms (they carry `trustSetting="automatic"`); the 2004 public sample has `trustLevel="restricted"`.
+- The authoritative vocabulary is the XSDs in Microsoft's public [MS-IPFF2] sections 5.1 (xsf), 5.2 (xsf2) and 5.3 (xsf3). All 48 in-repo manifests (forms 01–47 and the public sample) conform to them (checked 2026-11-10; forms 43–47 were generated to match them and never opened in InfoPath).
+- `xsf:xDocumentClass`: root. Attributes `name` (the URN), `solutionVersion`, `productVersion`, `solutionFormatVersion`, `publishUrl` (often a hard-coded local path or server), `trustSetting`, and optionally `trustLevel` and `requireFullTrust`. `trustLevel` is absent from all 47 own forms (they carry `trustSetting="automatic"`); the 2004 public sample has `trustLevel="restricted"`.
 - `xsf:views/xsf:view`: name, `xsf:mainpane transform="view1.xsl"`, menus and toolbars, `xsf:unboundControls`.
 - `xsf:documentSchemas`: root schema location.
 - `xsf:fileNew/xsf:initialXmlDocument`: `template.xml`.

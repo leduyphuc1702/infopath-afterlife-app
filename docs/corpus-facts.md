@@ -51,7 +51,10 @@ Total: 1266 controls across 71 forms.
 | `switchViewAction` | 7 |
 | `queryAction` | 1 |
 | `dialogBoxExpressionAction` | 1 |
-| `containmentAction` | 1 |
+
+Corrected by hand on 2026-11-10: the generated table also had a row `containmentAction` 1. That
+was not an action: the counting script (`facts.py`, outside this repo) matched the form field
+`my:containmentAction` in form 23, so the generated number was wrong.
 
 ## XPath functions used in expressions
 

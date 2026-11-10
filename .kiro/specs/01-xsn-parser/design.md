@@ -1,7 +1,9 @@
 # Design: 01 .xsn parser (CAB + manifest + schema)
 
-Phase 2 of 3. Requirements: `requirements.md` (R1–R20, approved 2026-11-10). Status: **draft,
-awaiting approval.**
+Phase 2 of 3. Requirements: `requirements.md` (R1–R20, approved 2026-11-10, amended at design
+approval). Status: **approved 2026-11-10**, with the answers and changes applied: D1, D7, D10 and
+`src/xsn/` approved; field kind from the content model (§9.2); encodings (§7.2); XSD groups,
+attribute groups, lists and unions (§9); forms 43–47 (§8.1, §14).
 
 ## 1. Overview
 
@@ -32,16 +34,18 @@ bytes ──► cab/ ──► PackageFile[] ──► xsn/ (find manifest, R6 c
 
 | # | Decision | Alternatives | Why |
 |---|---|---|---|
-| D1 | **One inflater in both runtimes: `DecompressionStream('deflate-raw')`.** `zlib.inflateRawSync` is used only in tests, as an independent oracle. **Needs your OK: it changes tech.md's Deflate line (§12).** | (a) `inflateRawSync` in Node and `DecompressionStream` in the browser, as tech.md says; (b) a small inflater written in core | Measured 2026-11-10: the two disagree on irregular blocks. With 8 junk bytes after the stream, Node 22.23.4's `DecompressionStream` and `inflateRawSync` both return the data with no error, while Node 26.13 and Chrome 157 return the data and then raise `TypeError`. For a stream with no final block, `inflateRawSync` throws and gives no output; `DecompressionStream` gives the output and then raises an error. R17.3 needs Node and Worker results to be deep-equal, and one code path makes that true by construction. `DecompressionStream` is a global in Node 22.23.4 (checked). Option (b) means more code for us to own, and tech.md forbids it. |
-| D2 | **History across blocks: stored-block prefix.** For block *k* > 0, inflate `[stored block holding the last ≤ 32 KB of folder output] + block k`, then drop the prefix bytes. | dictionary option (not in `DecompressionStream`); own inflater | Proved 2026-11-10 against a zlib-dictionary oracle on all 43 cabinets, including the 7 multi-block ones. It passed on Node 26 main thread, Node 26 `worker_threads`, Node 22.23.4 main thread and `worker_threads`, and a Chrome 157 dedicated Worker. The stored block header is 5 bytes: `0x00`, LEN, ~LEN (BFINAL=0, BTYPE=00). |
+| D1 | **One inflater in both runtimes: `DecompressionStream('deflate-raw')`.** `zlib.inflateRawSync` is used only in tests, as an independent oracle. Approved 2026-11-10; tech.md's Deflate line now says this. | (a) `inflateRawSync` in Node and `DecompressionStream` in the browser, as tech.md says; (b) a small inflater written in core | Measured 2026-11-10: the two disagree on irregular blocks. With 8 junk bytes after the stream, Node 22.23.4's `DecompressionStream` and `inflateRawSync` both return the data with no error, while Node 26.13 and Chrome 157 return the data and then raise `TypeError`. For a stream with no final block, `inflateRawSync` throws and gives no output; `DecompressionStream` gives the output and then raises an error. R17.3 needs Node and Worker results to be deep-equal, and one code path makes that true by construction. `DecompressionStream` is a global in Node 22.23.4 (checked). Option (b) means more code for us to own, and tech.md forbids it. |
+| D2 | **History across blocks: stored-block prefix.** For block *k* > 0, inflate `[stored block holding the last ≤ 32 KB of folder output] + block k`, then drop the prefix bytes. | dictionary option (not in `DecompressionStream`); own inflater | Proved 2026-11-10 against a zlib-dictionary oracle on all 43 cabinets, including the 7 multi-block ones. It passed on Node 26 main thread, Node 26 `worker_threads`, Node 22.23.4 main thread and `worker_threads`, and a Chrome 157 dedicated Worker. Re-run in Node on the 48 cabinets after forms 43–47 arrived: all equal, still 7 multi-block. The stored block header is 5 bytes: `0x00`, LEN, ~LEN (BFINAL=0, BTYPE=00). |
 | D3 | **A block is accepted when exactly `cbUncomp` bytes come out after the prefix.** An inflater error after that point is ignored. Fewer bytes, more bytes, or an error before that point is `CORRUPT_CAB` (R3.3). | report an "unclean end" issue | Whether junk after the stream raises an error depends on the runtime (D1), so an issue for it could not be deterministic. The data is complete and the checksum (R3.4) still catches corruption. |
 | D4 | **XML: `@xmldom/xmldom` 0.9.12, wrapped by `xml/`**, with our own decoding and pre-scan in front of it. | `saxes` (ISC, SAX only), `txml` (MIT, no locations), `fast-xml-parser` (MIT, no DOM) | Checks in §7.1. It meets R5 once we decode bytes ourselves and reject DOCTYPE and depth before it runs. No other MIT parser is needed. |
 | D5 | **One vocabulary table drives extraction and the unknown check** (§8). | hand-written extractors plus a separate "known names" list | Two lists drift. With one table, "modelled" is a property of the table plus the walker, and tests can check it mechanically (§8.5). |
-| D6 | **MS-IPFF2 names are generated into core** (`xsf/ms-ipff2.ts`) by a dev script from the XSDs in sections 5.1–5.3. They supply `documented` (R13.8) and the enumeration lists (R13.4), and a test checks that the vocabulary is a subset of them. | hand-copy; fetch at runtime | Core makes no network requests. Only names and enumeration values are stored, not the XSDs. The Open Specifications notice allows copies made to implement the format. |
-| D7 | **Extra limit `xmlBytes` = 4 MB, the total across all XML this spec parses.** **New; needs your OK.** | none | P1 (R19) requires ≤ 1 s for any input ≤ 2 MB. A 2 MB cabinet can inflate to the 50 MB cap, and xmldom parses about 9.5 MB/s (4.7 MB in 496 ms, measured). 4 MB is about 0.45 s of parsing. The largest in-repo form parses 72 KB of XML. |
+| D6 | **MS-IPFF2 names are generated into core** (`xsf/ms-ipff2.ts`) by a dev script from the XSDs in sections 5.1–5.3. They supply `documented` (R13.8) and the enumeration lists (R13.4), and a test checks that the vocabulary is a subset of them. Approved. The generated file's header names the source (MS-IPFF2 sections 5.1–5.3, URL, retrieval date) and says it holds only element names, attribute names and enumeration values, copied to implement the format, which the Microsoft Open Specifications notice allows. No prose from the spec and no XSD text. | hand-copy; fetch at runtime | Core makes no network requests. The Open Specifications notice allows copies made to implement the format. |
+| D7 | **Extra limit `xmlBytes` = 4 MB, the total across all XML this spec parses.** Approved, as an option. An overrun in a file other than the manifest is an issue, not a fatal error. | none | P1 (R19) requires ≤ 1 s for any input ≤ 2 MB. A 2 MB cabinet can inflate to the 50 MB cap, and xmldom parses about 9.5 MB/s (4.7 MB in 496 ms, measured). 4 MB is about 0.45 s of parsing. The largest in-repo form parses 72 KB of XML; across the whole 71-form corpus the largest manifest plus schemas is 45 KB (a third-party template, not in the repo), so 4 MB is about 90 times that. |
 | D8 | **`template.xml` is not parsed into a DOM.** R6.6 reads only the `mso-infoPathSolution` processing instruction, with a bounded scan of the first 4 KB. | full parse | That is all this spec needs, and it keeps large default data out of the `xmlBytes` budget. |
 | D9 | **Every `.xsd` in the package is loaded into one schema set**, even when it is not referenced. Trees are built only from roots (main, and each `dataObject`). | load only referenced files | Unknown-content checks (R15.4/15.6) then cover every schema file, and include/import resolve by name inside one set. |
-| D10 | **Lint and format: eslint 10 + typescript-eslint 8 + prettier 3**, with **TypeScript 6.0.3**. | oxlint + oxfmt; Biome 2.6.6; TypeScript 7.0.2 | typescript-eslint 8.72.2 has type-aware rules (`no-floating-promises` matters with async inflate) and supports TS `>=4.8.4 <6.1.0`. TypeScript 7.0.2 (the native compiler) is outside that range, so 6.0.3, the last JS release, is the newest we can use. oxfmt is pre-1.0 (0.78.0). `no-restricted-imports` and `no-restricted-globals` enforce R17.1 in the editor. |
+| D10 | **Lint and format: eslint 10 + typescript-eslint 8 + prettier 3**, with **TypeScript 6.0.3**. Approved. | oxlint + oxfmt; Biome 2.6.6; TypeScript 7.0.2 | typescript-eslint 8.72.2 has type-aware rules (`no-floating-promises` matters with async inflate) and supports TS `>=4.8.4 <6.1.0`. TypeScript 7.0.2 (the native compiler) is outside that range, so 6.0.3, the last JS release, is the newest we can use. oxfmt is pre-1.0 (0.78.0). `no-restricted-imports` and `no-restricted-globals` enforce R17.1 in the editor. |
+| D11 | **Encodings: `TextDecoder` decides, plus one fixed refusal list** (R5.3). A declared label is passed to `new TextDecoder(label, { fatal: true })`; a `RangeError` (unknown label, and every label that maps to `replacement`, which the constructor rejects by the WHATWG spec) is `INVALID_XML`. The canonical `decoder.encoding` is then checked against `REFUSED_ENCODINGS` in `xml/decode.ts`, the encodings that only one runtime supports. | allow only UTF-8/16 (the first R5.3); our own decoders | Decoding is not a safety risk, and old schemas imported from other systems use legacy code pages. Measured 2026-11-10 over the 228 WHATWG labels: Node 26.13 accepts 222, Node 22.23.4 accepts 220; both reject the 6 `replacement` labels, and Node 22 also rejects `iso-8859-16` and `x-user-defined`. Chromium is measured in task 2; the list is whatever the two runtimes do not share. |
+| D12 | **Field kind from the content model; XSD groups, attribute groups, lists and unions modelled** (R14.1, R14.4, R15.1, R15.4). | kind from "has child elements" (the first §9.2); leave groups unknown | Form 45's `signatures2` (only an `xsd:any` in the XML-DSig namespace) would have been a `field` and then `required`. Groups and attribute groups appear in schemas built from web services and line-of-business systems; leaving them unknown would drop their fields from the tree. |
 
 ## 3. Module layout
 
@@ -59,7 +63,7 @@ src/
     inflate.ts             inflateBlock(): DecompressionStream + stored-block prefix (D1–D3)
     reader.ts              readCabinet() (R1)
   xml/
-    decode.ts              bytes → string; BOM, declaration, encodings (R5.3)
+    decode.ts              bytes → string; BOM, declaration, TextDecoder labels, REFUSED_ENCODINGS (R5.3, D11)
     prescan.ts             DOCTYPE + depth check before parsing (R4.5, R5.2)
     parse.ts               the only importer of @xmldom/xmldom (R5.5–5.6)
     path.ts                path strings for elements, attributes, text (glossary "Path")
@@ -85,8 +89,8 @@ scripts/
 test/                      see §13
 ```
 
-structure.md lists `cab/`, `xsf/` and `xsd/`. tech.md already names `src/xml/`. `src/xsn/` is new
-and will be added to structure.md once this design is approved.
+structure.md lists `cab/`, `xsf/`, `xsd/`, and now `xml/` and `xsn/` (added 2026-11-10 at design
+approval).
 
 ## 4. Public API
 
@@ -251,19 +255,26 @@ export interface FieldTree { readonly file: string; readonly root: FieldNode }
 export interface FieldNode {
   readonly name: string; readonly namespace: string | null;
   readonly nodeType: 'element' | 'attribute';
-  readonly kind: 'group' | 'field' | 'richText';
-  readonly xsdType: { readonly declared?: QName; readonly builtin: QName };     // R14.1
+  readonly kind: 'group' | 'field' | 'richText';     // from the content model (§9.2, R14.1)
+  readonly xsdType: {                                                           // R14.1, R14.7
+    readonly declared?: QName; readonly builtin: QName;
+    readonly variety: 'atomic' | 'list' | 'union' | 'complex';
+    readonly itemType?: QName;                      // list
+    readonly memberTypes?: readonly QName[];        // union; inline members get their builtin QName
+  };
   readonly raw: {                                                               // R14.2, strings as written
     readonly minOccurs?: string; readonly maxOccurs?: string; readonly nillable?: string;
     readonly use?: string;                                                      // attributes
-    readonly groups: readonly { kind: 'sequence' | 'choice' | 'all'; minOccurs?: string; maxOccurs?: string }[];
+    readonly groups: readonly {                     // enclosing particles, outermost first
+      kind: 'sequence' | 'choice' | 'all' | 'group'; ref?: QName; minOccurs?: string; maxOccurs?: string;
+    }[];
   };
   readonly effective: { readonly minOccurs: number; readonly maxOccurs: number | 'unbounded'; readonly nillable: boolean };
   readonly repeating: boolean; readonly optional: boolean; readonly required: boolean;  // R14.3–14.4
   readonly choiceGroup?: string;                    // id shared by the alternatives (R14.5)
-  readonly facets: readonly Facet[];                // R14.7, in declaration order
+  readonly facets: readonly Facet[];                // R14.7, in declaration order, base type's first
   readonly default?: string; readonly fixed?: string;
-  readonly wildcards: readonly { kind: 'any' | 'anyAttribute'; namespace?: string; processContents?: string }[];
+  readonly wildcards: readonly { kind: 'any' | 'anyAttribute'; namespace?: string; processContents?: string; minOccurs?: string; maxOccurs?: string }[];
   readonly recursive: boolean;                      // R15.3
   readonly description?: string;                    // xsd:documentation
   readonly source: Located;                         // the declaration
@@ -318,17 +329,23 @@ Type-0 folders copy `data` as is, and require `cbData == cbUncomp`.
 | Billion laughs | not expanded (same mechanism) | as above |
 | Line and column | `lineNumber`/`columnNumber` on every element and attribute (`locator` is on by default); errors carry `{lineNumber, columnNumber}` in `onError`'s context and on the thrown `ParseError` | Meets R5.6 |
 | Depth | no limit: 100,000 nested elements parse in 218 ms; 2 MB of unclosed tags take 724 ms before the error | `prescan` must enforce `xmlDepth` itself (R4.5); the depth hook (`__DOMHandler`) is internal, so we do not use it |
-| Encoding | the parser takes a string and ignores the `encoding` declaration | `decode.ts` owns encodings (R5.3) |
+| Encoding | the parser takes a string and ignores the `encoding` declaration | `decode.ts` owns encodings (R5.3, D11) |
 | In-repo files | 265 XML files under `samples/own/forms/`: 0 errors, 0 warnings | |
 
 No replacement parser is needed.
 
 ### 7.2 Pipeline per document
 
-1. `decode(bytes)`: a BOM selects UTF-8, UTF-16LE or UTF-16BE; without one, use UTF-8. Read the XML
-   declaration's `encoding`. If it names something other than UTF-8 or UTF-16 (case-insensitive),
-   throw `INVALID_XML` naming it (R5.3). Decode with `fatal: true`; if that fails, decode again with
-   replacement and record `INVALID_ENCODING` (non-fatal, so damaged files still open).
+1. `decode(bytes)`: a BOM selects UTF-8, UTF-16LE or UTF-16BE. Without one, the first four bytes
+   `3C 00 3F 00` or `00 3C 00 3F` select UTF-16LE or UTF-16BE (XML 1.0 Appendix F); otherwise the
+   bytes are ASCII-compatible and the XML declaration's `encoding` is read (default UTF-8). A BOM
+   or byte pattern wins over the declaration, and a declared UTF-16 label on ASCII-compatible bytes
+   is read as UTF-8 (those bytes cannot be UTF-16). The label goes to `new TextDecoder(label, { fatal:
+   true })`. A `RangeError` (unknown label, or a `replacement` label) throws `INVALID_XML` with
+   `encoding` set to the label. If the canonical `decoder.encoding` is in `REFUSED_ENCODINGS`,
+   the same error is thrown (R5.3, D11). Decode with `fatal: true`; if that fails, decode again
+   without it (U+FFFD for bad bytes) and record `INVALID_ENCODING` (non-fatal, so damaged files
+   still open).
 2. Charge `xmlBytes` (D7).
 3. `prescan(text)`: one linear pass with states text / tag / quoted attribute / comment / CDATA / PI.
    `<!DOCTYPE` anywhere outside a comment or CDATA → `UNSAFE_XML` at its line and column (R5.2).
@@ -389,12 +406,23 @@ export const XSF_VOCABULARY = {
   `xsf:unboundControls/button`, `xsf:listProperties/field`, `xsf:sharepointListAdapter/field`).
   Children are looked up through the parent's `children` map, so the same name in a different
   place is a different entry, or unknown.
-- **Coverage:** every element and attribute in requirements Appendix A, plus everything R7–R12
-  name (`xsf3:customValidation`, `errorBlank`, `documentSignatures`, `signedDataBlock`,
-  `signedDataBlock/message`, `xsf3:signatureLines`, `roles`, `role`, `membership`, `scripts`, `script`,
-  `xsf2:managedCode`, `permissions`, `allowedControl`, `printSettings`, `header`, `footer`,
-  `toolbar`, `xsf2:mergedPrintView`, `xsf3:viewExtension`, every adapter in R11.3 and its children,
-  `xsf2:connectoid` and the `*Extension` elements in R11.4, `listPropertiesExtension`, and so on).
+- **Coverage:** every element and attribute in requirements Appendix A (forms 01–47 and the public
+  sample), plus everything R7–R12 name (`xsf3:customValidation`, `errorBlank`,
+  `documentSignatures`, `signedDataBlock`, `signedDataBlock/message`, `xsf3:signatureLines`,
+  `roles`, `role`, `membership`, `scripts`, `script`, `xsf2:managedCode`, `permissions`,
+  `allowedControl`, `printSettings`, `header`, `footer`, `toolbar`, `xsf2:mergedPrintView`,
+  `xsf3:viewExtension`, every adapter in R11.3 and its children, `xsf2:connectoid` and the
+  `*Extension` elements in R11.4, `listPropertiesExtension`, and so on). Forms 43–47 add, at
+  these positions: `submit/errorMessage`, `submitToHostAdapter` (`name`, `submitAllowed`),
+  `documentSignatures`, `signedDataBlock` (`name`, `data`, `signatureLocation`, `mode`),
+  `signedDataBlock/message`, `xsf2:managedCode` (`language`, `version`, `projectPath`),
+  `davAdapter` (`name`, `submitAllowed`, `overwriteAllowed`), `davAdapter/folderURL` (`value`),
+  `davAdapter/fileName` (`value`, `valueType`), `scripts` (`language`, `enforceScriptTimeout`),
+  `script` (`src`), `domEventHandler/@handlerObject` and `solutionProperties/@scriptLanguage`.
+  Checked 2026-11-10 with the same script as forms 01–42: each is declared by MS-IPFF2 at that
+  position, and the enumerated values in the five manifests (`mode="countersign"`,
+  `valueType="expression"`, `overwriteAllowed`, `enforceScriptTimeout`, `submitAllowed`) are inside
+  their lists. No sample markup needed fixing.
   MS-IPFF2 elements that R7–R12 do not name (e.g. `taskpane`, `featureRestrictions`,
   `externalViews`, `hwsWorkflow`, `autoRecovery`, `masterDetail`) are left out on purpose. They
   are reported as unknown with `documented: true` (R13.8).
@@ -402,8 +430,8 @@ export const XSF_VOCABULARY = {
   `xsd:enumeration` list (about 40 across the three XSDs) or `xdYesNo` (about 95).
   A test fails if the table and the generated file disagree. `runtimeCompatibility` is a string:
   MS-IPFF2 types it as a single NMTOKEN pattern `[a-zA-Z0-9_]*`, but real forms (and form 43) write
-  `"client server"`. Across the 43 manifests, all 2,603 enumerated attribute values are inside
-  their lists (checked).
+  `"client server"`. Across the 43 manifests of forms 01–42 and the public sample, all 2,603
+  enumerated attribute values are inside their lists (checked); forms 43–47 add none outside.
 - **Extension points:** `xsf:extension` (MS-IPFF2 content `##any`) declares `xsf2:solutionDefinition`
   and `xsf3:solutionDefinition` as its children. Anything else inside it is unknown.
 
@@ -471,15 +499,19 @@ recover the modelled set from the result alone: collect every object with a `pat
   Unmodelled XSD constructs become unknown entries (R15.4) with `documented` = "XML Schema 1.0
   defines this element or attribute". Modelled: `schema`, `import`, `include`, `element`,
   `attribute`, `complexType`, `simpleType`, `sequence`, `choice`, `all`, `any`, `anyAttribute`,
-  `simpleContent`, `complexContent`, `extension`, `restriction`, the 12 facets,
-  `annotation`/`documentation` (kept as a node's description) and `appinfo` (raw). Not modelled:
-  `group`, `attributeGroup`, `union`, `list`, `key`, `keyref`, `unique`, `redefine`, `notation`, and
-  the attributes `substitutionGroup`, `abstract`, `block`, `final`.
-- Globals are indexed by `{targetNamespace}name`, separately for elements, types and attributes.
-  `include` and `import` resolve `schemaLocation` against package file names (case-insensitive,
+  `simpleContent`, `complexContent`, `extension`, `restriction`, the 12 facets, `group` and
+  `attributeGroup` (global definitions and `ref`), `list` (`itemType` or an inline `simpleType`),
+  `union` (`memberTypes` and inline `simpleType` members), `annotation`/`documentation` (kept as a
+  node's description) and `appinfo` (raw). Not modelled, so unknown with `documented: true`
+  (R15.4): `key`, `keyref`, `unique`, `redefine`, `notation`, and the attributes
+  `substitutionGroup`, `abstract`, `block`, `final`. The unknown entry for an identity constraint
+  covers its `selector` and `field` children.
+- Globals are indexed by `{targetNamespace}name`, separately for elements, types, attributes,
+  model groups and attribute groups. `include` and `import` resolve `schemaLocation` against package file names (case-insensitive,
   last path segment only). A URL or absolute path is never fetched; it records
   `UNRESOLVED_REFERENCE` (R15.2). `import` with no `schemaLocation` resolves by namespace when one
-  loaded file declares that target namespace.
+  loaded file declares that target namespace. A `ref` to a group or attribute group that is not
+  indexed records `UNRESOLVED_REFERENCE`, like any other reference.
 - The main schema is the file in `documentSchema[@rootSchema="yes"]/@location` (the last
   whitespace-separated token). The root is the `rootElement` file property of that file in
   `xsf:files`, else its first global element (R14.1). A secondary schema is `dataObject/@schema`,
@@ -489,33 +521,55 @@ recover the modelled set from the result alone: collect every object with a `pat
 
 - Walk from the root declaration. For a `ref`, record the ref site as `use` and the declaration as
   `source`. Named types are resolved through `extension` and `restriction`: children of the base
-  come first, then the derived content.
+  come first, then the derived content. A model-group `ref` is expanded in place: its particle's
+  children join the content model at that point, and the reference appears in each child's
+  `raw.groups` as `{ kind: 'group', ref, minOccurs?, maxOccurs? }`. An attribute-group `ref` adds
+  its attributes (and nested attribute-group references, in document order) and its
+  `anyAttribute` to the element, as if declared there.
 - **Effective cardinality** (R14.3): `minOccurs` and `maxOccurs` of the element, multiplied by those
-  of every enclosing `sequence`, `choice` and `all` inside the same content model (`unbounded`
-  absorbs). Alternation inside a `choice` is **not** turned into `minOccurs = 0`; the members get a
+  of every enclosing `sequence`, `choice`, `all` and group reference inside the same content model
+  (`unbounded` absorbs). Alternation inside a `choice` is **not** turned into `minOccurs = 0`; the members get a
   shared `choiceGroup` instead (R14.5). Without this rule, form 05 would count 3 optional nodes
   where the README says 1 (`relocation`).
-- **Kind:** `richText` when the content is mixed and holds an `xsd:any` whose namespace is XHTML;
-  `group` when the element has child elements; otherwise `field`. A rich-text `any` is not a child
-  node (R14.6).
-- **Recursion:** keep a stack of declaration identities. A repeat is a leaf with `recursive: true` (R15.3).
-- **Built-in type:** follow `restriction` and `extension` bases to an `xsd:` type. No type and no
-  content means `xsd:anyType`.
+- **Kind** (R14.1), from the resolved content model only:
+
+  | Content model of the element's type | Kind |
+  |---|---|
+  | a simple type (built-in, named or inline; atomic, list or union) | `field` |
+  | complex type with `simpleContent` | `field` |
+  | complex type, `mixed="true"`, containing an `xsd:any` whose namespace is `http://www.w3.org/1999/xhtml` | `richText` |
+  | any other complex type: element children, element-only content made only of wildcards (form 45 `signatures2`), empty content, `xsd:anyType` | `group` |
+
+  Attributes are always `field`. A rich-text `any` is not a child node (R14.6); every other `any`
+  becomes an entry in `wildcards` with its `namespace`, `processContents`, `minOccurs` and
+  `maxOccurs` as written.
+- **Recursion:** keep a stack of declaration identities (element declarations, named types and
+  model groups). A repeat is a leaf with `recursive: true` (R15.3).
+- **Built-in type:** follow `restriction` and `extension` bases to an `xsd:` type. A `list` records
+  its item type and a `union` its member types (R14.7), and `builtin` is `xsd:anySimpleType` for
+  both. No type and no content means `xsd:anyType`.
 
 ### 9.3 `required` (`empty-string.ts`, R14.4)
 
-`required = nodeType === 'element' && kind !== 'group' && effective.minOccurs ≥ 1 && !effective.nillable && !acceptsEmpty(type)`.
+`required = kind === 'field' && nodeType === 'element' && effective.minOccurs ≥ 1 && !effective.nillable && !acceptsEmpty(type)`.
+
+Attributes stay out of `required`, as in the first design; `raw.use` keeps `use="required"` for
+spec 02.
 
 `acceptsEmpty(type)`:
-1. Built-in families: `string`, `normalizedString`, `token`, `anyURI`, `base64Binary`, `hexBinary`,
-   `anyType` and list types are true. Every other built-in is false.
-2. A restriction can only narrow: an `enumeration` makes it true iff `''` is listed; a `length` or
-   `minLength` ≥ 1 makes it false; a `pattern` is converted to a JS `RegExp` (`u` flag, anchored) and
+1. Built-in families: `string`, `normalizedString`, `token`, `anyURI`, `base64Binary`, `hexBinary`
+   and the built-in list types (`NMTOKENS`, `IDREFS`, `ENTITIES`) are true. Every other built-in is
+   false.
+2. `xsd:list` (R14.4): true, since a list of zero items is the empty string. `xsd:union`: true when
+   `acceptsEmpty` is true for any member type.
+3. A restriction can only narrow, whatever the variety: an `enumeration` makes it true iff `''` is
+   listed; a `length` or `minLength` ≥ 1 makes it false (for a list, these count items, and the
+   empty string has zero); a `pattern` is converted to a JS `RegExp` (`u` flag, anchored) and
    tested with `''`. If the pattern uses XSD-only syntax (`\i`, `\c`, character-class
    subtraction), the result is "unknown". `required` is then false and a `PATTERN_NOT_EVALUATED`
    issue records it. The facet itself is kept for spec 05.
 
-Groups and rich text are never `required`. Their presence is in `effective`.
+Groups and rich text are never `required` (R14.4). Their presence is in `effective`.
 
 ### 9.4 Counts (`counts.ts`, R16.1)
 
@@ -572,7 +626,7 @@ for logs. User-facing text is mapped in the UI (structure.md). Any other excepti
 | Tool | Version | Notes |
 |---|---|---|
 | Node | 22.23.4 (latest 22.x, 2026-10-20) | `engines.node: ">=22.12 <23"` in the root; `.node-version`; CI pins it (R18). Vitest 5 needs `^22.12` |
-| pnpm | 12.18.0 | `packageManager` field; `pnpm-workspace.yaml`: `packages/*`, `apps/*` |
+| pnpm | 12.18.0 | `packageManager: "pnpm@12.18.0"`; `pnpm-workspace.yaml`: `packages/*`, `apps/*`. No Corepack: an installed pnpm reads `packageManager` and runs the pinned version itself. Checked 2026-11-10 in a scratch folder with that field: the global pnpm on this machine (`/usr/local/bin/pnpm`, **11.5.2**, not 11.11.0) printed `12.18.0` for `pnpm --version`, under Node 26.13 and Node 22.23.4. CI uses `pnpm/action-setup`, which reads the same field |
 | TypeScript | 6.0.3 | D10. `tsconfig.base.json`: `strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes` (absent ≠ undefined, R7.5), `verbatimModuleSyntax`, `isolatedModules`, `module: "preserve"`, `moduleResolution: "bundler"`, `target: "ES2023"`, `noEmit` (apps bundle core from source) |
 | core `tsconfig.json` | | `lib: ["ES2023", "WebWorker"]`, `types: []`. A use of `DOMParser`, `document` or a Node module in `src/` is a type error (R17.1). `test/` has its own tsconfig with `@types/node` 22.20.5 |
 | `@xmldom/xmldom` | 0.9.12, exact pin | the only runtime dependency |
@@ -588,13 +642,16 @@ eslint rules for `packages/core/src/**`:
 - `no-restricted-globals`: `fetch`, `XMLHttpRequest`, `DOMParser`, `document`, `window`, `process`, `Buffer`, `require` (R17.1, R17.4).
 
 Scripts (root): `pnpm typecheck`, `pnpm lint`, `pnpm format:check`, `pnpm test` (node project),
-`pnpm test:browser`, `pnpm test:perf`. The Forge app keeps its own bundler's TypeScript (5.9.2,
+`pnpm test:browser`, `pnpm test:perf`, and `pnpm check`, which runs the first five in that order
+and is the "full suite" in `tasks.md`. The Forge app keeps its own bundler's TypeScript (5.9.2,
 pinned by `@forge/bundler` 7.3.2); core is plain TS that both compile.
 
-**Proposed tech.md edit (D1), not made yet:** replace "use built-in `zlib.inflateRawSync` in Node
-and `DecompressionStream('deflate-raw')` in the browser" with "use `DecompressionStream('deflate-raw')`
-in every runtime (a global in Node 22 and in Web Workers); `zlib` appears only in tests as an
-oracle".
+Local runs use Node 22: `.node-version` holds `22.23.4`, and on this machine Node 22 is put first
+on `PATH` (`/opt/homebrew/opt/node@22/bin`) because the default `node` is 26.13.
+
+**tech.md edit (D1), made 2026-11-10:** the Deflate line now says to use
+`DecompressionStream('deflate-raw')` in every runtime (a global in Node 22 and in Web Workers),
+with `zlib` only in tests as an oracle.
 
 ## 13. Test plan
 
@@ -618,9 +675,21 @@ oracle".
   automatic accept.
 - **Synthetic fixtures:** `packages/core/test/fixtures/synthetic/` holds hand-written `.xsf` and
   `.xsd` files for roles, print settings, SharePoint list adapters (`sharepointListAdapter`,
-  `sharepointListAdapterRW`), `xsd:include`, `xsf3` (`baseUrl`, `errorBlank`, `signatureLines`),
-  recursion, a remote `schemaLocation`, an XSD-only pattern, and the XML attack set (billion laughs,
-  external entity, external DTD, parameter entity, Windows-1251, depth 257 and 100,000).
+  `sharepointListAdapterRW`), `allowedControl`, `xsd:include`, `xsf3` (`baseUrl`, `errorBlank`,
+  `signatureLines`), recursion, a remote `schemaLocation`, an XSD-only pattern, the modelled XSD
+  constructs (a model group with a global definition, a `ref` with `minOccurs="0"
+  maxOccurs="unbounded"` and a self-reference; an attribute group nested in another; a `list` by
+  `itemType` and inline, with `length`; a `union` by `memberTypes` and inline), one schema per
+  construct that stays unknown (`key`, `keyref`, `unique`, `redefine`, `notation`,
+  `substitutionGroup`, `abstract`, `block`, `final`), the XML attack set (billion laughs, external
+  entity, external DTD, parameter entity, depth 257 and 100,000), and the encoding set: Cyrillic
+  text in `windows-1251`, `windows-1252`, `iso-8859-1` and `shift_jis` (positive), an unknown
+  label, `iso-2022-kr` (maps to `replacement`), and each label in `REFUSED_ENCODINGS` (negative).
+  Encoded fixtures are written by a test helper from UTF-8 source strings, so the repo holds no
+  binary encoding files.
+- **WHATWG label list:** `test/fixtures/whatwg-encodings.json`, a copy of the Encoding Standard's
+  `encodings.json` (CC BY 4.0, attributed in the file's sibling `README.md`), used by the label
+  parity test.
 - **Cabinet writer (test only):** `test/helpers/cab-writer.ts` builds cabinets from files with
   Node `zlib.deflateRawSync`. It can split blocks, set reserve or spanning flags, set any
   compression type and corrupt checksums. R2.5, R3 and R19.2 use it.
@@ -634,14 +703,14 @@ oracle".
 | R2 | unit | cab-writer: types 2, 3, 7; flags 1, 2, 4 | `cab/unsupported.test.ts` |
 | R3 | unit | truncations at every structure boundary; bad `CK`; wrong length; bad folder index; flipped checksum → one `CHECKSUM_MISMATCH` and the same files | `cab/corrupt.test.ts` |
 | R4 | unit | cab-writer: 2,001 entries; a declared 51 MB; 20 MB + 1 input; `cbUncomp` 32,769; deep XML; `xmlBytes` | `limits.test.ts` |
-| R5 | unit | XML attack set; encodings | `xml/safety.test.ts`, `xml/decode.test.ts` |
+| R5 | unit, browser | XML attack set; encoding set; WHATWG labels accepted the same way in Node and the Worker | `xml/safety.test.ts`, `xml/decode.test.ts`, `browser/encodings.browser.test.ts` |
 | R6 | unit | synthetic packages via `parsePackage` | `xsn/package.test.ts` |
 | R7–R12 | golden, unit | README forms + public sample; synthetic fixtures for items with no sample | `golden.samples.test.ts`, `xsf/build.test.ts` |
 | R13 | unit, coverage | kitchen-sink manifest; enum violation; text; comments and PIs ignored | `xsf/vocabulary.coverage.test.ts`, `xsf/unknowns.test.ts` |
 | R13.6, R15.6 | golden | every README row + public sample: `unknowns` is empty | `unknowns.samples.test.ts` |
 | R13.8, D6 | unit | vocabulary ⊆ MS-IPFF2; `documented` true and false cases | `xsf/vocabulary.ms-ipff2.test.ts` |
-| R14 | unit | the R14.8 oracle cases; synthetic facet and pattern cases | `xsd/field-tree.test.ts`, `xsd/empty-string.test.ts` |
-| R15 | unit | form 04 imports; synthetic include, extension, recursion, remote location | `xsd/schema-set.test.ts` |
+| R14 | unit | the R14.8 oracle cases (forms 01, 04, 05, 45, 47); synthetic kind, group-cardinality, list, union, facet and pattern cases | `xsd/field-tree.test.ts`, `xsd/empty-string.test.ts` |
+| R15 | unit | form 04 imports; synthetic include, extension, recursion, remote location, group, attribute group, list, union, unknown constructs | `xsd/schema-set.test.ts`, `xsd/groups.test.ts` |
 | R16 | golden | README table + public constants via `countTemplate` | `counts.samples.test.ts` |
 | R17.1, R17.4 | static, runtime | eslint rules; core `tsconfig` lib; golden runs with `fetch` stubbed to throw | `pnpm lint`, `pnpm typecheck`, `golden.samples.test.ts` |
 | R17.3 | browser | every cabinet parsed in a dedicated Worker, compared with the golden JSON | `browser/worker-parity.browser.test.ts` (+ `browser/parse.worker.ts`) |
@@ -677,9 +746,12 @@ oracle".
 
 | Risk | Retired by |
 |---|---|
-| The stored-block prefix behaves differently in Vitest's browser Worker than in the throwaway spike | Task 1 is the spike as tests: the 7 multi-block cabinets, Node and a Worker, against the zlib-dictionary oracle |
+| The stored-block prefix behaves differently in Vitest's browser Worker than in the throwaway spike | Task 2 is the spike as tests: the 7 multi-block cabinets (of 48), Node and a Worker, against the zlib-dictionary oracle |
 | `DecompressionStream` behaviour differs by version (D1, D3) | The acceptance rule depends only on byte counts; the spike runs on Node 22.23.4 in CI and on Chromium |
-| Forms 43–47 arrive with constructs not in the table | They are README rows, so `unknowns.samples.test.ts` and the count test fail loudly; the fix is a table entry (when MS-IPFF2 defines the node) or a sample fix |
+| `TextDecoder` label support differs between Node 22 and Chromium (D11) | Task 2 measures every WHATWG label in both and fixes `REFUSED_ENCODINGS`; `browser/encodings.browser.test.ts` keeps them in step |
+| The Forge Node 22 runtime might not ship full ICU, so legacy labels would fail there [VERIFY: not checkable from this repo before spec 07] | R5.3 needs only Node 22 and the Worker; the label test is cheap to run in a Forge function when spec 07 deploys one |
+| Forms 43–47 arrive with constructs not in the table | Checked 2026-11-10: zero vocabulary problems (§8.1). They are README rows, so `unknowns.samples.test.ts` and the count test still fail loudly on any later sample |
 | MS-IPFF2 XSDs disagree with real files (`runtimeCompatibility` is the known case) | Enumerations come only from explicit `xsd:enumeration` and `xdYesNo`; patterns are not enforced |
 | A file that is valid but large hits the 1 s P1 bound in CI | `xmlBytes` (D7); per-run timing reported; limits are options |
 | The vocabulary table grows large and hard to review | One entry per element, each with its `req` id; the coverage and MS-IPFF2 tests do the mechanical checking |
+| Groups and attribute groups get no in-repo fixture (none of the 54 schemas uses them) | Synthetic schemas in `xsd/groups.test.ts`; the field-tree code path for a group `ref` is the same as for a `sequence`, so the README forms exercise it too |

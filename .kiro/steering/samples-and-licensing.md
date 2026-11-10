@@ -11,12 +11,14 @@ its row there. The agent cannot write under `samples/`; ask the human to change 
 - Repo licence: **MIT**. It must be visible in the GitHub About section.
 - `samples/own/`: our own sample set, MIT (`samples/own/LICENSE`). Written from scratch for this
   project in a Windows VM on 2026-11-03 and 2026-11-04; declare it as test data, not app code.
-  - 42 templates: `xsn/<slug>.xsn`, the same files unpacked in `forms/<slug>/`.
-  - 323 filled records, plus one `<slug>-000-empty.xml` per template, in `records/<slug>/`.
+  - 47 templates: `xsn/<slug>.xsn`, the same files unpacked in `forms/<slug>/`.
+  - 348 filled records, plus one `<slug>-000-empty.xml` per template, in `records/<slug>/`.
   - 22 screenshots in `screenshots/`: every view of forms 01–08, empty and filled, taken in
     InfoPath Filler 2013 and cropped to the form canvas (1007x555). No Microsoft UI is left in
-    them. Forms 09–42 have none.
-  - All 42 opened in InfoPath Filler 2013 on 2026-11-04. Per-form counts are in
+    them. Forms 09–47 have none.
+  - Forms 01–42 opened in InfoPath Filler 2013 on 2026-11-04. Forms 43–47 were generated on
+    2026-11-10, after the InfoPath trial had expired, and were never opened in InfoPath; use them
+    as parser and converter input, not as proof of what InfoPath accepts. Per-form counts are in
     `samples/own/README.md`.
   - Everything is fictional: people, companies, hosts (`sql-legacy01`, `forms-legacy`,
     `contoso-fictional.example`) and files. The set may be published as an open test dataset.

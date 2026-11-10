@@ -8,7 +8,7 @@ Checked 2026-11-04, before the repository was created.
 
 | Source | Files | Licence as found | In repo? |
 |---|---|---|---|
-| This project (`samples/own/`) | 42 | MIT, written from scratch in a Windows VM | **yes** |
+| This project (`samples/own/`) | 47 | MIT, written from scratch (forms 01–42 in a Windows VM, opened in InfoPath; 43–47 generated 2026-11-10, not opened) | **yes** |
 | [`theill/iquomi`](https://github.com/theill/iquomi) | 1 | MIT | **yes**, with attribution in `samples/public/theill-weight-keeper/README.md` |
 | [spjeff.com sample pack](https://www.spjeff.com/2013/06/18/infopath-sample-form-templates/) — Microsoft's bundled InfoPath templates | 15 | none stated | no — used locally to test the parser, never committed |
 | [`kawalgrover/MARTA-Projects`](https://github.com/kawalgrover/MARTA-Projects) | 2 | none | no |

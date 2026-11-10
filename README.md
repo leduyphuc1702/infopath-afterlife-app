@@ -20,7 +20,7 @@ progress; the specs in `docs/spec-briefs/` say what is meant to exist.
 
 | Area | State |
 |---|---|
-| Sample set: 42 `.xsn`, 323 records, MIT | **verified** — 42 of 42 templates open in InfoPath Filler 2013, every view captured for the first 8 |
+| Sample set: 47 `.xsn`, 348 records, MIT | **verified** for forms 01–42 — 42 of 42 open in InfoPath Filler 2013, every view captured for the first 8. Forms 43–47 were generated later and never opened in InfoPath |
 | JSM Forms API via `requestJira('/forms/...')` | **verified** — read, create and delete templates on a real site |
 | `.xsn` parser, viewer, Triage, converter, Forge app | in progress |
 
@@ -33,16 +33,17 @@ docs/kiro/          hook and MCP descriptions used while building
 docs/infopath-ux.md         how InfoPath 2013 actually looks and behaves, with evidence tags
 docs/feature-coverage.md    every InfoPath capability and where it lands in Afterlife
 docs/corpus-facts.md        what the sample corpus contains, counted from the files themselves
-samples/own/        42 MIT form templates, 323 filled records, screenshots
+samples/own/        47 MIT form templates, 348 filled records, screenshots
 samples/public/     third-party samples that carry a licence permitting redistribution
 ```
 
 ## Samples and licensing
 
 `samples/own/` is ours, MIT, and every person, company, host and file in it is fictional. The
-42 templates exist so the parser is tested against real shapes — multi-view forms, repeating
+47 templates exist so the parser is tested against real shapes — multi-view forms, repeating
 tables, optional sections, filtered dropdowns, calculations, validation rules, a form with 209
-fields — instead of one toy example.
+fields — instead of one toy example. Forms 43–47 add browser compatibility, an ActiveX control,
+digital signatures, code-behind and script; they were generated and never opened in InfoPath.
 
 Third-party samples that do **not** clearly permit redistribution are not in this repository and
 never will be. `docs/SAMPLE-LICENSES.md` records what was checked and why each source is in or
