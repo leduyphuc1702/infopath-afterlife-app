@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:46:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:46:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="vendorOnboardingCode">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:vendorName"/>
+				<xsd:element ref="my:taxId"/>
+				<xsd:element ref="my:country"/>
+				<xsd:element ref="my:bankAccount"/>
+				<xsd:element ref="my:approved"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="vendorName" type="xsd:string"/>
+	<xsd:element name="taxId" type="xsd:string"/>
+	<xsd:element name="country" type="xsd:string"/>
+	<xsd:element name="bankAccount" type="xsd:string"/>
+	<xsd:element name="approved" type="xsd:boolean"/>
+</xsd:schema>

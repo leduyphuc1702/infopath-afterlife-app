@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Browser-Leave-Request:-myXSD-2026-11-04T09-43-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="manifest.xsf" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:browserLeaveRequest xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:43:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:employeeName>Bravo 71</my:employeeName>
+	<my:employeeEmail>Ember 46</my:employeeEmail>
+	<my:department>HR</my:department>
+	<my:firstDay>2026-09-06</my:firstDay>
+	<my:lastDay>2026-04-06</my:lastDay>
+	<my:halfDay>true</my:halfDay>
+	<my:comment>Alpha 75</my:comment>
+</my:browserLeaveRequest>

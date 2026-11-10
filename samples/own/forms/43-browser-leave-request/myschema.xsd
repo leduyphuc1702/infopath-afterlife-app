@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:43:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:43:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="browserLeaveRequest">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:employeeName"/>
+				<xsd:element ref="my:employeeEmail"/>
+				<xsd:element ref="my:department"/>
+				<xsd:element ref="my:firstDay"/>
+				<xsd:element ref="my:lastDay"/>
+				<xsd:element ref="my:halfDay"/>
+				<xsd:element ref="my:comment"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="employeeName" type="xsd:string"/>
+	<xsd:element name="employeeEmail" type="xsd:string"/>
+	<xsd:element name="department" type="xsd:string"/>
+	<xsd:element name="firstDay" nillable="true" type="xsd:date"/>
+	<xsd:element name="lastDay" nillable="true" type="xsd:date"/>
+	<xsd:element name="halfDay" type="xsd:boolean"/>
+	<xsd:element name="comment" type="xsd:string"/>
+</xsd:schema>

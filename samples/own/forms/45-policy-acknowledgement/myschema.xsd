@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:45:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:45:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="policyAcknowledgement">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:employeeName"/>
+				<xsd:element ref="my:employeeId"/>
+				<xsd:element ref="my:policyName"/>
+				<xsd:element ref="my:policyVersion"/>
+				<xsd:element ref="my:readAndUnderstood"/>
+				<xsd:element ref="my:acknowledgedOn"/>
+				<xsd:element ref="my:signatures1"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="employeeName" type="xsd:string"/>
+	<xsd:element name="employeeId" type="xsd:string"/>
+	<xsd:element name="policyName" type="xsd:string"/>
+	<xsd:element name="policyVersion" type="xsd:string"/>
+	<xsd:element name="readAndUnderstood" type="xsd:boolean"/>
+	<xsd:element name="acknowledgedOn" nillable="true" type="xsd:date"/>
+	<xsd:element name="signatures1">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:signatures2"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="signatures2">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2000/09/xmldsig#" processContents="lax"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

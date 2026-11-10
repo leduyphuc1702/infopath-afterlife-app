@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:44:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:44:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="contractApprovalTask">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:contractTitle"/>
+				<xsd:element ref="my:counterparty"/>
+				<xsd:element ref="my:contractValue"/>
+				<xsd:element ref="my:approvers"/>
+				<xsd:element ref="my:decision"/>
+				<xsd:element ref="my:decisionNote"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="contractTitle" type="xsd:string"/>
+	<xsd:element name="counterparty" type="xsd:string"/>
+	<xsd:element name="contractValue" nillable="true" type="xsd:double"/>
+	<xsd:element name="approvers">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:Person" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="Person">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:DisplayName"/>
+				<xsd:element ref="my:AccountId"/>
+				<xsd:element ref="my:AccountType"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="DisplayName" type="xsd:string"/>
+	<xsd:element name="AccountId" type="xsd:string"/>
+	<xsd:element name="AccountType" type="xsd:string"/>
+	<xsd:element name="decision" type="xsd:string"/>
+	<xsd:element name="decisionNote" type="xsd:string"/>
+</xsd:schema>

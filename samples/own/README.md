@@ -1,13 +1,14 @@
 # Own InfoPath sample set
 
-Forty-two form templates written from scratch for InfoPath Afterlife, with 323 records
+Forty-seven form templates written from scratch for InfoPath Afterlife, with 348 records
 and screenshots for the first eight. Everything here is MIT licensed and every person,
 company, host and file in the data is fictional.
 
 They were built to exercise the parts of the InfoPath file format that real legacy forms
 use, so the parser, converter and viewer have realistic input instead of a single toy form.
-It is also the in-repo part of the 71-form corpus counted in `docs/corpus-facts.md`; the
-script that counts it lives in a research workspace outside this repo.
+Forms 01–42 are also the in-repo part of the 71-form corpus counted in
+`docs/corpus-facts.md`; the script that counts it lives in a research workspace outside this
+repo. Forms 43–47 came later and are not in those counts.
 
 ## What was verified
 
@@ -28,6 +29,29 @@ time, form cache cleared before each (`verify42.ps1`). Two of them failed the ru
 Not verified: printing, submitting by e-mail, the SQL and web-service data connections
 (their hosts are deliberately fake), and signature workflows.
 
+**Forms 43–47 were never opened in InfoPath.** They were generated on 2026-11-10, after the
+InfoPath trial in the VM had expired (2026-11-07), to cover file-format features that forms
+01–42 do not have. Each one is a generated base form with one feature patched in, written to
+match the markup that real third-party InfoPath templates use for that feature and the element
+definitions in Microsoft's [MS-IPFF2] specification. They pass the same checks as forms 01–42
+(schema validation of every record, `upgrade.xsl` round trip, `bsdtar` extraction equal to
+`forms/<slug>/`), but nothing guarantees InfoPath would open them. Use them as parser and
+converter input, not as proof of what InfoPath accepts.
+
+| Form | Feature it adds |
+|---|---|
+| `43-browser-leave-request` | browser-compatible template: `xsf2:solutionDefinition runtimeCompatibility="client server"`, a SharePoint `publishUrl` |
+| `44-contract-approval-task` | an ActiveX Contact Selector (`object class="xdActiveX"`) bound to a repeating `approvers/Person` group, and a `submitToHostAdapter` submit |
+| `45-policy-acknowledgement` | digital signatures: `xsf:documentSignatures` with a countersigned `signedDataBlock`, and `xsd:any` signature containers in the XML-DSig namespace |
+| `46-vendor-onboarding-code` | code-behind: `xsf2:managedCode` (C#, no assembly in the package, as in real templates saved without a build) and a `davAdapter` submit with an expression file name |
+| `47-asset-checkout-script` | JScript: `xsf:scripts`, `script.js`, `domEventHandler` entries with `handlerObject`; named `simpleType`/`complexType` with `pattern`, `enumeration` and `maxLength` facets |
+
+In form 44 the repeating `approvers` group is edited through the ActiveX control, so the view
+has no `xsf:editWith` for it. For forms 01–42 and 45–47 the Repeating/optional count equals the
+number of `editWith` elements with `component="xCollection"` or `"xOptional"`; for 44 it does not.
+
+[MS-IPFF2]: https://learn.microsoft.com/en-us/openspecs/sharepoint_protocols/ms-ipff2/
+
 In `01-leave-request-Request-empty.png` the left 247 px are painted white. InfoPath showed its
 **Document Recovery** pane there because the VM was force-stopped between capture runs. The
 pane is not part of the form, and the form itself sits to its right at the same position as in
@@ -35,18 +59,18 @@ the filled screenshot. The other screenshots are unaffected.
 
 ## Forms
 
-Forty-two templates, 323 records in total, all MIT. The first eight are the
+Forty-seven templates, 348 records in total, all MIT. The first eight are the
 ones with screenshots and the ones the demo walks through; the rest widen the
 corpus so the parser is tested against more shapes than one team would write by
 hand (timesheets, NCRs, risk assessments, budget transfers, GDPR requests and so
 on).
 
-Every one of the 42 was opened in InfoPath Filler 2013 on Windows 11 ARM as part
-of building this set. There is no wave column: the app's Triage assigns waves from
+Forms 01–42 were opened in InfoPath Filler 2013 on Windows 11 ARM as part of
+building this set; forms 43–47 were not (see above). There is no wave column: the app's Triage assigns waves from
 the converter's coverage counts (spec brief 12), so the expected waves are its output,
 not an input fixed here.
 
-| # | Folder | Views | Fields | Records | Rules | Calcs | Checks | Repeating |
+| # | Folder | Views | Fields | Records | Rules | Calcs | Checks | Repeating/optional |
 |---|---|---|---|---|---|---|---|---|
 | 1 | `01-leave-request` | 1 | 11 | 30 | 1 | 0 | 6 | 0 |
 | 2 | `02-expense-report` | 1 | 16 | 30 | 0 | 1 | 3 | 1 |
@@ -90,6 +114,11 @@ not an input fixed here.
 | 40 | `40-supplier-scorecard` | 1 | 10 | 5 | 0 | 1 | 1 | 1 |
 | 41 | `41-timesheet-approval` | 2 | 7 | 5 | 0 | 0 | 1 | 0 |
 | 42 | `42-incident-rca` | 2 | 6 | 5 | 0 | 0 | 0 | 0 |
+| 43 | `43-browser-leave-request` | 1 | 8 | 5 | 0 | 0 | 3 | 0 |
+| 44 | `44-contract-approval-task` | 1 | 11 | 5 | 0 | 0 | 0 | 1 |
+| 45 | `45-policy-acknowledgement` | 1 | 9 | 5 | 0 | 0 | 1 | 0 |
+| 46 | `46-vendor-onboarding-code` | 1 | 6 | 5 | 0 | 0 | 1 | 0 |
+| 47 | `47-asset-checkout-script` | 1 | 8 | 5 | 0 | 0 | 1 | 0 |
 
 ## Layout
 

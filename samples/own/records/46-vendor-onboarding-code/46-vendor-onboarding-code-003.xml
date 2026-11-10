@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Vendor-Onboarding-Code:-myXSD-2026-11-04T09-46-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/46-vendor-onboarding-code.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:vendorOnboardingCode xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:46:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:vendorName>Alpha 42</my:vendorName>
+	<my:taxId>Falcon 29</my:taxId>
+	<my:country>DE</my:country>
+	<my:bankAccount>Delta 42</my:bankAccount>
+	<my:approved>false</my:approved>
+</my:vendorOnboardingCode>

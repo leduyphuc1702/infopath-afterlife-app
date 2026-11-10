@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema targetNamespace="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:47:00" xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:47:00" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="assetCheckoutScript">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:assetTag"/>
+				<xsd:element ref="my:assetCondition"/>
+				<xsd:element ref="my:borrower"/>
+				<xsd:element ref="my:checkoutDate"/>
+				<xsd:element ref="my:returnDue"/>
+			</xsd:sequence>
+			<xsd:anyAttribute processContents="lax" namespace="http://www.w3.org/XML/1998/namespace"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="assetTag" type="my:assetTagType"/>
+	<xsd:element name="assetCondition" type="my:conditionType"/>
+	<xsd:element name="borrower" type="my:personType"/>
+	<xsd:complexType name="personType">
+			<xsd:sequence>
+				<xsd:element ref="my:borrowerName"/>
+				<xsd:element ref="my:borrowerEmail"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	<xsd:element name="borrowerName" type="xsd:string"/>
+	<xsd:element name="borrowerEmail" type="xsd:string"/>
+	<xsd:element name="checkoutDate" nillable="true" type="xsd:date"/>
+	<xsd:element name="returnDue" nillable="true" type="xsd:date"/>
+	<xsd:simpleType name="assetTagType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[A-Z]{3}-[0-9]{4}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="conditionType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="New"/>
+			<xsd:enumeration value="Good"/>
+			<xsd:enumeration value="Worn"/>
+			<xsd:maxLength value="10"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>

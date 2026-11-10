@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-infoPathSolution name="urn:schemas-microsoft-com:office:infopath:Contract-Approval-Task:-myXSD-2026-11-04T09-44-00" solutionVersion="1.0.0.1" productVersion="15.0.0" PIVersion="1.0.0.0" href="file:///C:/forms/44-contract-approval-task.xsn" ?>
+<?mso-application progid="InfoPath.Document" versionProgid="InfoPath.Document.4"?>
+<my:contractApprovalTask xmlns:my="http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:44:00" xmlns:xd="http://schemas.microsoft.com/office/infopath/2003" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en-us">
+	<my:contractTitle>Bravo 57</my:contractTitle>
+	<my:counterparty>Ember 85</my:counterparty>
+	<my:contractValue>84.85</my:contractValue>
+	<my:approvers>
+		<my:Person>
+			<my:DisplayName>Ember 90</my:DisplayName>
+			<my:AccountId>CONTOSO\cedar</my:AccountId>
+			<my:AccountType>User</my:AccountType>
+		</my:Person>
+		<my:Person>
+			<my:DisplayName>Alpha 80</my:DisplayName>
+			<my:AccountId>CONTOSO\falcon</my:AccountId>
+			<my:AccountType>User</my:AccountType>
+		</my:Person>
+	</my:approvers>
+	<my:decision>Pending</my:decision>
+	<my:decisionNote>Cedar 66</my:decisionNote>
+</my:contractApprovalTask>
