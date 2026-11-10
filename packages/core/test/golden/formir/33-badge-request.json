@@ -1,0 +1,923 @@
+{
+  "activeX": {
+    "allowed": [],
+    "controls": []
+  },
+  "calculations": [],
+  "codeBehind": {
+    "files": [],
+    "handlers": [],
+    "languages": [],
+    "present": false
+  },
+  "dataConnections": [],
+  "dependencies": {
+    "references": [
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:badgeRequest/my:subject",
+        "text": "my:subject"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:badgeRequest/my:neededBy",
+        "text": "my:neededBy"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:badgeRequest/my:badgeType",
+        "text": "my:badgeType"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:badgeRequest/my:site",
+        "text": "my:site"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:badgeRequest/my:photoTaken",
+        "text": "my:photoTaken"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:badgeRequest/my:justification",
+        "text": "my:justification"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[8]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:badgeRequest/my:ownerEmail",
+        "text": "my:ownerEmail"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:badgeRequest/my:requester/my:requesterName",
+        "text": "my:requesterName"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:badgeRequest/my:requester/my:requesterEmail",
+        "text": "my:requesterEmail"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:badgeRequest/my:requester/my:requesterDept",
+        "text": "my:requesterDept"
+      }
+    ]
+  },
+  "fields": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:badgeRequest/my:requester",
+      "id": "f:main:/my:badgeRequest/my:requester/my:requesterName",
+      "kind": "field",
+      "label": "Name",
+      "labelEvidence": {
+        "at": {
+          "column": 11084,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "requesterName",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:33:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:badgeRequest/my:requester/my:requesterName",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 27,
+        "path": "/xsd:schema[1]/xsd:element[3]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 21,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:badgeRequest/my:requester",
+      "id": "f:main:/my:badgeRequest/my:requester/my:requesterEmail",
+      "kind": "field",
+      "label": "E-mail",
+      "labelEvidence": {
+        "at": {
+          "column": 11509,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "requesterEmail",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:33:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:badgeRequest/my:requester/my:requesterEmail",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 28,
+        "path": "/xsd:schema[1]/xsd:element[4]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 22,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:badgeRequest/my:requester",
+      "id": "f:main:/my:badgeRequest/my:requester/my:requesterDept",
+      "kind": "field",
+      "label": "Department",
+      "labelEvidence": {
+        "at": {
+          "column": 11949,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "requesterDept",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:33:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:badgeRequest/my:requester/my:requesterDept",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 29,
+        "path": "/xsd:schema[1]/xsd:element[5]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 23,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:badgeRequest",
+      "id": "f:main:/my:badgeRequest/my:subject",
+      "kind": "field",
+      "label": "Holder",
+      "labelEvidence": {
+        "at": {
+          "column": 5646,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "subject",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:33:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:badgeRequest/my:subject",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 30,
+        "path": "/xsd:schema[1]/xsd:element[6]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 7,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:badgeRequest",
+      "id": "f:main:/my:badgeRequest/my:neededBy",
+      "kind": "field",
+      "label": "Needed by",
+      "labelEvidence": {
+        "at": {
+          "column": 6050,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "neededBy",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:33:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:badgeRequest/my:neededBy",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 31,
+        "path": "/xsd:schema[1]/xsd:element[7]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 8,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:date",
+        "declared": "xsd:date",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:badgeRequest",
+      "id": "f:main:/my:badgeRequest/my:badgeType",
+      "kind": "field",
+      "label": "Type",
+      "labelEvidence": {
+        "at": {
+          "column": 7132,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "badgeType",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:33:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:badgeRequest/my:badgeType",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 32,
+        "path": "/xsd:schema[1]/xsd:element[8]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 9,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:badgeRequest",
+      "id": "f:main:/my:badgeRequest/my:site",
+      "kind": "field",
+      "label": "Site",
+      "labelEvidence": {
+        "at": {
+          "column": 8165,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "site",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:33:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:badgeRequest/my:site",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 33,
+        "path": "/xsd:schema[1]/xsd:element[9]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 10,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[5]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:badgeRequest",
+      "id": "f:main:/my:badgeRequest/my:photoTaken",
+      "kind": "field",
+      "label": "Photo taken",
+      "labelEvidence": {
+        "at": {
+          "column": 9148,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/input[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "photoTaken",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:33:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:badgeRequest/my:photoTaken",
+      "repeating": false,
+      "required": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 34,
+        "path": "/xsd:schema[1]/xsd:element[10]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 11,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[6]"
+      },
+      "xsdType": {
+        "builtin": "xsd:boolean",
+        "declared": "xsd:boolean",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:badgeRequest",
+      "id": "f:main:/my:badgeRequest/my:justification",
+      "kind": "field",
+      "label": "Justification",
+      "labelEvidence": {
+        "at": {
+          "column": 9743,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "justification",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:33:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:badgeRequest/my:justification",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 35,
+        "path": "/xsd:schema[1]/xsd:element[11]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 12,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[7]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[8]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[8]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:badgeRequest",
+      "id": "f:main:/my:badgeRequest/my:ownerEmail",
+      "kind": "field",
+      "label": "Owner e-mail",
+      "labelEvidence": {
+        "at": {
+          "column": 10184,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[8]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "ownerEmail",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:33:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:badgeRequest/my:ownerEmail",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 36,
+        "path": "/xsd:schema[1]/xsd:element[12]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 13,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[8]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "id": "g:main:/my:badgeRequest",
+      "kind": "group",
+      "label": "Badge Request",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "badgeRequest",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:33:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:badgeRequest",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 3,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:badgeRequest",
+      "id": "g:main:/my:badgeRequest/my:requester",
+      "kind": "group",
+      "label": "Requester",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "requester",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:33:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:badgeRequest/my:requester",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 18,
+        "path": "/xsd:schema[1]/xsd:element[2]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 6,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    }
+  ],
+  "irVersion": 1,
+  "issues": [],
+  "meta": {
+    "browserCompatible": false,
+    "generation": "2013",
+    "generationEvidence": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]/@productVersion"
+    },
+    "name": "Badge Request",
+    "nameSource": "caption",
+    "productVersion": "15.0.0",
+    "publishEndpoint": {
+      "attribute": "publishUrl",
+      "liveness": "internal",
+      "reason": "filePath",
+      "source": {
+        "column": 1,
+        "file": "manifest.xsf",
+        "line": 6,
+        "path": "/xsf:xDocumentClass[1]/@publishUrl"
+      },
+      "value": "C:\\forms\\33-badge-request.xsn"
+    },
+    "publishUrl": "C:\\forms\\33-badge-request.xsn",
+    "solutionFormatVersion": "2.0.0.0",
+    "solutionVersion": "1.0.0.1",
+    "source": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]"
+    },
+    "urn": "urn:schemas-microsoft-com:office:infopath:Badge-Request:-myXSD-2026-11-04T09-33-00"
+  },
+  "rules": [],
+  "signatures": {
+    "blocks": [],
+    "signatureLines": []
+  },
+  "unknowns": [],
+  "validations": [],
+  "views": [
+    {
+      "caption": "Main",
+      "controls": [
+        {
+          "binding": "my:subject",
+          "ctrlId": "CTRL5",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5602,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:badgeRequest/my:subject",
+          "title": "Holder",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:neededBy",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 6133,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:badgeRequest/my:neededBy",
+          "title": "Needed by",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:badgeType",
+          "ctrlId": "CTRL7",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 7081,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:badgeRequest/my:badgeType",
+          "title": "Type",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:site",
+          "ctrlId": "CTRL8",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 8114,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:badgeRequest/my:site",
+          "title": "Site",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:photoTaken",
+          "ctrlId": "CTRL9",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 9108,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:badgeRequest/my:photoTaken",
+          "title": "Photo taken",
+          "xctname": "CheckBox"
+        },
+        {
+          "binding": "my:justification",
+          "ctrlId": "CTRL10",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 9699,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:badgeRequest/my:justification",
+          "title": "Justification",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:ownerEmail",
+          "ctrlId": "CTRL11",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[8]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 10140,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[8]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:badgeRequest/my:ownerEmail",
+          "title": "Owner e-mail",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:requesterName",
+          "ctrlId": "CTRL1",
+          "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 11040,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:badgeRequest/my:requester/my:requesterName",
+          "title": "Name",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:requesterEmail",
+          "ctrlId": "CTRL2",
+          "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 11465,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:badgeRequest/my:requester/my:requesterEmail",
+          "title": "E-mail",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:requesterDept",
+          "ctrlId": "CTRL3",
+          "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 11898,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:badgeRequest/my:requester/my:requesterDept",
+          "title": "Department",
+          "xctname": "dropdown"
+        }
+      ],
+      "id": "view:/xsf:views[1]/xsf:view[1]",
+      "isDefault": true,
+      "isPrint": false,
+      "name": "Main",
+      "scanned": true,
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 31,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]"
+      },
+      "xslFile": "view1.xsl"
+    }
+  ]
+}

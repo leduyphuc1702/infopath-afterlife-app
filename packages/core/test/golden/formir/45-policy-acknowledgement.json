@@ -1,0 +1,711 @@
+{
+  "activeX": {
+    "allowed": [],
+    "controls": []
+  },
+  "calculations": [],
+  "codeBehind": {
+    "files": [],
+    "handlers": [],
+    "languages": [],
+    "present": false
+  },
+  "dataConnections": [],
+  "dependencies": {
+    "references": [
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:policyAcknowledgement/my:employeeName",
+        "text": "my:employeeName"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:policyAcknowledgement/my:employeeId",
+        "text": "my:employeeId"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:policyAcknowledgement/my:policyName",
+        "text": "my:policyName"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:policyAcknowledgement/my:policyVersion",
+        "text": "my:policyVersion"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:policyAcknowledgement/my:readAndUnderstood",
+        "text": "my:readAndUnderstood"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:policyAcknowledgement/my:acknowledgedOn",
+        "text": "my:acknowledgedOn"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:policyAcknowledgement/my:employeeName",
+        "text": "/my:policyAcknowledgement/my:employeeName"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:policyAcknowledgement/my:employeeName",
+        "text": "."
+      },
+      {
+        "elementId": "sig:/xsf:documentSignatures[1]/xsf:signedDataBlock[1]",
+        "role": "signedData",
+        "targetId": "g:main:/my:policyAcknowledgement",
+        "text": "/my:policyAcknowledgement"
+      }
+    ]
+  },
+  "fields": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:policyAcknowledgement",
+      "id": "f:main:/my:policyAcknowledgement/my:employeeName",
+      "kind": "field",
+      "label": "Employee name",
+      "labelEvidence": {
+        "at": {
+          "column": 5524,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "employeeName",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:45:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:policyAcknowledgement/my:employeeName",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 17,
+        "path": "/xsd:schema[1]/xsd:element[2]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 6,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:policyAcknowledgement",
+      "id": "f:main:/my:policyAcknowledgement/my:employeeId",
+      "kind": "field",
+      "label": "Employee ID",
+      "labelEvidence": {
+        "at": {
+          "column": 5961,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "employeeId",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:45:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:policyAcknowledgement/my:employeeId",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 18,
+        "path": "/xsd:schema[1]/xsd:element[3]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 7,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:policyAcknowledgement",
+      "id": "f:main:/my:policyAcknowledgement/my:policyName",
+      "kind": "field",
+      "label": "Policy",
+      "labelEvidence": {
+        "at": {
+          "column": 6394,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "policyName",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:45:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:policyAcknowledgement/my:policyName",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 19,
+        "path": "/xsd:schema[1]/xsd:element[4]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 8,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:policyAcknowledgement",
+      "id": "f:main:/my:policyAcknowledgement/my:policyVersion",
+      "kind": "field",
+      "label": "Policy version",
+      "labelEvidence": {
+        "at": {
+          "column": 7435,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "policyVersion",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:45:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:policyAcknowledgement/my:policyVersion",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 20,
+        "path": "/xsd:schema[1]/xsd:element[5]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 9,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:policyAcknowledgement",
+      "id": "f:main:/my:policyAcknowledgement/my:readAndUnderstood",
+      "kind": "field",
+      "label": "I have read and understood the policy",
+      "labelEvidence": {
+        "at": {
+          "column": 7860,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "readAndUnderstood",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:45:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:policyAcknowledgement/my:readAndUnderstood",
+      "repeating": false,
+      "required": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 21,
+        "path": "/xsd:schema[1]/xsd:element[6]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 10,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[5]"
+      },
+      "xsdType": {
+        "builtin": "xsd:boolean",
+        "declared": "xsd:boolean",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:policyAcknowledgement",
+      "id": "f:main:/my:policyAcknowledgement/my:acknowledgedOn",
+      "kind": "field",
+      "label": "Date",
+      "labelEvidence": {
+        "at": {
+          "column": 8505,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "acknowledgedOn",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:45:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:policyAcknowledgement/my:acknowledgedOn",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 22,
+        "path": "/xsd:schema[1]/xsd:element[7]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 11,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[6]"
+      },
+      "xsdType": {
+        "builtin": "xsd:date",
+        "declared": "xsd:date",
+        "variety": "atomic"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "sig:/xsf:documentSignatures[1]/xsf:signedDataBlock[1]",
+            "role": "signedData"
+          }
+        ],
+        "writtenBy": []
+      },
+      "id": "g:main:/my:policyAcknowledgement",
+      "kind": "group",
+      "label": "Policy Acknowledgement",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "policyAcknowledgement",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:45:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:policyAcknowledgement",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 3,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:policyAcknowledgement",
+      "id": "g:main:/my:policyAcknowledgement/my:signatures1",
+      "kind": "group",
+      "label": "Signatures1",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "signatures1",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:45:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:policyAcknowledgement/my:signatures1",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 23,
+        "path": "/xsd:schema[1]/xsd:element[8]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 12,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[7]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:policyAcknowledgement/my:signatures1",
+      "id": "g:main:/my:policyAcknowledgement/my:signatures1/my:signatures2",
+      "kind": "group",
+      "label": "Signatures2",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "signatures2",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:45:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:policyAcknowledgement/my:signatures1/my:signatures2",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 30,
+        "path": "/xsd:schema[1]/xsd:element[9]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 26,
+        "path": "/xsd:schema[1]/xsd:element[8]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    }
+  ],
+  "irVersion": 1,
+  "issues": [],
+  "meta": {
+    "browserCompatible": false,
+    "generation": "2013",
+    "generationEvidence": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]/@productVersion"
+    },
+    "name": "Policy Acknowledgement",
+    "nameSource": "caption",
+    "productVersion": "15.0.0",
+    "publishEndpoint": {
+      "attribute": "publishUrl",
+      "liveness": "internal",
+      "reason": "filePath",
+      "source": {
+        "column": 1,
+        "file": "manifest.xsf",
+        "line": 6,
+        "path": "/xsf:xDocumentClass[1]/@publishUrl"
+      },
+      "value": "C:\\forms\\45-policy-acknowledgement.xsn"
+    },
+    "publishUrl": "C:\\forms\\45-policy-acknowledgement.xsn",
+    "solutionFormatVersion": "2.0.0.0",
+    "solutionVersion": "1.0.0.1",
+    "source": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]"
+    },
+    "urn": "urn:schemas-microsoft-com:office:infopath:Policy-Acknowledgement:-myXSD-2026-11-04T09-45-00"
+  },
+  "rules": [],
+  "signatures": {
+    "blocks": [
+      {
+        "data": "/my:policyAcknowledgement",
+        "dataId": "g:main:/my:policyAcknowledgement",
+        "id": "sig:/xsf:documentSignatures[1]/xsf:signedDataBlock[1]",
+        "message": "Verify that the form you are signing is correct, as well as the additional information that will be stored with your signature.",
+        "mode": "countersign",
+        "name": "acknowledgement",
+        "source": {
+          "column": 3,
+          "file": "manifest.xsf",
+          "line": 61,
+          "path": "/xsf:xDocumentClass[1]/xsf:documentSignatures[1]/xsf:signedDataBlock[1]"
+        }
+      }
+    ],
+    "signatureLines": []
+  },
+  "unknowns": [],
+  "validations": [
+    {
+      "expression": ". = \"\"",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+      "kind": "errorCondition",
+      "match": "/my:policyAcknowledgement/my:employeeName",
+      "matchId": "f:main:/my:policyAcknowledgement/my:employeeName",
+      "message": {
+        "shortMessage": "Cannot be blank",
+        "text": "This field is required.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 66,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[1]"
+      },
+      "unresolvedRefs": []
+    }
+  ],
+  "views": [
+    {
+      "caption": "Main",
+      "controls": [
+        {
+          "binding": "my:employeeName",
+          "ctrlId": "CTRL1",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5480,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:policyAcknowledgement/my:employeeName",
+          "title": "Employee name",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:employeeId",
+          "ctrlId": "CTRL2",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5917,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:policyAcknowledgement/my:employeeId",
+          "title": "Employee ID",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:policyName",
+          "ctrlId": "CTRL3",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 6343,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:policyAcknowledgement/my:policyName",
+          "title": "Policy",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:policyVersion",
+          "ctrlId": "CTRL4",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 7391,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:policyAcknowledgement/my:policyVersion",
+          "title": "Policy version",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:readAndUnderstood",
+          "ctrlId": "CTRL5",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 7820,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:policyAcknowledgement/my:readAndUnderstood",
+          "title": "I have read and understood the policy",
+          "xctname": "CheckBox"
+        },
+        {
+          "binding": "my:acknowledgedOn",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 8583,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:policyAcknowledgement/my:acknowledgedOn",
+          "title": "Date",
+          "xctname": "DTPicker_DTText"
+        }
+      ],
+      "id": "view:/xsf:views[1]/xsf:view[1]",
+      "isDefault": true,
+      "isPrint": false,
+      "name": "Main",
+      "scanned": true,
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 31,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]"
+      },
+      "xslFile": "view1.xsl"
+    }
+  ]
+}

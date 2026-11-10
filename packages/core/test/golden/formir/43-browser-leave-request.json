@@ -1,0 +1,787 @@
+{
+  "activeX": {
+    "allowed": [],
+    "controls": []
+  },
+  "calculations": [],
+  "codeBehind": {
+    "files": [],
+    "handlers": [],
+    "languages": [],
+    "present": false
+  },
+  "dataConnections": [],
+  "dependencies": {
+    "references": [
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:browserLeaveRequest/my:employeeName",
+        "text": "my:employeeName"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:browserLeaveRequest/my:employeeEmail",
+        "text": "my:employeeEmail"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:browserLeaveRequest/my:department",
+        "text": "my:department"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:browserLeaveRequest/my:firstDay",
+        "text": "my:firstDay"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:browserLeaveRequest/my:lastDay",
+        "text": "my:lastDay"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:browserLeaveRequest/my:halfDay",
+        "text": "my:halfDay"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:browserLeaveRequest/my:comment",
+        "text": "my:comment"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:browserLeaveRequest/my:employeeName",
+        "text": "/my:browserLeaveRequest/my:employeeName"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:browserLeaveRequest/my:employeeName",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:browserLeaveRequest/my:firstDay",
+        "text": "/my:browserLeaveRequest/my:firstDay"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:browserLeaveRequest/my:firstDay",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:browserLeaveRequest/my:lastDay",
+        "text": "/my:browserLeaveRequest/my:lastDay"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:browserLeaveRequest/my:lastDay",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:browserLeaveRequest/my:firstDay",
+        "text": "../my:firstDay"
+      }
+    ]
+  },
+  "fields": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:browserLeaveRequest",
+      "id": "f:main:/my:browserLeaveRequest/my:employeeName",
+      "kind": "field",
+      "label": "Employee name",
+      "labelEvidence": {
+        "at": {
+          "column": 5528,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "employeeName",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:43:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:browserLeaveRequest/my:employeeName",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 17,
+        "path": "/xsd:schema[1]/xsd:element[2]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 6,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:browserLeaveRequest",
+      "id": "f:main:/my:browserLeaveRequest/my:employeeEmail",
+      "kind": "field",
+      "label": "E-mail",
+      "labelEvidence": {
+        "at": {
+          "column": 5960,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "employeeEmail",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:43:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:browserLeaveRequest/my:employeeEmail",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 18,
+        "path": "/xsd:schema[1]/xsd:element[3]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 7,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:browserLeaveRequest",
+      "id": "f:main:/my:browserLeaveRequest/my:department",
+      "kind": "field",
+      "label": "Department",
+      "labelEvidence": {
+        "at": {
+          "column": 6398,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "department",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:43:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:browserLeaveRequest/my:department",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 19,
+        "path": "/xsd:schema[1]/xsd:element[4]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 8,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:browserLeaveRequest",
+      "id": "f:main:/my:browserLeaveRequest/my:firstDay",
+      "kind": "field",
+      "label": "First day",
+      "labelEvidence": {
+        "at": {
+          "column": 7710,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "firstDay",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:43:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:browserLeaveRequest/my:firstDay",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 20,
+        "path": "/xsd:schema[1]/xsd:element[5]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 9,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      },
+      "xsdType": {
+        "builtin": "xsd:date",
+        "declared": "xsd:date",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:browserLeaveRequest",
+      "id": "f:main:/my:browserLeaveRequest/my:lastDay",
+      "kind": "field",
+      "label": "Last day",
+      "labelEvidence": {
+        "at": {
+          "column": 8775,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "lastDay",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:43:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:browserLeaveRequest/my:lastDay",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 21,
+        "path": "/xsd:schema[1]/xsd:element[6]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 10,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[5]"
+      },
+      "xsdType": {
+        "builtin": "xsd:date",
+        "declared": "xsd:date",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:browserLeaveRequest",
+      "id": "f:main:/my:browserLeaveRequest/my:halfDay",
+      "kind": "field",
+      "label": "Half day",
+      "labelEvidence": {
+        "at": {
+          "column": 9837,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/input[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "halfDay",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:43:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:browserLeaveRequest/my:halfDay",
+      "repeating": false,
+      "required": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 22,
+        "path": "/xsd:schema[1]/xsd:element[7]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 11,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[6]"
+      },
+      "xsdType": {
+        "builtin": "xsd:boolean",
+        "declared": "xsd:boolean",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:browserLeaveRequest",
+      "id": "f:main:/my:browserLeaveRequest/my:comment",
+      "kind": "field",
+      "label": "Comment",
+      "labelEvidence": {
+        "at": {
+          "column": 10411,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "comment",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:43:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:browserLeaveRequest/my:comment",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 23,
+        "path": "/xsd:schema[1]/xsd:element[8]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 12,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[7]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "id": "g:main:/my:browserLeaveRequest",
+      "kind": "group",
+      "label": "Browser Leave Request",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "browserLeaveRequest",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:43:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:browserLeaveRequest",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 3,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      }
+    }
+  ],
+  "irVersion": 1,
+  "issues": [],
+  "meta": {
+    "browserCompatible": true,
+    "generation": "2013",
+    "generationEvidence": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]/@productVersion"
+    },
+    "name": "Leave Request (browser form)",
+    "nameSource": "caption",
+    "productVersion": "15.0.0",
+    "publishEndpoint": {
+      "attribute": "publishUrl",
+      "host": "intranet.contoso-fictional.example",
+      "liveness": "unknown",
+      "reason": "public",
+      "source": {
+        "column": 1,
+        "file": "manifest.xsf",
+        "line": 6,
+        "path": "/xsf:xDocumentClass[1]/@publishUrl"
+      },
+      "value": "https://intranet.contoso-fictional.example/sites/hr/LeaveRequests/Forms/template.xsn"
+    },
+    "publishUrl": "https://intranet.contoso-fictional.example/sites/hr/LeaveRequests/Forms/template.xsn",
+    "solutionFormatVersion": "2.0.0.0",
+    "solutionVersion": "1.0.0.1",
+    "source": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]"
+    },
+    "urn": "urn:schemas-microsoft-com:office:infopath:Browser-Leave-Request:-myXSD-2026-11-04T09-43-00"
+  },
+  "rules": [],
+  "signatures": {
+    "blocks": [],
+    "signatureLines": []
+  },
+  "unknowns": [],
+  "validations": [
+    {
+      "expression": ". = \"\"",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+      "kind": "errorCondition",
+      "match": "/my:browserLeaveRequest/my:employeeName",
+      "matchId": "f:main:/my:browserLeaveRequest/my:employeeName",
+      "message": {
+        "shortMessage": "Cannot be blank",
+        "text": "This field is required.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 62,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[1]"
+      },
+      "unresolvedRefs": []
+    },
+    {
+      "expression": ". = \"\"",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+      "kind": "errorCondition",
+      "match": "/my:browserLeaveRequest/my:firstDay",
+      "matchId": "f:main:/my:browserLeaveRequest/my:firstDay",
+      "message": {
+        "shortMessage": "Cannot be blank",
+        "text": "This field is required.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 63,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[2]"
+      },
+      "unresolvedRefs": []
+    },
+    {
+      "expression": ". < ../my:firstDay",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+      "kind": "errorCondition",
+      "match": "/my:browserLeaveRequest/my:lastDay",
+      "matchId": "f:main:/my:browserLeaveRequest/my:lastDay",
+      "message": {
+        "shortMessage": "Check dates",
+        "text": "The last day cannot be before the first day.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 64,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[3]"
+      },
+      "unresolvedRefs": []
+    }
+  ],
+  "views": [
+    {
+      "caption": "Main",
+      "controls": [
+        {
+          "binding": "my:employeeName",
+          "ctrlId": "CTRL1",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5484,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:browserLeaveRequest/my:employeeName",
+          "title": "Employee name",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:employeeEmail",
+          "ctrlId": "CTRL2",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5916,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:browserLeaveRequest/my:employeeEmail",
+          "title": "E-mail",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:department",
+          "ctrlId": "CTRL3",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 6347,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:browserLeaveRequest/my:department",
+          "title": "Department",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:firstDay",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 7793,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:browserLeaveRequest/my:firstDay",
+          "title": "First day",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:lastDay",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 8857,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:browserLeaveRequest/my:lastDay",
+          "title": "Last day",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:halfDay",
+          "ctrlId": "CTRL6",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 9797,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:browserLeaveRequest/my:halfDay",
+          "title": "Half day",
+          "xctname": "CheckBox"
+        },
+        {
+          "binding": "my:comment",
+          "ctrlId": "CTRL7",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 10367,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:browserLeaveRequest/my:comment",
+          "title": "Comment",
+          "xctname": "PlainText"
+        }
+      ],
+      "id": "view:/xsf:views[1]/xsf:view[1]",
+      "isDefault": true,
+      "isPrint": false,
+      "name": "Main",
+      "scanned": true,
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 31,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]"
+      },
+      "xslFile": "view1.xsl"
+    }
+  ]
+}

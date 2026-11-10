@@ -1,0 +1,801 @@
+{
+  "activeX": {
+    "allowed": [],
+    "controls": []
+  },
+  "calculations": [
+    {
+      "expression": "xdMath:Nz(../my:dayMeals) + xdMath:Nz(../my:dayLodging)",
+      "id": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+      "refresh": "onChange",
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 67,
+        "path": "/xsf:xDocumentClass[1]/xsf:calculations[1]/xsf:calculatedField[1]"
+      },
+      "target": "/my:travelPerdiem/my:days/my:day/my:dayTotal",
+      "targetId": "f:main:/my:travelPerdiem/my:days/my:day/my:dayTotal",
+      "unresolvedRefs": []
+    },
+    {
+      "expression": "sum(xdMath:Nz(../my:days/my:day/my:dayTotal))",
+      "id": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+      "refresh": "onChange",
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 68,
+        "path": "/xsf:xDocumentClass[1]/xsf:calculations[1]/xsf:calculatedField[2]"
+      },
+      "target": "/my:travelPerdiem/my:perDiemTotal",
+      "targetId": "f:main:/my:travelPerdiem/my:perDiemTotal",
+      "unresolvedRefs": []
+    }
+  ],
+  "codeBehind": {
+    "files": [],
+    "handlers": [],
+    "languages": [],
+    "present": false
+  },
+  "dataConnections": [],
+  "dependencies": {
+    "references": [
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelPerdiem/my:travelerName",
+        "text": "my:travelerName"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelPerdiem/my:destination",
+        "text": "my:destination"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelPerdiem/my:perDiemTotal",
+        "text": "my:perDiemTotal"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelPerdiem/my:days/my:day/my:dayDate",
+        "text": "my:dayDate"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelPerdiem/my:days/my:day/my:dayMeals",
+        "text": "my:dayMeals"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[3]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelPerdiem/my:days/my:day/my:dayLodging",
+        "text": "my:dayLodging"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[4]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelPerdiem/my:days/my:day/my:dayTotal",
+        "text": "my:dayTotal"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+        "role": "calcTarget",
+        "targetId": "f:main:/my:travelPerdiem/my:days/my:day/my:dayTotal",
+        "text": "/my:travelPerdiem/my:days/my:day/my:dayTotal"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+        "role": "calcExpression",
+        "targetId": "f:main:/my:travelPerdiem/my:days/my:day/my:dayMeals",
+        "text": "../my:dayMeals"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+        "role": "calcExpression",
+        "targetId": "f:main:/my:travelPerdiem/my:days/my:day/my:dayLodging",
+        "text": "../my:dayLodging"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+        "role": "calcTarget",
+        "targetId": "f:main:/my:travelPerdiem/my:perDiemTotal",
+        "text": "/my:travelPerdiem/my:perDiemTotal"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+        "role": "calcExpression",
+        "targetId": "f:main:/my:travelPerdiem/my:days/my:day/my:dayTotal",
+        "text": "../my:days/my:day/my:dayTotal"
+      }
+    ]
+  },
+  "fields": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelPerdiem",
+      "id": "f:main:/my:travelPerdiem/my:travelerName",
+      "kind": "field",
+      "label": "Traveler",
+      "labelEvidence": {
+        "at": {
+          "column": 5504,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "travelerName",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:31:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelPerdiem/my:travelerName",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 14,
+        "path": "/xsd:schema[1]/xsd:element[2]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 6,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelPerdiem",
+      "id": "f:main:/my:travelPerdiem/my:destination",
+      "kind": "field",
+      "label": "Destination",
+      "labelEvidence": {
+        "at": {
+          "column": 5936,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "destination",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:31:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelPerdiem/my:destination",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 15,
+        "path": "/xsd:schema[1]/xsd:element[3]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 7,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelPerdiem/my:days/my:day",
+      "id": "f:main:/my:travelPerdiem/my:days/my:day/my:dayDate",
+      "kind": "field",
+      "label": "Date",
+      "labelEvidence": {
+        "at": {
+          "column": 8590,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[1]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "dayDate",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:31:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelPerdiem/my:days/my:day/my:dayDate",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 33,
+        "path": "/xsd:schema[1]/xsd:element[6]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 26,
+        "path": "/xsd:schema[1]/xsd:element[5]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:date",
+        "declared": "xsd:date",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+            "role": "calcExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelPerdiem/my:days/my:day",
+      "id": "f:main:/my:travelPerdiem/my:days/my:day/my:dayMeals",
+      "kind": "field",
+      "label": "Meals",
+      "labelEvidence": {
+        "at": {
+          "column": 9593,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "dayMeals",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:31:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelPerdiem/my:days/my:day/my:dayMeals",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 34,
+        "path": "/xsd:schema[1]/xsd:element[7]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 27,
+        "path": "/xsd:schema[1]/xsd:element[5]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+            "role": "calcExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[3]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[3]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelPerdiem/my:days/my:day",
+      "id": "f:main:/my:travelPerdiem/my:days/my:day/my:dayLodging",
+      "kind": "field",
+      "label": "Lodging",
+      "labelEvidence": {
+        "at": {
+          "column": 10451,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[3]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "dayLodging",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:31:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelPerdiem/my:days/my:day/my:dayLodging",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 35,
+        "path": "/xsd:schema[1]/xsd:element[8]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 28,
+        "path": "/xsd:schema[1]/xsd:element[5]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+            "role": "calcExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[4]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+            "role": "calcTarget"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[4]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelPerdiem/my:days/my:day",
+      "id": "f:main:/my:travelPerdiem/my:days/my:day/my:dayTotal",
+      "kind": "field",
+      "label": "Total",
+      "labelEvidence": {
+        "at": {
+          "column": 11319,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[4]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "dayTotal",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:31:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelPerdiem/my:days/my:day/my:dayTotal",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 36,
+        "path": "/xsd:schema[1]/xsd:element[9]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 29,
+        "path": "/xsd:schema[1]/xsd:element[5]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+            "role": "calcTarget"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelPerdiem",
+      "id": "f:main:/my:travelPerdiem/my:perDiemTotal",
+      "kind": "field",
+      "label": "Total",
+      "labelEvidence": {
+        "at": {
+          "column": 7591,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "perDiemTotal",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:31:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelPerdiem/my:perDiemTotal",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 37,
+        "path": "/xsd:schema[1]/xsd:element[10]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 9,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "id": "g:main:/my:travelPerdiem",
+      "kind": "group",
+      "label": "Travel Perdiem",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "travelPerdiem",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:31:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelPerdiem",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 3,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:travelPerdiem",
+      "id": "g:main:/my:travelPerdiem/my:days",
+      "kind": "group",
+      "label": "Days",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "days",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:31:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelPerdiem/my:days",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 16,
+        "path": "/xsd:schema[1]/xsd:element[4]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 8,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:travelPerdiem/my:days",
+      "id": "g:main:/my:travelPerdiem/my:days/my:day",
+      "kind": "group",
+      "label": "Day",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "day",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:31:00",
+      "nodeType": "element",
+      "optional": true,
+      "path": "/my:travelPerdiem/my:days/my:day",
+      "repeating": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 23,
+        "path": "/xsd:schema[1]/xsd:element[5]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 19,
+        "path": "/xsd:schema[1]/xsd:element[4]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    }
+  ],
+  "irVersion": 1,
+  "issues": [],
+  "meta": {
+    "browserCompatible": false,
+    "generation": "2013",
+    "generationEvidence": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]/@productVersion"
+    },
+    "name": "Travel Per Diem",
+    "nameSource": "caption",
+    "productVersion": "15.0.0",
+    "publishEndpoint": {
+      "attribute": "publishUrl",
+      "liveness": "internal",
+      "reason": "filePath",
+      "source": {
+        "column": 1,
+        "file": "manifest.xsf",
+        "line": 6,
+        "path": "/xsf:xDocumentClass[1]/@publishUrl"
+      },
+      "value": "C:\\forms\\31-travel-perdiem.xsn"
+    },
+    "publishUrl": "C:\\forms\\31-travel-perdiem.xsn",
+    "solutionFormatVersion": "2.0.0.0",
+    "solutionVersion": "1.0.0.1",
+    "source": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]"
+    },
+    "urn": "urn:schemas-microsoft-com:office:infopath:Travel-Perdiem:-myXSD-2026-11-04T09-31-00"
+  },
+  "rules": [],
+  "signatures": {
+    "blocks": [],
+    "signatureLines": []
+  },
+  "unknowns": [],
+  "validations": [],
+  "views": [
+    {
+      "caption": "Main",
+      "controls": [
+        {
+          "binding": "my:travelerName",
+          "ctrlId": "CTRL1",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5460,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelPerdiem/my:travelerName",
+          "title": "Traveler",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:destination",
+          "ctrlId": "CTRL2",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5892,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelPerdiem/my:destination",
+          "title": "Destination",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:perDiemTotal",
+          "ctrlId": "CTRL8",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 7525,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelPerdiem/my:perDiemTotal",
+          "title": "Total",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:dayDate",
+          "id": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 8668,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[1]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelPerdiem/my:days/my:day/my:dayDate",
+          "title": "Date",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:dayMeals",
+          "ctrlId": "CTRL4",
+          "id": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 9527,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelPerdiem/my:days/my:day/my:dayMeals",
+          "title": "Meals",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:dayLodging",
+          "ctrlId": "CTRL5",
+          "id": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[3]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 10385,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[3]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelPerdiem/my:days/my:day/my:dayLodging",
+          "title": "Lodging",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:dayTotal",
+          "ctrlId": "CTRL6",
+          "id": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[4]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 11253,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[4]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelPerdiem/my:days/my:day/my:dayTotal",
+          "title": "Total",
+          "xctname": "PlainText"
+        }
+      ],
+      "id": "view:/xsf:views[1]/xsf:view[1]",
+      "isDefault": true,
+      "isPrint": false,
+      "name": "Main",
+      "scanned": true,
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 31,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]"
+      },
+      "xslFile": "view1.xsl"
+    }
+  ]
+}

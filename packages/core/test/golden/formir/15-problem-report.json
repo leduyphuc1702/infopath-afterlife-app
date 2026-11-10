@@ -1,0 +1,870 @@
+{
+  "activeX": {
+    "allowed": [],
+    "controls": []
+  },
+  "calculations": [],
+  "codeBehind": {
+    "files": [],
+    "handlers": [],
+    "languages": [],
+    "present": false
+  },
+  "dataConnections": [],
+  "dependencies": {
+    "references": [
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:problemReport/my:reportedBy",
+        "text": "my:reportedBy"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:problemReport/my:detectedAt",
+        "text": "my:detectedAt"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:problemReport/my:service",
+        "text": "my:service"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:problemReport/my:impact",
+        "text": "my:impact"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[2]",
+        "role": "binding",
+        "targetId": "f:main:/my:problemReport/my:impact",
+        "text": "my:impact"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[3]",
+        "role": "binding",
+        "targetId": "f:main:/my:problemReport/my:impact",
+        "text": "my:impact"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:problemReport/my:description",
+        "text": "my:description"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:problemReport/my:resolved",
+        "text": "my:resolved"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:problemReport/my:actions/my:action/my:actionAt",
+        "text": "my:actionAt"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:problemReport/my:actions/my:action/my:actionText",
+        "text": "my:actionText"
+      }
+    ]
+  },
+  "fields": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:problemReport",
+      "id": "f:main:/my:problemReport/my:reportedBy",
+      "kind": "field",
+      "label": "Reported by",
+      "labelEvidence": {
+        "at": {
+          "column": 5506,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "reportedBy",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:15:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:problemReport/my:reportedBy",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 17,
+        "path": "/xsd:schema[1]/xsd:element[2]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 6,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:problemReport",
+      "id": "f:main:/my:problemReport/my:detectedAt",
+      "kind": "field",
+      "label": "Detected at",
+      "labelEvidence": {
+        "at": {
+          "column": 5923,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "detectedAt",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:15:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:problemReport/my:detectedAt",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 18,
+        "path": "/xsd:schema[1]/xsd:element[3]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 7,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:dateTime",
+        "declared": "xsd:dateTime",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:problemReport",
+      "id": "f:main:/my:problemReport/my:service",
+      "kind": "field",
+      "label": "Service",
+      "labelEvidence": {
+        "at": {
+          "column": 7070,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "service",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:15:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:problemReport/my:service",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 19,
+        "path": "/xsd:schema[1]/xsd:element[4]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 8,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[2]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[3]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[2]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[3]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:problemReport",
+      "id": "f:main:/my:problemReport/my:impact",
+      "kind": "field",
+      "label": "Impact",
+      "labelEvidence": {
+        "at": {
+          "column": 8187,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "impact",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:15:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:problemReport/my:impact",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 20,
+        "path": "/xsd:schema[1]/xsd:element[5]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 9,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:problemReport",
+      "id": "f:main:/my:problemReport/my:description",
+      "kind": "richText",
+      "label": "Description",
+      "labelEvidence": {
+        "at": {
+          "column": 9781,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "description",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:15:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:problemReport/my:description",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 21,
+        "path": "/xsd:schema[1]/xsd:element[6]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 10,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[5]"
+      },
+      "xsdType": {
+        "builtin": "xsd:anyType",
+        "variety": "complex"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:problemReport/my:actions/my:action",
+      "id": "f:main:/my:problemReport/my:actions/my:action/my:actionAt",
+      "kind": "field",
+      "label": "When",
+      "labelEvidence": {
+        "at": {
+          "column": 11745,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[1]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "actionAt",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:15:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:problemReport/my:actions/my:action/my:actionAt",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 43,
+        "path": "/xsd:schema[1]/xsd:element[9]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 38,
+        "path": "/xsd:schema[1]/xsd:element[8]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:dateTime",
+        "declared": "xsd:dateTime",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:problemReport/my:actions/my:action",
+      "id": "f:main:/my:problemReport/my:actions/my:action/my:actionText",
+      "kind": "field",
+      "label": "Action",
+      "labelEvidence": {
+        "at": {
+          "column": 12782,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "actionText",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:15:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:problemReport/my:actions/my:action/my:actionText",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 44,
+        "path": "/xsd:schema[1]/xsd:element[10]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 39,
+        "path": "/xsd:schema[1]/xsd:element[8]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:problemReport",
+      "id": "f:main:/my:problemReport/my:resolved",
+      "kind": "field",
+      "label": "Resolved",
+      "labelEvidence": {
+        "at": {
+          "column": 11156,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/input[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "resolved",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:15:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:problemReport/my:resolved",
+      "repeating": false,
+      "required": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 45,
+        "path": "/xsd:schema[1]/xsd:element[11]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 12,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[7]"
+      },
+      "xsdType": {
+        "builtin": "xsd:boolean",
+        "declared": "xsd:boolean",
+        "variety": "atomic"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "id": "g:main:/my:problemReport",
+      "kind": "group",
+      "label": "Problem Report",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "problemReport",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:15:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:problemReport",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 3,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:problemReport",
+      "id": "g:main:/my:problemReport/my:actions",
+      "kind": "group",
+      "label": "Actions",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "actions",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:15:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:problemReport/my:actions",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 28,
+        "path": "/xsd:schema[1]/xsd:element[7]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 11,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[6]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:problemReport/my:actions",
+      "id": "g:main:/my:problemReport/my:actions/my:action",
+      "kind": "group",
+      "label": "Action",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "action",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:15:00",
+      "nodeType": "element",
+      "optional": true,
+      "path": "/my:problemReport/my:actions/my:action",
+      "repeating": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 35,
+        "path": "/xsd:schema[1]/xsd:element[8]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 31,
+        "path": "/xsd:schema[1]/xsd:element[7]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    }
+  ],
+  "irVersion": 1,
+  "issues": [],
+  "meta": {
+    "browserCompatible": false,
+    "generation": "2013",
+    "generationEvidence": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]/@productVersion"
+    },
+    "name": "Problem Report",
+    "nameSource": "caption",
+    "productVersion": "15.0.0",
+    "publishEndpoint": {
+      "attribute": "publishUrl",
+      "liveness": "internal",
+      "reason": "filePath",
+      "source": {
+        "column": 1,
+        "file": "manifest.xsf",
+        "line": 6,
+        "path": "/xsf:xDocumentClass[1]/@publishUrl"
+      },
+      "value": "C:\\forms\\15-problem-report.xsn"
+    },
+    "publishUrl": "C:\\forms\\15-problem-report.xsn",
+    "solutionFormatVersion": "2.0.0.0",
+    "solutionVersion": "1.0.0.1",
+    "source": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]"
+    },
+    "urn": "urn:schemas-microsoft-com:office:infopath:Problem-Report:-myXSD-2026-11-04T09-15-00"
+  },
+  "rules": [],
+  "signatures": {
+    "blocks": [],
+    "signatureLines": []
+  },
+  "unknowns": [],
+  "validations": [],
+  "views": [
+    {
+      "caption": "Main",
+      "controls": [
+        {
+          "binding": "my:reportedBy",
+          "ctrlId": "CTRL1",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5462,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:problemReport/my:reportedBy",
+          "title": "Reported by",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:detectedAt",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 6008,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:problemReport/my:detectedAt",
+          "title": "Detected at",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:service",
+          "ctrlId": "CTRL3",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 7019,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:problemReport/my:service",
+          "title": "Service",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:impact",
+          "choice": {
+            "label": "Low",
+            "value": "Low"
+          },
+          "ctrlId": "CTRL4",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 8147,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:problemReport/my:impact",
+          "title": "Impact",
+          "xctname": "OptionButton"
+        },
+        {
+          "binding": "my:impact",
+          "choice": {
+            "label": "Medium",
+            "value": "Medium"
+          },
+          "ctrlId": "CTRL5",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[2]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 8617,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[2]"
+          },
+          "targetId": "f:main:/my:problemReport/my:impact",
+          "title": "Impact",
+          "xctname": "OptionButton"
+        },
+        {
+          "binding": "my:impact",
+          "choice": {
+            "label": "High",
+            "value": "High"
+          },
+          "ctrlId": "CTRL6",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[3]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 9096,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[3]"
+          },
+          "targetId": "f:main:/my:problemReport/my:impact",
+          "title": "Impact",
+          "xctname": "OptionButton"
+        },
+        {
+          "binding": "my:description",
+          "ctrlId": "CTRL7",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 9733,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:problemReport/my:description",
+          "title": "Description",
+          "xctname": "RichText"
+        },
+        {
+          "binding": "my:resolved",
+          "ctrlId": "CTRL11",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 11116,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:problemReport/my:resolved",
+          "title": "Resolved",
+          "xctname": "CheckBox"
+        },
+        {
+          "binding": "my:actionAt",
+          "id": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 11823,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[1]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:problemReport/my:actions/my:action/my:actionAt",
+          "title": "When",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:actionText",
+          "ctrlId": "CTRL9",
+          "id": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 12738,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:problemReport/my:actions/my:action/my:actionText",
+          "title": "Action",
+          "xctname": "PlainText"
+        }
+      ],
+      "id": "view:/xsf:views[1]/xsf:view[1]",
+      "isDefault": true,
+      "isPrint": false,
+      "name": "Main",
+      "scanned": true,
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 31,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]"
+      },
+      "xslFile": "view1.xsl"
+    }
+  ]
+}

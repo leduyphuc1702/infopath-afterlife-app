@@ -1,0 +1,1079 @@
+{
+  "activeX": {
+    "allowed": [],
+    "controls": []
+  },
+  "calculations": [
+    {
+      "expression": "xdMath:Nz(../my:lineQty) * xdMath:Nz(../my:linePrice)",
+      "id": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+      "refresh": "onChange",
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 70,
+        "path": "/xsf:xDocumentClass[1]/xsf:calculations[1]/xsf:calculatedField[1]"
+      },
+      "target": "/my:invoiceApproval/my:lines/my:line/my:lineTotal",
+      "targetId": "f:main:/my:invoiceApproval/my:lines/my:line/my:lineTotal",
+      "unresolvedRefs": []
+    },
+    {
+      "expression": "sum(xdMath:Nz(../my:lines/my:line/my:lineTotal))",
+      "id": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+      "refresh": "onChange",
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 71,
+        "path": "/xsf:xDocumentClass[1]/xsf:calculations[1]/xsf:calculatedField[2]"
+      },
+      "target": "/my:invoiceApproval/my:netTotal",
+      "targetId": "f:main:/my:invoiceApproval/my:netTotal",
+      "unresolvedRefs": []
+    },
+    {
+      "expression": "xdMath:Nz(../my:netTotal) * (1 + xdMath:Nz(../my:taxRate))",
+      "id": "calc:/xsf:calculations[1]/xsf:calculatedField[3]",
+      "refresh": "onChange",
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 72,
+        "path": "/xsf:xDocumentClass[1]/xsf:calculations[1]/xsf:calculatedField[3]"
+      },
+      "target": "/my:invoiceApproval/my:grossTotal",
+      "targetId": "f:main:/my:invoiceApproval/my:grossTotal",
+      "unresolvedRefs": []
+    }
+  ],
+  "codeBehind": {
+    "files": [],
+    "handlers": [],
+    "languages": [],
+    "present": false
+  },
+  "dataConnections": [],
+  "dependencies": {
+    "references": [
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:invoiceApproval/my:invoiceNumber",
+        "text": "my:invoiceNumber"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:invoiceApproval/my:vendorName",
+        "text": "my:vendorName"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:invoiceApproval/my:invoiceDate",
+        "text": "my:invoiceDate"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:invoiceApproval/my:netTotal",
+        "text": "my:netTotal"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:invoiceApproval/my:taxRate",
+        "text": "my:taxRate"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:invoiceApproval/my:grossTotal",
+        "text": "my:grossTotal"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:invoiceApproval/my:lines/my:line/my:lineText",
+        "text": "my:lineText"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:invoiceApproval/my:lines/my:line/my:lineQty",
+        "text": "my:lineQty"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[3]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:invoiceApproval/my:lines/my:line/my:linePrice",
+        "text": "my:linePrice"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[4]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:invoiceApproval/my:lines/my:line/my:lineTotal",
+        "text": "my:lineTotal"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+        "role": "calcTarget",
+        "targetId": "f:main:/my:invoiceApproval/my:lines/my:line/my:lineTotal",
+        "text": "/my:invoiceApproval/my:lines/my:line/my:lineTotal"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+        "role": "calcExpression",
+        "targetId": "f:main:/my:invoiceApproval/my:lines/my:line/my:lineQty",
+        "text": "../my:lineQty"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+        "role": "calcExpression",
+        "targetId": "f:main:/my:invoiceApproval/my:lines/my:line/my:linePrice",
+        "text": "../my:linePrice"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+        "role": "calcTarget",
+        "targetId": "f:main:/my:invoiceApproval/my:netTotal",
+        "text": "/my:invoiceApproval/my:netTotal"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+        "role": "calcExpression",
+        "targetId": "f:main:/my:invoiceApproval/my:lines/my:line/my:lineTotal",
+        "text": "../my:lines/my:line/my:lineTotal"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[3]",
+        "role": "calcTarget",
+        "targetId": "f:main:/my:invoiceApproval/my:grossTotal",
+        "text": "/my:invoiceApproval/my:grossTotal"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[3]",
+        "role": "calcExpression",
+        "targetId": "f:main:/my:invoiceApproval/my:netTotal",
+        "text": "../my:netTotal"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[3]",
+        "role": "calcExpression",
+        "targetId": "f:main:/my:invoiceApproval/my:taxRate",
+        "text": "../my:taxRate"
+      }
+    ]
+  },
+  "fields": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:invoiceApproval",
+      "id": "f:main:/my:invoiceApproval/my:invoiceNumber",
+      "kind": "field",
+      "label": "Invoice",
+      "labelEvidence": {
+        "at": {
+          "column": 5506,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "invoiceNumber",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:invoiceApproval/my:invoiceNumber",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 17,
+        "path": "/xsd:schema[1]/xsd:element[2]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 6,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:invoiceApproval",
+      "id": "f:main:/my:invoiceApproval/my:vendorName",
+      "kind": "field",
+      "label": "Vendor",
+      "labelEvidence": {
+        "at": {
+          "column": 5934,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "vendorName",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:invoiceApproval/my:vendorName",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 18,
+        "path": "/xsd:schema[1]/xsd:element[3]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 7,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:invoiceApproval",
+      "id": "f:main:/my:invoiceApproval/my:invoiceDate",
+      "kind": "field",
+      "label": "Invoice date",
+      "labelEvidence": {
+        "at": {
+          "column": 6347,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "invoiceDate",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:invoiceApproval/my:invoiceDate",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 19,
+        "path": "/xsd:schema[1]/xsd:element[4]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 8,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:date",
+        "declared": "xsd:date",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:invoiceApproval/my:lines/my:line",
+      "id": "f:main:/my:invoiceApproval/my:lines/my:line/my:lineText",
+      "kind": "field",
+      "label": "Description",
+      "labelEvidence": {
+        "at": {
+          "column": 11570,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[1]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "lineText",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:invoiceApproval/my:lines/my:line/my:lineText",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 37,
+        "path": "/xsd:schema[1]/xsd:element[7]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 30,
+        "path": "/xsd:schema[1]/xsd:element[6]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+            "role": "calcExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:invoiceApproval/my:lines/my:line",
+      "id": "f:main:/my:invoiceApproval/my:lines/my:line/my:lineQty",
+      "kind": "field",
+      "label": "Qty",
+      "labelEvidence": {
+        "at": {
+          "column": 11927,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "lineQty",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:invoiceApproval/my:lines/my:line/my:lineQty",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 38,
+        "path": "/xsd:schema[1]/xsd:element[8]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 31,
+        "path": "/xsd:schema[1]/xsd:element[6]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+            "role": "calcExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[3]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[3]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:invoiceApproval/my:lines/my:line",
+      "id": "f:main:/my:invoiceApproval/my:lines/my:line/my:linePrice",
+      "kind": "field",
+      "label": "Unit price",
+      "labelEvidence": {
+        "at": {
+          "column": 12725,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[3]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "linePrice",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:invoiceApproval/my:lines/my:line/my:linePrice",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 39,
+        "path": "/xsd:schema[1]/xsd:element[9]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 32,
+        "path": "/xsd:schema[1]/xsd:element[6]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+            "role": "calcExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[4]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+            "role": "calcTarget"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[4]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:invoiceApproval/my:lines/my:line",
+      "id": "f:main:/my:invoiceApproval/my:lines/my:line/my:lineTotal",
+      "kind": "field",
+      "label": "Total",
+      "labelEvidence": {
+        "at": {
+          "column": 13592,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[4]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "lineTotal",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:invoiceApproval/my:lines/my:line/my:lineTotal",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 40,
+        "path": "/xsd:schema[1]/xsd:element[10]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 33,
+        "path": "/xsd:schema[1]/xsd:element[6]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[3]",
+            "role": "calcExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+            "role": "calcTarget"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:invoiceApproval",
+      "id": "f:main:/my:invoiceApproval/my:netTotal",
+      "kind": "field",
+      "label": "Net",
+      "labelEvidence": {
+        "at": {
+          "column": 8677,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "netTotal",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:invoiceApproval/my:netTotal",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 41,
+        "path": "/xsd:schema[1]/xsd:element[11]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 10,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[5]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[3]",
+            "role": "calcExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:invoiceApproval",
+      "id": "f:main:/my:invoiceApproval/my:taxRate",
+      "kind": "field",
+      "label": "Tax rate",
+      "labelEvidence": {
+        "at": {
+          "column": 9673,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "taxRate",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:invoiceApproval/my:taxRate",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 42,
+        "path": "/xsd:schema[1]/xsd:element[12]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 11,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[6]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[3]",
+            "role": "calcTarget"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:invoiceApproval",
+      "id": "f:main:/my:invoiceApproval/my:grossTotal",
+      "kind": "field",
+      "label": "Gross",
+      "labelEvidence": {
+        "at": {
+          "column": 10563,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "grossTotal",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:invoiceApproval/my:grossTotal",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 43,
+        "path": "/xsd:schema[1]/xsd:element[13]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 12,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[7]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "id": "g:main:/my:invoiceApproval",
+      "kind": "group",
+      "label": "Invoice Approval",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "invoiceApproval",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:invoiceApproval",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 3,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:invoiceApproval",
+      "id": "g:main:/my:invoiceApproval/my:lines",
+      "kind": "group",
+      "label": "Lines",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "lines",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:invoiceApproval/my:lines",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 20,
+        "path": "/xsd:schema[1]/xsd:element[5]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 9,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:invoiceApproval/my:lines",
+      "id": "g:main:/my:invoiceApproval/my:lines/my:line",
+      "kind": "group",
+      "label": "Line",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "line",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:29:00",
+      "nodeType": "element",
+      "optional": true,
+      "path": "/my:invoiceApproval/my:lines/my:line",
+      "repeating": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 27,
+        "path": "/xsd:schema[1]/xsd:element[6]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 23,
+        "path": "/xsd:schema[1]/xsd:element[5]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    }
+  ],
+  "irVersion": 1,
+  "issues": [],
+  "meta": {
+    "browserCompatible": false,
+    "generation": "2013",
+    "generationEvidence": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]/@productVersion"
+    },
+    "name": "Invoice Approval",
+    "nameSource": "caption",
+    "productVersion": "15.0.0",
+    "publishEndpoint": {
+      "attribute": "publishUrl",
+      "liveness": "internal",
+      "reason": "filePath",
+      "source": {
+        "column": 1,
+        "file": "manifest.xsf",
+        "line": 6,
+        "path": "/xsf:xDocumentClass[1]/@publishUrl"
+      },
+      "value": "C:\\forms\\29-invoice-approval.xsn"
+    },
+    "publishUrl": "C:\\forms\\29-invoice-approval.xsn",
+    "solutionFormatVersion": "2.0.0.0",
+    "solutionVersion": "1.0.0.1",
+    "source": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]"
+    },
+    "urn": "urn:schemas-microsoft-com:office:infopath:Invoice-Approval:-myXSD-2026-11-04T09-29-00"
+  },
+  "rules": [],
+  "signatures": {
+    "blocks": [],
+    "signatureLines": []
+  },
+  "unknowns": [],
+  "validations": [],
+  "views": [
+    {
+      "caption": "Main",
+      "controls": [
+        {
+          "binding": "my:invoiceNumber",
+          "ctrlId": "CTRL1",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5462,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:invoiceApproval/my:invoiceNumber",
+          "title": "Invoice",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:vendorName",
+          "ctrlId": "CTRL2",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5890,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:invoiceApproval/my:vendorName",
+          "title": "Vendor",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:invoiceDate",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 6433,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:invoiceApproval/my:invoiceDate",
+          "title": "Invoice date",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:netTotal",
+          "ctrlId": "CTRL9",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 8611,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:invoiceApproval/my:netTotal",
+          "title": "Net",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:taxRate",
+          "ctrlId": "CTRL10",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 9607,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:invoiceApproval/my:taxRate",
+          "title": "Tax rate",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:grossTotal",
+          "ctrlId": "CTRL11",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 10497,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:invoiceApproval/my:grossTotal",
+          "title": "Gross",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:lineText",
+          "ctrlId": "CTRL4",
+          "id": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 11526,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:invoiceApproval/my:lines/my:line/my:lineText",
+          "title": "Description",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:lineQty",
+          "ctrlId": "CTRL5",
+          "id": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 11861,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:invoiceApproval/my:lines/my:line/my:lineQty",
+          "title": "Qty",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:linePrice",
+          "ctrlId": "CTRL6",
+          "id": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[3]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 12659,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[3]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:invoiceApproval/my:lines/my:line/my:linePrice",
+          "title": "Unit price",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:lineTotal",
+          "ctrlId": "CTRL7",
+          "id": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[4]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 13526,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[4]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:invoiceApproval/my:lines/my:line/my:lineTotal",
+          "title": "Total",
+          "xctname": "PlainText"
+        }
+      ],
+      "id": "view:/xsf:views[1]/xsf:view[1]",
+      "isDefault": true,
+      "isPrint": false,
+      "name": "Main",
+      "scanned": true,
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 31,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]"
+      },
+      "xslFile": "view1.xsl"
+    }
+  ]
+}

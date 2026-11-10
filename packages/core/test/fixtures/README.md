@@ -41,3 +41,11 @@ is fictional.
 - `xsd/restriction.xsd`: attributes in derived types (XML Schema 1.0 Part 1 §3.4.2): inherited,
   redeclared with a narrower type, and prohibited in complex and simple content restrictions, and
   a prohibited attribute outside any derivation.
+- `views/`: view XSL for the static view scan (spec 02 task 7), with a shared main schema
+  (`myschema.xsd`, root `my:order`) and a secondary source `Depots` (`rows.xsd`, `rows.xml`);
+  `test/helpers/view-package.ts` generates the manifest around them. One file per shape: a mode
+  called twice, a mode never called, `call-template`, a view that is not well-formed, an unbound
+  `object`, ExpressionBoxes (a repeating average and a string literal), a `GetDOM` binding and a
+  filtered `GetDOM` list, `DropDown` next to `dropdown`, an ActiveX person picker (`{{…}}` in
+  `xd:xctname`, a group binding, `xd:server` on a single-label host) and a dynamic `title`. The
+  shapes follow counts recorded from the private corpus; the wording, names and GUIDs are ours.

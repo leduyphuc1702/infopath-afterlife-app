@@ -12,6 +12,7 @@
 import { AfterlifeError, type Issue } from '../errors';
 import type { UnknownEntry } from '../unknown';
 
+import { containsCredential } from './credentials';
 import { MS_IPFF2 } from './ms-ipff2';
 import type {
   AnyModelled,
@@ -837,8 +838,6 @@ const DATA_ADAPTERS = [
   'xsf:xmlFileAdapter',
 ] as const satisfies readonly AdapterKey[];
 
-const CREDENTIAL = /(^|;)\s*(password|pwd)\s*=/i;
-
 function buildAdapter(ctx: BuildContext, n: ModelNode, role: Adapter['role']): Adapter {
   // Every modelled descendant, whatever its depth (operation → input), in document order.
   const children: Ordered<AnyModelled<AdapterChildKey>>[] = [];
@@ -860,7 +859,7 @@ function buildAdapter(ctx: BuildContext, n: ModelNode, role: Adapter['role']): A
     ...(modelled(n) as AnyModelled<AdapterKey>),
     role,
     children: ctx.inOrder(children),
-    containsCredential: connection !== undefined && CREDENTIAL.test(connection),
+    containsCredential: connection !== undefined && containsCredential(connection),
   };
 }
 

@@ -53,6 +53,11 @@ every task ends green, so every batch does.
     `,port`, `\instance`, quoted values), redaction of `Password` and `Pwd` with the rest kept byte
     for byte.
   - Requirements: R8.2, R8.3, R8.4.
+  - Changed before task 7: the secret-key rule now covers keys ending in whitespace or `:` before
+    `password`/`pwd` (the Jet and ACE `Jet OLEDB:Database Password`, `Jet OLEDB:New Database
+    Password`) and URL userinfo passwords, and keeps whitespace around the value. Spec 01's
+    `containsCredential` shares the implementation (`src/xsf/credentials.ts`) and the test
+    (`test/xsf/credentials.test.ts`), which also searches the FormIR JSON for the secret (R8.4).
 
 - [x] 5. Data connections
   - `src/ir/connections.ts` (stage 4): every adapter, `isQuery`/`isSubmit`, children, endpoints,
@@ -72,7 +77,7 @@ every task ends green, so every batch does.
     with no path).
   - Requirements: R11.1, R11.2, R11.4.
 
-- [ ] 7. View scan
+- [x] 7. View scan
   - `src/ir/views/scan.ts` (design §6.1): contexts, bound controls, `choicesFrom`, ActiveX,
     `viewXmlBytes`; `FormIROptions`.
   - Fixtures: `test/fixtures/synthetic/views/` (a mode called twice, a mode never called,
@@ -88,7 +93,7 @@ every task ends green, so every batch does.
     `internal`/`singleLabel`; the limit as an option).
   - Requirements: R4, R15 (limit).
 
-- [ ] 8. Labels
+- [x] 8. Labels
   - `src/ir/views/labels.ts` (stage 6, requirements R5.1 steps 1–8, option-button rule).
   - Fixtures: `test/fixtures/synthetic/views/labels/`, one per R5.4 layout, our own wording.
   - Tests: `test/ir/labels.test.ts` (each fixture: label, `labelSource`, `labelEvidence`);
@@ -97,7 +102,7 @@ every task ends green, so every batch does.
     stop and report.
   - Requirements: R5.
 
-- [ ] 9. Dependency index and FormIR golden files
+- [x] 9. Dependency index and FormIR golden files
   - `src/ir/dependencies.ts` (stage 7, design §7.4): references, `readBy`/`writtenBy`,
     `unresolvedRefs`, lineage.
   - Tests: `test/ir/dependencies.samples.test.ts` (1,566 of 1,566; form 04 `grandTotal`; form 03
@@ -105,6 +110,10 @@ every task ends green, so every batch does.
     sample; built twice gives equal JSON; ids unique; forms 01 and 07 share common field ids;
     every expression string equals its spec 01 source, R1.2; every sample has zero FormIR issues).
   - Requirements: R11.3, R11.5, R1.2, R1.3, R13.2, R13.3.
+  - Note at task 9: the Evidence row "Absolute paths" is 684 only with
+    `signedDataBlock/@signatureLocation` (form 45, 1 string), which its label omits; the test
+    counts it. FormIR carries no reference for it (no `DepRole`). Form 04 `grandTotal` is also
+    in `writtenBy` of its view control (role `binding`, design §5 notes), besides the calculation.
 
 - [ ] 10. Property P6: JSON round trip
   - Test: `test/property/p6.property.test.ts` (generator of design §10; 500 runs; the 48 golden

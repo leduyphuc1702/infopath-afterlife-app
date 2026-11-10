@@ -1,12 +1,12 @@
 // Stage 4: data connections (spec 02 R8.1–R8.4, design §5 notes, §8). Every adapter becomes one
-// connection. Any attribute value holding `Password=` or `Pwd=` is redacted wherever it sits
-// (adapter, child, connection extension), so the secret reaches no part of FormIR.
+// connection. Any secret in an attribute value (a password key, a URL userinfo password) is
+// redacted wherever it sits (adapter, child, connection extension), so it reaches no part of FormIR.
 
 import type { Located } from '../unknown';
 import type { Adapter, ConnectionExtension } from '../xsf/types';
 import type { ParsedTemplate } from '../xsn/parse';
 import { localKind, type PendingExpr } from './elements';
-import { classifyEndpoint, HAS_CREDENTIAL, redactSecrets } from './endpoints';
+import { classifyEndpoint, redactSecrets } from './endpoints';
 import { loc, manifestId, type IdRegistry } from './ids';
 import type { Attrs, Endpoint, IrConnection } from './types';
 
@@ -76,11 +76,9 @@ export function buildConnections(t: ParsedTemplate, ids: IdRegistry): Connection
       const out: Record<string, string> = {};
       for (const [k, v] of Object.entries(attrs)) {
         if (v === undefined) continue;
-        if (HAS_CREDENTIAL.test(v)) {
-          const r = redactSecrets(v);
-          redacted ||= r.redacted;
-          out[k] = r.value;
-        } else out[k] = v;
+        const r = redactSecrets(v);
+        redacted ||= r.redacted;
+        out[k] = r.value;
       }
       return out;
     };

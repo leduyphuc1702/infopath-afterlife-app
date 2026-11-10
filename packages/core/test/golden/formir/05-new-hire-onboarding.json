@@ -1,0 +1,2495 @@
+{
+  "activeX": {
+    "allowed": [],
+    "controls": []
+  },
+  "calculations": [],
+  "codeBehind": {
+    "files": [],
+    "handlers": [],
+    "languages": [],
+    "present": false
+  },
+  "dataConnections": [],
+  "dependencies": {
+    "references": [
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:newHire/my:hireName",
+        "text": "my:hireName"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:newHire/my:hireStartDate",
+        "text": "my:hireStartDate"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:newHire/my:hireTitle",
+        "text": "my:hireTitle"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:newHire/my:hireDept",
+        "text": "my:hireDept"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:newHire/my:hireManager",
+        "text": "my:hireManager"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:employment/my:fullTime/my:annualSalary",
+        "text": "my:annualSalary"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:employment/my:fullTime/my:benefitsPlan",
+        "text": "my:benefitsPlan"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:employment/my:contractor/my:agencyName",
+        "text": "my:agencyName"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:employment/my:contractor/my:hourlyRate",
+        "text": "my:hourlyRate"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:employment/my:contractor/my:contractEnd",
+        "text": "my:contractEnd"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[5]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:equipment/my:needsLaptop",
+        "text": "my:needsLaptop"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[5]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:equipment/my:needsPhone",
+        "text": "my:needsPhone"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[5]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:equipment/my:needsMonitor",
+        "text": "my:needsMonitor"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[5]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:equipment/my:accountsNeeded",
+        "text": "my:accountsNeeded"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:newHire/my:hireName",
+        "text": "my:hireName"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:newHire/my:hireStartDate",
+        "text": "my:hireStartDate"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:newHire/my:hireTitle",
+        "text": "my:hireTitle"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:newHire/my:hireDept",
+        "text": "my:hireDept"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:newHire/my:hireManager",
+        "text": "my:hireManager"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:equipment/my:needsLaptop",
+        "text": "my:needsLaptop"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:equipment/my:needsPhone",
+        "text": "my:needsPhone"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:equipment/my:needsMonitor",
+        "text": "my:needsMonitor"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:equipment/my:accountsNeeded",
+        "text": "my:accountsNeeded"
+      },
+      {
+        "elementId": "ctl:view3.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:welcomeNote",
+        "text": "my:welcomeNote"
+      },
+      {
+        "elementId": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:newHire/my:hireName",
+        "text": "my:hireName"
+      },
+      {
+        "elementId": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:newHire/my:hireStartDate",
+        "text": "my:hireStartDate"
+      },
+      {
+        "elementId": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:newHire/my:hireTitle",
+        "text": "my:hireTitle"
+      },
+      {
+        "elementId": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:newHire/my:hireDept",
+        "text": "my:hireDept"
+      },
+      {
+        "elementId": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:newHire/my:hireManager",
+        "text": "my:hireManager"
+      },
+      {
+        "elementId": "ctl:view3.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:equipment/my:needsLaptop",
+        "text": "my:needsLaptop"
+      },
+      {
+        "elementId": "ctl:view3.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:equipment/my:needsPhone",
+        "text": "my:needsPhone"
+      },
+      {
+        "elementId": "ctl:view3.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:equipment/my:needsMonitor",
+        "text": "my:needsMonitor"
+      },
+      {
+        "elementId": "ctl:view3.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:equipment/my:accountsNeeded",
+        "text": "my:accountsNeeded"
+      },
+      {
+        "elementId": "ctl:view3.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:relocation/my:relocateFrom",
+        "text": "my:relocateFrom"
+      },
+      {
+        "elementId": "ctl:view3.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:relocation/my:relocationAllowance",
+        "text": "my:relocationAllowance"
+      },
+      {
+        "elementId": "ctl:view3.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:onboarding/my:relocation/my:movingDate",
+        "text": "my:movingDate"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:onboarding/my:newHire/my:hireName",
+        "text": "/my:onboarding/my:newHire/my:hireName"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:onboarding/my:newHire/my:hireName",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:onboarding/my:newHire/my:hireStartDate",
+        "text": "/my:onboarding/my:newHire/my:hireStartDate"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:onboarding/my:newHire/my:hireStartDate",
+        "text": "."
+      }
+    ]
+  },
+  "fields": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:onboarding/my:newHire",
+      "id": "f:main:/my:onboarding/my:newHire/my:hireName",
+      "kind": "field",
+      "label": "Full name",
+      "labelEvidence": {
+        "at": {
+          "column": 7014,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "HR"
+      },
+      "labelSource": "title",
+      "name": "hireName",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:newHire/my:hireName",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 26,
+        "path": "/xsd:schema[1]/xsd:element[3]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 18,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:onboarding/my:newHire",
+      "id": "f:main:/my:onboarding/my:newHire/my:hireStartDate",
+      "kind": "field",
+      "label": "Start date",
+      "labelEvidence": {
+        "at": {
+          "column": 7424,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "HR"
+      },
+      "labelSource": "title",
+      "name": "hireStartDate",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:newHire/my:hireStartDate",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 27,
+        "path": "/xsd:schema[1]/xsd:element[4]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 19,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:date",
+        "declared": "xsd:date",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:onboarding/my:newHire",
+      "id": "f:main:/my:onboarding/my:newHire/my:hireTitle",
+      "kind": "field",
+      "label": "Job title",
+      "labelEvidence": {
+        "at": {
+          "column": 8525,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "HR"
+      },
+      "labelSource": "title",
+      "name": "hireTitle",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:newHire/my:hireTitle",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 28,
+        "path": "/xsd:schema[1]/xsd:element[5]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 20,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:onboarding/my:newHire",
+      "id": "f:main:/my:onboarding/my:newHire/my:hireDept",
+      "kind": "field",
+      "label": "Department",
+      "labelEvidence": {
+        "at": {
+          "column": 8958,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "title",
+        "view": "HR"
+      },
+      "labelSource": "title",
+      "name": "hireDept",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:newHire/my:hireDept",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 29,
+        "path": "/xsd:schema[1]/xsd:element[6]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 21,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:onboarding/my:newHire",
+      "id": "f:main:/my:onboarding/my:newHire/my:hireManager",
+      "kind": "field",
+      "label": "Manager",
+      "labelEvidence": {
+        "at": {
+          "column": 10266,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "HR"
+      },
+      "labelSource": "title",
+      "name": "hireManager",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:newHire/my:hireManager",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 30,
+        "path": "/xsd:schema[1]/xsd:element[7]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 22,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[5]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:onboarding/my:employment/my:fullTime",
+      "id": "f:main:/my:onboarding/my:employment/my:fullTime/my:annualSalary",
+      "kind": "field",
+      "label": "Annual salary",
+      "labelEvidence": {
+        "at": {
+          "column": 11202,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "HR"
+      },
+      "labelSource": "title",
+      "name": "annualSalary",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:employment/my:fullTime/my:annualSalary",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 47,
+        "path": "/xsd:schema[1]/xsd:element[10]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 42,
+        "path": "/xsd:schema[1]/xsd:element[9]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:onboarding/my:employment/my:fullTime",
+      "id": "f:main:/my:onboarding/my:employment/my:fullTime/my:benefitsPlan",
+      "kind": "field",
+      "label": "Benefits plan",
+      "labelEvidence": {
+        "at": {
+          "column": 12163,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "title",
+        "view": "HR"
+      },
+      "labelSource": "title",
+      "name": "benefitsPlan",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:employment/my:fullTime/my:benefitsPlan",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 48,
+        "path": "/xsd:schema[1]/xsd:element[11]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 43,
+        "path": "/xsd:schema[1]/xsd:element[9]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:onboarding/my:employment/my:contractor",
+      "id": "f:main:/my:onboarding/my:employment/my:contractor/my:agencyName",
+      "kind": "field",
+      "label": "Agency",
+      "labelEvidence": {
+        "at": {
+          "column": 13667,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "HR"
+      },
+      "labelSource": "title",
+      "name": "agencyName",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:employment/my:contractor/my:agencyName",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 58,
+        "path": "/xsd:schema[1]/xsd:element[13]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 52,
+        "path": "/xsd:schema[1]/xsd:element[12]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:onboarding/my:employment/my:contractor",
+      "id": "f:main:/my:onboarding/my:employment/my:contractor/my:hourlyRate",
+      "kind": "field",
+      "label": "Hourly rate",
+      "labelEvidence": {
+        "at": {
+          "column": 14116,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "HR"
+      },
+      "labelSource": "title",
+      "name": "hourlyRate",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:employment/my:contractor/my:hourlyRate",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 59,
+        "path": "/xsd:schema[1]/xsd:element[14]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 53,
+        "path": "/xsd:schema[1]/xsd:element[12]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:onboarding/my:employment/my:contractor",
+      "id": "f:main:/my:onboarding/my:employment/my:contractor/my:contractEnd",
+      "kind": "field",
+      "label": "Contract end",
+      "labelEvidence": {
+        "at": {
+          "column": 15046,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "HR"
+      },
+      "labelSource": "title",
+      "name": "contractEnd",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:employment/my:contractor/my:contractEnd",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 60,
+        "path": "/xsd:schema[1]/xsd:element[15]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 54,
+        "path": "/xsd:schema[1]/xsd:element[12]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:date",
+        "declared": "xsd:date",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[5]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[5]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:onboarding/my:equipment",
+      "id": "f:main:/my:onboarding/my:equipment/my:needsLaptop",
+      "kind": "field",
+      "label": "Laptop",
+      "labelEvidence": {
+        "at": {
+          "column": 16579,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[5]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/input[1]/@title"
+        },
+        "step": "title",
+        "view": "HR"
+      },
+      "labelSource": "title",
+      "name": "needsLaptop",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:equipment/my:needsLaptop",
+      "repeating": false,
+      "required": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 71,
+        "path": "/xsd:schema[1]/xsd:element[17]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 64,
+        "path": "/xsd:schema[1]/xsd:element[16]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:boolean",
+        "declared": "xsd:boolean",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[5]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[5]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:onboarding/my:equipment",
+      "id": "f:main:/my:onboarding/my:equipment/my:needsPhone",
+      "kind": "field",
+      "label": "Mobile phone",
+      "labelEvidence": {
+        "at": {
+          "column": 17151,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[5]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]/@title"
+        },
+        "step": "title",
+        "view": "HR"
+      },
+      "labelSource": "title",
+      "name": "needsPhone",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:equipment/my:needsPhone",
+      "repeating": false,
+      "required": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 72,
+        "path": "/xsd:schema[1]/xsd:element[18]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 65,
+        "path": "/xsd:schema[1]/xsd:element[16]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:boolean",
+        "declared": "xsd:boolean",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[5]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[5]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:onboarding/my:equipment",
+      "id": "f:main:/my:onboarding/my:equipment/my:needsMonitor",
+      "kind": "field",
+      "label": "Second monitor",
+      "labelEvidence": {
+        "at": {
+          "column": 17732,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[5]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]/@title"
+        },
+        "step": "title",
+        "view": "HR"
+      },
+      "labelSource": "title",
+      "name": "needsMonitor",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:equipment/my:needsMonitor",
+      "repeating": false,
+      "required": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 73,
+        "path": "/xsd:schema[1]/xsd:element[19]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 66,
+        "path": "/xsd:schema[1]/xsd:element[16]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:boolean",
+        "declared": "xsd:boolean",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[5]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[5]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:onboarding/my:equipment",
+      "id": "f:main:/my:onboarding/my:equipment/my:accountsNeeded",
+      "kind": "field",
+      "label": "System accounts",
+      "labelEvidence": {
+        "at": {
+          "column": 18342,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[5]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "HR"
+      },
+      "labelSource": "title",
+      "name": "accountsNeeded",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:equipment/my:accountsNeeded",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 74,
+        "path": "/xsd:schema[1]/xsd:element[20]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 67,
+        "path": "/xsd:schema[1]/xsd:element[16]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:onboarding/my:relocation",
+      "id": "f:main:/my:onboarding/my:relocation/my:relocateFrom",
+      "kind": "field",
+      "label": "Moving from",
+      "labelEvidence": {
+        "at": {
+          "column": 13942,
+          "file": "view3.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "otherView",
+        "view": "Manager",
+        "viewStep": "title"
+      },
+      "labelSource": "otherView",
+      "name": "relocateFrom",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:relocation/my:relocateFrom",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 84,
+        "path": "/xsd:schema[1]/xsd:element[22]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 78,
+        "path": "/xsd:schema[1]/xsd:element[21]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:onboarding/my:relocation",
+      "id": "f:main:/my:onboarding/my:relocation/my:relocationAllowance",
+      "kind": "field",
+      "label": "Allowance",
+      "labelEvidence": {
+        "at": {
+          "column": 14398,
+          "file": "view3.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "otherView",
+        "view": "Manager",
+        "viewStep": "title"
+      },
+      "labelSource": "otherView",
+      "name": "relocationAllowance",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:relocation/my:relocationAllowance",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 85,
+        "path": "/xsd:schema[1]/xsd:element[23]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 79,
+        "path": "/xsd:schema[1]/xsd:element[21]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:onboarding/my:relocation",
+      "id": "f:main:/my:onboarding/my:relocation/my:movingDate",
+      "kind": "field",
+      "label": "Moving date",
+      "labelEvidence": {
+        "at": {
+          "column": 15361,
+          "file": "view3.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/@title"
+        },
+        "step": "otherView",
+        "view": "Manager",
+        "viewStep": "title"
+      },
+      "labelSource": "otherView",
+      "name": "movingDate",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:relocation/my:movingDate",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 86,
+        "path": "/xsd:schema[1]/xsd:element[24]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 80,
+        "path": "/xsd:schema[1]/xsd:element[21]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:date",
+        "declared": "xsd:date",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view3.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:onboarding",
+      "id": "f:main:/my:onboarding/my:welcomeNote",
+      "kind": "richText",
+      "label": "Welcome note",
+      "labelEvidence": {
+        "at": {
+          "column": 6227,
+          "file": "view3.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "otherView",
+        "view": "Manager",
+        "viewStep": "title"
+      },
+      "labelSource": "otherView",
+      "name": "welcomeNote",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:welcomeNote",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 87,
+        "path": "/xsd:schema[1]/xsd:element[25]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 10,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[5]"
+      },
+      "xsdType": {
+        "builtin": "xsd:anyType",
+        "variety": "complex"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "id": "g:main:/my:onboarding",
+      "kind": "group",
+      "label": "Onboarding",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "onboarding",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 3,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:onboarding",
+      "id": "g:main:/my:onboarding/my:newHire",
+      "kind": "group",
+      "label": "New Hire",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "newHire",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:newHire",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 15,
+        "path": "/xsd:schema[1]/xsd:element[2]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 6,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:onboarding",
+      "id": "g:main:/my:onboarding/my:employment",
+      "kind": "group",
+      "label": "Employment",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "employment",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:employment",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 31,
+        "path": "/xsd:schema[1]/xsd:element[8]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 7,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      }
+    },
+    {
+      "choiceGroup": "choice-1",
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:onboarding/my:employment",
+      "id": "g:main:/my:onboarding/my:employment/my:fullTime",
+      "kind": "group",
+      "label": "Full Time",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "fullTime",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:employment/my:fullTime",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 39,
+        "path": "/xsd:schema[1]/xsd:element[9]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 34,
+        "path": "/xsd:schema[1]/xsd:element[8]/xsd:complexType[1]/xsd:choice[1]/xsd:element[1]"
+      }
+    },
+    {
+      "choiceGroup": "choice-1",
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:onboarding/my:employment",
+      "id": "g:main:/my:onboarding/my:employment/my:contractor",
+      "kind": "group",
+      "label": "Contractor",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "contractor",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:employment/my:contractor",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 49,
+        "path": "/xsd:schema[1]/xsd:element[12]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 35,
+        "path": "/xsd:schema[1]/xsd:element[8]/xsd:complexType[1]/xsd:choice[1]/xsd:element[2]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:onboarding",
+      "id": "g:main:/my:onboarding/my:equipment",
+      "kind": "group",
+      "label": "Equipment",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "equipment",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:onboarding/my:equipment",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 61,
+        "path": "/xsd:schema[1]/xsd:element[16]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 8,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:onboarding",
+      "id": "g:main:/my:onboarding/my:relocation",
+      "kind": "group",
+      "label": "Relocation",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "relocation",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00",
+      "nodeType": "element",
+      "optional": true,
+      "path": "/my:onboarding/my:relocation",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 75,
+        "path": "/xsd:schema[1]/xsd:element[21]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 9,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      }
+    }
+  ],
+  "irVersion": 1,
+  "issues": [],
+  "meta": {
+    "browserCompatible": false,
+    "generation": "2013",
+    "generationEvidence": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]/@productVersion"
+    },
+    "name": "New Hire Onboarding",
+    "nameSource": "caption",
+    "productVersion": "15.0.0",
+    "publishEndpoint": {
+      "attribute": "publishUrl",
+      "liveness": "internal",
+      "reason": "filePath",
+      "source": {
+        "column": 1,
+        "file": "manifest.xsf",
+        "line": 6,
+        "path": "/xsf:xDocumentClass[1]/@publishUrl"
+      },
+      "value": "C:\\forms\\05-new-hire-onboarding.xsn"
+    },
+    "publishUrl": "C:\\forms\\05-new-hire-onboarding.xsn",
+    "solutionFormatVersion": "2.0.0.0",
+    "solutionVersion": "1.0.0.1",
+    "source": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]"
+    },
+    "urn": "urn:schemas-microsoft-com:office:infopath:New-Hire-Onboarding:-myXSD-2026-11-03T08-40-00"
+  },
+  "rules": [
+    {
+      "actions": [
+        {
+          "attrs": {
+            "view": "HR"
+          },
+          "id": "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:switchViewAction[1]",
+          "kind": "switchViewAction",
+          "source": {
+            "column": 5,
+            "file": "manifest.xsf",
+            "line": 124,
+            "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:switchViewAction[1]"
+          }
+        }
+      ],
+      "caption": "Switch to HR",
+      "enabled": true,
+      "id": "rule:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]",
+      "ruleSet": "toHR",
+      "source": {
+        "column": 4,
+        "file": "manifest.xsf",
+        "line": 123,
+        "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]"
+      },
+      "stopProcessing": false,
+      "triggers": [
+        {
+          "button": "CTRL912",
+          "kind": "button",
+          "source": {
+            "column": 52,
+            "file": "manifest.xsf",
+            "line": 79,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[2]/xsf:unboundControls[1]/xsf:button[1]/xsf:ruleSetAction[1]"
+          },
+          "view": "IT"
+        }
+      ],
+      "unresolvedRefs": []
+    },
+    {
+      "actions": [
+        {
+          "attrs": {
+            "view": "IT"
+          },
+          "id": "action:/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[1]/xsf:switchViewAction[1]",
+          "kind": "switchViewAction",
+          "source": {
+            "column": 5,
+            "file": "manifest.xsf",
+            "line": 129,
+            "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[1]/xsf:switchViewAction[1]"
+          }
+        }
+      ],
+      "caption": "Switch to IT",
+      "enabled": true,
+      "id": "rule:/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[1]",
+      "ruleSet": "toIT",
+      "source": {
+        "column": 4,
+        "file": "manifest.xsf",
+        "line": 128,
+        "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[1]"
+      },
+      "stopProcessing": false,
+      "triggers": [
+        {
+          "button": "CTRL910",
+          "kind": "button",
+          "source": {
+            "column": 52,
+            "file": "manifest.xsf",
+            "line": 60,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:unboundControls[1]/xsf:button[1]/xsf:ruleSetAction[1]"
+          },
+          "view": "HR"
+        }
+      ],
+      "unresolvedRefs": []
+    },
+    {
+      "actions": [
+        {
+          "attrs": {
+            "view": "Manager"
+          },
+          "id": "action:/xsf:ruleSets[1]/xsf:ruleSet[3]/xsf:rule[1]/xsf:switchViewAction[1]",
+          "kind": "switchViewAction",
+          "source": {
+            "column": 5,
+            "file": "manifest.xsf",
+            "line": 134,
+            "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]/xsf:ruleSet[3]/xsf:rule[1]/xsf:switchViewAction[1]"
+          }
+        }
+      ],
+      "caption": "Switch to Manager",
+      "enabled": true,
+      "id": "rule:/xsf:ruleSets[1]/xsf:ruleSet[3]/xsf:rule[1]",
+      "ruleSet": "toManager",
+      "source": {
+        "column": 4,
+        "file": "manifest.xsf",
+        "line": 133,
+        "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]/xsf:ruleSet[3]/xsf:rule[1]"
+      },
+      "stopProcessing": false,
+      "triggers": [
+        {
+          "button": "CTRL911",
+          "kind": "button",
+          "source": {
+            "column": 146,
+            "file": "manifest.xsf",
+            "line": 60,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:unboundControls[1]/xsf:button[2]/xsf:ruleSetAction[1]"
+          },
+          "view": "HR"
+        }
+      ],
+      "unresolvedRefs": []
+    }
+  ],
+  "signatures": {
+    "blocks": [],
+    "signatureLines": []
+  },
+  "unknowns": [],
+  "validations": [
+    {
+      "expression": ". = \"\"",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+      "kind": "errorCondition",
+      "match": "/my:onboarding/my:newHire/my:hireName",
+      "matchId": "f:main:/my:onboarding/my:newHire/my:hireName",
+      "message": {
+        "shortMessage": "Cannot be blank",
+        "text": "This field is required.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 142,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[1]"
+      },
+      "unresolvedRefs": []
+    },
+    {
+      "expression": ". = \"\"",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+      "kind": "errorCondition",
+      "match": "/my:onboarding/my:newHire/my:hireStartDate",
+      "matchId": "f:main:/my:onboarding/my:newHire/my:hireStartDate",
+      "message": {
+        "shortMessage": "Cannot be blank",
+        "text": "This field is required.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 143,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[2]"
+      },
+      "unresolvedRefs": []
+    }
+  ],
+  "views": [
+    {
+      "caption": "HR",
+      "controls": [
+        {
+          "binding": "my:hireName",
+          "ctrlId": "CTRL1",
+          "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 6970,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:newHire/my:hireName",
+          "title": "Full name",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:hireStartDate",
+          "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 7508,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:newHire/my:hireStartDate",
+          "title": "Start date",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:hireTitle",
+          "ctrlId": "CTRL3",
+          "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 8481,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:newHire/my:hireTitle",
+          "title": "Job title",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:hireDept",
+          "ctrlId": "CTRL4",
+          "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 8907,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:newHire/my:hireDept",
+          "title": "Department",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:hireManager",
+          "ctrlId": "CTRL5",
+          "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 10222,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:newHire/my:hireManager",
+          "title": "Manager",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:annualSalary",
+          "ctrlId": "CTRL7",
+          "id": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 11136,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:employment/my:fullTime/my:annualSalary",
+          "title": "Annual salary",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:benefitsPlan",
+          "ctrlId": "CTRL8",
+          "id": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 12112,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:employment/my:fullTime/my:benefitsPlan",
+          "title": "Benefits plan",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:agencyName",
+          "ctrlId": "CTRL10",
+          "id": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 13623,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:employment/my:contractor/my:agencyName",
+          "title": "Agency",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:hourlyRate",
+          "ctrlId": "CTRL11",
+          "id": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 14050,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:employment/my:contractor/my:hourlyRate",
+          "title": "Hourly rate",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:contractEnd",
+          "id": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 15133,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:employment/my:contractor/my:contractEnd",
+          "title": "Contract end",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:needsLaptop",
+          "ctrlId": "CTRL15",
+          "id": "ctl:view1.xsl:/xsl:template[5]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 16539,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[5]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:equipment/my:needsLaptop",
+          "title": "Laptop",
+          "xctname": "CheckBox"
+        },
+        {
+          "binding": "my:needsPhone",
+          "ctrlId": "CTRL16",
+          "id": "ctl:view1.xsl:/xsl:template[5]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 17111,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[5]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:equipment/my:needsPhone",
+          "title": "Mobile phone",
+          "xctname": "CheckBox"
+        },
+        {
+          "binding": "my:needsMonitor",
+          "ctrlId": "CTRL17",
+          "id": "ctl:view1.xsl:/xsl:template[5]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 17692,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[5]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:equipment/my:needsMonitor",
+          "title": "Second monitor",
+          "xctname": "CheckBox"
+        },
+        {
+          "binding": "my:accountsNeeded",
+          "ctrlId": "CTRL18",
+          "id": "ctl:view1.xsl:/xsl:template[5]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 18298,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[5]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:equipment/my:accountsNeeded",
+          "title": "System accounts",
+          "xctname": "PlainText"
+        }
+      ],
+      "id": "view:/xsf:views[1]/xsf:view[1]",
+      "isDefault": true,
+      "isPrint": false,
+      "name": "HR",
+      "scanned": true,
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 33,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]"
+      },
+      "xslFile": "view1.xsl"
+    },
+    {
+      "caption": "IT",
+      "controls": [
+        {
+          "binding": "my:hireName",
+          "ctrlId": "CTRL1",
+          "id": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 6381,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:newHire/my:hireName",
+          "title": "Full name",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:hireStartDate",
+          "id": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 6919,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:newHire/my:hireStartDate",
+          "title": "Start date",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:hireTitle",
+          "ctrlId": "CTRL3",
+          "id": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 7892,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:newHire/my:hireTitle",
+          "title": "Job title",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:hireDept",
+          "ctrlId": "CTRL4",
+          "id": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 8318,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:newHire/my:hireDept",
+          "title": "Department",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:hireManager",
+          "ctrlId": "CTRL5",
+          "id": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 9633,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:newHire/my:hireManager",
+          "title": "Manager",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:needsLaptop",
+          "ctrlId": "CTRL7",
+          "id": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 10501,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:equipment/my:needsLaptop",
+          "title": "Laptop",
+          "xctname": "CheckBox"
+        },
+        {
+          "binding": "my:needsPhone",
+          "ctrlId": "CTRL8",
+          "id": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 11072,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:equipment/my:needsPhone",
+          "title": "Mobile phone",
+          "xctname": "CheckBox"
+        },
+        {
+          "binding": "my:needsMonitor",
+          "ctrlId": "CTRL9",
+          "id": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 11652,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:equipment/my:needsMonitor",
+          "title": "Second monitor",
+          "xctname": "CheckBox"
+        },
+        {
+          "binding": "my:accountsNeeded",
+          "ctrlId": "CTRL10",
+          "id": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 12257,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:equipment/my:accountsNeeded",
+          "title": "System accounts",
+          "xctname": "PlainText"
+        }
+      ],
+      "id": "view:/xsf:views[1]/xsf:view[2]",
+      "isDefault": false,
+      "isPrint": false,
+      "name": "IT",
+      "scanned": true,
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 66,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[2]"
+      },
+      "xslFile": "view2.xsl"
+    },
+    {
+      "caption": "Manager",
+      "controls": [
+        {
+          "binding": "my:welcomeNote",
+          "ctrlId": "CTRL16",
+          "id": "ctl:view3.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 6179,
+            "file": "view3.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:welcomeNote",
+          "title": "Welcome note",
+          "xctname": "RichText"
+        },
+        {
+          "binding": "my:hireName",
+          "ctrlId": "CTRL1",
+          "id": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 7106,
+            "file": "view3.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:newHire/my:hireName",
+          "title": "Full name",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:hireStartDate",
+          "id": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 7644,
+            "file": "view3.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:newHire/my:hireStartDate",
+          "title": "Start date",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:hireTitle",
+          "ctrlId": "CTRL3",
+          "id": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 8617,
+            "file": "view3.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:newHire/my:hireTitle",
+          "title": "Job title",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:hireDept",
+          "ctrlId": "CTRL4",
+          "id": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 9043,
+            "file": "view3.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:newHire/my:hireDept",
+          "title": "Department",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:hireManager",
+          "ctrlId": "CTRL5",
+          "id": "ctl:view3.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 10358,
+            "file": "view3.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:newHire/my:hireManager",
+          "title": "Manager",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:needsLaptop",
+          "ctrlId": "CTRL7",
+          "id": "ctl:view3.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 11226,
+            "file": "view3.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:equipment/my:needsLaptop",
+          "title": "Laptop",
+          "xctname": "CheckBox"
+        },
+        {
+          "binding": "my:needsPhone",
+          "ctrlId": "CTRL8",
+          "id": "ctl:view3.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 11797,
+            "file": "view3.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:equipment/my:needsPhone",
+          "title": "Mobile phone",
+          "xctname": "CheckBox"
+        },
+        {
+          "binding": "my:needsMonitor",
+          "ctrlId": "CTRL9",
+          "id": "ctl:view3.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 12377,
+            "file": "view3.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:equipment/my:needsMonitor",
+          "title": "Second monitor",
+          "xctname": "CheckBox"
+        },
+        {
+          "binding": "my:accountsNeeded",
+          "ctrlId": "CTRL10",
+          "id": "ctl:view3.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 12982,
+            "file": "view3.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:equipment/my:accountsNeeded",
+          "title": "System accounts",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:relocateFrom",
+          "ctrlId": "CTRL12",
+          "id": "ctl:view3.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 13898,
+            "file": "view3.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:relocation/my:relocateFrom",
+          "title": "Moving from",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:relocationAllowance",
+          "ctrlId": "CTRL13",
+          "id": "ctl:view3.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 14332,
+            "file": "view3.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:relocation/my:relocationAllowance",
+          "title": "Allowance",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:movingDate",
+          "id": "ctl:view3.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 15447,
+            "file": "view3.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:onboarding/my:relocation/my:movingDate",
+          "title": "Moving date",
+          "xctname": "DTPicker_DTText"
+        }
+      ],
+      "id": "view:/xsf:views[1]/xsf:view[3]",
+      "isDefault": false,
+      "isPrint": false,
+      "name": "Manager",
+      "scanned": true,
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 84,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[3]"
+      },
+      "xslFile": "view3.xsl"
+    }
+  ]
+}

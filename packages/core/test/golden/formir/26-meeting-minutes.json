@@ -1,0 +1,1020 @@
+{
+  "activeX": {
+    "allowed": [],
+    "controls": []
+  },
+  "calculations": [],
+  "codeBehind": {
+    "files": [],
+    "handlers": [],
+    "languages": [],
+    "present": false
+  },
+  "dataConnections": [],
+  "dependencies": {
+    "references": [
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:meetingMinutes/my:meetingTitle",
+        "text": "my:meetingTitle"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:meetingMinutes/my:meetingDate",
+        "text": "my:meetingDate"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:meetingMinutes/my:chair",
+        "text": "my:chair"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:meetingMinutes/my:decisions",
+        "text": "my:decisions"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:meetingMinutes/my:attendees/my:attendee/my:attendeeName",
+        "text": "my:attendeeName"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:meetingMinutes/my:attendees/my:attendee/my:attendeeOrg",
+        "text": "my:attendeeOrg"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[3]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:meetingMinutes/my:attendees/my:attendee/my:attendeePresent",
+        "text": "my:attendeePresent"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:meetingMinutes/my:actions/my:action/my:actionText",
+        "text": "my:actionText"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:meetingMinutes/my:actions/my:action/my:actionOwner",
+        "text": "my:actionOwner"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[3]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:meetingMinutes/my:actions/my:action/my:actionDue",
+        "text": "my:actionDue"
+      }
+    ]
+  },
+  "fields": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:meetingMinutes",
+      "id": "f:main:/my:meetingMinutes/my:meetingTitle",
+      "kind": "field",
+      "label": "Meeting",
+      "labelEvidence": {
+        "at": {
+          "column": 5504,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "meetingTitle",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:26:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:meetingMinutes/my:meetingTitle",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 16,
+        "path": "/xsd:schema[1]/xsd:element[2]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 6,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:meetingMinutes",
+      "id": "f:main:/my:meetingMinutes/my:meetingDate",
+      "kind": "field",
+      "label": "When",
+      "labelEvidence": {
+        "at": {
+          "column": 5914,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "meetingDate",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:26:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:meetingMinutes/my:meetingDate",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 17,
+        "path": "/xsd:schema[1]/xsd:element[3]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 7,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:dateTime",
+        "declared": "xsd:dateTime",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:meetingMinutes",
+      "id": "f:main:/my:meetingMinutes/my:chair",
+      "kind": "field",
+      "label": "Chair",
+      "labelEvidence": {
+        "at": {
+          "column": 7049,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "chair",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:26:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:meetingMinutes/my:chair",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 18,
+        "path": "/xsd:schema[1]/xsd:element[4]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 8,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:meetingMinutes/my:attendees/my:attendee",
+      "id": "f:main:/my:meetingMinutes/my:attendees/my:attendee/my:attendeeName",
+      "kind": "field",
+      "label": "Name",
+      "labelEvidence": {
+        "at": {
+          "column": 10098,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[1]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "attendeeName",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:26:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:meetingMinutes/my:attendees/my:attendee/my:attendeeName",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 35,
+        "path": "/xsd:schema[1]/xsd:element[7]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 29,
+        "path": "/xsd:schema[1]/xsd:element[6]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:meetingMinutes/my:attendees/my:attendee",
+      "id": "f:main:/my:meetingMinutes/my:attendees/my:attendee/my:attendeeOrg",
+      "kind": "field",
+      "label": "Organisation",
+      "labelEvidence": {
+        "at": {
+          "column": 10434,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "attendeeOrg",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:26:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:meetingMinutes/my:attendees/my:attendee/my:attendeeOrg",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 36,
+        "path": "/xsd:schema[1]/xsd:element[8]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 30,
+        "path": "/xsd:schema[1]/xsd:element[6]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[3]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[3]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:meetingMinutes/my:attendees/my:attendee",
+      "id": "f:main:/my:meetingMinutes/my:attendees/my:attendee/my:attendeePresent",
+      "kind": "field",
+      "label": "Present",
+      "labelEvidence": {
+        "at": {
+          "column": 10772,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[3]/div[1]/input[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "attendeePresent",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:26:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:meetingMinutes/my:attendees/my:attendee/my:attendeePresent",
+      "repeating": false,
+      "required": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 37,
+        "path": "/xsd:schema[1]/xsd:element[9]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 31,
+        "path": "/xsd:schema[1]/xsd:element[6]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:boolean",
+        "declared": "xsd:boolean",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:meetingMinutes",
+      "id": "f:main:/my:meetingMinutes/my:decisions",
+      "kind": "richText",
+      "label": "Decisions",
+      "labelEvidence": {
+        "at": {
+          "column": 8556,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "decisions",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:26:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:meetingMinutes/my:decisions",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 38,
+        "path": "/xsd:schema[1]/xsd:element[10]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 10,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[5]"
+      },
+      "xsdType": {
+        "builtin": "xsd:anyType",
+        "variety": "complex"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:meetingMinutes/my:actions/my:action",
+      "id": "f:main:/my:meetingMinutes/my:actions/my:action/my:actionText",
+      "kind": "field",
+      "label": "Action",
+      "labelEvidence": {
+        "at": {
+          "column": 11346,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[1]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "actionText",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:26:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:meetingMinutes/my:actions/my:action/my:actionText",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 61,
+        "path": "/xsd:schema[1]/xsd:element[13]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 55,
+        "path": "/xsd:schema[1]/xsd:element[12]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:meetingMinutes/my:actions/my:action",
+      "id": "f:main:/my:meetingMinutes/my:actions/my:action/my:actionOwner",
+      "kind": "field",
+      "label": "Owner",
+      "labelEvidence": {
+        "at": {
+          "column": 11680,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "actionOwner",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:26:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:meetingMinutes/my:actions/my:action/my:actionOwner",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 62,
+        "path": "/xsd:schema[1]/xsd:element[14]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 56,
+        "path": "/xsd:schema[1]/xsd:element[12]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[3]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[3]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:meetingMinutes/my:actions/my:action",
+      "id": "f:main:/my:meetingMinutes/my:actions/my:action/my:actionDue",
+      "kind": "field",
+      "label": "Due",
+      "labelEvidence": {
+        "at": {
+          "column": 12002,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[3]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "actionDue",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:26:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:meetingMinutes/my:actions/my:action/my:actionDue",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 63,
+        "path": "/xsd:schema[1]/xsd:element[15]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 57,
+        "path": "/xsd:schema[1]/xsd:element[12]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:date",
+        "declared": "xsd:date",
+        "variety": "atomic"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "id": "g:main:/my:meetingMinutes",
+      "kind": "group",
+      "label": "Meeting Minutes",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "meetingMinutes",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:26:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:meetingMinutes",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 3,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:meetingMinutes",
+      "id": "g:main:/my:meetingMinutes/my:attendees",
+      "kind": "group",
+      "label": "Attendees",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "attendees",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:26:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:meetingMinutes/my:attendees",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 19,
+        "path": "/xsd:schema[1]/xsd:element[5]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 9,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:meetingMinutes/my:attendees",
+      "id": "g:main:/my:meetingMinutes/my:attendees/my:attendee",
+      "kind": "group",
+      "label": "Attendee",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "attendee",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:26:00",
+      "nodeType": "element",
+      "optional": true,
+      "path": "/my:meetingMinutes/my:attendees/my:attendee",
+      "repeating": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 26,
+        "path": "/xsd:schema[1]/xsd:element[6]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 22,
+        "path": "/xsd:schema[1]/xsd:element[5]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:meetingMinutes",
+      "id": "g:main:/my:meetingMinutes/my:actions",
+      "kind": "group",
+      "label": "Actions",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "actions",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:26:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:meetingMinutes/my:actions",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 45,
+        "path": "/xsd:schema[1]/xsd:element[11]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 11,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[6]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:meetingMinutes/my:actions",
+      "id": "g:main:/my:meetingMinutes/my:actions/my:action",
+      "kind": "group",
+      "label": "Action",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "action",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:26:00",
+      "nodeType": "element",
+      "optional": true,
+      "path": "/my:meetingMinutes/my:actions/my:action",
+      "repeating": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 52,
+        "path": "/xsd:schema[1]/xsd:element[12]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 48,
+        "path": "/xsd:schema[1]/xsd:element[11]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    }
+  ],
+  "irVersion": 1,
+  "issues": [],
+  "meta": {
+    "browserCompatible": false,
+    "generation": "2013",
+    "generationEvidence": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]/@productVersion"
+    },
+    "name": "Meeting Minutes",
+    "nameSource": "caption",
+    "productVersion": "15.0.0",
+    "publishEndpoint": {
+      "attribute": "publishUrl",
+      "liveness": "internal",
+      "reason": "filePath",
+      "source": {
+        "column": 1,
+        "file": "manifest.xsf",
+        "line": 6,
+        "path": "/xsf:xDocumentClass[1]/@publishUrl"
+      },
+      "value": "C:\\forms\\26-meeting-minutes.xsn"
+    },
+    "publishUrl": "C:\\forms\\26-meeting-minutes.xsn",
+    "solutionFormatVersion": "2.0.0.0",
+    "solutionVersion": "1.0.0.1",
+    "source": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]"
+    },
+    "urn": "urn:schemas-microsoft-com:office:infopath:Meeting-Minutes:-myXSD-2026-11-04T09-26-00"
+  },
+  "rules": [],
+  "signatures": {
+    "blocks": [],
+    "signatureLines": []
+  },
+  "unknowns": [],
+  "validations": [],
+  "views": [
+    {
+      "caption": "Main",
+      "controls": [
+        {
+          "binding": "my:meetingTitle",
+          "ctrlId": "CTRL1",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5460,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:meetingMinutes/my:meetingTitle",
+          "title": "Meeting",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:meetingDate",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5992,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:meetingMinutes/my:meetingDate",
+          "title": "When",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:chair",
+          "ctrlId": "CTRL3",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 7005,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:meetingMinutes/my:chair",
+          "title": "Chair",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:decisions",
+          "ctrlId": "CTRL8",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 8508,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:meetingMinutes/my:decisions",
+          "title": "Decisions",
+          "xctname": "RichText"
+        },
+        {
+          "binding": "my:attendeeName",
+          "ctrlId": "CTRL4",
+          "id": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 10054,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:meetingMinutes/my:attendees/my:attendee/my:attendeeName",
+          "title": "Name",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:attendeeOrg",
+          "ctrlId": "CTRL5",
+          "id": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 10390,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:meetingMinutes/my:attendees/my:attendee/my:attendeeOrg",
+          "title": "Organisation",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:attendeePresent",
+          "ctrlId": "CTRL6",
+          "id": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[3]/div[1]/input[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 10732,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[3]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:meetingMinutes/my:attendees/my:attendee/my:attendeePresent",
+          "title": "Present",
+          "xctname": "CheckBox"
+        },
+        {
+          "binding": "my:actionText",
+          "ctrlId": "CTRL9",
+          "id": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[1]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 11302,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:meetingMinutes/my:actions/my:action/my:actionText",
+          "title": "Action",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:actionOwner",
+          "ctrlId": "CTRL10",
+          "id": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 11636,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:meetingMinutes/my:actions/my:action/my:actionOwner",
+          "title": "Owner",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:actionDue",
+          "id": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[3]/div[1]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 12080,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[3]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:meetingMinutes/my:actions/my:action/my:actionDue",
+          "title": "Due",
+          "xctname": "DTPicker_DTText"
+        }
+      ],
+      "id": "view:/xsf:views[1]/xsf:view[1]",
+      "isDefault": true,
+      "isPrint": false,
+      "name": "Main",
+      "scanned": true,
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 31,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]"
+      },
+      "xslFile": "view1.xsl"
+    }
+  ]
+}

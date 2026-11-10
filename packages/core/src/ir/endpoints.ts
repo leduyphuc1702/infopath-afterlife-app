@@ -2,77 +2,13 @@
 // `internal` only when the text proves it, `unknown` otherwise. There is no `dead`.
 
 import type { Located } from '../unknown';
+import { connectionPairs, redactSecrets } from '../xsf/credentials';
 import { loc } from './ids';
 import type { Endpoint, LivenessReason } from './types';
 
+export { connectionPairs, redactSecrets };
+
 const HOST_KEYS = ['data source', 'server', 'address', 'addr', 'network address'];
-const SECRET_KEY = /^\s*(password|pwd)\s*$/i;
-/** Spec 01's `containsCredential` test (R11.5). */
-export const HAS_CREDENTIAL = /(^|;)\s*(password|pwd)\s*=/i;
-
-interface Pair {
-  readonly key: string;
-  readonly value: string;
-  /** Offsets of the value (after `=`, to the end of the pair) in the string. */
-  readonly start: number;
-  readonly end: number;
-}
-
-/** `key=value` pairs split on `;`, with `"…"`, `'…'` and `{…}` values kept whole. */
-export function connectionPairs(s: string): Pair[] {
-  const out: Pair[] = [];
-  let i = 0;
-  while (i <= s.length) {
-    const eq = s.indexOf('=', i);
-    const semi = s.indexOf(';', i);
-    if (eq < 0 || (semi >= 0 && semi < eq)) {
-      if (semi < 0) break;
-      i = semi + 1;
-      continue;
-    }
-    const key = s.slice(i, eq);
-    let j = eq + 1;
-    while (j < s.length && /\s/.test(s[j]!)) j++;
-    const open = s[j];
-    const close = open === '"' || open === "'" ? open : open === '{' ? '}' : undefined;
-    if (close !== undefined) {
-      j++;
-      for (; j < s.length; j++) {
-        if (s[j] === close) {
-          if (close !== '}' && s[j + 1] === close) j++;
-          else break;
-        }
-      }
-      j++;
-    }
-    const end = s.indexOf(';', Math.min(j, s.length));
-    const stop = end < 0 ? s.length : end;
-    out.push({
-      key: key.trim().toLowerCase(),
-      value: s.slice(eq + 1, stop).trim(),
-      start: eq + 1,
-      end: stop,
-    });
-    i = stop + 1;
-  }
-  return out;
-}
-
-/** Every `Password`/`Pwd` value replaced by `***`; the rest byte for byte (R8.4). */
-export function redactSecrets(s: string): { readonly value: string; readonly redacted: boolean } {
-  if (!HAS_CREDENTIAL.test(s)) return { value: s, redacted: false };
-  let out = '';
-  let at = 0;
-  let redacted = false;
-  for (const p of connectionPairs(s)) {
-    if (!SECRET_KEY.test(p.key)) continue;
-    out += `${s.slice(at, p.start)}***`;
-    at = p.end;
-    redacted = true;
-  }
-  return { value: out + s.slice(at), redacted };
-}
-
 type Located2 = { host?: string } & (
   | { kind: 'file' }
   | { kind: 'package' }
@@ -157,8 +93,8 @@ export function hostReason(host: string): LivenessReason {
 }
 
 /**
- * One endpoint (design §8). `value` is the attribute value as written, with any `Password` or
- * `Pwd` value redacted before it is stored. `packageFiles`: lower-case names of the template's files.
+ * One endpoint (design §8). `value` is the attribute value as written, with every secret
+ * (`redactSecrets`) redacted before it is stored. `packageFiles`: lower-case names of the template's files.
  */
 export function classifyEndpoint(
   attribute: string,
@@ -167,7 +103,7 @@ export function classifyEndpoint(
   packageFiles: ReadonlySet<string>,
 ): Endpoint {
   const where = locate(attribute, value, packageFiles);
-  // Redacted whatever the attribute: a URL can carry `;Password=` too (R8.4).
+  // Redacted whatever the attribute: a URL can carry a userinfo password or `;Password=` (R8.4).
   const stored = redactSecrets(value).value;
   const base = { attribute, value: stored, source: loc(at) };
   const host =

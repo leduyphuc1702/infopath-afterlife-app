@@ -1,0 +1,802 @@
+{
+  "activeX": {
+    "allowed": [],
+    "controls": []
+  },
+  "calculations": [
+    {
+      "expression": "xdMath:Nz(../my:itemQty) * xdMath:Nz(../my:itemPrice)",
+      "id": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+      "refresh": "onChange",
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 67,
+        "path": "/xsf:xDocumentClass[1]/xsf:calculations[1]/xsf:calculatedField[1]"
+      },
+      "target": "/my:stationeryOrder/my:items/my:item/my:itemTotal",
+      "targetId": "f:main:/my:stationeryOrder/my:items/my:item/my:itemTotal",
+      "unresolvedRefs": []
+    },
+    {
+      "expression": "sum(xdMath:Nz(../my:items/my:item/my:itemTotal))",
+      "id": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+      "refresh": "onChange",
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 68,
+        "path": "/xsf:xDocumentClass[1]/xsf:calculations[1]/xsf:calculatedField[2]"
+      },
+      "target": "/my:stationeryOrder/my:orderTotal",
+      "targetId": "f:main:/my:stationeryOrder/my:orderTotal",
+      "unresolvedRefs": []
+    }
+  ],
+  "codeBehind": {
+    "files": [],
+    "handlers": [],
+    "languages": [],
+    "present": false
+  },
+  "dataConnections": [],
+  "dependencies": {
+    "references": [
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:stationeryOrder/my:ordererName",
+        "text": "my:ordererName"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:stationeryOrder/my:deliverTo",
+        "text": "my:deliverTo"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:stationeryOrder/my:orderTotal",
+        "text": "my:orderTotal"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:stationeryOrder/my:items/my:item/my:itemText",
+        "text": "my:itemText"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:stationeryOrder/my:items/my:item/my:itemQty",
+        "text": "my:itemQty"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[3]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:stationeryOrder/my:items/my:item/my:itemPrice",
+        "text": "my:itemPrice"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[4]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:stationeryOrder/my:items/my:item/my:itemTotal",
+        "text": "my:itemTotal"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+        "role": "calcTarget",
+        "targetId": "f:main:/my:stationeryOrder/my:items/my:item/my:itemTotal",
+        "text": "/my:stationeryOrder/my:items/my:item/my:itemTotal"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+        "role": "calcExpression",
+        "targetId": "f:main:/my:stationeryOrder/my:items/my:item/my:itemQty",
+        "text": "../my:itemQty"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+        "role": "calcExpression",
+        "targetId": "f:main:/my:stationeryOrder/my:items/my:item/my:itemPrice",
+        "text": "../my:itemPrice"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+        "role": "calcTarget",
+        "targetId": "f:main:/my:stationeryOrder/my:orderTotal",
+        "text": "/my:stationeryOrder/my:orderTotal"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+        "role": "calcExpression",
+        "targetId": "f:main:/my:stationeryOrder/my:items/my:item/my:itemTotal",
+        "text": "../my:items/my:item/my:itemTotal"
+      }
+    ]
+  },
+  "fields": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:stationeryOrder",
+      "id": "f:main:/my:stationeryOrder/my:ordererName",
+      "kind": "field",
+      "label": "Orderer",
+      "labelEvidence": {
+        "at": {
+          "column": 5506,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "ordererName",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:35:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:stationeryOrder/my:ordererName",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 14,
+        "path": "/xsd:schema[1]/xsd:element[2]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 6,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:stationeryOrder",
+      "id": "f:main:/my:stationeryOrder/my:deliverTo",
+      "kind": "field",
+      "label": "Deliver to",
+      "labelEvidence": {
+        "at": {
+          "column": 5934,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "deliverTo",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:35:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:stationeryOrder/my:deliverTo",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 15,
+        "path": "/xsd:schema[1]/xsd:element[3]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 7,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:stationeryOrder/my:items/my:item",
+      "id": "f:main:/my:stationeryOrder/my:items/my:item/my:itemText",
+      "kind": "field",
+      "label": "Item",
+      "labelEvidence": {
+        "at": {
+          "column": 8608,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[1]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "itemText",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:35:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:stationeryOrder/my:items/my:item/my:itemText",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 33,
+        "path": "/xsd:schema[1]/xsd:element[6]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 26,
+        "path": "/xsd:schema[1]/xsd:element[5]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+            "role": "calcExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:stationeryOrder/my:items/my:item",
+      "id": "f:main:/my:stationeryOrder/my:items/my:item/my:itemQty",
+      "kind": "field",
+      "label": "Qty",
+      "labelEvidence": {
+        "at": {
+          "column": 8958,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "itemQty",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:35:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:stationeryOrder/my:items/my:item/my:itemQty",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 34,
+        "path": "/xsd:schema[1]/xsd:element[7]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 27,
+        "path": "/xsd:schema[1]/xsd:element[5]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:integer",
+        "declared": "xsd:integer",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+            "role": "calcExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[3]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[3]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:stationeryOrder/my:items/my:item",
+      "id": "f:main:/my:stationeryOrder/my:items/my:item/my:itemPrice",
+      "kind": "field",
+      "label": "Unit price",
+      "labelEvidence": {
+        "at": {
+          "column": 9756,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[3]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "itemPrice",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:35:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:stationeryOrder/my:items/my:item/my:itemPrice",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 35,
+        "path": "/xsd:schema[1]/xsd:element[8]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 28,
+        "path": "/xsd:schema[1]/xsd:element[5]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+            "role": "calcExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[4]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+            "role": "calcTarget"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[4]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:stationeryOrder/my:items/my:item",
+      "id": "f:main:/my:stationeryOrder/my:items/my:item/my:itemTotal",
+      "kind": "field",
+      "label": "Total",
+      "labelEvidence": {
+        "at": {
+          "column": 10623,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[4]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "itemTotal",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:35:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:stationeryOrder/my:items/my:item/my:itemTotal",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 36,
+        "path": "/xsd:schema[1]/xsd:element[9]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 29,
+        "path": "/xsd:schema[1]/xsd:element[5]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+            "role": "calcTarget"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:stationeryOrder",
+      "id": "f:main:/my:stationeryOrder/my:orderTotal",
+      "kind": "field",
+      "label": "Order total",
+      "labelEvidence": {
+        "at": {
+          "column": 7596,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Main"
+      },
+      "labelSource": "title",
+      "name": "orderTotal",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:35:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:stationeryOrder/my:orderTotal",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 37,
+        "path": "/xsd:schema[1]/xsd:element[10]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 9,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "id": "g:main:/my:stationeryOrder",
+      "kind": "group",
+      "label": "Stationery Order",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "stationeryOrder",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:35:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:stationeryOrder",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 3,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:stationeryOrder",
+      "id": "g:main:/my:stationeryOrder/my:items",
+      "kind": "group",
+      "label": "Items",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "items",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:35:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:stationeryOrder/my:items",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 16,
+        "path": "/xsd:schema[1]/xsd:element[4]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 8,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:stationeryOrder/my:items",
+      "id": "g:main:/my:stationeryOrder/my:items/my:item",
+      "kind": "group",
+      "label": "Item",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "item",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:35:00",
+      "nodeType": "element",
+      "optional": true,
+      "path": "/my:stationeryOrder/my:items/my:item",
+      "repeating": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 23,
+        "path": "/xsd:schema[1]/xsd:element[5]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 19,
+        "path": "/xsd:schema[1]/xsd:element[4]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    }
+  ],
+  "irVersion": 1,
+  "issues": [],
+  "meta": {
+    "browserCompatible": false,
+    "generation": "2013",
+    "generationEvidence": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]/@productVersion"
+    },
+    "name": "Stationery Order",
+    "nameSource": "caption",
+    "productVersion": "15.0.0",
+    "publishEndpoint": {
+      "attribute": "publishUrl",
+      "liveness": "internal",
+      "reason": "filePath",
+      "source": {
+        "column": 1,
+        "file": "manifest.xsf",
+        "line": 6,
+        "path": "/xsf:xDocumentClass[1]/@publishUrl"
+      },
+      "value": "C:\\forms\\35-stationery-order.xsn"
+    },
+    "publishUrl": "C:\\forms\\35-stationery-order.xsn",
+    "solutionFormatVersion": "2.0.0.0",
+    "solutionVersion": "1.0.0.1",
+    "source": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]"
+    },
+    "urn": "urn:schemas-microsoft-com:office:infopath:Stationery-Order:-myXSD-2026-11-04T09-35-00"
+  },
+  "rules": [],
+  "signatures": {
+    "blocks": [],
+    "signatureLines": []
+  },
+  "unknowns": [],
+  "validations": [],
+  "views": [
+    {
+      "caption": "Main",
+      "controls": [
+        {
+          "binding": "my:ordererName",
+          "ctrlId": "CTRL1",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5462,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:stationeryOrder/my:ordererName",
+          "title": "Orderer",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:deliverTo",
+          "ctrlId": "CTRL2",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5890,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:stationeryOrder/my:deliverTo",
+          "title": "Deliver to",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:orderTotal",
+          "ctrlId": "CTRL8",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 7530,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:stationeryOrder/my:orderTotal",
+          "title": "Order total",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:itemText",
+          "ctrlId": "CTRL3",
+          "id": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[1]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 8564,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:stationeryOrder/my:items/my:item/my:itemText",
+          "title": "Item",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:itemQty",
+          "ctrlId": "CTRL4",
+          "id": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 8892,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:stationeryOrder/my:items/my:item/my:itemQty",
+          "title": "Qty",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:itemPrice",
+          "ctrlId": "CTRL5",
+          "id": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[3]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 9690,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[3]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:stationeryOrder/my:items/my:item/my:itemPrice",
+          "title": "Unit price",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:itemTotal",
+          "ctrlId": "CTRL6",
+          "id": "ctl:view1.xsl:/xsl:template[2]/tr[1]/td[4]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 10557,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[4]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:stationeryOrder/my:items/my:item/my:itemTotal",
+          "title": "Total",
+          "xctname": "PlainText"
+        }
+      ],
+      "id": "view:/xsf:views[1]/xsf:view[1]",
+      "isDefault": true,
+      "isPrint": false,
+      "name": "Main",
+      "scanned": true,
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 31,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]"
+      },
+      "xslFile": "view1.xsl"
+    }
+  ]
+}

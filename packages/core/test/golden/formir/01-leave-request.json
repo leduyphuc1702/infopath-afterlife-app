@@ -1,0 +1,1368 @@
+{
+  "activeX": {
+    "allowed": [],
+    "controls": []
+  },
+  "calculations": [],
+  "codeBehind": {
+    "files": [],
+    "handlers": [],
+    "languages": [],
+    "present": false
+  },
+  "dataConnections": [
+    {
+      "adapterKind": "emailAdapter",
+      "attrs": {
+        "name": "Main submit",
+        "submitAllowed": "yes"
+      },
+      "children": [
+        {
+          "attrs": {
+            "value": "my:managerEmail",
+            "valueType": "expression"
+          },
+          "kind": "to",
+          "source": {
+            "column": 4,
+            "file": "manifest.xsf",
+            "line": 61,
+            "path": "/xsf:xDocumentClass[1]/xsf:submit[1]/xsf:emailAdapter[1]/xsf:to[1]"
+          }
+        },
+        {
+          "attrs": {
+            "value": "Leave Request",
+            "valueType": "literal"
+          },
+          "kind": "subject",
+          "source": {
+            "column": 4,
+            "file": "manifest.xsf",
+            "line": 62,
+            "path": "/xsf:xDocumentClass[1]/xsf:submit[1]/xsf:emailAdapter[1]/xsf:subject[1]"
+          }
+        },
+        {
+          "attrs": {
+            "value": "This message was created by a Microsoft InfoPath form."
+          },
+          "kind": "intro",
+          "source": {
+            "column": 4,
+            "file": "manifest.xsf",
+            "line": 63,
+            "path": "/xsf:xDocumentClass[1]/xsf:submit[1]/xsf:emailAdapter[1]/xsf:intro[1]"
+          }
+        },
+        {
+          "attrs": {
+            "value": "Leave Request",
+            "valueType": "literal"
+          },
+          "kind": "attachmentFileName",
+          "source": {
+            "column": 4,
+            "file": "manifest.xsf",
+            "line": 64,
+            "path": "/xsf:xDocumentClass[1]/xsf:submit[1]/xsf:emailAdapter[1]/xsf:attachmentFileName[1]"
+          }
+        }
+      ],
+      "credentialRedacted": false,
+      "endpoints": [],
+      "id": "conn:/xsf:submit[1]/xsf:emailAdapter[1]",
+      "isQuery": false,
+      "isSubmit": true,
+      "lineage": {
+        "fieldIds": [],
+        "usedBy": []
+      },
+      "name": "Main submit",
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 60,
+        "path": "/xsf:xDocumentClass[1]/xsf:submit[1]/xsf:emailAdapter[1]"
+      },
+      "unresolvedRefs": []
+    }
+  ],
+  "dependencies": {
+    "references": [
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:leaveRequest/my:employeeName",
+        "text": "my:employeeName"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:leaveRequest/my:employeeId",
+        "text": "my:employeeId"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:leaveRequest/my:department",
+        "text": "my:department"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:leaveRequest/my:requestDate",
+        "text": "my:requestDate"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:leaveRequest/my:leaveType",
+        "text": "my:leaveType"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[2]",
+        "role": "binding",
+        "targetId": "f:main:/my:leaveRequest/my:leaveType",
+        "text": "my:leaveType"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[3]",
+        "role": "binding",
+        "targetId": "f:main:/my:leaveRequest/my:leaveType",
+        "text": "my:leaveType"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:leaveRequest/my:startDate",
+        "text": "my:startDate"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:leaveRequest/my:endDate",
+        "text": "my:endDate"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[8]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:leaveRequest/my:daysRequested",
+        "text": "my:daysRequested"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[9]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:leaveRequest/my:reason",
+        "text": "my:reason"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[10]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:leaveRequest/my:managerEmail",
+        "text": "my:managerEmail"
+      },
+      {
+        "elementId": "rule:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]",
+        "role": "condition",
+        "targetId": "f:main:/my:leaveRequest/my:requestDate",
+        "text": "my:requestDate"
+      },
+      {
+        "elementId": "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[1]",
+        "role": "assignmentTarget",
+        "targetId": "f:main:/my:leaveRequest/my:requestDate",
+        "text": "my:requestDate"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:leaveRequest/my:employeeName",
+        "text": "/my:leaveRequest/my:employeeName"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:leaveRequest/my:employeeName",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:leaveRequest/my:employeeId",
+        "text": "/my:leaveRequest/my:employeeId"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:leaveRequest/my:employeeId",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:leaveRequest/my:startDate",
+        "text": "/my:leaveRequest/my:startDate"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:leaveRequest/my:startDate",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[4]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:leaveRequest/my:endDate",
+        "text": "/my:leaveRequest/my:endDate"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[4]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:leaveRequest/my:endDate",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[5]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:leaveRequest/my:endDate",
+        "text": "/my:leaveRequest/my:endDate"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[5]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:leaveRequest/my:endDate",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[5]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:leaveRequest/my:startDate",
+        "text": "../my:startDate"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[6]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:leaveRequest/my:daysRequested",
+        "text": "/my:leaveRequest/my:daysRequested"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[6]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:leaveRequest/my:daysRequested",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[6]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:leaveRequest/my:daysRequested",
+        "text": "."
+      },
+      {
+        "elementId": "conn:/xsf:submit[1]/xsf:emailAdapter[1]",
+        "role": "submitValue",
+        "targetId": "f:main:/my:leaveRequest/my:managerEmail",
+        "text": "my:managerEmail"
+      }
+    ]
+  },
+  "fields": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:leaveRequest",
+      "id": "f:main:/my:leaveRequest/my:employeeName",
+      "kind": "field",
+      "label": "Employee name",
+      "labelEvidence": {
+        "at": {
+          "column": 5509,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "employeeName",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:00:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:leaveRequest/my:employeeName",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 20,
+        "path": "/xsd:schema[1]/xsd:element[2]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 6,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:leaveRequest",
+      "id": "f:main:/my:leaveRequest/my:employeeId",
+      "kind": "field",
+      "label": "Employee ID",
+      "labelEvidence": {
+        "at": {
+          "column": 5946,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "employeeId",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:00:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:leaveRequest/my:employeeId",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 21,
+        "path": "/xsd:schema[1]/xsd:element[3]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 7,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:leaveRequest",
+      "id": "f:main:/my:leaveRequest/my:department",
+      "kind": "field",
+      "label": "Department",
+      "labelEvidence": {
+        "at": {
+          "column": 6383,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "department",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:00:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:leaveRequest/my:department",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 22,
+        "path": "/xsd:schema[1]/xsd:element[4]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 8,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "rule:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]",
+            "role": "condition"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[1]",
+            "role": "assignmentTarget"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:leaveRequest",
+      "id": "f:main:/my:leaveRequest/my:requestDate",
+      "kind": "field",
+      "label": "Request date",
+      "labelEvidence": {
+        "at": {
+          "column": 7698,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "requestDate",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:00:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:leaveRequest/my:requestDate",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 23,
+        "path": "/xsd:schema[1]/xsd:element[5]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 9,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      },
+      "xsdType": {
+        "builtin": "xsd:date",
+        "declared": "xsd:date",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[2]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[3]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[2]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[3]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:leaveRequest",
+      "id": "f:main:/my:leaveRequest/my:leaveType",
+      "kind": "field",
+      "label": "Leave type",
+      "labelEvidence": {
+        "at": {
+          "column": 8790,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "leaveType",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:00:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:leaveRequest/my:leaveType",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 24,
+        "path": "/xsd:schema[1]/xsd:element[6]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 10,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[5]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[5]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:leaveRequest",
+      "id": "f:main:/my:leaveRequest/my:startDate",
+      "kind": "field",
+      "label": "First day of leave",
+      "labelEvidence": {
+        "at": {
+          "column": 10430,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "startDate",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:00:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:leaveRequest/my:startDate",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 25,
+        "path": "/xsd:schema[1]/xsd:element[7]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 11,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[6]"
+      },
+      "xsdType": {
+        "builtin": "xsd:date",
+        "declared": "xsd:date",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[4]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[5]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[4]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[5]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:leaveRequest",
+      "id": "f:main:/my:leaveRequest/my:endDate",
+      "kind": "field",
+      "label": "Last day of leave",
+      "labelEvidence": {
+        "at": {
+          "column": 11517,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "endDate",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:00:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:leaveRequest/my:endDate",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 26,
+        "path": "/xsd:schema[1]/xsd:element[8]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 12,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[7]"
+      },
+      "xsdType": {
+        "builtin": "xsd:date",
+        "declared": "xsd:date",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[6]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[6]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[8]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[8]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:leaveRequest",
+      "id": "f:main:/my:leaveRequest/my:daysRequested",
+      "kind": "field",
+      "label": "Working days",
+      "labelEvidence": {
+        "at": {
+          "column": 12626,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[8]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "daysRequested",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:00:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:leaveRequest/my:daysRequested",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 27,
+        "path": "/xsd:schema[1]/xsd:element[9]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 13,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[8]"
+      },
+      "xsdType": {
+        "builtin": "xsd:integer",
+        "declared": "xsd:integer",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[9]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[9]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:leaveRequest",
+      "id": "f:main:/my:leaveRequest/my:reason",
+      "kind": "field",
+      "label": "Reason",
+      "labelEvidence": {
+        "at": {
+          "column": 13523,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[9]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "reason",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:00:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:leaveRequest/my:reason",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 28,
+        "path": "/xsd:schema[1]/xsd:element[10]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 14,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[9]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[10]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "conn:/xsf:submit[1]/xsf:emailAdapter[1]",
+            "role": "submitValue"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[10]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:leaveRequest",
+      "id": "f:main:/my:leaveRequest/my:managerEmail",
+      "kind": "field",
+      "label": "Manager e-mail",
+      "labelEvidence": {
+        "at": {
+          "column": 13945,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[10]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "managerEmail",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:00:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:leaveRequest/my:managerEmail",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 29,
+        "path": "/xsd:schema[1]/xsd:element[11]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 15,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[10]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "id": "g:main:/my:leaveRequest",
+      "kind": "group",
+      "label": "Leave Request",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "leaveRequest",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:00:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:leaveRequest",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 3,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      }
+    }
+  ],
+  "irVersion": 1,
+  "issues": [],
+  "meta": {
+    "browserCompatible": false,
+    "generation": "2013",
+    "generationEvidence": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]/@productVersion"
+    },
+    "name": "Leave Request",
+    "nameSource": "caption",
+    "productVersion": "15.0.0",
+    "publishEndpoint": {
+      "attribute": "publishUrl",
+      "liveness": "internal",
+      "reason": "filePath",
+      "source": {
+        "column": 1,
+        "file": "manifest.xsf",
+        "line": 6,
+        "path": "/xsf:xDocumentClass[1]/@publishUrl"
+      },
+      "value": "C:\\forms\\01-leave-request.xsn"
+    },
+    "publishUrl": "C:\\forms\\01-leave-request.xsn",
+    "solutionFormatVersion": "2.0.0.0",
+    "solutionVersion": "1.0.0.1",
+    "source": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]"
+    },
+    "urn": "urn:schemas-microsoft-com:office:infopath:Leave-Request:-myXSD-2026-11-03T08-00-00"
+  },
+  "rules": [
+    {
+      "actions": [
+        {
+          "attrs": {
+            "expression": "xdDate:Today()",
+            "targetField": "my:requestDate"
+          },
+          "id": "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[1]",
+          "kind": "assignmentAction",
+          "source": {
+            "column": 5,
+            "file": "manifest.xsf",
+            "line": 70,
+            "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[1]"
+          }
+        }
+      ],
+      "caption": "Default request date",
+      "condition": "not(string(my:requestDate))",
+      "enabled": true,
+      "id": "rule:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]",
+      "ruleSet": "setToday",
+      "source": {
+        "column": 4,
+        "file": "manifest.xsf",
+        "line": 69,
+        "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]"
+      },
+      "stopProcessing": false,
+      "triggers": [
+        {
+          "kind": "onLoad",
+          "source": {
+            "column": 14,
+            "file": "manifest.xsf",
+            "line": 73,
+            "path": "/xsf:xDocumentClass[1]/xsf:onLoad[1]/xsf:ruleSetAction[1]"
+          }
+        }
+      ],
+      "unresolvedRefs": []
+    }
+  ],
+  "signatures": {
+    "blocks": [],
+    "signatureLines": []
+  },
+  "unknowns": [],
+  "validations": [
+    {
+      "expression": ". = \"\"",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+      "kind": "errorCondition",
+      "match": "/my:leaveRequest/my:employeeName",
+      "matchId": "f:main:/my:leaveRequest/my:employeeName",
+      "message": {
+        "shortMessage": "Cannot be blank",
+        "text": "This field is required.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 79,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[1]"
+      },
+      "unresolvedRefs": []
+    },
+    {
+      "expression": ". = \"\"",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+      "kind": "errorCondition",
+      "match": "/my:leaveRequest/my:employeeId",
+      "matchId": "f:main:/my:leaveRequest/my:employeeId",
+      "message": {
+        "shortMessage": "Cannot be blank",
+        "text": "This field is required.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 80,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[2]"
+      },
+      "unresolvedRefs": []
+    },
+    {
+      "expression": ". = \"\"",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+      "kind": "errorCondition",
+      "match": "/my:leaveRequest/my:startDate",
+      "matchId": "f:main:/my:leaveRequest/my:startDate",
+      "message": {
+        "shortMessage": "Cannot be blank",
+        "text": "This field is required.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 81,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[3]"
+      },
+      "unresolvedRefs": []
+    },
+    {
+      "expression": ". = \"\"",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[4]",
+      "kind": "errorCondition",
+      "match": "/my:leaveRequest/my:endDate",
+      "matchId": "f:main:/my:leaveRequest/my:endDate",
+      "message": {
+        "shortMessage": "Cannot be blank",
+        "text": "This field is required.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 82,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[4]"
+      },
+      "unresolvedRefs": []
+    },
+    {
+      "expression": "msxsl:string-compare(., ../my:startDate) < 0",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[5]",
+      "kind": "errorCondition",
+      "match": "/my:leaveRequest/my:endDate",
+      "matchId": "f:main:/my:leaveRequest/my:endDate",
+      "message": {
+        "shortMessage": "End before start",
+        "text": "The last day of leave cannot be before the first day.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 83,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[5]"
+      },
+      "unresolvedRefs": []
+    },
+    {
+      "expression": ". < 1 or . > 30",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[6]",
+      "kind": "errorCondition",
+      "match": "/my:leaveRequest/my:daysRequested",
+      "matchId": "f:main:/my:leaveRequest/my:daysRequested",
+      "message": {
+        "shortMessage": "1 to 30 days",
+        "text": "Working days must be between 1 and 30.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 84,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[6]"
+      },
+      "unresolvedRefs": []
+    }
+  ],
+  "views": [
+    {
+      "caption": "Request",
+      "controls": [
+        {
+          "binding": "my:employeeName",
+          "ctrlId": "CTRL1",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5465,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:leaveRequest/my:employeeName",
+          "title": "Employee name",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:employeeId",
+          "ctrlId": "CTRL2",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5902,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:leaveRequest/my:employeeId",
+          "title": "Employee ID",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:department",
+          "ctrlId": "CTRL3",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 6332,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:leaveRequest/my:department",
+          "title": "Department",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:requestDate",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 7784,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:leaveRequest/my:requestDate",
+          "title": "Request date",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:leaveType",
+          "choice": {
+            "label": "Annual",
+            "value": "Annual"
+          },
+          "ctrlId": "CTRL5",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 8750,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:leaveRequest/my:leaveType",
+          "title": "Leave type",
+          "xctname": "OptionButton"
+        },
+        {
+          "binding": "my:leaveType",
+          "choice": {
+            "label": "Sick",
+            "value": "Sick"
+          },
+          "ctrlId": "CTRL6",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[2]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 9245,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[2]"
+          },
+          "targetId": "f:main:/my:leaveRequest/my:leaveType",
+          "title": "Leave type",
+          "xctname": "OptionButton"
+        },
+        {
+          "binding": "my:leaveType",
+          "choice": {
+            "label": "Unpaid",
+            "value": "Unpaid"
+          },
+          "ctrlId": "CTRL7",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[3]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 9734,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[3]"
+          },
+          "targetId": "f:main:/my:leaveRequest/my:leaveType",
+          "title": "Leave type",
+          "xctname": "OptionButton"
+        },
+        {
+          "binding": "my:startDate",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 10522,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:leaveRequest/my:startDate",
+          "title": "First day of leave",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:endDate",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 11608,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:leaveRequest/my:endDate",
+          "title": "Last day of leave",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:daysRequested",
+          "ctrlId": "CTRL10",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[8]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 12560,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[8]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:leaveRequest/my:daysRequested",
+          "title": "Working days",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:reason",
+          "ctrlId": "CTRL11",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[9]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 13479,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[9]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:leaveRequest/my:reason",
+          "title": "Reason",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:managerEmail",
+          "ctrlId": "CTRL12",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[10]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 13901,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[10]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:leaveRequest/my:managerEmail",
+          "title": "Manager e-mail",
+          "xctname": "PlainText"
+        }
+      ],
+      "id": "view:/xsf:views[1]/xsf:view[1]",
+      "isDefault": true,
+      "isPrint": false,
+      "name": "Request",
+      "scanned": true,
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 31,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]"
+      },
+      "xslFile": "view1.xsl"
+    }
+  ]
+}

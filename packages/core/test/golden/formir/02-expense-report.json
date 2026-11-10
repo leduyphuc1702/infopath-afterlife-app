@@ -1,0 +1,1389 @@
+{
+  "activeX": {
+    "allowed": [],
+    "controls": []
+  },
+  "calculations": [
+    {
+      "expression": "sum(xdMath:Nz(../my:expenses/my:expense/my:amount))",
+      "id": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+      "refresh": "onChange",
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 81,
+        "path": "/xsf:xDocumentClass[1]/xsf:calculations[1]/xsf:calculatedField[1]"
+      },
+      "target": "/my:expenseClaim/my:totalAmount",
+      "targetId": "f:main:/my:expenseClaim/my:totalAmount",
+      "unresolvedRefs": []
+    }
+  ],
+  "codeBehind": {
+    "files": [],
+    "handlers": [],
+    "languages": [],
+    "present": false
+  },
+  "dataConnections": [
+    {
+      "adapterKind": "emailAdapter",
+      "attrs": {
+        "name": "Main submit",
+        "submitAllowed": "yes"
+      },
+      "children": [
+        {
+          "attrs": {
+            "value": "my:approverEmail",
+            "valueType": "expression"
+          },
+          "kind": "to",
+          "source": {
+            "column": 4,
+            "file": "manifest.xsf",
+            "line": 73,
+            "path": "/xsf:xDocumentClass[1]/xsf:submit[1]/xsf:emailAdapter[1]/xsf:to[1]"
+          }
+        },
+        {
+          "attrs": {
+            "value": "Expense Report",
+            "valueType": "literal"
+          },
+          "kind": "subject",
+          "source": {
+            "column": 4,
+            "file": "manifest.xsf",
+            "line": 74,
+            "path": "/xsf:xDocumentClass[1]/xsf:submit[1]/xsf:emailAdapter[1]/xsf:subject[1]"
+          }
+        },
+        {
+          "attrs": {
+            "value": "This message was created by a Microsoft InfoPath form."
+          },
+          "kind": "intro",
+          "source": {
+            "column": 4,
+            "file": "manifest.xsf",
+            "line": 75,
+            "path": "/xsf:xDocumentClass[1]/xsf:submit[1]/xsf:emailAdapter[1]/xsf:intro[1]"
+          }
+        },
+        {
+          "attrs": {
+            "value": "Expense Report",
+            "valueType": "literal"
+          },
+          "kind": "attachmentFileName",
+          "source": {
+            "column": 4,
+            "file": "manifest.xsf",
+            "line": 76,
+            "path": "/xsf:xDocumentClass[1]/xsf:submit[1]/xsf:emailAdapter[1]/xsf:attachmentFileName[1]"
+          }
+        }
+      ],
+      "credentialRedacted": false,
+      "endpoints": [],
+      "id": "conn:/xsf:submit[1]/xsf:emailAdapter[1]",
+      "isQuery": false,
+      "isSubmit": true,
+      "lineage": {
+        "fieldIds": [],
+        "usedBy": []
+      },
+      "name": "Main submit",
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 72,
+        "path": "/xsf:xDocumentClass[1]/xsf:submit[1]/xsf:emailAdapter[1]"
+      },
+      "unresolvedRefs": []
+    }
+  ],
+  "dependencies": {
+    "references": [
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:expenseClaim/my:businessPurpose",
+        "text": "my:businessPurpose"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:expenseClaim/my:claimCurrency",
+        "text": "my:claimCurrency"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:expenseClaim/my:totalAmount",
+        "text": "my:totalAmount"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:expenseClaim/my:approverEmail",
+        "text": "my:approverEmail"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:expenseClaim/my:claimant/my:claimantName",
+        "text": "my:claimantName"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:expenseClaim/my:claimant/my:claimantId",
+        "text": "my:claimantId"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:expenseClaim/my:claimant/my:claimantDept",
+        "text": "my:claimantDept"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[1]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:expenseClaim/my:expenses/my:expense/my:expenseDate",
+        "text": "my:expenseDate"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:expenseClaim/my:expenses/my:expense/my:expenseType",
+        "text": "my:expenseType"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[3]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:expenseClaim/my:expenses/my:expense/my:expenseDescription",
+        "text": "my:expenseDescription"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[4]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:expenseClaim/my:expenses/my:expense/my:amount",
+        "text": "my:amount"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[5]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:expenseClaim/my:expenses/my:expense/my:receipt",
+        "text": "my:receipt"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+        "role": "calcTarget",
+        "targetId": "f:main:/my:expenseClaim/my:totalAmount",
+        "text": "/my:expenseClaim/my:totalAmount"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+        "role": "calcExpression",
+        "targetId": "f:main:/my:expenseClaim/my:expenses/my:expense/my:amount",
+        "text": "../my:expenses/my:expense/my:amount"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:expenseClaim/my:claimant/my:claimantName",
+        "text": "/my:expenseClaim/my:claimant/my:claimantName"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:expenseClaim/my:claimant/my:claimantName",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:expenseClaim/my:businessPurpose",
+        "text": "/my:expenseClaim/my:businessPurpose"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:expenseClaim/my:businessPurpose",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:expenseClaim/my:expenses/my:expense/my:amount",
+        "text": "/my:expenseClaim/my:expenses/my:expense/my:amount"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:expenseClaim/my:expenses/my:expense/my:amount",
+        "text": "."
+      },
+      {
+        "elementId": "conn:/xsf:submit[1]/xsf:emailAdapter[1]",
+        "role": "submitValue",
+        "targetId": "f:main:/my:expenseClaim/my:approverEmail",
+        "text": "my:approverEmail"
+      }
+    ]
+  },
+  "fields": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:expenseClaim/my:claimant",
+      "id": "f:main:/my:expenseClaim/my:claimant/my:claimantName",
+      "kind": "field",
+      "label": "Name",
+      "labelEvidence": {
+        "at": {
+          "column": 10446,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Claim"
+      },
+      "labelSource": "title",
+      "name": "claimantName",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:expenseClaim/my:claimant/my:claimantName",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 25,
+        "path": "/xsd:schema[1]/xsd:element[3]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 19,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:expenseClaim/my:claimant",
+      "id": "f:main:/my:expenseClaim/my:claimant/my:claimantId",
+      "kind": "field",
+      "label": "Employee ID",
+      "labelEvidence": {
+        "at": {
+          "column": 10874,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Claim"
+      },
+      "labelSource": "title",
+      "name": "claimantId",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:expenseClaim/my:claimant/my:claimantId",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 26,
+        "path": "/xsd:schema[1]/xsd:element[4]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 20,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:expenseClaim/my:claimant",
+      "id": "f:main:/my:expenseClaim/my:claimant/my:claimantDept",
+      "kind": "field",
+      "label": "Department",
+      "labelEvidence": {
+        "at": {
+          "column": 11311,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "title",
+        "view": "Claim"
+      },
+      "labelSource": "title",
+      "name": "claimantDept",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:expenseClaim/my:claimant/my:claimantDept",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 27,
+        "path": "/xsd:schema[1]/xsd:element[5]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 21,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:expenseClaim",
+      "id": "f:main:/my:expenseClaim/my:businessPurpose",
+      "kind": "field",
+      "label": "Business purpose",
+      "labelEvidence": {
+        "at": {
+          "column": 5657,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Claim"
+      },
+      "labelSource": "title",
+      "name": "businessPurpose",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:expenseClaim/my:businessPurpose",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 28,
+        "path": "/xsd:schema[1]/xsd:element[6]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 7,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:expenseClaim",
+      "id": "f:main:/my:expenseClaim/my:claimCurrency",
+      "kind": "field",
+      "label": "Currency",
+      "labelEvidence": {
+        "at": {
+          "column": 6107,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "title",
+        "view": "Claim"
+      },
+      "labelSource": "title",
+      "name": "claimCurrency",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:expenseClaim/my:claimCurrency",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 29,
+        "path": "/xsd:schema[1]/xsd:element[7]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 8,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[1]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[1]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:expenseClaim/my:expenses/my:expense",
+      "id": "f:main:/my:expenseClaim/my:expenses/my:expense/my:expenseDate",
+      "kind": "field",
+      "label": "Date",
+      "labelEvidence": {
+        "at": {
+          "column": 12638,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[1]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Claim"
+      },
+      "labelSource": "title",
+      "name": "expenseDate",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:expenseClaim/my:expenses/my:expense/my:expenseDate",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 48,
+        "path": "/xsd:schema[1]/xsd:element[10]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 40,
+        "path": "/xsd:schema[1]/xsd:element[9]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:date",
+        "declared": "xsd:date",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:expenseClaim/my:expenses/my:expense",
+      "id": "f:main:/my:expenseClaim/my:expenses/my:expense/my:expenseType",
+      "kind": "field",
+      "label": "Type",
+      "labelEvidence": {
+        "at": {
+          "column": 13642,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "title",
+        "view": "Claim"
+      },
+      "labelSource": "title",
+      "name": "expenseType",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:expenseClaim/my:expenses/my:expense/my:expenseType",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 49,
+        "path": "/xsd:schema[1]/xsd:element[11]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 41,
+        "path": "/xsd:schema[1]/xsd:element[9]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[3]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[3]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:expenseClaim/my:expenses/my:expense",
+      "id": "f:main:/my:expenseClaim/my:expenses/my:expense/my:expenseDescription",
+      "kind": "field",
+      "label": "Description",
+      "labelEvidence": {
+        "at": {
+          "column": 14888,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[3]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Claim"
+      },
+      "labelSource": "title",
+      "name": "expenseDescription",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:expenseClaim/my:expenses/my:expense/my:expenseDescription",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 50,
+        "path": "/xsd:schema[1]/xsd:element[12]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 42,
+        "path": "/xsd:schema[1]/xsd:element[9]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+            "role": "calcExpression"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[4]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[4]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:expenseClaim/my:expenses/my:expense",
+      "id": "f:main:/my:expenseClaim/my:expenses/my:expense/my:amount",
+      "kind": "field",
+      "label": "Amount",
+      "labelEvidence": {
+        "at": {
+          "column": 15265,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[4]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Claim"
+      },
+      "labelSource": "title",
+      "name": "amount",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:expenseClaim/my:expenses/my:expense/my:amount",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 51,
+        "path": "/xsd:schema[1]/xsd:element[13]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 43,
+        "path": "/xsd:schema[1]/xsd:element[9]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[5]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[5]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:expenseClaim/my:expenses/my:expense",
+      "id": "f:main:/my:expenseClaim/my:expenses/my:expense/my:receipt",
+      "kind": "field",
+      "label": "Receipt",
+      "labelEvidence": {
+        "at": {
+          "column": 16102,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[5]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Claim"
+      },
+      "labelSource": "title",
+      "name": "receipt",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:expenseClaim/my:expenses/my:expense/my:receipt",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 52,
+        "path": "/xsd:schema[1]/xsd:element[14]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 44,
+        "path": "/xsd:schema[1]/xsd:element[9]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[5]"
+      },
+      "xsdType": {
+        "builtin": "xsd:base64Binary",
+        "declared": "xsd:base64Binary",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+            "role": "calcTarget"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:expenseClaim",
+      "id": "f:main:/my:expenseClaim/my:totalAmount",
+      "kind": "field",
+      "label": "Total",
+      "labelEvidence": {
+        "at": {
+          "column": 8544,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Claim"
+      },
+      "labelSource": "title",
+      "name": "totalAmount",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:expenseClaim/my:totalAmount",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 53,
+        "path": "/xsd:schema[1]/xsd:element[15]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 10,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[5]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "conn:/xsf:submit[1]/xsf:emailAdapter[1]",
+            "role": "submitValue"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:expenseClaim",
+      "id": "f:main:/my:expenseClaim/my:approverEmail",
+      "kind": "field",
+      "label": "Approver e-mail",
+      "labelEvidence": {
+        "at": {
+          "column": 9540,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Claim"
+      },
+      "labelSource": "title",
+      "name": "approverEmail",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:expenseClaim/my:approverEmail",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 54,
+        "path": "/xsd:schema[1]/xsd:element[16]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 11,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[6]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "id": "g:main:/my:expenseClaim",
+      "kind": "group",
+      "label": "Expense Claim",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "expenseClaim",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:expenseClaim",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 3,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:expenseClaim",
+      "id": "g:main:/my:expenseClaim/my:claimant",
+      "kind": "group",
+      "label": "Claimant",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "claimant",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:expenseClaim/my:claimant",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 16,
+        "path": "/xsd:schema[1]/xsd:element[2]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 6,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:expenseClaim",
+      "id": "g:main:/my:expenseClaim/my:expenses",
+      "kind": "group",
+      "label": "Expenses",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "expenses",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:expenseClaim/my:expenses",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 30,
+        "path": "/xsd:schema[1]/xsd:element[8]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 9,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:expenseClaim/my:expenses",
+      "id": "g:main:/my:expenseClaim/my:expenses/my:expense",
+      "kind": "group",
+      "label": "Expense",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "expense",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00",
+      "nodeType": "element",
+      "optional": true,
+      "path": "/my:expenseClaim/my:expenses/my:expense",
+      "repeating": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 37,
+        "path": "/xsd:schema[1]/xsd:element[9]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 33,
+        "path": "/xsd:schema[1]/xsd:element[8]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    }
+  ],
+  "irVersion": 1,
+  "issues": [],
+  "meta": {
+    "browserCompatible": false,
+    "generation": "2013",
+    "generationEvidence": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]/@productVersion"
+    },
+    "name": "Expense Report",
+    "nameSource": "caption",
+    "productVersion": "15.0.0",
+    "publishEndpoint": {
+      "attribute": "publishUrl",
+      "liveness": "internal",
+      "reason": "filePath",
+      "source": {
+        "column": 1,
+        "file": "manifest.xsf",
+        "line": 6,
+        "path": "/xsf:xDocumentClass[1]/@publishUrl"
+      },
+      "value": "C:\\forms\\02-expense-report.xsn"
+    },
+    "publishUrl": "C:\\forms\\02-expense-report.xsn",
+    "solutionFormatVersion": "2.0.0.0",
+    "solutionVersion": "1.0.0.1",
+    "source": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]"
+    },
+    "urn": "urn:schemas-microsoft-com:office:infopath:Expense-Claim:-myXSD-2026-11-03T08-10-00"
+  },
+  "rules": [],
+  "signatures": {
+    "blocks": [],
+    "signatureLines": []
+  },
+  "unknowns": [],
+  "validations": [
+    {
+      "expression": ". = \"\"",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+      "kind": "errorCondition",
+      "match": "/my:expenseClaim/my:claimant/my:claimantName",
+      "matchId": "f:main:/my:expenseClaim/my:claimant/my:claimantName",
+      "message": {
+        "shortMessage": "Cannot be blank",
+        "text": "This field is required.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 86,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[1]"
+      },
+      "unresolvedRefs": []
+    },
+    {
+      "expression": ". = \"\"",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+      "kind": "errorCondition",
+      "match": "/my:expenseClaim/my:businessPurpose",
+      "matchId": "f:main:/my:expenseClaim/my:businessPurpose",
+      "message": {
+        "shortMessage": "Cannot be blank",
+        "text": "This field is required.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 87,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[2]"
+      },
+      "unresolvedRefs": []
+    },
+    {
+      "expression": ". <= 0",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+      "kind": "errorCondition",
+      "match": "/my:expenseClaim/my:expenses/my:expense/my:amount",
+      "matchId": "f:main:/my:expenseClaim/my:expenses/my:expense/my:amount",
+      "message": {
+        "shortMessage": "Must be > 0",
+        "text": "Amount must be greater than zero.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 88,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[3]"
+      },
+      "unresolvedRefs": []
+    }
+  ],
+  "views": [
+    {
+      "caption": "Claim",
+      "controls": [
+        {
+          "binding": "my:businessPurpose",
+          "ctrlId": "CTRL5",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5613,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:expenseClaim/my:businessPurpose",
+          "title": "Business purpose",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:claimCurrency",
+          "ctrlId": "CTRL6",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 6056,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:expenseClaim/my:claimCurrency",
+          "title": "Currency",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:totalAmount",
+          "ctrlId": "CTRL13",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 8478,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:expenseClaim/my:totalAmount",
+          "title": "Total",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:approverEmail",
+          "ctrlId": "CTRL14",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 9496,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:expenseClaim/my:approverEmail",
+          "title": "Approver e-mail",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:claimantName",
+          "ctrlId": "CTRL1",
+          "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 10402,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:expenseClaim/my:claimant/my:claimantName",
+          "title": "Name",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:claimantId",
+          "ctrlId": "CTRL2",
+          "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 10830,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:expenseClaim/my:claimant/my:claimantId",
+          "title": "Employee ID",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:claimantDept",
+          "ctrlId": "CTRL3",
+          "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 11260,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:expenseClaim/my:claimant/my:claimantDept",
+          "title": "Department",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:expenseDate",
+          "id": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[1]/div[1]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 12716,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[1]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:expenseClaim/my:expenses/my:expense/my:expenseDate",
+          "title": "Date",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:expenseType",
+          "ctrlId": "CTRL8",
+          "id": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[2]/div[1]/select[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 13591,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:expenseClaim/my:expenses/my:expense/my:expenseType",
+          "title": "Type",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:expenseDescription",
+          "ctrlId": "CTRL9",
+          "id": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[3]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 14844,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[3]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:expenseClaim/my:expenses/my:expense/my:expenseDescription",
+          "title": "Description",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:amount",
+          "ctrlId": "CTRL10",
+          "id": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[4]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 15199,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[4]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:expenseClaim/my:expenses/my:expense/my:amount",
+          "title": "Amount",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:receipt",
+          "ctrlId": "CTRL11",
+          "id": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[5]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 16051,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[5]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:expenseClaim/my:expenses/my:expense/my:receipt",
+          "title": "Receipt",
+          "xctname": "FileAttachment"
+        }
+      ],
+      "id": "view:/xsf:views[1]/xsf:view[1]",
+      "isDefault": true,
+      "isPrint": false,
+      "name": "Claim",
+      "scanned": true,
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 31,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]"
+      },
+      "xslFile": "view1.xsl"
+    }
+  ]
+}

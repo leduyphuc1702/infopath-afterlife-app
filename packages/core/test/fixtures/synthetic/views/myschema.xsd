@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Main schema for the synthetic view fixtures (spec 02 task 7). Written for this project. -->
+<xsd:schema targetNamespace="urn:my" xmlns:my="urn:my" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:element name="order">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:orderTitle"/>
+				<xsd:element ref="my:status"/>
+				<xsd:element ref="my:lines"/>
+				<xsd:element ref="my:reviewers"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="orderTitle" type="xsd:string"/>
+	<xsd:element name="status" type="xsd:string"/>
+	<xsd:element name="lines">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:line" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="line">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:item"/>
+				<xsd:element ref="my:qty"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="item" type="xsd:string"/>
+	<xsd:element name="qty" type="xsd:string"/>
+	<xsd:element name="reviewers">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:Person" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="Person">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="my:DisplayName"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="DisplayName" type="xsd:string"/>
+</xsd:schema>

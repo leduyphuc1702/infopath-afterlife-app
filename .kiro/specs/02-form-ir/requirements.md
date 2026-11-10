@@ -415,6 +415,14 @@ is private, so I can see which ones cannot work from the cloud.
    and the X-ray can report an embedded password as a finding (decision 5). Oracle: the spec 01
    R11.5 unit cases: the value is redacted and the flag set; every sample has
    `credentialRedacted: false`.
+   Changed at task 7: a secret is now the value of any key that, compared case-insensitively, is
+   `password` or `pwd` or ends in whitespace or `:` followed by one of them (so `Jet OLEDB:Database
+   Password` and `Jet OLEDB:New Database Password` of Access connection strings count), with the
+   whitespace around the value kept; and the password of a URL userinfo (`http://user:***@host/…`,
+   the user name kept, the URL never re-serialised). This applies to every connection attribute,
+   and spec 01's `containsCredential` gives the same answer (one implementation,
+   `src/xsf/credentials.ts`; one shared test, `test/xsf/credentials.test.ts`). The first version
+   missed both Jet keys and URL userinfo, and dropped the space after `=` in `PWD = xyz`.
 
 ### R9. Code-behind and signatures
 Traces: brief AC1 `codeBehind`, `signatures`; brief 12 causes `code-behind` ("listed with the

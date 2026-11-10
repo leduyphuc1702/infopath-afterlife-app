@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Secondary source "Depots" for the synthetic view fixtures: one SharePoint-style row. -->
+<xsd:schema targetNamespace="#RowsetSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:element name="row">
+		<xsd:complexType>
+			<xsd:attribute name="ows_Depot" type="xsd:string"/>
+			<xsd:attribute name="ows_Region" type="xsd:string"/>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

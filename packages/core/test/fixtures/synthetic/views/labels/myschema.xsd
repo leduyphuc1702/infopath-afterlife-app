@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Main schema for the label fixtures (spec 02 task 8, R5.4). Written for this project. -->
+<xsd:schema targetNamespace="urn:my" xmlns:my="urn:my" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:ma="http://schemas.microsoft.com/office/2009/metadata/properties/metaAttributes" elementFormDefault="qualified">
+	<xsd:element name="sheet">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="tipDiffers" type="xsd:string"/>
+				<xsd:element name="inlineBefore" type="xsd:string"/>
+				<xsd:element name="blockAbove" type="xsd:string"/>
+				<xsd:element name="leftCellField" type="xsd:string"/>
+				<xsd:element name="tipOnly" type="xsd:string"/>
+				<xsd:element name="urgent" type="xsd:boolean"/>
+				<xsd:element name="fragile" type="xsd:boolean"/>
+				<xsd:element name="sealed" type="xsd:boolean"/>
+				<xsd:element name="insured" type="xsd:boolean"/>
+				<xsd:element name="rows">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="row" minOccurs="0" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="rowItem" type="xsd:string"/>
+										<xsd:element name="rowQty" type="xsd:string"/>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="entries">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="entry" minOccurs="0" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="entryDate" type="xsd:string"/>
+										<xsd:element name="entryNote" type="xsd:string"/>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="listTitle" type="xsd:string" ma:displayName="List heading"/>
+				<xsd:element name="secondViewOnly" type="xsd:string"/>
+				<xsd:element name="noLabel" type="xsd:string"/>
+				<xsd:element name="priority" type="xsd:string"/>
+				<xsd:element name="shipping" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

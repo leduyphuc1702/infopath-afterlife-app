@@ -402,6 +402,11 @@ no longer exist.
    including `xsf2:connectoid` (a reference to an external `.udcx` connection file).
 5. + WHEN an `adoAdapter/@connectionString` contains `Password=` or `Pwd=`, THE SYSTEM SHALL set a
    `containsCredential` flag on that adapter. The value is still returned; display layers mask it.
+   Changed (spec 02 task 7): "contains `Password=` or `Pwd=`" now means a key that, compared
+   case-insensitively, is `password` or `pwd` or ends in whitespace or `:` followed by one of them
+   (`Jet OLEDB:Database Password`), or a URL userinfo with a password. The flag is true exactly
+   when spec 02's redaction changes the string (`src/xsf/credentials.ts`, shared test
+   `test/xsf/credentials.test.ts`).
 6. + THE SYSTEM SHALL build a field tree (R14) for each secondary schema, keyed by data object name.
 7. Oracle: form 04 has `adoAdapter` (`Data Source=sql-legacy01`) and `webServiceAdapter`
    (`http://forms-legacy/budget/…`); form 03 has `xmlFileAdapter fileUrl="locations.xml"`; forms

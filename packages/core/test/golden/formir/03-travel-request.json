@@ -1,0 +1,2655 @@
+{
+  "activeX": {
+    "allowed": [],
+    "controls": []
+  },
+  "calculations": [],
+  "codeBehind": {
+    "files": [],
+    "handlers": [],
+    "languages": [],
+    "present": false
+  },
+  "dataConnections": [
+    {
+      "adapterKind": "xmlFileAdapter",
+      "attrs": {
+        "fileUrl": "locations.xml"
+      },
+      "children": [],
+      "credentialRedacted": false,
+      "dataSource": "Locations",
+      "endpoints": [
+        {
+          "attribute": "fileUrl",
+          "liveness": "package",
+          "reason": "packageFile",
+          "source": {
+            "column": 5,
+            "file": "manifest.xsf",
+            "line": 94,
+            "path": "/xsf:xDocumentClass[1]/xsf:dataObjects[1]/xsf:dataObject[1]/xsf:query[1]/xsf:xmlFileAdapter[1]/@fileUrl"
+          },
+          "value": "locations.xml"
+        }
+      ],
+      "id": "conn:/xsf:dataObjects[1]/xsf:dataObject[1]/xsf:query[1]/xsf:xmlFileAdapter[1]",
+      "isQuery": true,
+      "isSubmit": false,
+      "lineage": {
+        "fieldIds": [
+          "g:Locations:/locations/country",
+          "f:Locations:/locations/country/city",
+          "f:Locations:/locations/country/@code"
+        ],
+        "usedBy": [
+          "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+          "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+          "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+          "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]"
+        ]
+      },
+      "source": {
+        "column": 5,
+        "file": "manifest.xsf",
+        "line": 94,
+        "path": "/xsf:xDocumentClass[1]/xsf:dataObjects[1]/xsf:dataObject[1]/xsf:query[1]/xsf:xmlFileAdapter[1]"
+      },
+      "unresolvedRefs": []
+    }
+  ],
+  "dependencies": {
+    "references": [
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:tripType",
+        "text": "my:tripType"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[2]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:tripType",
+        "text": "my:tripType"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:destCountry",
+        "text": "my:destCountry"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+        "role": "choicesFilter",
+        "targetId": "g:Locations:/locations/country",
+        "text": "xdXDocument:GetDOM(\"Locations\")/locations/country"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:destCity",
+        "text": "my:destCity"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+        "role": "choicesFilter",
+        "targetId": "f:Locations:/locations/country/city",
+        "text": "xdXDocument:GetDOM(\"Locations\")/locations/country[@code = current()/my:destCountry]/city"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+        "role": "choicesFilter",
+        "targetId": "f:Locations:/locations/country/@code",
+        "text": "@code"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+        "role": "choicesFilter",
+        "targetId": "f:main:/my:travelRequest/my:destCountry",
+        "text": "current()/my:destCountry"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:departDate",
+        "text": "my:departDate"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:returnDate",
+        "text": "my:returnDate"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:purpose",
+        "text": "my:purpose"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:traveler/my:travelerName",
+        "text": "my:travelerName"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:traveler/my:travelerEmail",
+        "text": "my:travelerEmail"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:traveler/my:travelerDept",
+        "text": "my:travelerDept"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:international/my:passportNumber",
+        "text": "my:passportNumber"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:international/my:passportExpiry",
+        "text": "my:passportExpiry"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:international/my:visaRequired",
+        "text": "my:visaRequired"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:international/my:travelInsurance",
+        "text": "my:travelInsurance"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:tripType",
+        "text": "my:tripType"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[2]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:tripType",
+        "text": "my:tripType"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:destCountry",
+        "text": "my:destCountry"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+        "role": "choicesFilter",
+        "targetId": "g:Locations:/locations/country",
+        "text": "xdXDocument:GetDOM(\"Locations\")/locations/country"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:destCity",
+        "text": "my:destCity"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+        "role": "choicesFilter",
+        "targetId": "f:Locations:/locations/country/city",
+        "text": "xdXDocument:GetDOM(\"Locations\")/locations/country[@code = current()/my:destCountry]/city"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+        "role": "choicesFilter",
+        "targetId": "f:Locations:/locations/country/@code",
+        "text": "@code"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+        "role": "choicesFilter",
+        "targetId": "f:main:/my:travelRequest/my:destCountry",
+        "text": "current()/my:destCountry"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:departDate",
+        "text": "my:departDate"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:returnDate",
+        "text": "my:returnDate"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:purpose",
+        "text": "my:purpose"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:traveler/my:travelerName",
+        "text": "my:travelerName"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:traveler/my:travelerEmail",
+        "text": "my:travelerEmail"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:traveler/my:travelerDept",
+        "text": "my:travelerDept"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:international/my:passportNumber",
+        "text": "my:passportNumber"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:international/my:passportExpiry",
+        "text": "my:passportExpiry"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:international/my:visaRequired",
+        "text": "my:visaRequired"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:international/my:travelInsurance",
+        "text": "my:travelInsurance"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:accounting/my:costCenter",
+        "text": "my:costCenter"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:accounting/my:estimatedCost",
+        "text": "my:estimatedCost"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:accounting/my:advanceAmount",
+        "text": "my:advanceAmount"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:accounting/my:accountingApprover",
+        "text": "my:accountingApprover"
+      },
+      {
+        "elementId": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:travelRequest/my:accounting/my:accountingStatus",
+        "text": "my:accountingStatus"
+      },
+      {
+        "elementId": "rule:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]",
+        "role": "trigger",
+        "targetId": "f:main:/my:travelRequest/my:destCountry",
+        "text": "/my:travelRequest/my:destCountry"
+      },
+      {
+        "elementId": "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[1]",
+        "role": "assignmentTarget",
+        "targetId": "f:main:/my:travelRequest/my:destCity",
+        "text": "../my:destCity"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:travelRequest/my:traveler/my:travelerName",
+        "text": "/my:travelRequest/my:traveler/my:travelerName"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:travelRequest/my:traveler/my:travelerName",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:travelRequest/my:destCountry",
+        "text": "/my:travelRequest/my:destCountry"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:travelRequest/my:destCountry",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:travelRequest/my:departDate",
+        "text": "/my:travelRequest/my:departDate"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:travelRequest/my:departDate",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[4]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:travelRequest/my:returnDate",
+        "text": "/my:travelRequest/my:returnDate"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[4]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:travelRequest/my:returnDate",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[4]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:travelRequest/my:departDate",
+        "text": "../my:departDate"
+      }
+    ]
+  },
+  "fields": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelRequest/my:traveler",
+      "id": "f:main:/my:travelRequest/my:traveler/my:travelerName",
+      "kind": "field",
+      "label": "Name",
+      "labelEvidence": {
+        "at": {
+          "column": 12299,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Employee"
+      },
+      "labelSource": "title",
+      "name": "travelerName",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:traveler/my:travelerName",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 28,
+        "path": "/xsd:schema[1]/xsd:element[3]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 22,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelRequest/my:traveler",
+      "id": "f:main:/my:travelRequest/my:traveler/my:travelerEmail",
+      "kind": "field",
+      "label": "E-mail",
+      "labelEvidence": {
+        "at": {
+          "column": 12722,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Employee"
+      },
+      "labelSource": "title",
+      "name": "travelerEmail",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:traveler/my:travelerEmail",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 29,
+        "path": "/xsd:schema[1]/xsd:element[4]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 23,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelRequest/my:traveler",
+      "id": "f:main:/my:travelRequest/my:traveler/my:travelerDept",
+      "kind": "field",
+      "label": "Department",
+      "labelEvidence": {
+        "at": {
+          "column": 13160,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "title",
+        "view": "Employee"
+      },
+      "labelSource": "title",
+      "name": "travelerDept",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:traveler/my:travelerDept",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 30,
+        "path": "/xsd:schema[1]/xsd:element[5]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 24,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[2]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[2]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[2]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[2]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelRequest",
+      "id": "f:main:/my:travelRequest/my:tripType",
+      "kind": "field",
+      "label": "Trip type",
+      "labelEvidence": {
+        "at": {
+          "column": 5650,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]/@title"
+        },
+        "step": "title",
+        "view": "Employee"
+      },
+      "labelSource": "title",
+      "name": "tripType",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:tripType",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 31,
+        "path": "/xsd:schema[1]/xsd:element[6]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 7,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+            "role": "choicesFilter"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+            "role": "choicesFilter"
+          },
+          {
+            "elementId": "rule:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]",
+            "role": "trigger"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelRequest",
+      "id": "f:main:/my:travelRequest/my:destCountry",
+      "kind": "field",
+      "label": "Country",
+      "labelEvidence": {
+        "at": {
+          "column": 6878,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "title",
+        "view": "Employee"
+      },
+      "labelSource": "title",
+      "name": "destCountry",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:destCountry",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 32,
+        "path": "/xsd:schema[1]/xsd:element[7]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 8,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[1]",
+            "role": "assignmentTarget"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelRequest",
+      "id": "f:main:/my:travelRequest/my:destCity",
+      "kind": "field",
+      "label": "City",
+      "labelEvidence": {
+        "at": {
+          "column": 8018,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "title",
+        "view": "Employee"
+      },
+      "labelSource": "title",
+      "name": "destCity",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:destCity",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 33,
+        "path": "/xsd:schema[1]/xsd:element[8]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 9,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[4]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelRequest",
+      "id": "f:main:/my:travelRequest/my:departDate",
+      "kind": "field",
+      "label": "Departure",
+      "labelEvidence": {
+        "at": {
+          "column": 9107,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Employee"
+      },
+      "labelSource": "title",
+      "name": "departDate",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:departDate",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 34,
+        "path": "/xsd:schema[1]/xsd:element[9]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 10,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[5]"
+      },
+      "xsdType": {
+        "builtin": "xsd:date",
+        "declared": "xsd:date",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[4]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[4]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelRequest",
+      "id": "f:main:/my:travelRequest/my:returnDate",
+      "kind": "field",
+      "label": "Return",
+      "labelEvidence": {
+        "at": {
+          "column": 10178,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Employee"
+      },
+      "labelSource": "title",
+      "name": "returnDate",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:returnDate",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 35,
+        "path": "/xsd:schema[1]/xsd:element[10]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 11,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[6]"
+      },
+      "xsdType": {
+        "builtin": "xsd:date",
+        "declared": "xsd:date",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelRequest",
+      "id": "f:main:/my:travelRequest/my:purpose",
+      "kind": "field",
+      "label": "Purpose",
+      "labelEvidence": {
+        "at": {
+          "column": 11262,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Employee"
+      },
+      "labelSource": "title",
+      "name": "purpose",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:purpose",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 36,
+        "path": "/xsd:schema[1]/xsd:element[11]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 12,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[7]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelRequest/my:international",
+      "id": "f:main:/my:travelRequest/my:international/my:passportNumber",
+      "kind": "field",
+      "label": "Passport number",
+      "labelEvidence": {
+        "at": {
+          "column": 15201,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Employee"
+      },
+      "labelSource": "title",
+      "name": "passportNumber",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:international/my:passportNumber",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 47,
+        "path": "/xsd:schema[1]/xsd:element[13]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 40,
+        "path": "/xsd:schema[1]/xsd:element[12]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelRequest/my:international",
+      "id": "f:main:/my:travelRequest/my:international/my:passportExpiry",
+      "kind": "field",
+      "label": "Passport expiry",
+      "labelEvidence": {
+        "at": {
+          "column": 15635,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Employee"
+      },
+      "labelSource": "title",
+      "name": "passportExpiry",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:international/my:passportExpiry",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 48,
+        "path": "/xsd:schema[1]/xsd:element[14]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 41,
+        "path": "/xsd:schema[1]/xsd:element[12]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:date",
+        "declared": "xsd:date",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelRequest/my:international",
+      "id": "f:main:/my:travelRequest/my:international/my:visaRequired",
+      "kind": "field",
+      "label": "Visa required",
+      "labelEvidence": {
+        "at": {
+          "column": 16733,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]/@title"
+        },
+        "step": "title",
+        "view": "Employee"
+      },
+      "labelSource": "title",
+      "name": "visaRequired",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:international/my:visaRequired",
+      "repeating": false,
+      "required": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 49,
+        "path": "/xsd:schema[1]/xsd:element[15]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 42,
+        "path": "/xsd:schema[1]/xsd:element[12]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:boolean",
+        "declared": "xsd:boolean",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelRequest/my:international",
+      "id": "f:main:/my:travelRequest/my:international/my:travelInsurance",
+      "kind": "field",
+      "label": "Travel insurance arranged",
+      "labelEvidence": {
+        "at": {
+          "column": 17322,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[1]/@title"
+        },
+        "step": "title",
+        "view": "Employee"
+      },
+      "labelSource": "title",
+      "name": "travelInsurance",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:international/my:travelInsurance",
+      "repeating": false,
+      "required": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 50,
+        "path": "/xsd:schema[1]/xsd:element[16]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 43,
+        "path": "/xsd:schema[1]/xsd:element[12]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      },
+      "xsdType": {
+        "builtin": "xsd:boolean",
+        "declared": "xsd:boolean",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelRequest/my:accounting",
+      "id": "f:main:/my:travelRequest/my:accounting/my:costCenter",
+      "kind": "field",
+      "label": "Cost center",
+      "labelEvidence": {
+        "at": {
+          "column": 18562,
+          "file": "view2.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "otherView",
+        "view": "Accounting",
+        "viewStep": "title"
+      },
+      "labelSource": "otherView",
+      "name": "costCenter",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:accounting/my:costCenter",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 62,
+        "path": "/xsd:schema[1]/xsd:element[18]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 54,
+        "path": "/xsd:schema[1]/xsd:element[17]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelRequest/my:accounting",
+      "id": "f:main:/my:travelRequest/my:accounting/my:estimatedCost",
+      "kind": "field",
+      "label": "Estimated cost",
+      "labelEvidence": {
+        "at": {
+          "column": 19019,
+          "file": "view2.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "otherView",
+        "view": "Accounting",
+        "viewStep": "title"
+      },
+      "labelSource": "otherView",
+      "name": "estimatedCost",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:accounting/my:estimatedCost",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 63,
+        "path": "/xsd:schema[1]/xsd:element[19]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 55,
+        "path": "/xsd:schema[1]/xsd:element[17]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelRequest/my:accounting",
+      "id": "f:main:/my:travelRequest/my:accounting/my:advanceAmount",
+      "kind": "field",
+      "label": "Cash advance",
+      "labelEvidence": {
+        "at": {
+          "column": 20000,
+          "file": "view2.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "otherView",
+        "view": "Accounting",
+        "viewStep": "title"
+      },
+      "labelSource": "otherView",
+      "name": "advanceAmount",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:accounting/my:advanceAmount",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 64,
+        "path": "/xsd:schema[1]/xsd:element[20]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 56,
+        "path": "/xsd:schema[1]/xsd:element[17]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelRequest/my:accounting",
+      "id": "f:main:/my:travelRequest/my:accounting/my:accountingApprover",
+      "kind": "field",
+      "label": "Approved by",
+      "labelEvidence": {
+        "at": {
+          "column": 20956,
+          "file": "view2.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "otherView",
+        "view": "Accounting",
+        "viewStep": "title"
+      },
+      "labelSource": "otherView",
+      "name": "accountingApprover",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:accounting/my:accountingApprover",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 65,
+        "path": "/xsd:schema[1]/xsd:element[21]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 57,
+        "path": "/xsd:schema[1]/xsd:element[17]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:travelRequest/my:accounting",
+      "id": "f:main:/my:travelRequest/my:accounting/my:accountingStatus",
+      "kind": "field",
+      "label": "Status",
+      "labelEvidence": {
+        "at": {
+          "column": 21406,
+          "file": "view2.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "otherView",
+        "view": "Accounting",
+        "viewStep": "title"
+      },
+      "labelSource": "otherView",
+      "name": "accountingStatus",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:accounting/my:accountingStatus",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 66,
+        "path": "/xsd:schema[1]/xsd:element[22]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 58,
+        "path": "/xsd:schema[1]/xsd:element[17]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[5]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "Locations",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+            "role": "choicesFilter"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+            "role": "choicesFilter"
+          }
+        ],
+        "writtenBy": []
+      },
+      "groupId": "g:Locations:/locations/country",
+      "id": "f:Locations:/locations/country/city",
+      "kind": "field",
+      "label": "City",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "city",
+      "namespace": null,
+      "nodeType": "element",
+      "optional": true,
+      "path": "/locations/country/city",
+      "repeating": true,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "locations.xsd",
+        "line": 19,
+        "path": "/xsd:schema[1]/xsd:element[3]"
+      },
+      "use": {
+        "column": 5,
+        "file": "locations.xsd",
+        "line": 13,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "Locations",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+            "role": "choicesFilter"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+            "role": "choicesFilter"
+          }
+        ],
+        "writtenBy": []
+      },
+      "groupId": "g:Locations:/locations/country",
+      "id": "f:Locations:/locations/country/@code",
+      "kind": "field",
+      "label": "Code",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "code",
+      "namespace": null,
+      "nodeType": "attribute",
+      "optional": true,
+      "path": "/locations/country/@code",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 4,
+        "file": "locations.xsd",
+        "line": 15,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:attribute[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "Locations",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:Locations:/locations/country",
+      "id": "f:Locations:/locations/country/@name",
+      "kind": "field",
+      "label": "Name",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "name",
+      "namespace": null,
+      "nodeType": "attribute",
+      "optional": true,
+      "path": "/locations/country/@name",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 4,
+        "file": "locations.xsd",
+        "line": 16,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:attribute[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "id": "g:main:/my:travelRequest",
+      "kind": "group",
+      "label": "Travel Request",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "travelRequest",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 3,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:travelRequest",
+      "id": "g:main:/my:travelRequest/my:traveler",
+      "kind": "group",
+      "label": "Traveler",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "traveler",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:traveler",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 19,
+        "path": "/xsd:schema[1]/xsd:element[2]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 6,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:travelRequest",
+      "id": "g:main:/my:travelRequest/my:international",
+      "kind": "group",
+      "label": "International",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "international",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:international",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 37,
+        "path": "/xsd:schema[1]/xsd:element[12]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 13,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[8]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:travelRequest",
+      "id": "g:main:/my:travelRequest/my:accounting",
+      "kind": "group",
+      "label": "Accounting",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "accounting",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:20:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:travelRequest/my:accounting",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 51,
+        "path": "/xsd:schema[1]/xsd:element[17]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 14,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[9]"
+      }
+    },
+    {
+      "dataSource": "Locations",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "id": "g:Locations:/locations",
+      "kind": "group",
+      "label": "Locations",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "locations",
+      "namespace": null,
+      "nodeType": "element",
+      "optional": false,
+      "path": "/locations",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "locations.xsd",
+        "line": 3,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "Locations",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "choicesFilter"
+          },
+          {
+            "elementId": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "choicesFilter"
+          }
+        ],
+        "writtenBy": []
+      },
+      "groupId": "g:Locations:/locations",
+      "id": "g:Locations:/locations/country",
+      "kind": "group",
+      "label": "Country",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "country",
+      "namespace": null,
+      "nodeType": "element",
+      "optional": true,
+      "path": "/locations/country",
+      "repeating": true,
+      "source": {
+        "column": 2,
+        "file": "locations.xsd",
+        "line": 10,
+        "path": "/xsd:schema[1]/xsd:element[2]"
+      },
+      "use": {
+        "column": 5,
+        "file": "locations.xsd",
+        "line": 6,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    }
+  ],
+  "irVersion": 1,
+  "issues": [],
+  "meta": {
+    "browserCompatible": false,
+    "generation": "2013",
+    "generationEvidence": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]/@productVersion"
+    },
+    "name": "Travel Request",
+    "nameSource": "caption",
+    "productVersion": "15.0.0",
+    "publishEndpoint": {
+      "attribute": "publishUrl",
+      "liveness": "internal",
+      "reason": "filePath",
+      "source": {
+        "column": 1,
+        "file": "manifest.xsf",
+        "line": 6,
+        "path": "/xsf:xDocumentClass[1]/@publishUrl"
+      },
+      "value": "C:\\forms\\03-travel-request.xsn"
+    },
+    "publishUrl": "C:\\forms\\03-travel-request.xsn",
+    "solutionFormatVersion": "2.0.0.0",
+    "solutionVersion": "1.0.0.1",
+    "source": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]"
+    },
+    "urn": "urn:schemas-microsoft-com:office:infopath:Travel-Request:-myXSD-2026-11-03T08-20-00"
+  },
+  "rules": [
+    {
+      "actions": [
+        {
+          "attrs": {
+            "expression": "\"\"",
+            "targetField": "../my:destCity"
+          },
+          "id": "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[1]",
+          "kind": "assignmentAction",
+          "source": {
+            "column": 5,
+            "file": "manifest.xsf",
+            "line": 100,
+            "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[1]"
+          }
+        }
+      ],
+      "caption": "Clear city when country changes",
+      "enabled": true,
+      "id": "rule:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]",
+      "ruleSet": "clearCity",
+      "source": {
+        "column": 4,
+        "file": "manifest.xsf",
+        "line": 99,
+        "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]"
+      },
+      "stopProcessing": false,
+      "triggers": [
+        {
+          "kind": "fieldChange",
+          "match": "/my:travelRequest/my:destCountry",
+          "source": {
+            "column": 65,
+            "file": "manifest.xsf",
+            "line": 106,
+            "path": "/xsf:xDocumentClass[1]/xsf:domEventHandlers[1]/xsf:domEventHandler[1]/xsf:ruleSetAction[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:destCountry"
+        }
+      ],
+      "unresolvedRefs": []
+    }
+  ],
+  "signatures": {
+    "blocks": [],
+    "signatureLines": []
+  },
+  "unknowns": [],
+  "validations": [
+    {
+      "expression": ". = \"\"",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+      "kind": "errorCondition",
+      "match": "/my:travelRequest/my:traveler/my:travelerName",
+      "matchId": "f:main:/my:travelRequest/my:traveler/my:travelerName",
+      "message": {
+        "shortMessage": "Cannot be blank",
+        "text": "This field is required.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 109,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[1]"
+      },
+      "unresolvedRefs": []
+    },
+    {
+      "expression": ". = \"\"",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+      "kind": "errorCondition",
+      "match": "/my:travelRequest/my:destCountry",
+      "matchId": "f:main:/my:travelRequest/my:destCountry",
+      "message": {
+        "shortMessage": "Cannot be blank",
+        "text": "This field is required.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 110,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[2]"
+      },
+      "unresolvedRefs": []
+    },
+    {
+      "expression": ". = \"\"",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+      "kind": "errorCondition",
+      "match": "/my:travelRequest/my:departDate",
+      "matchId": "f:main:/my:travelRequest/my:departDate",
+      "message": {
+        "shortMessage": "Cannot be blank",
+        "text": "This field is required.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 111,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[3]"
+      },
+      "unresolvedRefs": []
+    },
+    {
+      "expression": "msxsl:string-compare(., ../my:departDate) < 0",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[4]",
+      "kind": "errorCondition",
+      "match": "/my:travelRequest/my:returnDate",
+      "matchId": "f:main:/my:travelRequest/my:returnDate",
+      "message": {
+        "shortMessage": "Return before departure",
+        "text": "Return date cannot be before the departure date.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 112,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[4]"
+      },
+      "unresolvedRefs": []
+    }
+  ],
+  "views": [
+    {
+      "caption": "Employee",
+      "controls": [
+        {
+          "binding": "my:tripType",
+          "choice": {
+            "label": "Domestic",
+            "value": "Domestic"
+          },
+          "ctrlId": "CTRL5",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5610,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:tripType",
+          "title": "Trip type",
+          "xctname": "OptionButton"
+        },
+        {
+          "binding": "my:tripType",
+          "choice": {
+            "label": "International",
+            "value": "International"
+          },
+          "ctrlId": "CTRL6",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[2]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 6106,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[2]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:tripType",
+          "title": "Trip type",
+          "xctname": "OptionButton"
+        },
+        {
+          "binding": "my:destCountry",
+          "choicesFrom": {
+            "connectionId": "conn:/xsf:dataObjects[1]/xsf:dataObject[1]/xsf:query[1]/xsf:xmlFileAdapter[1]",
+            "dataSource": "Locations",
+            "filterIds": [],
+            "select": "xdXDocument:GetDOM(\"Locations\")/locations/country"
+          },
+          "ctrlId": "CTRL7",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 6827,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:destCountry",
+          "title": "Country",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:destCity",
+          "choicesFrom": {
+            "connectionId": "conn:/xsf:dataObjects[1]/xsf:dataObject[1]/xsf:query[1]/xsf:xmlFileAdapter[1]",
+            "dataSource": "Locations",
+            "filterIds": [
+              "f:Locations:/locations/country/@code",
+              "f:main:/my:travelRequest/my:destCountry"
+            ],
+            "select": "xdXDocument:GetDOM(\"Locations\")/locations/country[@code = current()/my:destCountry]/city"
+          },
+          "ctrlId": "CTRL8",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 7967,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:destCity",
+          "title": "City",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:departDate",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 9190,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:departDate",
+          "title": "Departure",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:returnDate",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 10259,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:returnDate",
+          "title": "Return",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:purpose",
+          "ctrlId": "CTRL11",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 11218,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:purpose",
+          "title": "Purpose",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:travelerName",
+          "ctrlId": "CTRL1",
+          "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 12255,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:traveler/my:travelerName",
+          "title": "Name",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:travelerEmail",
+          "ctrlId": "CTRL2",
+          "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 12678,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:traveler/my:travelerEmail",
+          "title": "E-mail",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:travelerDept",
+          "ctrlId": "CTRL3",
+          "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 13109,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:traveler/my:travelerDept",
+          "title": "Department",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:passportNumber",
+          "ctrlId": "CTRL12",
+          "id": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 15157,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:international/my:passportNumber",
+          "title": "Passport number",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:passportExpiry",
+          "id": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 15725,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:international/my:passportExpiry",
+          "title": "Passport expiry",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:visaRequired",
+          "ctrlId": "CTRL14",
+          "id": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 16693,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:international/my:visaRequired",
+          "title": "Visa required",
+          "xctname": "CheckBox"
+        },
+        {
+          "binding": "my:travelInsurance",
+          "ctrlId": "CTRL15",
+          "id": "ctl:view1.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 17282,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:international/my:travelInsurance",
+          "title": "Travel insurance arranged",
+          "xctname": "CheckBox"
+        }
+      ],
+      "id": "view:/xsf:views[1]/xsf:view[1]",
+      "isDefault": true,
+      "isPrint": false,
+      "name": "Employee",
+      "scanned": true,
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 34,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]"
+      },
+      "xslFile": "view1.xsl"
+    },
+    {
+      "caption": "Accounting",
+      "controls": [
+        {
+          "binding": "my:tripType",
+          "choice": {
+            "label": "Domestic",
+            "value": "Domestic"
+          },
+          "ctrlId": "CTRL5",
+          "id": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5612,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:tripType",
+          "title": "Trip type",
+          "xctname": "OptionButton"
+        },
+        {
+          "binding": "my:tripType",
+          "choice": {
+            "label": "International",
+            "value": "International"
+          },
+          "ctrlId": "CTRL6",
+          "id": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[2]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 6108,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/input[2]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:tripType",
+          "title": "Trip type",
+          "xctname": "OptionButton"
+        },
+        {
+          "binding": "my:destCountry",
+          "choicesFrom": {
+            "connectionId": "conn:/xsf:dataObjects[1]/xsf:dataObject[1]/xsf:query[1]/xsf:xmlFileAdapter[1]",
+            "dataSource": "Locations",
+            "filterIds": [],
+            "select": "xdXDocument:GetDOM(\"Locations\")/locations/country"
+          },
+          "ctrlId": "CTRL7",
+          "id": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 6829,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:destCountry",
+          "title": "Country",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:destCity",
+          "choicesFrom": {
+            "connectionId": "conn:/xsf:dataObjects[1]/xsf:dataObject[1]/xsf:query[1]/xsf:xmlFileAdapter[1]",
+            "dataSource": "Locations",
+            "filterIds": [
+              "f:Locations:/locations/country/@code",
+              "f:main:/my:travelRequest/my:destCountry"
+            ],
+            "select": "xdXDocument:GetDOM(\"Locations\")/locations/country[@code = current()/my:destCountry]/city"
+          },
+          "ctrlId": "CTRL8",
+          "id": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 7969,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:destCity",
+          "title": "City",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:departDate",
+          "id": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 9192,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:departDate",
+          "title": "Departure",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:returnDate",
+          "id": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 10261,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:returnDate",
+          "title": "Return",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:purpose",
+          "ctrlId": "CTRL11",
+          "id": "ctl:view2.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 11220,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:purpose",
+          "title": "Purpose",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:travelerName",
+          "ctrlId": "CTRL1",
+          "id": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 12405,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:traveler/my:travelerName",
+          "title": "Name",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:travelerEmail",
+          "ctrlId": "CTRL2",
+          "id": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 12828,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:traveler/my:travelerEmail",
+          "title": "E-mail",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:travelerDept",
+          "ctrlId": "CTRL3",
+          "id": "ctl:view2.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 13259,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:traveler/my:travelerDept",
+          "title": "Department",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:passportNumber",
+          "ctrlId": "CTRL12",
+          "id": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 15307,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:international/my:passportNumber",
+          "title": "Passport number",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:passportExpiry",
+          "id": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 15875,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:international/my:passportExpiry",
+          "title": "Passport expiry",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:visaRequired",
+          "ctrlId": "CTRL14",
+          "id": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 16843,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:international/my:visaRequired",
+          "title": "Visa required",
+          "xctname": "CheckBox"
+        },
+        {
+          "binding": "my:travelInsurance",
+          "ctrlId": "CTRL15",
+          "id": "ctl:view2.xsl:/xsl:template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 17432,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:international/my:travelInsurance",
+          "title": "Travel insurance arranged",
+          "xctname": "CheckBox"
+        },
+        {
+          "binding": "my:costCenter",
+          "ctrlId": "CTRL17",
+          "id": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 18518,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:accounting/my:costCenter",
+          "title": "Cost center",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:estimatedCost",
+          "ctrlId": "CTRL18",
+          "id": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 18953,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:accounting/my:estimatedCost",
+          "title": "Estimated cost",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:advanceAmount",
+          "ctrlId": "CTRL19",
+          "id": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 19934,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:accounting/my:advanceAmount",
+          "title": "Cash advance",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:accountingApprover",
+          "ctrlId": "CTRL20",
+          "id": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 20912,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:accounting/my:accountingApprover",
+          "title": "Approved by",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:accountingStatus",
+          "ctrlId": "CTRL21",
+          "id": "ctl:view2.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 21355,
+            "file": "view2.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:travelRequest/my:accounting/my:accountingStatus",
+          "title": "Status",
+          "xctname": "dropdown"
+        }
+      ],
+      "id": "view:/xsf:views[1]/xsf:view[2]",
+      "isDefault": false,
+      "isPrint": false,
+      "name": "Accounting",
+      "scanned": true,
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 55,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[2]"
+      },
+      "xslFile": "view2.xsl"
+    }
+  ]
+}

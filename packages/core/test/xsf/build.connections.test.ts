@@ -133,34 +133,7 @@ describe('R11.7 oracle', () => {
   });
 });
 
-describe('R11.5 containsCredential', () => {
-  const credential = (cs: string) =>
-    parseManifest(
-      manifestBytes(
-        `<xsf:dataAdapters><xsf:adoAdapter name="a" connectionString="${cs}"/></xsf:dataAdapters>`,
-      ),
-    ).manifest.dataAdapters[0]!.containsCredential;
-
-  test.each([
-    'Password=secret',
-    'Data Source=x;Password=secret',
-    'Data Source=x; pwd = secret',
-    'PASSWORD=secret;Data Source=x',
-    'User ID=a;PwD=b',
-  ])('true: %s', (cs) => {
-    expect(credential(cs)).toBe(true);
-  });
-
-  test.each([
-    'Data Source=sql-legacy01;Integrated Security=SSPI',
-    'PasswordHint=none',
-    'MyPassword=x',
-    'Data Source=x;Persist Security Info=True',
-    '',
-  ])('false: %s', (cs) => {
-    expect(credential(cs)).toBe(false);
-  });
-
+describe('R11.5 containsCredential (cases shared with spec 02 R8.4: test/xsf/credentials.test.ts)', () => {
   test('every other adapter kind is false', () => {
     const m = parseManifest(
       manifestBytes(

@@ -1,0 +1,1558 @@
+{
+  "activeX": {
+    "allowed": [],
+    "controls": []
+  },
+  "calculations": [],
+  "codeBehind": {
+    "files": [],
+    "handlers": [],
+    "languages": [],
+    "present": false
+  },
+  "dataConnections": [],
+  "dependencies": {
+    "references": [
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:incidentReport/my:occurredAt",
+        "text": "my:occurredAt"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:incidentReport/my:site",
+        "text": "my:site"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:incidentReport/my:locationDetail",
+        "text": "my:locationDetail"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:incidentReport/my:severity",
+        "text": "my:severity"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[2]",
+        "role": "binding",
+        "targetId": "f:main:/my:incidentReport/my:severity",
+        "text": "my:severity"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[3]",
+        "role": "binding",
+        "targetId": "f:main:/my:incidentReport/my:severity",
+        "text": "my:severity"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:incidentReport/my:incidentDescription",
+        "text": "my:incidentDescription"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:incidentReport/my:scenePhoto",
+        "text": "my:scenePhoto"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:incidentReport/my:reporter/my:reporterName",
+        "text": "my:reporterName"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:incidentReport/my:reporter/my:reporterPhone",
+        "text": "my:reporterPhone"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[1]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:incidentReport/my:persons/my:person/my:followUps/my:followUp/my:actionDate",
+        "text": "my:actionDate"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:incidentReport/my:persons/my:person/my:followUps/my:followUp/my:actionTaken",
+        "text": "my:actionTaken"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[3]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:incidentReport/my:persons/my:person/my:followUps/my:followUp/my:actionOwner",
+        "text": "my:actionOwner"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:incidentReport/my:persons/my:person/my:personName",
+        "text": "my:personName"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:incidentReport/my:persons/my:person/my:personRole",
+        "text": "my:personRole"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:incidentReport/my:persons/my:person/my:injuryType",
+        "text": "my:injuryType"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:incidentReport/my:reporter/my:reporterName",
+        "text": "/my:incidentReport/my:reporter/my:reporterName"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:incidentReport/my:reporter/my:reporterName",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:incidentReport/my:occurredAt",
+        "text": "/my:incidentReport/my:occurredAt"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:incidentReport/my:occurredAt",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:incidentReport/my:severity",
+        "text": "/my:incidentReport/my:severity"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:incidentReport/my:severity",
+        "text": "."
+      }
+    ]
+  },
+  "fields": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:incidentReport/my:reporter",
+      "id": "f:main:/my:incidentReport/my:reporter/my:reporterName",
+      "kind": "field",
+      "label": "Name",
+      "labelEvidence": {
+        "at": {
+          "column": 11925,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Report"
+      },
+      "labelSource": "title",
+      "name": "reporterName",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:incidentReport/my:reporter/my:reporterName",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 26,
+        "path": "/xsd:schema[1]/xsd:element[3]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 21,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:incidentReport/my:reporter",
+      "id": "f:main:/my:incidentReport/my:reporter/my:reporterPhone",
+      "kind": "field",
+      "label": "Phone",
+      "labelEvidence": {
+        "at": {
+          "column": 12347,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Report"
+      },
+      "labelSource": "title",
+      "name": "reporterPhone",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:incidentReport/my:reporter/my:reporterPhone",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 27,
+        "path": "/xsd:schema[1]/xsd:element[4]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 22,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:incidentReport",
+      "id": "f:main:/my:incidentReport/my:occurredAt",
+      "kind": "field",
+      "label": "Date and time",
+      "labelEvidence": {
+        "at": {
+          "column": 5651,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Report"
+      },
+      "labelSource": "title",
+      "name": "occurredAt",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:incidentReport/my:occurredAt",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 28,
+        "path": "/xsd:schema[1]/xsd:element[5]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 7,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:dateTime",
+        "declared": "xsd:dateTime",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:incidentReport",
+      "id": "f:main:/my:incidentReport/my:site",
+      "kind": "field",
+      "label": "Site",
+      "labelEvidence": {
+        "at": {
+          "column": 6797,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "title",
+        "view": "Report"
+      },
+      "labelSource": "title",
+      "name": "site",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:incidentReport/my:site",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 29,
+        "path": "/xsd:schema[1]/xsd:element[6]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 8,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:incidentReport",
+      "id": "f:main:/my:incidentReport/my:locationDetail",
+      "kind": "field",
+      "label": "Exact location",
+      "labelEvidence": {
+        "at": {
+          "column": 7798,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Report"
+      },
+      "labelSource": "title",
+      "name": "locationDetail",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:incidentReport/my:locationDetail",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 30,
+        "path": "/xsd:schema[1]/xsd:element[7]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 9,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[2]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[3]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[2]",
+            "role": "binding"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[3]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:incidentReport",
+      "id": "f:main:/my:incidentReport/my:severity",
+      "kind": "field",
+      "label": "Severity",
+      "labelEvidence": {
+        "at": {
+          "column": 8233,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[1]/@title"
+        },
+        "step": "title",
+        "view": "Report"
+      },
+      "labelSource": "title",
+      "name": "severity",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:incidentReport/my:severity",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 31,
+        "path": "/xsd:schema[1]/xsd:element[8]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 10,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[5]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:incidentReport",
+      "id": "f:main:/my:incidentReport/my:incidentDescription",
+      "kind": "richText",
+      "label": "What happened",
+      "labelEvidence": {
+        "at": {
+          "column": 9859,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Report"
+      },
+      "labelSource": "title",
+      "name": "incidentDescription",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:incidentReport/my:incidentDescription",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 32,
+        "path": "/xsd:schema[1]/xsd:element[9]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 11,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[6]"
+      },
+      "xsdType": {
+        "builtin": "xsd:anyType",
+        "variety": "complex"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:incidentReport",
+      "id": "f:main:/my:incidentReport/my:scenePhoto",
+      "kind": "field",
+      "label": "Scene photo",
+      "labelEvidence": {
+        "at": {
+          "column": 10337,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Report"
+      },
+      "labelSource": "title",
+      "name": "scenePhoto",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:incidentReport/my:scenePhoto",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 39,
+        "path": "/xsd:schema[1]/xsd:element[10]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 12,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[7]"
+      },
+      "xsdType": {
+        "builtin": "xsd:base64Binary",
+        "declared": "xsd:base64Binary",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:incidentReport/my:persons/my:person",
+      "id": "f:main:/my:incidentReport/my:persons/my:person/my:personName",
+      "kind": "field",
+      "label": "Name",
+      "labelEvidence": {
+        "at": {
+          "column": 14972,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Report"
+      },
+      "labelSource": "title",
+      "name": "personName",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:incidentReport/my:persons/my:person/my:personName",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 57,
+        "path": "/xsd:schema[1]/xsd:element[13]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 50,
+        "path": "/xsd:schema[1]/xsd:element[12]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:incidentReport/my:persons/my:person",
+      "id": "f:main:/my:incidentReport/my:persons/my:person/my:personRole",
+      "kind": "field",
+      "label": "Role",
+      "labelEvidence": {
+        "at": {
+          "column": 15397,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "title",
+        "view": "Report"
+      },
+      "labelSource": "title",
+      "name": "personRole",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:incidentReport/my:persons/my:person/my:personRole",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 58,
+        "path": "/xsd:schema[1]/xsd:element[14]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 51,
+        "path": "/xsd:schema[1]/xsd:element[12]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:incidentReport/my:persons/my:person",
+      "id": "f:main:/my:incidentReport/my:persons/my:person/my:injuryType",
+      "kind": "field",
+      "label": "Injury",
+      "labelEvidence": {
+        "at": {
+          "column": 16448,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "title",
+        "view": "Report"
+      },
+      "labelSource": "title",
+      "name": "injuryType",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:incidentReport/my:persons/my:person/my:injuryType",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 59,
+        "path": "/xsd:schema[1]/xsd:element[15]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 52,
+        "path": "/xsd:schema[1]/xsd:element[12]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[1]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[1]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:incidentReport/my:persons/my:person/my:followUps/my:followUp",
+      "id": "f:main:/my:incidentReport/my:persons/my:person/my:followUps/my:followUp/my:actionDate",
+      "kind": "field",
+      "label": "Date",
+      "labelEvidence": {
+        "at": {
+          "column": 12762,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[1]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Report"
+      },
+      "labelSource": "title",
+      "name": "actionDate",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:incidentReport/my:persons/my:person/my:followUps/my:followUp/my:actionDate",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 76,
+        "path": "/xsd:schema[1]/xsd:element[18]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 70,
+        "path": "/xsd:schema[1]/xsd:element[17]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:date",
+        "declared": "xsd:date",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:incidentReport/my:persons/my:person/my:followUps/my:followUp",
+      "id": "f:main:/my:incidentReport/my:persons/my:person/my:followUps/my:followUp/my:actionTaken",
+      "kind": "field",
+      "label": "Action",
+      "labelEvidence": {
+        "at": {
+          "column": 13756,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Report"
+      },
+      "labelSource": "title",
+      "name": "actionTaken",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:incidentReport/my:persons/my:person/my:followUps/my:followUp/my:actionTaken",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 77,
+        "path": "/xsd:schema[1]/xsd:element[19]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 71,
+        "path": "/xsd:schema[1]/xsd:element[17]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[3]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[3]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:incidentReport/my:persons/my:person/my:followUps/my:followUp",
+      "id": "f:main:/my:incidentReport/my:persons/my:person/my:followUps/my:followUp/my:actionOwner",
+      "kind": "field",
+      "label": "Owner",
+      "labelEvidence": {
+        "at": {
+          "column": 14093,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[3]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Report"
+      },
+      "labelSource": "title",
+      "name": "actionOwner",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:incidentReport/my:persons/my:person/my:followUps/my:followUp/my:actionOwner",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 78,
+        "path": "/xsd:schema[1]/xsd:element[20]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 72,
+        "path": "/xsd:schema[1]/xsd:element[17]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "id": "g:main:/my:incidentReport",
+      "kind": "group",
+      "label": "Incident Report",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "incidentReport",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:incidentReport",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 3,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:incidentReport",
+      "id": "g:main:/my:incidentReport/my:reporter",
+      "kind": "group",
+      "label": "Reporter",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "reporter",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:incidentReport/my:reporter",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 18,
+        "path": "/xsd:schema[1]/xsd:element[2]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 6,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:incidentReport",
+      "id": "g:main:/my:incidentReport/my:persons",
+      "kind": "group",
+      "label": "Persons",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "persons",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:incidentReport/my:persons",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 40,
+        "path": "/xsd:schema[1]/xsd:element[11]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 13,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[8]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:incidentReport/my:persons",
+      "id": "g:main:/my:incidentReport/my:persons/my:person",
+      "kind": "group",
+      "label": "Person",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "person",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": true,
+      "path": "/my:incidentReport/my:persons/my:person",
+      "repeating": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 47,
+        "path": "/xsd:schema[1]/xsd:element[12]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 43,
+        "path": "/xsd:schema[1]/xsd:element[11]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:incidentReport/my:persons/my:person",
+      "id": "g:main:/my:incidentReport/my:persons/my:person/my:followUps",
+      "kind": "group",
+      "label": "Follow Ups",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "followUps",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:incidentReport/my:persons/my:person/my:followUps",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 60,
+        "path": "/xsd:schema[1]/xsd:element[16]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 53,
+        "path": "/xsd:schema[1]/xsd:element[12]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:incidentReport/my:persons/my:person/my:followUps",
+      "id": "g:main:/my:incidentReport/my:persons/my:person/my:followUps/my:followUp",
+      "kind": "group",
+      "label": "Follow Up",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "followUp",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00",
+      "nodeType": "element",
+      "optional": true,
+      "path": "/my:incidentReport/my:persons/my:person/my:followUps/my:followUp",
+      "repeating": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 67,
+        "path": "/xsd:schema[1]/xsd:element[17]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 63,
+        "path": "/xsd:schema[1]/xsd:element[16]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    }
+  ],
+  "irVersion": 1,
+  "issues": [],
+  "meta": {
+    "browserCompatible": false,
+    "generation": "2013",
+    "generationEvidence": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]/@productVersion"
+    },
+    "name": "Safety Incident Report",
+    "nameSource": "caption",
+    "productVersion": "15.0.0",
+    "publishEndpoint": {
+      "attribute": "publishUrl",
+      "liveness": "internal",
+      "reason": "filePath",
+      "source": {
+        "column": 1,
+        "file": "manifest.xsf",
+        "line": 6,
+        "path": "/xsf:xDocumentClass[1]/@publishUrl"
+      },
+      "value": "C:\\forms\\06-safety-incident.xsn"
+    },
+    "publishUrl": "C:\\forms\\06-safety-incident.xsn",
+    "solutionFormatVersion": "2.0.0.0",
+    "solutionVersion": "1.0.0.1",
+    "source": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]"
+    },
+    "urn": "urn:schemas-microsoft-com:office:infopath:Safety-Incident:-myXSD-2026-11-03T08-50-00"
+  },
+  "rules": [],
+  "signatures": {
+    "blocks": [],
+    "signatureLines": []
+  },
+  "unknowns": [],
+  "validations": [
+    {
+      "expression": ". = \"\"",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+      "kind": "errorCondition",
+      "match": "/my:incidentReport/my:reporter/my:reporterName",
+      "matchId": "f:main:/my:incidentReport/my:reporter/my:reporterName",
+      "message": {
+        "shortMessage": "Cannot be blank",
+        "text": "This field is required.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 93,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[1]"
+      },
+      "unresolvedRefs": []
+    },
+    {
+      "expression": ". = \"\"",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+      "kind": "errorCondition",
+      "match": "/my:incidentReport/my:occurredAt",
+      "matchId": "f:main:/my:incidentReport/my:occurredAt",
+      "message": {
+        "shortMessage": "Cannot be blank",
+        "text": "This field is required.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 94,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[2]"
+      },
+      "unresolvedRefs": []
+    },
+    {
+      "expression": ". = \"\"",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+      "kind": "errorCondition",
+      "match": "/my:incidentReport/my:severity",
+      "matchId": "f:main:/my:incidentReport/my:severity",
+      "message": {
+        "shortMessage": "Cannot be blank",
+        "text": "This field is required.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 95,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[3]"
+      },
+      "unresolvedRefs": []
+    }
+  ],
+  "views": [
+    {
+      "caption": "Report",
+      "controls": [
+        {
+          "binding": "my:occurredAt",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5738,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:incidentReport/my:occurredAt",
+          "title": "Date and time",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:site",
+          "ctrlId": "CTRL5",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 6746,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:incidentReport/my:site",
+          "title": "Site",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:locationDetail",
+          "ctrlId": "CTRL6",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 7754,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:incidentReport/my:locationDetail",
+          "title": "Exact location",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:severity",
+          "choice": {
+            "label": "Low",
+            "value": "Low"
+          },
+          "ctrlId": "CTRL7",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 8193,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:incidentReport/my:severity",
+          "title": "Severity",
+          "xctname": "OptionButton"
+        },
+        {
+          "binding": "my:severity",
+          "choice": {
+            "label": "Medium",
+            "value": "Medium"
+          },
+          "ctrlId": "CTRL8",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[2]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 8673,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[2]"
+          },
+          "targetId": "f:main:/my:incidentReport/my:severity",
+          "title": "Severity",
+          "xctname": "OptionButton"
+        },
+        {
+          "binding": "my:severity",
+          "choice": {
+            "label": "High",
+            "value": "High"
+          },
+          "ctrlId": "CTRL9",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[3]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 9162,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/input[3]"
+          },
+          "targetId": "f:main:/my:incidentReport/my:severity",
+          "title": "Severity",
+          "xctname": "OptionButton"
+        },
+        {
+          "binding": "my:incidentDescription",
+          "ctrlId": "CTRL10",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 9811,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:incidentReport/my:incidentDescription",
+          "title": "What happened",
+          "xctname": "RichText"
+        },
+        {
+          "binding": "my:scenePhoto",
+          "ctrlId": "CTRL11",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 10287,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:incidentReport/my:scenePhoto",
+          "title": "Scene photo",
+          "xctname": "InlineImage"
+        },
+        {
+          "binding": "my:reporterName",
+          "ctrlId": "CTRL1",
+          "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 11881,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:incidentReport/my:reporter/my:reporterName",
+          "title": "Name",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:reporterPhone",
+          "ctrlId": "CTRL2",
+          "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 12303,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:incidentReport/my:reporter/my:reporterPhone",
+          "title": "Phone",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:actionDate",
+          "id": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[1]/div[1]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 12841,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[1]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:incidentReport/my:persons/my:person/my:followUps/my:followUp/my:actionDate",
+          "title": "Date",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:actionTaken",
+          "ctrlId": "CTRL16",
+          "id": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 13712,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:incidentReport/my:persons/my:person/my:followUps/my:followUp/my:actionTaken",
+          "title": "Action",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:actionOwner",
+          "ctrlId": "CTRL17",
+          "id": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[3]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 14049,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[3]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:incidentReport/my:persons/my:person/my:followUps/my:followUp/my:actionOwner",
+          "title": "Owner",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:personName",
+          "ctrlId": "CTRL12",
+          "id": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 14928,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:incidentReport/my:persons/my:person/my:personName",
+          "title": "Name",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:personRole",
+          "ctrlId": "CTRL13",
+          "id": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 15346,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:incidentReport/my:persons/my:person/my:personRole",
+          "title": "Role",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:injuryType",
+          "ctrlId": "CTRL14",
+          "id": "ctl:view1.xsl:/xsl:template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 16397,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[4]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:incidentReport/my:persons/my:person/my:injuryType",
+          "title": "Injury",
+          "xctname": "dropdown"
+        }
+      ],
+      "id": "view:/xsf:views[1]/xsf:view[1]",
+      "isDefault": true,
+      "isPrint": false,
+      "name": "Report",
+      "scanned": true,
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 31,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]"
+      },
+      "xslFile": "view1.xsl"
+    }
+  ]
+}

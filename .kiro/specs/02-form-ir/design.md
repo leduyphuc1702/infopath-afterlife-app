@@ -279,6 +279,14 @@ Only these, each seen in our 53 views or recorded for the private corpus in requ
 | `object` with `classid`, or `class` containing `xdActiveX` | form 44; private: 7 in 2 workflow-task forms, all `clsid:61e40d31-993d-4777-8fa0-19ca59b6d0bb` (the Contact Selector [VERIFY: the name]) | `activeX.controls` (R4.5). Its `xd:binding` (with `xd:boundProp="xd:inline"`) resolves like any control, here to a group id. `xd:server` is an endpoint (§8) |
 | attribute value templates on literal result elements (XSLT 1.0 §7.6.2) | private: `xd:xctname="{{61e40d31-…}}"` on every ActiveX object | Every attribute the scan reads (`title`, `xd:xctname`, `xd:CtrlId`, `classid`, `xd:server`, `xd:onValue`) is decoded: `{{` → `{`, `}}` → `}`. A value with an unescaped `{…}` is dynamic: the property is absent and its name goes to `dynamicAttrs`. A dynamic `title` is not a label source (R5.1 step 1). `xd:binding` is read as written |
 
+Changed at task 7: "called from inside a `table`" means the repeat point's nearest table
+ancestor (`td`, `th`, `tr`, `tbody`, `thead`, `tfoot`, `table`) is not a cell. A moded template
+called from inside a layout cell (form 02's claimant section) is not a repeating row; one called
+from a `tbody` (form 02's expense rows) is. Reasons on `UNRESOLVED_BINDING` are the §7.3 ones plus
+`modeCallSites`, `modeNotCalled`, `namedTemplate`, `matchPattern`, `noSelect`, `notOnePath` and
+`xsl:<name>` for a control under another XSL instruction. A view whose XSL file is missing keeps
+`scanned: false` and adds no issue of its own: spec 01's `MISSING_FILE` already names it.
+
 Not understood, so a control under them gets `UNRESOLVED_BINDING`: `xsl:call-template` and named
 templates, `xsl:import`/`xsl:include` in a view, `match` patterns with `|` or predicates, and
 `select` values containing a variable. Bindings are resolved by §7 with the control as the
@@ -294,6 +302,16 @@ ignores `colspan`. [VERIFY: no sample uses `colspan` in a header row.]
 
 **Text** of a node means its text children and `xsl:text` contents in document order, stopping at
 (and excluding) any bound control and any other `xsl:*` element, with whitespace collapsed.
+
+Changed at task 8: (1) text after a `CheckBox` or `OptionButton` belongs to it (its checkbox text
+or choice label), so R5.1 step 2 gives nothing for the next control in that cell when the
+previous bound control is one of these; without this, the second of two checkboxes without
+ScreenTips in one cell took the first one's text. (2) Whitespace-only text between elements is
+not text: XSLT 1.0 §3.4 strips it from the stylesheet, so `<b>Site</b> <xsl:text>x</xsl:text>`
+reads `Sitex`. Block elements (`div`, `p`, `br`, table parts, headings, lists) separate words.
+(3) The default view is the one `isDefault` marks; with none marked, the first scanned view.
+(4) R5.1's counts are over the 606 main-tree fields; the 9 secondary-source fields of forms 03
+and 04 have no control and get step 8.
 
 ## 7. References: tokenizer and resolver (R11)
 
@@ -396,6 +414,11 @@ Hosts are compared lower-case with one trailing dot removed.
 is replaced by `***` and the rest is kept byte for byte; `credentialRedacted` is true when at least
 one was replaced. The connection's `attrs.connectionString` and its endpoint `value` both hold the
 redacted string. Spec 01's `containsCredential` regex finds the same keys.
+
+Changed at task 7 (R8.4): the key test is `/(^|[\s:])(password|pwd)$/i` on the trimmed key, the
+whitespace around the value is kept, and a URL userinfo password becomes `***` (the user name
+kept, no `URL` serialisation). Every connection attribute is redacted this way. Spec 01's
+`containsCredential` is now `redactSecrets(cs).redacted`, from the shared `src/xsf/credentials.ts`.
 
 ## 9. JSON (R13.1, R14)
 

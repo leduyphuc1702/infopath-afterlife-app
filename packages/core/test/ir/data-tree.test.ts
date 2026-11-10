@@ -18,7 +18,7 @@ describe('R3.1 fields and groups', () => {
       required: false,
       groupId: 'g:main:/my:leaveRequest',
       label: 'Reason',
-      labelSource: 'name',
+      labelSource: 'title', // stage 6 (task 8)
     });
   });
 

@@ -106,7 +106,7 @@ describe('redaction (R8.4)', () => {
       'Provider=SQLOLEDB.1;Data Source=sql-legacy01;User ID=forms;Password=fictional;Packet Size=4096',
       'Provider=SQLOLEDB.1;Data Source=sql-legacy01;User ID=forms;Password=***;Packet Size=4096',
     ],
-    ['Server=a; pwd = s3cr;et? ;x=1', 'Server=a; pwd =***;et? ;x=1'],
+    ['Server=a; pwd = s3cr;et? ;x=1', 'Server=a; pwd = ***;et? ;x=1'],
     ['Server=a;PASSWORD="se;cret";Pwd={a;b}', 'Server=a;PASSWORD=***;Pwd=***'],
     ['Server=a;Password=last', 'Server=a;Password=***'],
   ])('%s', (input, output) => {

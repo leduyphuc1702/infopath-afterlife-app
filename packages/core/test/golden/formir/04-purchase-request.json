@@ -1,0 +1,2649 @@
+{
+  "activeX": {
+    "allowed": [],
+    "controls": []
+  },
+  "calculations": [
+    {
+      "expression": "xdMath:Nz(../my:quantity) * xdMath:Nz(../my:unitPrice)",
+      "id": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+      "refresh": "onChange",
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 114,
+        "path": "/xsf:xDocumentClass[1]/xsf:calculations[1]/xsf:calculatedField[1]"
+      },
+      "target": "/my:purchaseRequest/my:lines/my:line/my:lineTotal",
+      "targetId": "f:main:/my:purchaseRequest/my:lines/my:line/my:lineTotal",
+      "unresolvedRefs": []
+    },
+    {
+      "expression": "sum(xdMath:Nz(../my:lines/my:line/my:lineTotal))",
+      "id": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+      "refresh": "onChange",
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 115,
+        "path": "/xsf:xDocumentClass[1]/xsf:calculations[1]/xsf:calculatedField[2]"
+      },
+      "target": "/my:purchaseRequest/my:subtotal",
+      "targetId": "f:main:/my:purchaseRequest/my:subtotal",
+      "unresolvedRefs": []
+    },
+    {
+      "expression": "round(xdMath:Nz(../my:subtotal) * xdMath:Nz(../my:vatRate) * 100) div 100",
+      "id": "calc:/xsf:calculations[1]/xsf:calculatedField[3]",
+      "refresh": "onChange",
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 116,
+        "path": "/xsf:xDocumentClass[1]/xsf:calculations[1]/xsf:calculatedField[3]"
+      },
+      "target": "/my:purchaseRequest/my:vatAmount",
+      "targetId": "f:main:/my:purchaseRequest/my:vatAmount",
+      "unresolvedRefs": []
+    },
+    {
+      "expression": "xdMath:Nz(../my:subtotal) + xdMath:Nz(../my:vatAmount)",
+      "id": "calc:/xsf:calculations[1]/xsf:calculatedField[4]",
+      "refresh": "onChange",
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 117,
+        "path": "/xsf:xDocumentClass[1]/xsf:calculations[1]/xsf:calculatedField[4]"
+      },
+      "target": "/my:purchaseRequest/my:grandTotal",
+      "targetId": "f:main:/my:purchaseRequest/my:grandTotal",
+      "unresolvedRefs": []
+    }
+  ],
+  "codeBehind": {
+    "files": [],
+    "handlers": [],
+    "languages": [],
+    "present": false
+  },
+  "dataConnections": [
+    {
+      "adapterKind": "adoAdapter",
+      "attrs": {
+        "commandText": "select \"VendorID\",\"VendorName\" from \"dbo\".\"Vendors\" as \"Vendors\"",
+        "connectionString": "Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=True;Initial Catalog=Purchasing;Data Source=sql-legacy01;Use Procedure for Prepare=1;Auto Translate=True;Packet Size=4096;Workstation ID=FORMS01;Use Encryption for Data=False;Tag with column collation when possible=False",
+        "queryAllowed": "yes",
+        "submitAllowed": "no"
+      },
+      "children": [],
+      "credentialRedacted": false,
+      "dataSource": "Vendors",
+      "endpoints": [
+        {
+          "attribute": "connectionString",
+          "host": "sql-legacy01",
+          "liveness": "internal",
+          "reason": "singleLabel",
+          "source": {
+            "column": 5,
+            "file": "manifest.xsf",
+            "line": 84,
+            "path": "/xsf:xDocumentClass[1]/xsf:dataObjects[1]/xsf:dataObject[1]/xsf:query[1]/xsf:adoAdapter[1]/@connectionString"
+          },
+          "value": "Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=True;Initial Catalog=Purchasing;Data Source=sql-legacy01;Use Procedure for Prepare=1;Auto Translate=True;Packet Size=4096;Workstation ID=FORMS01;Use Encryption for Data=False;Tag with column collation when possible=False"
+        }
+      ],
+      "id": "conn:/xsf:dataObjects[1]/xsf:dataObject[1]/xsf:query[1]/xsf:adoAdapter[1]",
+      "isQuery": true,
+      "isSubmit": false,
+      "lineage": {
+        "fieldIds": [
+          "g:Vendors:/dfs:myFields/dfs:dataFields/d:Vendors"
+        ],
+        "usedBy": [
+          "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]"
+        ]
+      },
+      "source": {
+        "column": 5,
+        "file": "manifest.xsf",
+        "line": 84,
+        "path": "/xsf:xDocumentClass[1]/xsf:dataObjects[1]/xsf:dataObject[1]/xsf:query[1]/xsf:adoAdapter[1]"
+      },
+      "unresolvedRefs": []
+    },
+    {
+      "adapterKind": "webServiceAdapter",
+      "attrs": {
+        "name": "BudgetService",
+        "queryAllowed": "yes",
+        "submitAllowed": "no",
+        "wsdlUrl": "http://forms-legacy/budget/BudgetService.asmx?WSDL"
+      },
+      "children": [
+        {
+          "attrs": {
+            "name": "GetRemainingBudget",
+            "serviceUrl": "http://forms-legacy/budget/BudgetService.asmx",
+            "soapAction": "http://forms-legacy/budget/GetRemainingBudget"
+          },
+          "kind": "operation",
+          "source": {
+            "column": 6,
+            "file": "manifest.xsf",
+            "line": 90,
+            "path": "/xsf:xDocumentClass[1]/xsf:dataObjects[1]/xsf:dataObject[2]/xsf:query[1]/xsf:webServiceAdapter[1]/xsf:operation[1]"
+          }
+        },
+        {
+          "attrs": {
+            "source": "BudgetServiceInput.xml"
+          },
+          "kind": "input",
+          "source": {
+            "column": 7,
+            "file": "manifest.xsf",
+            "line": 91,
+            "path": "/xsf:xDocumentClass[1]/xsf:dataObjects[1]/xsf:dataObject[2]/xsf:query[1]/xsf:webServiceAdapter[1]/xsf:operation[1]/xsf:input[1]"
+          }
+        }
+      ],
+      "credentialRedacted": false,
+      "dataSource": "BudgetService",
+      "endpoints": [
+        {
+          "attribute": "wsdlUrl",
+          "host": "forms-legacy",
+          "liveness": "internal",
+          "reason": "singleLabel",
+          "source": {
+            "column": 5,
+            "file": "manifest.xsf",
+            "line": 89,
+            "path": "/xsf:xDocumentClass[1]/xsf:dataObjects[1]/xsf:dataObject[2]/xsf:query[1]/xsf:webServiceAdapter[1]/@wsdlUrl"
+          },
+          "value": "http://forms-legacy/budget/BudgetService.asmx?WSDL"
+        },
+        {
+          "attribute": "serviceUrl",
+          "host": "forms-legacy",
+          "liveness": "internal",
+          "reason": "singleLabel",
+          "source": {
+            "column": 6,
+            "file": "manifest.xsf",
+            "line": 90,
+            "path": "/xsf:xDocumentClass[1]/xsf:dataObjects[1]/xsf:dataObject[2]/xsf:query[1]/xsf:webServiceAdapter[1]/xsf:operation[1]/@serviceUrl"
+          },
+          "value": "http://forms-legacy/budget/BudgetService.asmx"
+        }
+      ],
+      "id": "conn:/xsf:dataObjects[1]/xsf:dataObject[2]/xsf:query[1]/xsf:webServiceAdapter[1]",
+      "isQuery": true,
+      "isSubmit": false,
+      "lineage": {
+        "fieldIds": [
+          "f:BudgetService:/dfs:myFields/dfs:queryFields/tns:GetRemainingBudget/tns:costCenter",
+          "f:BudgetService:/dfs:myFields/dfs:dataFields/tns:GetRemainingBudgetResponse/tns:GetRemainingBudgetResult"
+        ],
+        "usedBy": [
+          "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[1]",
+          "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[2]"
+        ]
+      },
+      "name": "BudgetService",
+      "source": {
+        "column": 5,
+        "file": "manifest.xsf",
+        "line": 89,
+        "path": "/xsf:xDocumentClass[1]/xsf:dataObjects[1]/xsf:dataObject[2]/xsf:query[1]/xsf:webServiceAdapter[1]"
+      },
+      "unresolvedRefs": []
+    }
+  ],
+  "dependencies": {
+    "references": [
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:purchaseRequest/my:vendorId",
+        "text": "my:vendorId"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]",
+        "role": "choicesFilter",
+        "targetId": "g:Vendors:/dfs:myFields/dfs:dataFields/d:Vendors",
+        "text": "xdXDocument:GetDOM(\"Vendors\")/dfs:myFields/dfs:dataFields/d:Vendors"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:purchaseRequest/my:neededBy",
+        "text": "my:neededBy"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:purchaseRequest/my:subtotal",
+        "text": "my:subtotal"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:purchaseRequest/my:vatRate",
+        "text": "my:vatRate"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:purchaseRequest/my:vatAmount",
+        "text": "my:vatAmount"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[8]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:purchaseRequest/my:grandTotal",
+        "text": "my:grandTotal"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[9]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:purchaseRequest/my:budgetRemaining",
+        "text": "my:budgetRemaining"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[10]/td[2]/div[1]/input[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:purchaseRequest/my:needsAccounting",
+        "text": "my:needsAccounting"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[11]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:purchaseRequest/my:justification",
+        "text": "my:justification"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:purchaseRequest/my:requester/my:requesterName",
+        "text": "my:requesterName"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:purchaseRequest/my:requester/my:requesterEmail",
+        "text": "my:requesterEmail"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:purchaseRequest/my:requester/my:costCenterCode",
+        "text": "my:costCenterCode"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[1]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:purchaseRequest/my:lines/my:line/my:lineDescription",
+        "text": "my:lineDescription"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[2]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:purchaseRequest/my:lines/my:line/my:quantity",
+        "text": "my:quantity"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[3]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:purchaseRequest/my:lines/my:line/my:unitPrice",
+        "text": "my:unitPrice"
+      },
+      {
+        "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[4]/div[1]/span[1]",
+        "role": "binding",
+        "targetId": "f:main:/my:purchaseRequest/my:lines/my:line/my:lineTotal",
+        "text": "my:lineTotal"
+      },
+      {
+        "elementId": "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[1]",
+        "role": "actionExpression",
+        "targetId": "f:main:/my:purchaseRequest/my:requester/my:costCenterCode",
+        "text": "/my:purchaseRequest/my:requester/my:costCenterCode"
+      },
+      {
+        "elementId": "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[1]",
+        "role": "assignmentTarget",
+        "targetId": "f:BudgetService:/dfs:myFields/dfs:queryFields/tns:GetRemainingBudget/tns:costCenter",
+        "text": "xdXDocument:GetDOM(\"BudgetService\")/dfs:myFields/dfs:queryFields/tns:GetRemainingBudget/tns:costCenter"
+      },
+      {
+        "elementId": "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[2]",
+        "role": "actionExpression",
+        "targetId": "f:BudgetService:/dfs:myFields/dfs:dataFields/tns:GetRemainingBudgetResponse/tns:GetRemainingBudgetResult",
+        "text": "xdXDocument:GetDOM(\"BudgetService\")/dfs:myFields/dfs:dataFields/tns:GetRemainingBudgetResponse/tns:GetRemainingBudgetResult"
+      },
+      {
+        "elementId": "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[2]",
+        "role": "assignmentTarget",
+        "targetId": "f:main:/my:purchaseRequest/my:budgetRemaining",
+        "text": "/my:purchaseRequest/my:budgetRemaining"
+      },
+      {
+        "elementId": "rule:/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[1]",
+        "role": "condition",
+        "targetId": "f:main:/my:purchaseRequest/my:grandTotal",
+        "text": "/my:purchaseRequest/my:grandTotal"
+      },
+      {
+        "elementId": "action:/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[1]/xsf:assignmentAction[1]",
+        "role": "assignmentTarget",
+        "targetId": "f:main:/my:purchaseRequest/my:needsAccounting",
+        "text": "/my:purchaseRequest/my:needsAccounting"
+      },
+      {
+        "elementId": "action:/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[1]/xsf:dialogBoxExpressionAction[1]",
+        "role": "dialogText",
+        "targetId": "f:main:/my:purchaseRequest/my:grandTotal",
+        "text": "/my:purchaseRequest/my:grandTotal"
+      },
+      {
+        "elementId": "rule:/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[2]",
+        "role": "condition",
+        "targetId": "f:main:/my:purchaseRequest/my:grandTotal",
+        "text": "/my:purchaseRequest/my:grandTotal"
+      },
+      {
+        "elementId": "action:/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[2]/xsf:assignmentAction[1]",
+        "role": "assignmentTarget",
+        "targetId": "f:main:/my:purchaseRequest/my:needsAccounting",
+        "text": "/my:purchaseRequest/my:needsAccounting"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+        "role": "calcTarget",
+        "targetId": "f:main:/my:purchaseRequest/my:lines/my:line/my:lineTotal",
+        "text": "/my:purchaseRequest/my:lines/my:line/my:lineTotal"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+        "role": "calcExpression",
+        "targetId": "f:main:/my:purchaseRequest/my:lines/my:line/my:quantity",
+        "text": "../my:quantity"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+        "role": "calcExpression",
+        "targetId": "f:main:/my:purchaseRequest/my:lines/my:line/my:unitPrice",
+        "text": "../my:unitPrice"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+        "role": "calcTarget",
+        "targetId": "f:main:/my:purchaseRequest/my:subtotal",
+        "text": "/my:purchaseRequest/my:subtotal"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+        "role": "calcExpression",
+        "targetId": "f:main:/my:purchaseRequest/my:lines/my:line/my:lineTotal",
+        "text": "../my:lines/my:line/my:lineTotal"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[3]",
+        "role": "calcTarget",
+        "targetId": "f:main:/my:purchaseRequest/my:vatAmount",
+        "text": "/my:purchaseRequest/my:vatAmount"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[3]",
+        "role": "calcExpression",
+        "targetId": "f:main:/my:purchaseRequest/my:subtotal",
+        "text": "../my:subtotal"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[3]",
+        "role": "calcExpression",
+        "targetId": "f:main:/my:purchaseRequest/my:vatRate",
+        "text": "../my:vatRate"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[4]",
+        "role": "calcTarget",
+        "targetId": "f:main:/my:purchaseRequest/my:grandTotal",
+        "text": "/my:purchaseRequest/my:grandTotal"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[4]",
+        "role": "calcExpression",
+        "targetId": "f:main:/my:purchaseRequest/my:subtotal",
+        "text": "../my:subtotal"
+      },
+      {
+        "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[4]",
+        "role": "calcExpression",
+        "targetId": "f:main:/my:purchaseRequest/my:vatAmount",
+        "text": "../my:vatAmount"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:purchaseRequest/my:requester/my:requesterName",
+        "text": "/my:purchaseRequest/my:requester/my:requesterName"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:purchaseRequest/my:requester/my:requesterName",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:purchaseRequest/my:justification",
+        "text": "/my:purchaseRequest/my:justification"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:purchaseRequest/my:justification",
+        "text": "."
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+        "role": "validationMatch",
+        "targetId": "f:main:/my:purchaseRequest/my:lines/my:line/my:quantity",
+        "text": "/my:purchaseRequest/my:lines/my:line/my:quantity"
+      },
+      {
+        "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+        "role": "validationExpression",
+        "targetId": "f:main:/my:purchaseRequest/my:lines/my:line/my:quantity",
+        "text": "."
+      }
+    ]
+  },
+  "fields": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:purchaseRequest/my:requester",
+      "id": "f:main:/my:purchaseRequest/my:requester/my:requesterName",
+      "kind": "field",
+      "label": "Name",
+      "labelEvidence": {
+        "at": {
+          "column": 15986,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "requesterName",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:purchaseRequest/my:requester/my:requesterName",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 30,
+        "path": "/xsd:schema[1]/xsd:element[3]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 24,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:purchaseRequest/my:requester",
+      "id": "f:main:/my:purchaseRequest/my:requester/my:requesterEmail",
+      "kind": "field",
+      "label": "E-mail",
+      "labelEvidence": {
+        "at": {
+          "column": 16411,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "requesterEmail",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:purchaseRequest/my:requester/my:requesterEmail",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 31,
+        "path": "/xsd:schema[1]/xsd:element[4]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 25,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[1]",
+            "role": "actionExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:purchaseRequest/my:requester",
+      "id": "f:main:/my:purchaseRequest/my:requester/my:costCenterCode",
+      "kind": "field",
+      "label": "Cost center",
+      "labelEvidence": {
+        "at": {
+          "column": 16845,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "costCenterCode",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:purchaseRequest/my:requester/my:costCenterCode",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 32,
+        "path": "/xsd:schema[1]/xsd:element[5]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 26,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:purchaseRequest",
+      "id": "f:main:/my:purchaseRequest/my:vendorId",
+      "kind": "field",
+      "label": "Vendor (from sql-legacy01)",
+      "labelEvidence": {
+        "at": {
+          "column": 5729,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "vendorId",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:purchaseRequest/my:vendorId",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 33,
+        "path": "/xsd:schema[1]/xsd:element[6]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 7,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:purchaseRequest",
+      "id": "f:main:/my:purchaseRequest/my:neededBy",
+      "kind": "field",
+      "label": "Needed by",
+      "labelEvidence": {
+        "at": {
+          "column": 6845,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "neededBy",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:purchaseRequest/my:neededBy",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 34,
+        "path": "/xsd:schema[1]/xsd:element[7]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 8,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:date",
+        "declared": "xsd:date",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[1]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:purchaseRequest/my:lines/my:line",
+      "id": "f:main:/my:purchaseRequest/my:lines/my:line/my:lineDescription",
+      "kind": "field",
+      "label": "Description",
+      "labelEvidence": {
+        "at": {
+          "column": 17278,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[1]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "lineDescription",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:purchaseRequest/my:lines/my:line/my:lineDescription",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 52,
+        "path": "/xsd:schema[1]/xsd:element[10]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 45,
+        "path": "/xsd:schema[1]/xsd:element[9]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+            "role": "calcExpression"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:purchaseRequest/my:lines/my:line",
+      "id": "f:main:/my:purchaseRequest/my:lines/my:line/my:quantity",
+      "kind": "field",
+      "label": "Qty",
+      "labelEvidence": {
+        "at": {
+          "column": 17649,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "quantity",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:purchaseRequest/my:lines/my:line/my:quantity",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 53,
+        "path": "/xsd:schema[1]/xsd:element[11]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 46,
+        "path": "/xsd:schema[1]/xsd:element[9]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:integer",
+        "declared": "xsd:integer",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+            "role": "calcExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[3]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[3]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:purchaseRequest/my:lines/my:line",
+      "id": "f:main:/my:purchaseRequest/my:lines/my:line/my:unitPrice",
+      "kind": "field",
+      "label": "Unit price",
+      "labelEvidence": {
+        "at": {
+          "column": 18451,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[3]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "unitPrice",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:purchaseRequest/my:lines/my:line/my:unitPrice",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 54,
+        "path": "/xsd:schema[1]/xsd:element[12]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 47,
+        "path": "/xsd:schema[1]/xsd:element[9]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[3]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+            "role": "calcExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[4]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[1]",
+            "role": "calcTarget"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[4]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:purchaseRequest/my:lines/my:line",
+      "id": "f:main:/my:purchaseRequest/my:lines/my:line/my:lineTotal",
+      "kind": "field",
+      "label": "Line total",
+      "labelEvidence": {
+        "at": {
+          "column": 19318,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[4]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "lineTotal",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:purchaseRequest/my:lines/my:line/my:lineTotal",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 55,
+        "path": "/xsd:schema[1]/xsd:element[13]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 48,
+        "path": "/xsd:schema[1]/xsd:element[9]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[3]",
+            "role": "calcExpression"
+          },
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[4]",
+            "role": "calcExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[2]",
+            "role": "calcTarget"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:purchaseRequest",
+      "id": "f:main:/my:purchaseRequest/my:subtotal",
+      "kind": "field",
+      "label": "Subtotal",
+      "labelEvidence": {
+        "at": {
+          "column": 9171,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "subtotal",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:purchaseRequest/my:subtotal",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 56,
+        "path": "/xsd:schema[1]/xsd:element[14]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 10,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[5]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[3]",
+            "role": "calcExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:purchaseRequest",
+      "id": "f:main:/my:purchaseRequest/my:vatRate",
+      "kind": "field",
+      "label": "VAT rate",
+      "labelEvidence": {
+        "at": {
+          "column": 10173,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "vatRate",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:purchaseRequest/my:vatRate",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 57,
+        "path": "/xsd:schema[1]/xsd:element[15]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 11,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[6]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[4]",
+            "role": "calcExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[3]",
+            "role": "calcTarget"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:purchaseRequest",
+      "id": "f:main:/my:purchaseRequest/my:vatAmount",
+      "kind": "field",
+      "label": "VAT",
+      "labelEvidence": {
+        "at": {
+          "column": 11061,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "vatAmount",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:purchaseRequest/my:vatAmount",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 58,
+        "path": "/xsd:schema[1]/xsd:element[16]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 12,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[7]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "rule:/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[1]",
+            "role": "condition"
+          },
+          {
+            "elementId": "rule:/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[2]",
+            "role": "condition"
+          },
+          {
+            "elementId": "action:/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[1]/xsf:dialogBoxExpressionAction[1]",
+            "role": "dialogText"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[8]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "calc:/xsf:calculations[1]/xsf:calculatedField[4]",
+            "role": "calcTarget"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[8]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:purchaseRequest",
+      "id": "f:main:/my:purchaseRequest/my:grandTotal",
+      "kind": "field",
+      "label": "Total incl. VAT",
+      "labelEvidence": {
+        "at": {
+          "column": 12069,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[8]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "grandTotal",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:purchaseRequest/my:grandTotal",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 59,
+        "path": "/xsd:schema[1]/xsd:element[17]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 13,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[8]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[9]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[2]",
+            "role": "assignmentTarget"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[9]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:purchaseRequest",
+      "id": "f:main:/my:purchaseRequest/my:budgetRemaining",
+      "kind": "field",
+      "label": "Budget remaining (web service)",
+      "labelEvidence": {
+        "at": {
+          "column": 13108,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[9]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "budgetRemaining",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:purchaseRequest/my:budgetRemaining",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 60,
+        "path": "/xsd:schema[1]/xsd:element[18]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 14,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[9]"
+      },
+      "xsdType": {
+        "builtin": "xsd:double",
+        "declared": "xsd:double",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[10]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "action:/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[1]/xsf:assignmentAction[1]",
+            "role": "assignmentTarget"
+          },
+          {
+            "elementId": "action:/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[2]/xsf:assignmentAction[1]",
+            "role": "assignmentTarget"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[10]/td[2]/div[1]/input[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:purchaseRequest",
+      "id": "f:main:/my:purchaseRequest/my:needsAccounting",
+      "kind": "field",
+      "label": "Needs accounting approval",
+      "labelEvidence": {
+        "at": {
+          "column": 14126,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[10]/td[2]/div[1]/input[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "needsAccounting",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:purchaseRequest/my:needsAccounting",
+      "repeating": false,
+      "required": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 61,
+        "path": "/xsd:schema[1]/xsd:element[19]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 15,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[10]"
+      },
+      "xsdType": {
+        "builtin": "xsd:boolean",
+        "declared": "xsd:boolean",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+            "role": "validationMatch"
+          },
+          {
+            "elementId": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+            "role": "validationExpression"
+          },
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[11]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ],
+        "writtenBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[11]/td[2]/div[1]/span[1]",
+            "role": "binding"
+          }
+        ]
+      },
+      "groupId": "g:main:/my:purchaseRequest",
+      "id": "f:main:/my:purchaseRequest/my:justification",
+      "kind": "field",
+      "label": "Justification",
+      "labelEvidence": {
+        "at": {
+          "column": 14765,
+          "file": "view1.xsl",
+          "line": 1,
+          "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[11]/td[2]/div[1]/span[1]/@title"
+        },
+        "step": "title",
+        "view": "Request"
+      },
+      "labelSource": "title",
+      "name": "justification",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:purchaseRequest/my:justification",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 62,
+        "path": "/xsd:schema[1]/xsd:element[20]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 16,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[11]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "BudgetService",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": [
+          {
+            "elementId": "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[1]",
+            "role": "assignmentTarget"
+          }
+        ]
+      },
+      "groupId": "g:BudgetService:/dfs:myFields/dfs:queryFields/tns:GetRemainingBudget",
+      "id": "f:BudgetService:/dfs:myFields/dfs:queryFields/tns:GetRemainingBudget/tns:costCenter",
+      "kind": "field",
+      "label": "Cost Center",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "costCenter",
+      "namespace": "http://forms-legacy/budget/",
+      "nodeType": "element",
+      "optional": true,
+      "path": "/dfs:myFields/dfs:queryFields/tns:GetRemainingBudget/tns:costCenter",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 5,
+        "file": "BudgetService1.xsd",
+        "line": 6,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "BudgetService",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[2]",
+            "role": "actionExpression"
+          }
+        ],
+        "writtenBy": []
+      },
+      "groupId": "g:BudgetService:/dfs:myFields/dfs:dataFields/tns:GetRemainingBudgetResponse",
+      "id": "f:BudgetService:/dfs:myFields/dfs:dataFields/tns:GetRemainingBudgetResponse/tns:GetRemainingBudgetResult",
+      "kind": "field",
+      "label": "Get Remaining Budget Result",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "GetRemainingBudgetResult",
+      "namespace": "http://forms-legacy/budget/",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/dfs:myFields/dfs:dataFields/tns:GetRemainingBudgetResponse/tns:GetRemainingBudgetResult",
+      "repeating": false,
+      "required": true,
+      "source": {
+        "column": 5,
+        "file": "BudgetService1.xsd",
+        "line": 13,
+        "path": "/xsd:schema[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:decimal",
+        "declared": "xsd:decimal",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "Vendors",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:Vendors:/dfs:myFields/dfs:queryFields/{http://schemas.microsoft.com/office/infopath/2003/ado/queryFields}Vendors",
+      "id": "f:Vendors:/dfs:myFields/dfs:queryFields/{http://schemas.microsoft.com/office/infopath/2003/ado/queryFields}Vendors/@VendorID",
+      "kind": "field",
+      "label": "Vendor ID",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "VendorID",
+      "namespace": null,
+      "nodeType": "attribute",
+      "optional": true,
+      "path": "/dfs:myFields/dfs:queryFields/{http://schemas.microsoft.com/office/infopath/2003/ado/queryFields}Vendors/@VendorID",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 4,
+        "file": "Vendors2.xsd",
+        "line": 5,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:attribute[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "Vendors",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:Vendors:/dfs:myFields/dfs:queryFields/{http://schemas.microsoft.com/office/infopath/2003/ado/queryFields}Vendors",
+      "id": "f:Vendors:/dfs:myFields/dfs:queryFields/{http://schemas.microsoft.com/office/infopath/2003/ado/queryFields}Vendors/@VendorName",
+      "kind": "field",
+      "label": "Vendor Name",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "VendorName",
+      "namespace": null,
+      "nodeType": "attribute",
+      "optional": true,
+      "path": "/dfs:myFields/dfs:queryFields/{http://schemas.microsoft.com/office/infopath/2003/ado/queryFields}Vendors/@VendorName",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 4,
+        "file": "Vendors2.xsd",
+        "line": 6,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:attribute[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "Vendors",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:Vendors:/dfs:myFields/dfs:dataFields/d:Vendors",
+      "id": "f:Vendors:/dfs:myFields/dfs:dataFields/d:Vendors/@VendorID",
+      "kind": "field",
+      "label": "Vendor ID",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "VendorID",
+      "namespace": null,
+      "nodeType": "attribute",
+      "optional": true,
+      "path": "/dfs:myFields/dfs:dataFields/d:Vendors/@VendorID",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 4,
+        "file": "Vendors1.xsd",
+        "line": 5,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:attribute[1]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    },
+    {
+      "dataSource": "Vendors",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:Vendors:/dfs:myFields/dfs:dataFields/d:Vendors",
+      "id": "f:Vendors:/dfs:myFields/dfs:dataFields/d:Vendors/@VendorName",
+      "kind": "field",
+      "label": "Vendor Name",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "VendorName",
+      "namespace": null,
+      "nodeType": "attribute",
+      "optional": true,
+      "path": "/dfs:myFields/dfs:dataFields/d:Vendors/@VendorName",
+      "repeating": false,
+      "required": false,
+      "source": {
+        "column": 4,
+        "file": "Vendors1.xsd",
+        "line": 6,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:attribute[2]"
+      },
+      "xsdType": {
+        "builtin": "xsd:string",
+        "declared": "xsd:string",
+        "variety": "atomic"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "id": "g:main:/my:purchaseRequest",
+      "kind": "group",
+      "label": "Purchase Request",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "purchaseRequest",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:purchaseRequest",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 3,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:purchaseRequest",
+      "id": "g:main:/my:purchaseRequest/my:requester",
+      "kind": "group",
+      "label": "Requester",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "requester",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:purchaseRequest/my:requester",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 21,
+        "path": "/xsd:schema[1]/xsd:element[2]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 6,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:purchaseRequest",
+      "id": "g:main:/my:purchaseRequest/my:lines",
+      "kind": "group",
+      "label": "Lines",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "lines",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/my:purchaseRequest/my:lines",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 35,
+        "path": "/xsd:schema[1]/xsd:element[8]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 9,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[4]"
+      }
+    },
+    {
+      "dataSource": "main",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:main:/my:purchaseRequest/my:lines",
+      "id": "g:main:/my:purchaseRequest/my:lines/my:line",
+      "kind": "group",
+      "label": "Line",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "line",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00",
+      "nodeType": "element",
+      "optional": true,
+      "path": "/my:purchaseRequest/my:lines/my:line",
+      "repeating": true,
+      "source": {
+        "column": 2,
+        "file": "myschema.xsd",
+        "line": 42,
+        "path": "/xsd:schema[1]/xsd:element[9]"
+      },
+      "use": {
+        "column": 5,
+        "file": "myschema.xsd",
+        "line": 38,
+        "path": "/xsd:schema[1]/xsd:element[8]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "BudgetService",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "id": "g:BudgetService:/dfs:myFields",
+      "kind": "group",
+      "label": "My Fields",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "myFields",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/dataFormSolution",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/dfs:myFields",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "BudgetService.xsd",
+        "line": 4,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "BudgetService",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:BudgetService:/dfs:myFields",
+      "id": "g:BudgetService:/dfs:myFields/dfs:queryFields",
+      "kind": "group",
+      "label": "Query Fields",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "queryFields",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/dataFormSolution",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/dfs:myFields/dfs:queryFields",
+      "repeating": false,
+      "source": {
+        "column": 5,
+        "file": "BudgetService.xsd",
+        "line": 7,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "BudgetService",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:BudgetService:/dfs:myFields/dfs:queryFields",
+      "id": "g:BudgetService:/dfs:myFields/dfs:queryFields/tns:GetRemainingBudget",
+      "kind": "group",
+      "label": "Get Remaining Budget",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "GetRemainingBudget",
+      "namespace": "http://forms-legacy/budget/",
+      "nodeType": "element",
+      "optional": true,
+      "path": "/dfs:myFields/dfs:queryFields/tns:GetRemainingBudget",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "BudgetService1.xsd",
+        "line": 3,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      },
+      "use": {
+        "column": 8,
+        "file": "BudgetService.xsd",
+        "line": 10,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "BudgetService",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:BudgetService:/dfs:myFields",
+      "id": "g:BudgetService:/dfs:myFields/dfs:dataFields",
+      "kind": "group",
+      "label": "Data Fields",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "dataFields",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/dataFormSolution",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/dfs:myFields/dfs:dataFields",
+      "repeating": false,
+      "source": {
+        "column": 5,
+        "file": "BudgetService.xsd",
+        "line": 14,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      }
+    },
+    {
+      "dataSource": "BudgetService",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:BudgetService:/dfs:myFields/dfs:dataFields",
+      "id": "g:BudgetService:/dfs:myFields/dfs:dataFields/tns:GetRemainingBudgetResponse",
+      "kind": "group",
+      "label": "Get Remaining Budget Response",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "GetRemainingBudgetResponse",
+      "namespace": "http://forms-legacy/budget/",
+      "nodeType": "element",
+      "optional": true,
+      "path": "/dfs:myFields/dfs:dataFields/tns:GetRemainingBudgetResponse",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "BudgetService1.xsd",
+        "line": 10,
+        "path": "/xsd:schema[1]/xsd:element[2]"
+      },
+      "use": {
+        "column": 8,
+        "file": "BudgetService.xsd",
+        "line": 17,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "Vendors",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "id": "g:Vendors:/dfs:myFields",
+      "kind": "group",
+      "label": "My Fields",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "myFields",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/dataFormSolution",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/dfs:myFields",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "Vendors.xsd",
+        "line": 5,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "Vendors",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:Vendors:/dfs:myFields",
+      "id": "g:Vendors:/dfs:myFields/dfs:queryFields",
+      "kind": "group",
+      "label": "Query Fields",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "queryFields",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/dataFormSolution",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/dfs:myFields/dfs:queryFields",
+      "repeating": false,
+      "source": {
+        "column": 5,
+        "file": "Vendors.xsd",
+        "line": 8,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "Vendors",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:Vendors:/dfs:myFields/dfs:queryFields",
+      "id": "g:Vendors:/dfs:myFields/dfs:queryFields/{http://schemas.microsoft.com/office/infopath/2003/ado/queryFields}Vendors",
+      "kind": "group",
+      "label": "Vendors",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "Vendors",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/ado/queryFields",
+      "nodeType": "element",
+      "optional": true,
+      "path": "/dfs:myFields/dfs:queryFields/{http://schemas.microsoft.com/office/infopath/2003/ado/queryFields}Vendors",
+      "repeating": false,
+      "source": {
+        "column": 2,
+        "file": "Vendors2.xsd",
+        "line": 3,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      },
+      "use": {
+        "column": 8,
+        "file": "Vendors.xsd",
+        "line": 11,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    },
+    {
+      "dataSource": "Vendors",
+      "dependencies": {
+        "readBy": [],
+        "writtenBy": []
+      },
+      "groupId": "g:Vendors:/dfs:myFields",
+      "id": "g:Vendors:/dfs:myFields/dfs:dataFields",
+      "kind": "group",
+      "label": "Data Fields",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "dataFields",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/dataFormSolution",
+      "nodeType": "element",
+      "optional": false,
+      "path": "/dfs:myFields/dfs:dataFields",
+      "repeating": false,
+      "source": {
+        "column": 5,
+        "file": "Vendors.xsd",
+        "line": 15,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]"
+      }
+    },
+    {
+      "dataSource": "Vendors",
+      "dependencies": {
+        "readBy": [
+          {
+            "elementId": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]",
+            "role": "choicesFilter"
+          }
+        ],
+        "writtenBy": []
+      },
+      "groupId": "g:Vendors:/dfs:myFields/dfs:dataFields",
+      "id": "g:Vendors:/dfs:myFields/dfs:dataFields/d:Vendors",
+      "kind": "group",
+      "label": "Vendors",
+      "labelEvidence": {
+        "step": "name"
+      },
+      "labelSource": "name",
+      "name": "Vendors",
+      "namespace": "http://schemas.microsoft.com/office/infopath/2003/ado/dataFields",
+      "nodeType": "element",
+      "optional": true,
+      "path": "/dfs:myFields/dfs:dataFields/d:Vendors",
+      "repeating": true,
+      "source": {
+        "column": 2,
+        "file": "Vendors1.xsd",
+        "line": 3,
+        "path": "/xsd:schema[1]/xsd:element[1]"
+      },
+      "use": {
+        "column": 8,
+        "file": "Vendors.xsd",
+        "line": 18,
+        "path": "/xsd:schema[1]/xsd:element[1]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[2]/xsd:complexType[1]/xsd:sequence[1]/xsd:element[1]"
+      }
+    }
+  ],
+  "irVersion": 1,
+  "issues": [],
+  "meta": {
+    "browserCompatible": false,
+    "generation": "2013",
+    "generationEvidence": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]/@productVersion"
+    },
+    "name": "Purchase Request",
+    "nameSource": "caption",
+    "productVersion": "15.0.0",
+    "publishEndpoint": {
+      "attribute": "publishUrl",
+      "liveness": "internal",
+      "reason": "filePath",
+      "source": {
+        "column": 1,
+        "file": "manifest.xsf",
+        "line": 6,
+        "path": "/xsf:xDocumentClass[1]/@publishUrl"
+      },
+      "value": "C:\\forms\\04-purchase-request.xsn"
+    },
+    "publishUrl": "C:\\forms\\04-purchase-request.xsn",
+    "solutionFormatVersion": "2.0.0.0",
+    "solutionVersion": "1.0.0.1",
+    "source": {
+      "column": 1,
+      "file": "manifest.xsf",
+      "line": 6,
+      "path": "/xsf:xDocumentClass[1]"
+    },
+    "urn": "urn:schemas-microsoft-com:office:infopath:Purchase-Request:-myXSD-2026-11-03T08-30-00"
+  },
+  "rules": [
+    {
+      "actions": [
+        {
+          "attrs": {
+            "expression": "/my:purchaseRequest/my:requester/my:costCenterCode",
+            "targetField": "xdXDocument:GetDOM(\"BudgetService\")/dfs:myFields/dfs:queryFields/tns:GetRemainingBudget/tns:costCenter"
+          },
+          "id": "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[1]",
+          "kind": "assignmentAction",
+          "source": {
+            "column": 5,
+            "file": "manifest.xsf",
+            "line": 99,
+            "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[1]"
+          }
+        },
+        {
+          "attrs": {
+            "adapter": "BudgetService"
+          },
+          "id": "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:queryAction[1]",
+          "kind": "queryAction",
+          "source": {
+            "column": 5,
+            "file": "manifest.xsf",
+            "line": 100,
+            "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:queryAction[1]"
+          }
+        },
+        {
+          "attrs": {
+            "expression": "xdXDocument:GetDOM(\"BudgetService\")/dfs:myFields/dfs:dataFields/tns:GetRemainingBudgetResponse/tns:GetRemainingBudgetResult",
+            "targetField": "/my:purchaseRequest/my:budgetRemaining"
+          },
+          "id": "action:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[2]",
+          "kind": "assignmentAction",
+          "source": {
+            "column": 5,
+            "file": "manifest.xsf",
+            "line": 101,
+            "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]/xsf:assignmentAction[2]"
+          }
+        }
+      ],
+      "caption": "Query budget service",
+      "enabled": true,
+      "id": "rule:/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]",
+      "ruleSet": "checkBudget",
+      "source": {
+        "column": 4,
+        "file": "manifest.xsf",
+        "line": 98,
+        "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]/xsf:ruleSet[1]/xsf:rule[1]"
+      },
+      "stopProcessing": false,
+      "triggers": [
+        {
+          "button": "CTRL900",
+          "kind": "button",
+          "source": {
+            "column": 52,
+            "file": "manifest.xsf",
+            "line": 63,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:unboundControls[1]/xsf:button[1]/xsf:ruleSetAction[1]"
+          },
+          "view": "Request"
+        }
+      ],
+      "unresolvedRefs": []
+    },
+    {
+      "actions": [
+        {
+          "attrs": {
+            "expression": "\"true\"",
+            "targetField": "/my:purchaseRequest/my:needsAccounting"
+          },
+          "id": "action:/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[1]/xsf:assignmentAction[1]",
+          "kind": "assignmentAction",
+          "source": {
+            "column": 5,
+            "file": "manifest.xsf",
+            "line": 106,
+            "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[1]/xsf:assignmentAction[1]"
+          }
+        },
+        {
+          "attrs": {},
+          "id": "action:/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[1]/xsf:dialogBoxExpressionAction[1]",
+          "kind": "dialogBoxExpressionAction",
+          "source": {
+            "column": 5,
+            "file": "manifest.xsf",
+            "line": 107,
+            "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[1]/xsf:dialogBoxExpressionAction[1]"
+          },
+          "text": "concat(\"Total \", /my:purchaseRequest/my:grandTotal, \" is over 1000: accounting must approve.\")"
+        }
+      ],
+      "caption": "Over 1000 needs accounting approval",
+      "condition": "/my:purchaseRequest/my:grandTotal > 1000",
+      "enabled": true,
+      "id": "rule:/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[1]",
+      "ruleSet": "checkApproval",
+      "source": {
+        "column": 4,
+        "file": "manifest.xsf",
+        "line": 105,
+        "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[1]"
+      },
+      "stopProcessing": false,
+      "triggers": [
+        {
+          "button": "CTRL901",
+          "kind": "button",
+          "source": {
+            "column": 153,
+            "file": "manifest.xsf",
+            "line": 63,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:unboundControls[1]/xsf:button[2]/xsf:ruleSetAction[1]"
+          },
+          "view": "Request"
+        }
+      ],
+      "unresolvedRefs": []
+    },
+    {
+      "actions": [
+        {
+          "attrs": {
+            "expression": "\"false\"",
+            "targetField": "/my:purchaseRequest/my:needsAccounting"
+          },
+          "id": "action:/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[2]/xsf:assignmentAction[1]",
+          "kind": "assignmentAction",
+          "source": {
+            "column": 5,
+            "file": "manifest.xsf",
+            "line": 110,
+            "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[2]/xsf:assignmentAction[1]"
+          }
+        }
+      ],
+      "caption": "1000 or less",
+      "condition": "/my:purchaseRequest/my:grandTotal <= 1000",
+      "enabled": true,
+      "id": "rule:/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[2]",
+      "ruleSet": "checkApproval",
+      "source": {
+        "column": 4,
+        "file": "manifest.xsf",
+        "line": 109,
+        "path": "/xsf:xDocumentClass[1]/xsf:ruleSets[1]/xsf:ruleSet[2]/xsf:rule[2]"
+      },
+      "stopProcessing": false,
+      "triggers": [
+        {
+          "button": "CTRL901",
+          "kind": "button",
+          "source": {
+            "column": 153,
+            "file": "manifest.xsf",
+            "line": 63,
+            "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:unboundControls[1]/xsf:button[2]/xsf:ruleSetAction[1]"
+          },
+          "view": "Request"
+        }
+      ],
+      "unresolvedRefs": []
+    }
+  ],
+  "signatures": {
+    "blocks": [],
+    "signatureLines": []
+  },
+  "unknowns": [],
+  "validations": [
+    {
+      "expression": ". = \"\"",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[1]",
+      "kind": "errorCondition",
+      "match": "/my:purchaseRequest/my:requester/my:requesterName",
+      "matchId": "f:main:/my:purchaseRequest/my:requester/my:requesterName",
+      "message": {
+        "shortMessage": "Cannot be blank",
+        "text": "This field is required.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 122,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[1]"
+      },
+      "unresolvedRefs": []
+    },
+    {
+      "expression": ". = \"\"",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[2]",
+      "kind": "errorCondition",
+      "match": "/my:purchaseRequest/my:justification",
+      "matchId": "f:main:/my:purchaseRequest/my:justification",
+      "message": {
+        "shortMessage": "Cannot be blank",
+        "text": "This field is required.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 123,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[2]"
+      },
+      "unresolvedRefs": []
+    },
+    {
+      "expression": ". < 1",
+      "expressionContext": ".",
+      "id": "val:/xsf:customValidation[1]/xsf:errorCondition[3]",
+      "kind": "errorCondition",
+      "match": "/my:purchaseRequest/my:lines/my:line/my:quantity",
+      "matchId": "f:main:/my:purchaseRequest/my:lines/my:line/my:quantity",
+      "message": {
+        "shortMessage": "At least 1",
+        "text": "Quantity must be at least 1.",
+        "type": "modeless"
+      },
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 124,
+        "path": "/xsf:xDocumentClass[1]/xsf:customValidation[1]/xsf:errorCondition[3]"
+      },
+      "unresolvedRefs": []
+    }
+  ],
+  "views": [
+    {
+      "caption": "Request",
+      "controls": [
+        {
+          "binding": "my:vendorId",
+          "choicesFrom": {
+            "connectionId": "conn:/xsf:dataObjects[1]/xsf:dataObject[1]/xsf:query[1]/xsf:adoAdapter[1]",
+            "dataSource": "Vendors",
+            "filterIds": [],
+            "select": "xdXDocument:GetDOM(\"Vendors\")/dfs:myFields/dfs:dataFields/d:Vendors"
+          },
+          "ctrlId": "CTRL5",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 5678,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/select[1]"
+          },
+          "targetId": "f:main:/my:purchaseRequest/my:vendorId",
+          "title": "Vendor (from sql-legacy01)",
+          "xctname": "dropdown"
+        },
+        {
+          "binding": "my:neededBy",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 6928,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:purchaseRequest/my:neededBy",
+          "title": "Needed by",
+          "xctname": "DTPicker_DTText"
+        },
+        {
+          "binding": "my:subtotal",
+          "ctrlId": "CTRL12",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 9105,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:purchaseRequest/my:subtotal",
+          "title": "Subtotal",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:vatRate",
+          "ctrlId": "CTRL13",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 10107,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:purchaseRequest/my:vatRate",
+          "title": "VAT rate",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:vatAmount",
+          "ctrlId": "CTRL14",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 10995,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:purchaseRequest/my:vatAmount",
+          "title": "VAT",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:grandTotal",
+          "ctrlId": "CTRL15",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[8]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 12003,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[8]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:purchaseRequest/my:grandTotal",
+          "title": "Total incl. VAT",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:budgetRemaining",
+          "ctrlId": "CTRL16",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[9]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 13042,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[9]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:purchaseRequest/my:budgetRemaining",
+          "title": "Budget remaining (web service)",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:needsAccounting",
+          "ctrlId": "CTRL17",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[10]/td[2]/div[1]/input[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 14086,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[10]/td[2]/div[1]/input[1]"
+          },
+          "targetId": "f:main:/my:purchaseRequest/my:needsAccounting",
+          "title": "Needs accounting approval",
+          "xctname": "CheckBox"
+        },
+        {
+          "binding": "my:justification",
+          "ctrlId": "CTRL18",
+          "id": "ctl:view1.xsl:/xsl:template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[11]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 14721,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[11]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:purchaseRequest/my:justification",
+          "title": "Justification",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:requesterName",
+          "ctrlId": "CTRL1",
+          "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 15942,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:purchaseRequest/my:requester/my:requesterName",
+          "title": "Name",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:requesterEmail",
+          "ctrlId": "CTRL2",
+          "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 16367,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:purchaseRequest/my:requester/my:requesterEmail",
+          "title": "E-mail",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:costCenterCode",
+          "ctrlId": "CTRL3",
+          "id": "ctl:view1.xsl:/xsl:template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]",
+          "inRepeat": false,
+          "readOnly": false,
+          "source": {
+            "column": 16801,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:purchaseRequest/my:requester/my:costCenterCode",
+          "title": "Cost center",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:lineDescription",
+          "ctrlId": "CTRL7",
+          "id": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[1]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 17234,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[1]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:purchaseRequest/my:lines/my:line/my:lineDescription",
+          "title": "Description",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:quantity",
+          "ctrlId": "CTRL8",
+          "id": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[2]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 17583,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[2]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:purchaseRequest/my:lines/my:line/my:quantity",
+          "title": "Qty",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:unitPrice",
+          "ctrlId": "CTRL9",
+          "id": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[3]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 18385,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[3]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:purchaseRequest/my:lines/my:line/my:unitPrice",
+          "title": "Unit price",
+          "xctname": "PlainText"
+        },
+        {
+          "binding": "my:lineTotal",
+          "ctrlId": "CTRL10",
+          "id": "ctl:view1.xsl:/xsl:template[3]/tr[1]/td[4]/div[1]/span[1]",
+          "inRepeat": true,
+          "readOnly": false,
+          "source": {
+            "column": 19252,
+            "file": "view1.xsl",
+            "line": 1,
+            "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[4]/div[1]/span[1]"
+          },
+          "targetId": "f:main:/my:purchaseRequest/my:lines/my:line/my:lineTotal",
+          "title": "Line total",
+          "xctname": "PlainText"
+        }
+      ],
+      "id": "view:/xsf:views[1]/xsf:view[1]",
+      "isDefault": true,
+      "isPrint": false,
+      "name": "Request",
+      "scanned": true,
+      "source": {
+        "column": 3,
+        "file": "manifest.xsf",
+        "line": 37,
+        "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]"
+      },
+      "xslFile": "view1.xsl"
+    }
+  ]
+}
