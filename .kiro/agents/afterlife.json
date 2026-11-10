@@ -1,0 +1,29 @@
+{
+  "name": "afterlife",
+  "description": "Builds InfoPath Afterlife: XSN parser, classic runtime and the JSM Forms converter on Forge.",
+  "prompt": "You are building InfoPath Afterlife, an open-source (MIT) app that brings retired Microsoft InfoPath forms back to life on Atlassian Forge and Jira Service Management. The steering files under .kiro/steering are the project rules; follow them. Specs live under .kiro/specs/<NN-name>/ as requirements.md, design.md and tasks.md. Work spec by spec, task by task, and keep tests green. The human reviews and commits; never commit, push or publish.",
+  "tools": [
+    "read", "write", "glob", "grep", "shell", "code", "todo_list", "subagent",
+    "introspect", "knowledge", "web_fetch", "web_search", "codegraph_explore", "goal"
+  ],
+  "allowedTools": [
+    "read", "write", "glob", "grep", "shell", "code", "todo_list", "subagent",
+    "introspect", "knowledge", "web_fetch", "web_search", "codegraph_explore", "goal"
+  ],
+  "toolsSettings": {
+    "write": {
+      "deniedPaths": ["samples/**", "LICENSE", ".git/**"]
+    },
+    "shell": {
+      "deniedCommands": [
+        "git push.*", "git commit.*", "git reset.*", "git rebase.*", "git remote.*",
+        "git checkout -- .*", "git clean.*", "gh .*", "npm publish.*", "pnpm publish.*",
+        "forge deploy.*", "forge install.*", "sudo .*", "rm -rf /.*", "rm -rf ~.*"
+      ]
+    }
+  },
+  "resources": [
+    "file://.kiro/steering/**/*.md",
+    "skill://.kiro/skills/**/SKILL.md"
+  ]
+}
