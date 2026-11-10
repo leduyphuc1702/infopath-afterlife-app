@@ -267,14 +267,17 @@ migrating.
 3. IF a referenced file is absent, THEN THE SYSTEM SHALL record a `MISSING_FILE` issue with the
    reference's path.
 4. IF a package file is not listed in `xsf:files`, THEN THE SYSTEM SHALL record an `UNLISTED_FILE`
-   issue. In-repo: 0 of 43 forms.
+   issue. In-repo: 0 of 48 (47 own forms plus the public sample).
+   Changed at task 28: the count was "0 of 43 forms", written before forms 43–47 arrived.
 5. IF two entries have the same name ignoring case, or a name has a `..` path segment (splitting
    on `/` and `\`), a drive letter or a leading separator, THEN THE SYSTEM SHALL keep the bytes and
    record an issue.
    Changed at task 21: the text said "contains `..`", which would flag a safe name such as
    `notes..v2.xml`; only a whole `..` segment can climb out of a folder.
 6. WHEN `template.xml` carries `mso-infoPathSolution`, THE SYSTEM SHALL record an issue if its `name`
-   differs from `xDocumentClass/@name` (InfoPath rejects that; infopath-domain.md). In-repo: 0 of 43.
+   differs from `xDocumentClass/@name` (InfoPath rejects that; infopath-domain.md). In-repo: 0 of 48
+   (47 own forms plus the public sample).
+   Changed at task 28: the count was "0 of 43", written before forms 43–47 arrived.
 
 ### R7. Form identity, versions and runtime settings
 Traces: brief AC5 (`publishUrl`, `solutionVersion`, `productVersion`, `trustLevel`); Added: the
@@ -359,8 +362,10 @@ me in the same places with the same words.
    (corpus-facts.md: "keep it verbatim and never rewrite it").
 4. + THE SYSTEM SHALL extract `xsf3:customValidation/xsf3:errorBlank` (MS-IPFF2 2.2.3.2.18) and
    `xsf:schemaErrorMessages`. No in-repo fixture.
-5. Oracle: 19 calculated fields in own forms plus 1 in the public sample; 38 error conditions,
-   all in own forms; per-form counts in R16.
+5. Oracle: 19 calculated fields in own forms plus 1 in the public sample; 38 error conditions in
+   forms 01–42 and 44 in forms 01–47, none in the public sample; per-form counts in R16.
+   Changed at task 28: the text said "38 error conditions, all in own forms", true for forms 01–42;
+   forms 43–47 add 3 + 0 + 1 + 1 + 1.
 
 ### R11. Data connections and submit
 Traces: brief AC5 (`dataObjects` with adapter types and URLs, submit configuration); Added: +
@@ -648,15 +653,23 @@ Traces: brief P1.
 Traces: Added (enforces R13; P2–P11 are taken in testing.md, so this takes P12).
 
 1. For any manifest produced by inserting random elements and attributes (random names, known and
-   unknown namespaces, random depth) into the in-repo manifests, THE SYSTEM SHALL report each
-   inserted node that is not modelled as exactly one unknown entry whose path selects that node in
-   the input.
+   unknown namespaces, random depth), and changes to enumerated attribute values, into the
+   in-repo manifests, THE SYSTEM SHALL report each inserted node that is not modelled as exactly
+   one unknown entry whose path selects that node in the input. A changed attribute that is still
+   modelled SHALL have exactly one `unexpectedValue` entry (R13.4) whose path selects it.
+   Changed at task 28: the generator also sets a modelled attribute with a fixed value list
+   (`xsd:enumeration` or `xdYesNo` in MS-IPFF2) to a value outside the list. That is the one case
+   where a node is modelled and has an unknown entry, so it is where double counting would hide.
 2. For any such manifest, every element and attribute node SHALL be either modelled or inside
    exactly one unknown entry; none is in both and none is in neither. Unknown entries of R13.4
    (a modelled attribute with an unexpected value, `reason: "unexpectedValue"`) annotate a
    modelled node and are not counted here. Entries of R13.9 (`reason: "repeated"`) are counted
    as unknown: the repeated subtree is not modelled. The generator MAY insert a repeat of a
-   held-once element (added 2026-11-10 with R13.9).
+   held-once element (added 2026-11-10 with R13.9). Nodes inside content kept verbatim as raw
+   XML (the content of `xsf:chooseFragment`, `xsf:header` and `xsf:footer`, R13.5) are excluded:
+   they are neither modelled nor unknown, and SHALL be neither.
+   Changed at task 26: "none is in neither" could not hold for raw-XML content, which the parser
+   keeps in `raw` without modelling it node by node (design §8.3).
 3. At least 500 runs in CI.
 
 ## Traceability

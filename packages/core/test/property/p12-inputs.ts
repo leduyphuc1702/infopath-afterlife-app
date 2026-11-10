@@ -1,5 +1,5 @@
-// Inputs for property P12 (design §13.3, R20): a README manifest and a list of insertions, as a
-// JSON descriptor, applied to the manifest's DOM by `mutate`. Targets are integers taken modulo
+// Inputs for property P12 (design §13.3, R20): a README manifest and a list of insertions and
+// value changes, as a JSON descriptor, applied to the manifest's DOM by `mutate`. Targets are integers taken modulo
 // the eligible elements at the moment each insertion is applied, so they shrink towards the root.
 //
 // Eligible targets exclude the payload of modelled raw-XML elements (`chooseFragment`, `header`,
@@ -8,6 +8,7 @@
 
 import { DOMParser, XMLSerializer, type Element } from '@xmldom/xmldom';
 import fc from 'fast-check';
+import { MS_IPFF2, XD_YES_NO } from '../../src/xsf/ms-ipff2';
 import { XSF_VOCABULARY } from '../../src/xsf/vocabulary';
 
 export const NAMESPACES = {
@@ -46,7 +47,13 @@ export type Insertion =
   | { op: 'element'; target: number; position: number; element: GenElement }
   | { op: 'attribute'; target: number; attribute: GenAttribute }
   /** A deep copy of an eligible element (not the root), placed right after it. */
-  | { op: 'repeat'; target: number };
+  | { op: 'repeat'; target: number }
+  /**
+   * A modelled attribute with a fixed value list in MS-IPFF2 (`{ enum }` or `xdYesNo`), on an
+   * element modelled in the original manifest, set to `value`, or to `value` plus `~` when
+   * `value` is in the list (R13.4, R20.1). The attribute may be absent before.
+   */
+  | { op: 'enumValue'; target: number; attribute: number; value: string };
 
 export interface P12Input {
   /** Index among the README manifests. */
@@ -108,7 +115,38 @@ const insertion: fc.Arbitrary<Insertion> = fc.oneof(
     arbitrary: fc.record({ op: fc.constant('attribute' as const), target: POS, attribute }),
   },
   { weight: 1, arbitrary: fc.record({ op: fc.constant('repeat' as const), target: POS }) },
+  {
+    weight: 2,
+    arbitrary: fc.record({
+      op: fc.constant('enumValue' as const),
+      target: POS,
+      attribute: POS,
+      value: fc.oneof(value, fc.constantFrom('yes', 'no', 'Yes', 'true', '1', '')),
+    }),
+  },
 );
+
+/** An attribute with a fixed value list: its name and the list. */
+export interface EnumAttribute {
+  name: string;
+  values: readonly string[];
+}
+
+/** MS-IPFF2's fixed value list for an attribute of a position, if it has one. */
+export function fixedList(key: string, name: string): readonly string[] | undefined {
+  const spec = MS_IPFF2[key]?.attrs[name];
+  if (spec === 'yesNo') return XD_YES_NO;
+  return spec !== undefined && typeof spec === 'object' ? spec.enum : undefined;
+}
+
+/** The attributes of a position that the vocabulary models and MS-IPFF2 gives a fixed list. */
+export function enumAttributes(key: string): EnumAttribute[] {
+  const modelled = Object.keys(XSF_VOCABULARY[key as keyof typeof XSF_VOCABULARY]?.attrs ?? {});
+  return modelled.flatMap((name) => {
+    const values = fixedList(key, name);
+    return values ? [{ name, values }] : [];
+  });
+}
 
 export function p12Input(manifests: number): fc.Arbitrary<P12Input> {
   return fc.record({
@@ -122,30 +160,47 @@ export interface Mutated {
   /** The inserted nodes, in the mutated DOM. Attributes as [owner, namespace, local]. */
   insertedElements: Element[];
   insertedAttributes: [Element, string | null, string][];
+  /** Attributes set to a value outside their list: [owner, name, value]. */
+  changedAttributes: [Element, string, string][];
 }
 
-/**
- * Applies the insertions to `text`. `isPayload(el)` is true for modelled raw-XML elements of the
- * original manifest; they and their descendants are never targets, nor are copies of them.
- */
-export function mutate(
-  text: string,
-  input: P12Input,
-  isPayload: (el: Element, doc: Element) => boolean,
-): Mutated {
+export interface MutateOptions {
+  /** True for modelled raw-XML elements of the original manifest (never targets, R13.5). */
+  isPayload: (el: Element) => boolean;
+  /** For an element modelled in the original manifest, its attributes with a fixed list. */
+  enumAttributes: (el: Element) => readonly EnumAttribute[];
+}
+
+/** Applies the insertions and value changes to `text`, in order. */
+export function mutate(text: string, input: P12Input, options: MutateOptions): Mutated {
   const doc = new DOMParser().parseFromString(text, 'text/xml');
   const root = doc.documentElement!;
   for (const k of Object.keys(NAMESPACES) as Ns[]) {
     root.setAttributeNS('http://www.w3.org/2000/xmlns/', `xmlns:${PREFIX[k]}`, NAMESPACES[k]);
   }
   const payload = new Set<Element>();
-  for (const el of elementsOf(root)) if (isPayload(el, root)) payload.add(el);
+  const enumTargets: [Element, readonly EnumAttribute[]][] = [];
+  for (const el of elementsOf(root)) {
+    if (options.isPayload(el)) payload.add(el);
+    const attrs = options.enumAttributes(el);
+    if (attrs.length) enumTargets.push([el, attrs]);
+  }
 
   const inserted: Element[] = [];
   const insertedAttributes: [Element, string | null, string][] = [];
+  const changedAttributes: [Element, string, string][] = [];
   const eligible = () => elementsOf(root).filter((el) => !insidePayload(el, payload));
 
   for (const ins of input.insertions) {
+    if (ins.op === 'enumValue') {
+      if (!enumTargets.length) continue;
+      const [owner, attrs] = enumTargets[ins.target % enumTargets.length]!;
+      const { name, values } = attrs[ins.attribute % attrs.length]!;
+      const v = values.includes(ins.value) ? `${ins.value}~` : ins.value;
+      owner.setAttribute(name, v);
+      changedAttributes.push([owner, name, v]);
+      continue;
+    }
     const targets = eligible();
     const target = targets[ins.target % targets.length]!;
     if (ins.op === 'element') {
@@ -173,6 +228,7 @@ export function mutate(
     xml: new XMLSerializer().serializeToString(doc),
     insertedElements: inserted,
     insertedAttributes,
+    changedAttributes,
   };
 }
 

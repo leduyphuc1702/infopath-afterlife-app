@@ -4,12 +4,21 @@ import { expect, test } from 'vitest';
 import type { UnknownEntry } from '../../src/index';
 import { parseManifest, type ParsedManifest } from '../../src/xsf/parse-manifest';
 import { sampleManifests } from '../helpers/manifests';
-import { elementsOf, mutate, p12Input, type P12Input } from './p12-inputs';
+import {
+  elementsOf,
+  enumAttributes,
+  fixedList,
+  mutate,
+  p12Input,
+  type P12Input,
+} from './p12-inputs';
 import { P12_REGRESSIONS } from './regressions';
 
-// Property P12 (design §13.3, R20): after random insertions into a README manifest, every element
-// and non-xmlns attribute is either modelled or inside exactly one unknown entry, never both and
-// never neither; each inserted node that is not modelled has its own entry whose path selects it.
+// Property P12 (design §13.3, R20): after random insertions and enumerated-value changes in a
+// README manifest, every element and non-xmlns attribute outside raw-XML content is either
+// modelled or inside exactly one unknown entry, never both and never neither; each inserted node
+// that is not modelled has its own entry whose path selects it; and a modelled attribute whose
+// value is outside its MS-IPFF2 list has exactly one unexpectedValue entry, which is not counted.
 //
 // The oracle walks the mutated DOM with its own path code (below), not src/xml/path.ts and not
 // the vocabulary table. "Modelled" is read from the result alone (design §8.4): an object in the
@@ -56,6 +65,10 @@ const attrKey = (uri: string | null, local: string) => (uri ? `{${uri}}${local}`
 interface Accounted {
   /** path → modelled attribute keys. */
   modelled: Map<string, Set<string>>;
+  /** path → the position key of the modelled object with that path. */
+  keys: Map<string, string>;
+  /** unexpectedValue entries, by path, with how many have that path. */
+  unexpected: Map<string, number>;
   /** Paths of modelled raw-XML elements: their content is payload (R13.5). */
   raw: Set<string>;
   /** notModelled and repeated entries, by path, with how many have that path. */
@@ -64,15 +77,17 @@ interface Accounted {
 
 function accounted(parsed: ParsedManifest): Accounted {
   const modelled = new Map<string, Set<string>>();
+  const keys = new Map<string, string>();
   const raw = new Set<string>();
   const visit = (v: unknown) => {
     if (Array.isArray(v)) v.forEach(visit);
     else if (v && typeof v === 'object') {
       const o = v as Record<string, unknown>;
       if (typeof o.path === 'string' && o.attrs && typeof o.attrs === 'object') {
-        const keys = modelled.get(o.path) ?? new Set<string>();
-        Object.keys(o.attrs).forEach((k) => keys.add(k));
-        modelled.set(o.path, keys);
+        const names = modelled.get(o.path) ?? new Set<string>();
+        Object.keys(o.attrs).forEach((k) => names.add(k));
+        modelled.set(o.path, names);
+        if (typeof o.key === 'string') keys.set(o.path, o.key);
         if (typeof o.raw === 'string') raw.add(o.path);
       }
       Object.values(o).forEach(visit);
@@ -80,10 +95,12 @@ function accounted(parsed: ParsedManifest): Accounted {
   };
   visit(parsed.manifest);
   const unknown = new Map<string, number>();
-  for (const u of parsed.unknowns.filter(counted)) {
-    unknown.set(u.path, (unknown.get(u.path) ?? 0) + 1);
+  const unexpected = new Map<string, number>();
+  for (const u of parsed.unknowns) {
+    const map = counted(u) ? unknown : u.reason === 'unexpectedValue' ? unexpected : undefined;
+    map?.set(u.path, (map.get(u.path) ?? 0) + 1);
   }
-  return { modelled, raw, unknown };
+  return { modelled, keys, unexpected, raw, unknown };
 }
 
 const counted = (u: UnknownEntry) =>
@@ -98,6 +115,8 @@ interface Stats {
   ownEntries: number;
   repeated: number;
   unexpectedValue: number;
+  /** Changed attributes that stayed modelled and had their one unexpectedValue entry. */
+  changedChecked: number;
 }
 
 const stats: Stats = {
@@ -106,13 +125,20 @@ const stats: Stats = {
   ownEntries: 0,
   repeated: 0,
   unexpectedValue: 0,
+  changedChecked: 0,
 };
 
 /** Returns the problems found; empty when P12 holds. */
 function problems(p: P12Input): string[] {
   const base = readme[p.manifest % readme.length]!;
   const original = accounted(parseManifest(new TextEncoder().encode(base.text)));
-  const m = mutate(base.text, p, (el) => original.raw.has(pathOf(el)));
+  const m = mutate(base.text, p, {
+    isPayload: (el) => original.raw.has(pathOf(el)),
+    enumAttributes: (el) => {
+      const key = original.keys.get(pathOf(el));
+      return key === undefined ? [] : enumAttributes(key);
+    },
+  });
   const parsed = parseManifest(new TextEncoder().encode(m.xml));
   const r = accounted(parsed);
   const out: string[] = [];
@@ -167,10 +193,24 @@ function problems(p: P12Input): string[] {
       if (aModelled === aUnknown) out.push(`${at}: modelled ${aModelled}, unknown ${aUnknown}`);
       const aCovering = (r.unknown.get(at) ?? 0) + covering(path);
       if (aCovering > 1) out.push(`${at} is inside ${aCovering} unknown entries`);
+      // R13.4: a modelled attribute outside its MS-IPFF2 list has one unexpectedValue entry;
+      // every other attribute has none (one in a repeated subtree is part of that entry, R13.1).
+      const key = r.keys.get(path);
+      const list = a.namespaceURI === null && key ? fixedList(key, a.localName!) : undefined;
+      const expected = aModelled && !aUnknown && list !== undefined && !list.includes(a.value);
+      const got = r.unexpected.get(at) ?? 0;
+      if (got !== (expected ? 1 : 0)) {
+        out.push(
+          `${at}="${a.value}": ${got} unexpectedValue entries, expected ${expected ? 1 : 0}`,
+        );
+      }
     }
   }
   for (const path of r.unknown.keys()) {
     if (!domPaths.has(path)) out.push(`unknown entry ${path} selects no node`);
+  }
+  for (const path of r.unexpected.keys()) {
+    if (!domPaths.has(path)) out.push(`unexpectedValue entry ${path} selects no node`);
   }
 
   // R20.1: each inserted node that is not modelled, whose parent is modelled, has its own entry.
@@ -190,6 +230,19 @@ function problems(p: P12Input): string[] {
     const at = `${path}/@${qname(uri, local)}`;
     if (r.unknown.get(at) === 1) stats.ownEntries++;
     else out.push(`inserted ${at} has no entry of its own`);
+  }
+
+  // R20.1 (changed at task 28): a changed attribute whose element is still modelled stays
+  // modelled, has exactly one unexpectedValue entry, and is not counted as unknown.
+  for (const [owner, name, value] of m.changedAttributes) {
+    const path = pathOf(owner);
+    if (!r.modelled.has(path) || unknownAncestor(path)) continue; // e.g. now a repeat (R13.9)
+    if (owner.getAttribute(name) !== value) continue; // changed again later in the same run
+    const at = `${path}/@${name}`;
+    if (!r.modelled.get(path)!.has(name)) out.push(`changed ${at} is no longer modelled`);
+    else if (r.unknown.has(at)) out.push(`changed ${at} is counted as unknown`);
+    else if (r.unexpected.get(at) !== 1) out.push(`changed ${at} has no unexpectedValue entry`);
+    else stats.changedChecked++;
   }
   return out;
 }
@@ -221,6 +274,8 @@ test(`${RUNS} runs: every element and attribute is modelled or unknown, exactly 
   // The generator reaches both R13.9 repeats and R13.4 values, so R20.2's rules for them ran.
   expect(stats.repeated).toBeGreaterThan(0);
   expect(stats.ownEntries).toBeGreaterThan(0);
+  expect(stats.unexpectedValue).toBeGreaterThan(0);
+  expect(stats.changedChecked).toBeGreaterThan(0);
 }, 120_000);
 
 test.each(P12_REGRESSIONS.map((r) => [r.note, r.case] as const))('regression: %s', (_note, p) => {

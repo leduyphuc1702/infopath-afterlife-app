@@ -480,7 +480,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R18.1, R18.2.
   - Done when: `pnpm check` and `pnpm test:perf` green on Node 22.23.4.
 
-- [ ] 28. Re-check every acceptance criterion and update the coverage document
+- [x] 28. Re-check every acceptance criterion and update the coverage document
   - Run `pnpm check` and `pnpm test:perf` on a clean install (`pnpm install --frozen-lockfile`).
   - Walk every criterion R1.1–R20.3 and report, in the task report, the test file and test name
     that proves it and its result. A criterion with no passing test is a failed task, not a note.

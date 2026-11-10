@@ -537,7 +537,8 @@ manifest").
   One whose `ref` names no view goes to `Manifest.unlinkedViewExtensions`.
 - **Raw XML** (`chooseFragment`, `header`, `footer`) is the content as xmldom's `XMLSerializer`
   writes it: each element declares the namespaces it uses, and empty elements are written `<a/>`.
-  Text, attributes and whitespace are kept.
+  Text, attributes and whitespace are kept. The nodes inside are neither modelled nor unknown
+  (§8.4, R20.2).
 - `EventBinding`s come from each `xsf:ruleSetAction` and its parent key: `domEventHandler` →
   `fieldChange`, `onLoad`, `submit`, `unboundControls/button` (with the view's name) (R9.4).
 - `containsCredential` is true when `/(^|;)\s*(password|pwd)\s*=/i` matches `connectionString` (R11.5).
@@ -550,6 +551,10 @@ A node is modelled exactly when the walker puts it into the `ModelNode` tree. Ev
 keeps that node's `path`, and its `attrs` keys are the modelled attributes. A test can therefore
 recover the modelled set from the result alone: collect every object with a `path`, and its
 `attrs`. P12 and R13.6 use that, not the table.
+
+The content of a raw-XML element (`xsf:chooseFragment`, `xsf:header`, `xsf:footer`) is a third
+case: the element itself is modelled, but the nodes inside it are kept verbatim in `raw` and are
+neither modelled nor unknown (R13.5, R20.2; added at task 26).
 
 ### 8.5 How the table cannot drift from R7–R12, R13 and P12
 
@@ -847,26 +852,45 @@ with `zlib` only in tests as an oracle.
 
 - **P1** (R19): three fast-check generators. 1,000 runs each in CI. Each run is timed with
   `performance.now()` and must finish in 1 s.
-  1. `fc.uint8Array({ maxLength: 2 MiB })`;
+  1. `fc.uint8Array({ maxLength: 2 MiB })`, mixed 50/50 with arrays of any length from 0 to
+     2 MiB filled from a seeded xorshift, half of them starting with `MSCF`.
+     (Changed at task 25: with fast-check's default size, `fc.uint8Array` alone yields arrays of
+     about 10 bytes, so the 2 MiB range of R19.1 was never reached.)
   2. mutations of a sample cabinet: bit flips, truncation, splices of two cabinets, and header
      fields overwritten with boundary values;
   3. valid cabinets (cab-writer) whose manifest or schema text has been mutated: dropped tags,
      random characters, duplicate attributes, deep nesting.
 
+  Each generator yields a small JSON description of its input (a seed and length, or a sample
+  index and a list of mutations), and one function turns it into bytes. So a shrunk
+  counterexample is a JSON value that can be pasted into `test/property/regressions.ts` as it is.
+  Positions are integers taken modulo the current length, so they shrink towards the start.
+  `INTERNAL` fails P1 too: it is in §11, but it means a parser bug (added at task 25).
+
   Pass: the promise resolves, or rejects with an `AfterlifeError` whose `code` is in §11. Failing
   seeds are copied into `test/property/regressions.ts` and replayed every run.
 - **P12** (R20): insert 1–20 random nodes into a random README manifest: elements with random local
   names in `xsf`, `xsf2`, `xsf3` or a random URI (prefixes declared on the root), sometimes a real
-  vocabulary name in a wrong place, with random attributes and depth 0–3, and attributes added to
-  random modelled elements. The oracle walks the mutated DOM with its own code, independent of the
-  table:
+  vocabulary name in a wrong place, with random attributes and depth 0–3, attributes added to
+  random modelled elements, deep copies of existing elements placed after the original (repeats of
+  held-once elements, R13.9), and changes of a modelled attribute with a fixed value list
+  (`{ enum }` or `xdYesNo` in `ms-ipff2.ts`) to a value outside that list (added at task 28). The
+  input is a JSON description, as for P1. P12 calls `parseManifest` directly. The oracle walks the
+  mutated DOM with its own code, independent of the table:
   - an element is *modelled* if the result contains an object with its path (§8.4);
   - it is *unknown* if an `unknowns` entry with `reason: 'notModelled'` or `'repeated'` has its path
     or an ancestor's (a repeated subtree is not modelled, R13.9);
-  - the same for attributes, through `attrs` keys and `/@` paths.
+  - the same for attributes, through `attrs` keys and `/@` paths;
+  - nodes inside a raw-XML element's content (§8.4) must be neither, and are never insertion
+    targets (added at task 26);
+  - a modelled attribute whose value is outside its MS-IPFF2 list has exactly one
+    `unexpectedValue` entry, any other attribute none, and that entry does not count as unknown
+    (added at task 28).
 
-  Assert exactly one of the two for every element and non-`xmlns` attribute, and that each inserted
-  unmodelled node has an entry whose path selects it. 500 runs.
+  Assert exactly one of the two for every element and non-`xmlns` attribute outside raw-XML
+  content, that no node is inside more than one entry, that each inserted unmodelled node has an
+  entry whose path selects it, and that each changed attribute that is still modelled has its one
+  `unexpectedValue` entry. 500 runs.
 
 ## 14. Risks and how the first tasks retire them
 

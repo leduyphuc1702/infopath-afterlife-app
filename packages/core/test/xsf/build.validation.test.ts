@@ -30,6 +30,30 @@ describe('R10.5 oracle', () => {
     },
   );
 
+  test('totals: 19 + 1 calculated fields; 38 error conditions in forms 01–42, 44 in 01–47, 0 public', () => {
+    const own = all.filter((m) => m.own);
+    const count = (ms: typeof all, pick: (m: (typeof all)[number]) => readonly unknown[]) =>
+      ms.reduce((n, m) => n + pick(m).length, 0);
+    const early = own.filter((m) => Number(m.slug.slice(0, 2)) <= 42);
+    expect(own).toHaveLength(47);
+    expect(early).toHaveLength(42);
+    expect(count(own, (m) => m.manifest.calculations)).toBe(19);
+    expect(
+      count(
+        all.filter((m) => !m.own),
+        (m) => m.manifest.calculations,
+      ),
+    ).toBe(1);
+    expect(count(early, (m) => m.manifest.validations)).toBe(38);
+    expect(count(own, (m) => m.manifest.validations)).toBe(44);
+    expect(
+      count(
+        all.filter((m) => !m.own),
+        (m) => m.manifest.validations,
+      ),
+    ).toBe(0);
+  });
+
   test('the public sample has no error conditions', () => {
     expect(all.find((m) => !m.own)!.manifest.validations).toEqual([]);
   });

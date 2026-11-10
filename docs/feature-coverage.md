@@ -22,7 +22,11 @@ Coverage classes:
 - **Manual** — we cannot carry it; we explain what to build instead (Automation, approvals, assets).
 - **Unsupported** — deliberately out of scope, with a named reason.
 
-Status column: `spec N` means a spec brief covers it; nothing is implemented yet.
+Status column: `spec N` means a spec brief covers it. `parsed: spec 01` means the spec 01 parser
+extracts that input from the `.xsn` and a test proves it (`.kiro/specs/01-xsn-parser/verification.md`);
+the coverage state is still the owning spec's to deliver, and nothing past the parser is
+implemented yet. "Synthetic fixture only" means no in-repo form uses it, so a hand-written
+manifest is the evidence.
 
 ---
 
@@ -61,12 +65,12 @@ control is the cheapest way to close this.
 
 | Capability | Evidence | Coverage | Status |
 |---|---|---|---|
-| Text, number, date, time, boolean, base64 in XSD | `myschema.xsd` in all 42 samples **[format]** | Native | spec 02 |
+| Text, number, date, time, boolean, base64 in XSD | `myschema.xsd` in all 42 samples **[format]** | Native | spec 02; parsed: spec 01 |
 | Currency / integer / decimal formatting via `xdFormatting:formatString` | 556 uses | Native (JSM field formatting) or App | spec 04 |
 | Default values, including `xdDate:Today()` and `xdDate:Now()` | 30 + 2 uses | App (value on create) | spec 04 |
-| Read-only and calculated fields | 52 `calculatedField` | App | spec 04 |
-| Repeating fields, optional fields | 59 / 4 declarations | App | spec 02 |
-| Promoted fields (`listProperties`) → Jira custom fields | format | Native (link by name) | spec 05 AC 9 |
+| Read-only and calculated fields | 52 `calculatedField` | App | spec 04; parsed: spec 01 |
+| Repeating fields, optional fields | 59 / 4 declarations | App | spec 02; parsed: spec 01 |
+| Promoted fields (`listProperties`) → Jira custom fields | format | Native (link by name) | spec 05 AC 9; parsed: spec 01 |
 | Field-level help text and tooltips | format | Native (description) | spec 05 |
 
 ## C. Rules and actions
@@ -76,16 +80,16 @@ action (see the `containmentAction` note below the table).
 
 | Action | Count | What it does | Coverage | Status |
 |---|---|---|---|---|
-| `ruleSetAction` | 37 | run another rule set | App (rule graph) | spec 04 |
-| `assignmentAction` | 20 | set a field's value | App | spec 04 |
-| `closeDocumentAction` | 16 | close the form | App (redirect to request) | spec 04 |
-| `submitAction` | 12 | submit to a connection | Native (JSM submit) | spec 05 |
-| `switchViewAction` | 7 | change view | App (view switcher) | spec 03 |
-| `queryAction` | 1 | query a data connection | Manual → Automation/AQL | spec 05 |
-| `dialogBoxExpressionAction` | 1 | modal message built from fields | App (inline notice) | spec 04 |
-| `changeAdapterProperty`, `openNewDocumentAction`, `dialogBoxMessageAction`, `webPartConnectionAction`, `signSignatureLineAction` | 0 in corpus | defined in MS-IPFF2 2.2.1.2.114 | per action | spec 04/05 — **untested, no fixture** |
+| `ruleSetAction` | 37 | run another rule set | App (rule graph) | spec 04; parsed: spec 01 |
+| `assignmentAction` | 20 | set a field's value | App | spec 04; parsed: spec 01 |
+| `closeDocumentAction` | 16 | close the form | App (redirect to request) | spec 04; parsed: spec 01 (synthetic fixture only) |
+| `submitAction` | 12 | submit to a connection | Native (JSM submit) | spec 05; parsed: spec 01 (synthetic fixture only) |
+| `switchViewAction` | 7 | change view | App (view switcher) | spec 03; parsed: spec 01 |
+| `queryAction` | 1 | query a data connection | Manual → Automation/AQL | spec 05; parsed: spec 01 |
+| `dialogBoxExpressionAction` | 1 | modal message built from fields | App (inline notice) | spec 04; parsed: spec 01 |
+| `changeAdapterProperty`, `openNewDocumentAction`, `dialogBoxMessageAction`, `webPartConnectionAction`, `signSignatureLineAction` | 0 in corpus | defined in MS-IPFF2 2.2.1.2.114 | per action | spec 04/05 — **untested, no fixture**; parsed: spec 01 (synthetic fixture only) |
 | Conditional formatting (show/hide, colour, disable) | 38 rule sets | visual changes driven by conditions | App (live binding) | spec 03/04 |
-| Submit-only / "stop processing rules" (`xsf:exitRuleSet`) | format | short-circuits the rule chain | App | spec 04 |
+| Submit-only / "stop processing rules" (`xsf:exitRuleSet`) | format | short-circuits the rule chain | App | spec 04; parsed: spec 01 (synthetic fixture only) |
 
 `containmentAction` was removed from this table on 2026-11-10. It is not an InfoPath action: the
 child list of `xsf:rule` in MS-IPFF2 2.2.1.2.114 has no such element, and the three MS-IPFF2 XSDs
@@ -127,10 +131,10 @@ The 51 counted conditions are all `xsf:errorCondition` (MS-IPFF2 2.2.1.2.44).
 
 | Mechanism | Count | Coverage | Status |
 |---|---|---|---|
-| `xsf:errorCondition` | 51 | Native (`rq`) + App (message text) | spec 05 |
-| `xsf3:errorBlank` ("cannot be blank", InfoPath 2010+; MS-IPFF2 2.2.3.2.18) | 0 in corpus | Native (`rq`) | spec 05 — **untested, no fixture** |
-| Schema type and facet checks (length, range, pattern) | format | Native (`mnc/mxc`, `mnn/mxn`, `rgx`) | spec 05 |
-| Custom XPath validation with author message | 51 conditions, 13 distinct messages | App (validator) | spec 04 — 25 conditions fall back to InfoPath's English `This field is required.`, so fallback text needs translating and authored text must not be |
+| `xsf:errorCondition` | 51 | Native (`rq`) + App (message text) | spec 05; parsed: spec 01 |
+| `xsf3:errorBlank` ("cannot be blank", InfoPath 2010+; MS-IPFF2 2.2.3.2.18) | 0 in corpus | Native (`rq`) | spec 05 — **untested, no fixture**; parsed: spec 01 (synthetic fixture only) |
+| Schema type and facet checks (length, range, pattern) | format | Native (`mnc/mxc`, `mnn/mxn`, `rgx`) | spec 05; parsed: spec 01 |
+| Custom XPath validation with author message | 51 conditions, 13 distinct messages | App (validator) | spec 04; parsed: spec 01 — 25 conditions fall back to InfoPath's English `This field is required.`, so fallback text needs translating and authored text must not be |
 | Submit blocked by validation | format | Native (JSM form blocks submit) | spec 05 |
 | Cross-field validation ("end after start") | format | App | spec 04 |
 
@@ -138,7 +142,7 @@ The 51 counted conditions are all `xsf:errorCondition` (MS-IPFF2 2.2.1.2.44).
 
 | Capability | Count | Coverage | Status |
 |---|---|---|---|
-| Multiple views per form | 9 forms, max 4 | App + always-visible switcher | spec 03 |
+| Multiple views per form | 9 forms, max 4 | App + always-visible switcher | spec 03; parsed: spec 01 |
 | Sections, nested sections | 59 | Native/App | spec 03 |
 | Tables used purely for layout | format | App (CSS grid from XSL) | spec 03 |
 | Fixed page width, printing | format | App (print CSS) | spec 03 |
@@ -149,32 +153,33 @@ The 51 counted conditions are all `xsf:errorCondition` (MS-IPFF2 2.2.1.2.44).
 
 | Kind | Count | Coverage | Status |
 |---|---|---|---|
-| `adoAdapter` (SQL Server) | 4 forms | Manual — Assets/CMDB or Automation | spec 05 |
-| `webServiceAdapter` (SOAP) | 1 form | Manual — Automation HTTP call | spec 05 |
-| `xmlFileAdapter` | 6 forms | App (embedded XML becomes a choice list) | spec 05 |
-| `emailAdapter` | format | Manual → Automation "send email" | spec 05 |
-| Secondary data sources driving dropdowns | 6 forms | App (lookup source) | spec 05 |
-| SharePoint list/library submit | format | Native (JSM request) | spec 05 |
+| `adoAdapter` (SQL Server) | 4 forms | Manual — Assets/CMDB or Automation | spec 05; parsed: spec 01 |
+| `webServiceAdapter` (SOAP) | 1 form | Manual — Automation HTTP call | spec 05; parsed: spec 01 |
+| `xmlFileAdapter` | 6 forms | App (embedded XML becomes a choice list) | spec 05; parsed: spec 01 |
+| `emailAdapter` | format | Manual → Automation "send email" | spec 05; parsed: spec 01 |
+| Secondary data sources driving dropdowns | 6 forms | App (lookup source) | spec 05; parsed: spec 01 |
+| SharePoint list/library submit | format | Native (JSM request) | spec 05; parsed: spec 01 |
+| `submitToHostAdapter` (submit handed to the hosting application) | form 44 in `samples/own/`; `docs/corpus-facts.md` has no count for the third-party corpus | Native (JSM request): the host that receives the submit becomes the JSM request create, so no app code is needed; spec 05 owns the final class | spec 05; parsed: spec 01 |
 | Filtered / cascading dropdowns | format | Native (`cc`) when two-level | spec 05 AC 4 |
 
 ## H. Runtime, code, security
 
 | Capability | Count | Coverage | Status |
 |---|---|---|---|
-| InfoPath Forms Services (browser forms) | 12 forms | Gone; that is the reason for the project | — |
-| Managed code / VBA / script | 3 forms | Manual — rewrite as Automation or accept App emulation | spec 04 |
-| ActiveX controls | 7 | Unsupported, named in the Coverage Report | spec 05 |
-| Digital signatures | 1 form | Manual — JSM approval + audit log | spec 05 |
-| User roles (`userRoles`) | format | Native — JSM project roles | spec 05 |
-| Trust levels, full-trust forms, `.xsn` signing | format | Not applicable once we stop trusting the template | — |
+| InfoPath Forms Services (browser forms) | 12 forms | Gone; that is the reason for the project | —; parsed: spec 01 (`runtimeCompatibility`) |
+| Managed code / VBA / script | 3 forms | Manual — rewrite as Automation or accept App emulation | spec 04; parsed: spec 01 |
+| ActiveX controls | 7 | Unsupported, named in the Coverage Report | spec 05; parsed: spec 01 (manifest `allowedControl` only, synthetic fixture) |
+| Digital signatures | 1 form | Manual — JSM approval + audit log | spec 05; parsed: spec 01 |
+| User roles (`userRoles`) | format | Native — JSM project roles | spec 05; parsed: spec 01 (synthetic fixture only) |
+| Trust levels, full-trust forms, `.xsn` signing | format | Not applicable once we stop trusting the template | —; parsed: spec 01 |
 
 ## I. Records
 
 | Capability | Evidence | Coverage | Status |
 |---|---|---|---|
 | 348 filled records in `samples/own/records/`; for forms 01–42, one record per template was opened in the original (forms 43–47 were never opened) | `samples/own/records/`, `samples/own/README.md` | App (import + render) | spec 11 |
-| Record knows its template by URN, then `href` | `mso-infoPathSolution` | App | spec 11 |
-| `upgrade.xsl` applied when the template version moved | form 07 vs 01 | App | spec 11 |
+| Record knows its template by URN, then `href` | `mso-infoPathSolution` | App | spec 11; parsed: spec 01 (template side) |
+| `upgrade.xsl` applied when the template version moved | form 07 vs 01 | App | spec 11; parsed: spec 01 (template side) |
 | Attachments stored beside the record | 5 attachment controls | App | spec 11 |
 | Printing a record as it looked | screenshots, 22 | App (print CSS) | spec 03 |
 
