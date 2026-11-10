@@ -54,7 +54,7 @@ Out of scope, and the spec that owns each item:
 - **Event binding**: the place that runs a rule set: `xsf:domEventHandler` (field change),
   `xsf:onLoad`, a button, or `xsf:submit`.
 - **Data connection**: an adapter under `xsf:dataObject/xsf:query`, `xsf:submit` or `xsf:dataAdapters`.
-- **Unknown entry**: `{ kind: element | attribute | text, reason: notModelled | unexpectedValue,
+- **Unknown entry**: `{ kind: element | attribute | text, reason: notModelled | unexpectedValue | repeated,
   file, path, namespace, name, line, raw, documented }` for a node the parser does not model.
 - **Path**: an XPath to one node, using the prefixes `xsf`, `xsf2`, `xsf3`, `xsd` for the known
   namespaces and `{uri}local` for any other, with a 1-based position on every step, e.g.
@@ -424,7 +424,9 @@ decision.
    `xsf:permissions`, so `allowedControl` (R12.5) and roles have synthetic fixtures only.
 
 ### R13. Report unknown manifest content instead of dropping it
-Traces: Added (the user's requirement and the product principle "Never lose a feature silently").
+Traces: Added (the user's requirement and the product principle "Never lose a feature silently");
+R13.9 added 2026-11-10 at the task 14 review (a repeated element is well-formed XML, so R5.4 does
+not make it fatal; old and hand-edited files must still open).
 
 As Tim, I want every part of my template that the app does not understand to be named, so nothing
 disappears between InfoPath and Jira without someone seeing it.
@@ -458,6 +460,14 @@ unknown.
 8. + THE SYSTEM SHALL mark each unknown entry `documented: true` when MS-IPFF2 (sections 5.1–5.3)
    defines that element or attribute in that position, and `documented: false` otherwise. Spec 05
    then knows "an InfoPath feature we do not handle" from "not InfoPath at all".
+9. WHEN an element occurs more often than MS-IPFF2 allows at its position (a second `xsf:fileNew`,
+   a second adapter in one `xsf:dataObject/xsf:query`, whose `xsd:choice` allows one member), or
+   more often than the parser models it (a second `xsf2:solutionDefinition` or
+   `xsf3:solutionDefinition` across all `xsf:extension` elements), THE SYSTEM SHALL model the
+   first occurrence in document order, report each later occurrence as one unknown entry of kind
+   `element` with reason `repeated` and `documented: true` for its whole subtree, and record a
+   `REPEATED_ELEMENT` issue naming the element, the parent path and the number allowed (1). The
+   template SHALL still parse. Added (see Traces).
 
 ### R14. Build the field tree
 Traces: brief AC6, with the corrected "required" rule (4), now also in the brief; Added: raw
@@ -633,7 +643,9 @@ Traces: Added (enforces R13; P2–P11 are taken in testing.md, so this takes P12
 2. For any such manifest, every element and attribute node SHALL be either modelled or inside
    exactly one unknown entry; none is in both and none is in neither. Unknown entries of R13.4
    (a modelled attribute with an unexpected value, `reason: "unexpectedValue"`) annotate a
-   modelled node and are not counted here.
+   modelled node and are not counted here. Entries of R13.9 (`reason: "repeated"`) are counted
+   as unknown: the repeated subtree is not modelled. The generator MAY insert a repeat of a
+   held-once element (added 2026-11-10 with R13.9).
 3. At least 500 runs in CI.
 
 ## Traceability

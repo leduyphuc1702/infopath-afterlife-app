@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 15): xsf:permissions/xsf:allowedControl, the manifest's record of
+     ActiveX controls. Form 44 places its control in the view only. The CLSIDs are fictional. -->
+<xsf:xDocumentClass solutionFormatVersion="3.0.0.0" xmlns:xsf="http://schemas.microsoft.com/office/infopath/2003/solutionDefinition">
+	<xsf:permissions>
+		<xsf:allowedControl clsid="{00000000-0000-0000-0000-0000000000A1}" cabFile="contactselector.cab" version="1.0.0.1"></xsf:allowedControl>
+		<xsf:allowedControl clsid="{00000000-0000-0000-0000-0000000000A2}"></xsf:allowedControl>
+	</xsf:permissions>
+</xsf:xDocumentClass>

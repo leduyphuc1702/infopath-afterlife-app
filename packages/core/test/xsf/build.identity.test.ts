@@ -1,6 +1,5 @@
 import { describe, expect, test } from 'vitest';
 import { parseManifest } from '../../src/xsf/parse-manifest';
-import { catchError } from '../helpers/catch-error';
 import { formNumber, sampleManifests } from '../helpers/manifests';
 import { manifestBytes } from '../helpers/synthetic-manifest';
 
@@ -99,21 +98,6 @@ describe('R7.2 solution definition', () => {
       queryServerInfo: 'yes',
     });
   });
-
-  test('two xsf2:solutionDefinition, even in two xsf:extension elements, are INVALID_XML', () => {
-    const e = catchError(() =>
-      parseManifest(
-        manifestBytes(`<xsf:extensions>
-  <xsf:extension name="a"><xsf2:solutionDefinition/></xsf:extension>
-  <xsf:extension name="b"><xsf2:solutionDefinition/></xsf:extension>
-</xsf:extensions>`),
-      ),
-    );
-    expect(e).toMatchObject({
-      code: 'INVALID_XML',
-      details: { line: 5, reason: expect.stringContaining('xsf2:solutionDefinition') as string },
-    });
-  });
 });
 
 describe('R7.3 and R7.4: upgrade, package, schemas, fileNew, parameters', () => {
@@ -190,21 +174,10 @@ describe('R7.3 and R7.4: upgrade, package, schemas, fileNew, parameters', () => 
       dataObjects: [],
       dataAdapters: [],
       connectionExtensions: [],
+      promotedFields: [],
+      promotedFieldExtensions: [],
+      allowedControls: [],
       containers: [],
-    });
-  });
-
-  test('a second xsf:fileNew is INVALID_XML at the second, naming the rule', () => {
-    const e = catchError(() => parseManifest(manifestBytes('<xsf:fileNew/>\n  <xsf:fileNew/>')));
-    expect(e).toMatchObject({
-      code: 'INVALID_XML',
-      details: {
-        file: 'manifest.xsf',
-        line: 4,
-        column: 3,
-        reason:
-          'xsf:fileNew occurs 2 times in /xsf:xDocumentClass[1]; MS-IPFF2 allows xsf:fileNew once here',
-      },
     });
   });
 });

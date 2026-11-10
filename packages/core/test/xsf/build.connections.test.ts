@@ -2,7 +2,6 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, test } from 'vitest';
 import type { Adapter, Manifest } from '../../src/xsf/types';
 import { parseManifest } from '../../src/xsf/parse-manifest';
-import { catchError } from '../helpers/catch-error';
 import { formNumber, sampleManifests } from '../helpers/manifests';
 import { manifestBytes } from '../helpers/synthetic-manifest';
 
@@ -349,25 +348,6 @@ describe('synthetic: every adapter kind in each place it can sit (R11.3)', () =>
 });
 
 describe('positions held once', () => {
-  test('two adapters in one data object query are INVALID_XML', () => {
-    const e = catchError(() =>
-      parseManifest(
-        manifestBytes(`<xsf:dataObjects><xsf:dataObject name="d"><xsf:query>
-  <xsf:xmlFileAdapter fileUrl="a.xml"/>
-  <xsf:adoAdapter connectionString=""/>
-</xsf:query></xsf:dataObject></xsf:dataObjects>`),
-      ),
-    );
-    expect(e).toMatchObject({
-      code: 'INVALID_XML',
-      details: {
-        line: 5,
-        reason:
-          '/xsf:xDocumentClass[1]/xsf:dataObjects[1]/xsf:dataObject[1]/xsf:query[1] holds 2 of xsf:adoAdapter, xsf:sharepointListAdapter, xsf:sharepointListAdapterRW, xsf:webServiceAdapter, xsf:xmlFileAdapter; MS-IPFF2 allows one of them here',
-      },
-    });
-  });
-
   test('the root query keeps its queryAction as an unknown entry, documented: true', () => {
     const { manifest, unknowns } = parseManifest(
       manifestBytes('<xsf:query><xsf:queryAction adapter="Main"/></xsf:query>'),

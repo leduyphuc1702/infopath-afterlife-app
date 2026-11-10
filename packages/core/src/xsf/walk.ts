@@ -20,6 +20,14 @@ export interface ModelNode extends Located {
   readonly text?: string;
   /** `rawXml` content: the inner XML, verbatim. */
   readonly raw?: string;
+  /** The element this node was read from (for unknown entries made after the walk). */
+  readonly element: XmlElement;
+}
+
+/** Which nodes the format's own specification defines at a position (R13.8, R15.4). */
+export interface Documentation {
+  attr(key: string, name: string): boolean;
+  child(parentKey: string, child: XmlElement): boolean;
 }
 
 export interface WalkResult {
@@ -29,44 +37,72 @@ export interface WalkResult {
 
 const ROOT = 'xsf:xDocumentClass';
 
+/** MS-IPFF2 5.1–5.3, from ms-ipff2.ts. */
+export const MS_IPFF2_DOCUMENTATION: Documentation = {
+  attr: (key, name) => documentedAttr(key, name),
+  child: (parentKey, child) => documentedChild(parentKey, child),
+};
+
 export function walkManifest(root: XmlElement, file: string, vocabulary: Vocabulary): WalkResult {
-  if (qualified(root.namespaceURI, root.localName) !== ROOT) {
+  return walkTree(root, file, {
+    vocabulary,
+    rootKey: ROOT,
+    documentation: MS_IPFF2_DOCUMENTATION,
+    notRoot: 'not an InfoPath manifest: the root is not xsf:xDocumentClass',
+  });
+}
+
+export interface WalkOptions {
+  readonly vocabulary: Vocabulary;
+  /** The qualified name the root must have; it is also the root's key. */
+  readonly rootKey: string;
+  readonly documentation: Documentation;
+  /** The INVALID_XML reason when the root is something else. */
+  readonly notRoot: string;
+}
+
+/** The generic walker (design §8.2), shared by the manifest and the schemas (§9.1). */
+export function walkTree(root: XmlElement, file: string, options: WalkOptions): WalkResult {
+  if (qualified(root.namespaceURI, root.localName) !== options.rootKey) {
     throw new AfterlifeError('INVALID_XML', {
       file,
       line: root.line,
       column: root.column,
-      reason: 'not an InfoPath manifest: the root is not xsf:xDocumentClass',
+      reason: options.notRoot,
     });
   }
   const unknowns: UnknownEntry[] = [];
-  return { root: walk(root, ROOT, file, vocabulary, unknowns), unknowns };
+  return { root: walk(root, options.rootKey, file, options, unknowns), unknowns };
 }
 
 function walk(
   el: XmlElement,
   key: string,
   file: string,
-  vocabulary: Vocabulary,
+  options: WalkOptions,
   unknowns: UnknownEntry[],
 ): ModelNode {
+  const { vocabulary, documentation } = options;
   const spec: ElementSpec | undefined = vocabulary[key];
-  if (!spec) throw new AfterlifeError('INTERNAL', { path: el.path });
+  if (!spec) {
+    throw new AfterlifeError('INTERNAL', { path: el.path, reason: `no vocabulary entry ${key}` });
+  }
 
   const attrs: Record<string, string> = {};
   for (const a of el.attributes) {
     const name = attrKey(a);
     const attrSpec = Object.hasOwn(spec.attrs, name) ? spec.attrs[name] : undefined;
     if (attrSpec === undefined) {
-      unknowns.push(unknownAttribute(a, file, 'notModelled', documentedAttr(key, name)));
+      unknowns.push(unknownAttribute(a, file, 'notModelled', documentation.attr(key, name)));
       continue;
     }
     attrs[name] = a.value;
     if (!allowed(attrSpec, a.value)) {
-      unknowns.push(unknownAttribute(a, file, 'unexpectedValue', documentedAttr(key, name)));
+      unknowns.push(unknownAttribute(a, file, 'unexpectedValue', documentation.attr(key, name)));
     }
   }
 
-  const base = { file, path: el.path, line: el.line, column: el.column, key, attrs };
+  const base = { file, path: el.path, line: el.line, column: el.column, key, attrs, element: el };
   if (spec.content === 'rawXml') return { ...base, children: [], raw: el.innerXml() };
 
   const children: ModelNode[] = [];
@@ -81,10 +117,10 @@ function walk(
         ? spec.children[qname]
         : undefined;
     if (target === undefined) {
-      unknowns.push(unknownElement(child, file, documentedChild(key, child)));
+      unknowns.push(unknownElement(child, file, 'notModelled', documentation.child(key, child)));
       continue;
     }
-    children.push(walk(child, childKey(target), file, vocabulary, unknowns));
+    children.push(walk(child, childKey(target), file, options, unknowns));
   }
 
   if (spec.content === 'text') return { ...base, children, text: el.textContent() };
@@ -120,10 +156,15 @@ function documentedChild(parentKey: string, child: XmlElement): boolean {
   );
 }
 
-function unknownElement(el: XmlElement, file: string, documented: boolean): UnknownEntry {
+export function unknownElement(
+  el: XmlElement,
+  file: string,
+  reason: UnknownEntry['reason'],
+  documented: boolean,
+): UnknownEntry {
   return {
     kind: 'element',
-    reason: 'notModelled',
+    reason,
     file,
     path: el.path,
     line: el.line,

@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { BuildContext } from '../../src/xsf/build';
+import type { XmlElement } from '../../src/xml/node';
 import type { ModelNode } from '../../src/xsf/walk';
 import { parseManifest } from '../../src/xsf/parse-manifest';
 import { catchError } from '../helpers/catch-error';
@@ -9,6 +10,7 @@ import { sampleManifests } from '../helpers/manifests';
 // allows once.
 
 const node = (key: string, path: string, children: ModelNode[] = []): ModelNode => ({
+  element: {} as XmlElement,
   key,
   path,
   file: 'manifest.xsf',
@@ -30,7 +32,7 @@ describe('BuildContext', () => {
     ctx.take(sets[0]!, 'xsf:ruleSet'); // the builder "forgets" the rules
     expect(catchError(() => ctx.assertAllConsumed())).toMatchObject({
       code: 'INTERNAL',
-      details: { path: rule.path },
+      details: { path: rule.path, reason: 'a modelled node was not consumed by any builder' },
     });
     ctx.take(ruleSet, 'xsf:rule');
     expect(() => ctx.assertAllConsumed()).not.toThrow();
@@ -38,25 +40,25 @@ describe('BuildContext', () => {
 
   test('one() refuses a position MS-IPFF2 allows more than once (a builder bug)', () => {
     const ctx = new BuildContext(node('xsf:views', `${R}/xsf:views[1]`));
-    expect(catchError(() => ctx.one(ctx.root, 'xsf:view'))).toMatchObject({ code: 'INTERNAL' });
+    const e = catchError(() => ctx.one(ctx.root, 'xsf:view'));
+    expect(e).toMatchObject({
+      code: 'INTERNAL',
+      details: {
+        path: '/xsf:xDocumentClass[1]/xsf:views[1]',
+        reason: 'one(xsf:view) on a position MS-IPFF2 does not hold once',
+      },
+    });
+    expect(e.message).not.toContain('not consumed');
   });
 
   test('oneOf() refuses keys that are not one choice', () => {
     const ctx = new BuildContext(node('xsf:submit', `${R}/xsf:submit[1]`));
     expect(
       catchError(() => ctx.oneOf(ctx.root, ['xsf:emailAdapter', 'xsf:davAdapter'])),
-    ).toMatchObject({ code: 'INTERNAL' });
-  });
-
-  test('notYetBuilt consumes the whole subtree', () => {
-    const deep = node('xsf:rule', `${R}/a/b/c`);
-    const ctx = new BuildContext(
-      node('xsf:xDocumentClass', R, [
-        node('xsf:ruleSets', `${R}/a`, [node('xsf:ruleSet', `${R}/a/b`, [deep])]),
-      ]),
-    );
-    ctx.notYetBuilt(ctx.root, 'xsf:ruleSets');
-    expect(() => ctx.assertAllConsumed()).not.toThrow();
+    ).toMatchObject({
+      code: 'INTERNAL',
+      details: { reason: expect.stringContaining('is not one xsd:choice of xsf:submit') as string },
+    });
   });
 });
 

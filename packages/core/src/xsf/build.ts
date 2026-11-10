@@ -5,10 +5,12 @@
 //
 // A position the Manifest holds once is read with `one` (or `oneOf` for an xsd:choice). It is
 // allowed only where MS-IPFF2 itself allows the child once (`once` and `choices` in ms-ipff2.ts),
-// or for a `viaWildcard` child, which the parser models once by choice. A second occurrence is
-// INVALID_XML at that occurrence: keeping only the first would drop the second silently.
+// or for a `viaWildcard` child, which the parser models once by choice. The first occurrence is
+// modelled; each later one becomes an unknown entry with reason `repeated` for its whole subtree
+// and a REPEATED_ELEMENT issue (R13.9), so nothing is dropped and the template still opens.
 
-import { AfterlifeError } from '../errors';
+import { AfterlifeError, type Issue } from '../errors';
+import type { UnknownEntry } from '../unknown';
 
 import { MS_IPFF2 } from './ms-ipff2';
 import type {
@@ -34,18 +36,24 @@ import type {
   PackageEntry,
   PrintSettings,
   RawXml,
+  MembershipKey,
+  Roles,
   Rule,
   RuleSet,
+  Scripts,
+  SignatureLine,
+  Signatures,
   SchemaErrorMessages,
   Solution,
   SpecKey,
   Submit,
   View,
   ViewExtension,
+  WithText,
   XmlToEdit,
 } from './types';
 import { XSF_VOCABULARY, type ElementSpec } from './vocabulary';
-import type { ModelNode } from './walk';
+import { unknownElement, type ModelNode } from './walk';
 
 // ---- consumption ------------------------------------------------------------------------------
 
@@ -53,6 +61,9 @@ export class BuildContext {
   private readonly consumed = new Set<ModelNode>();
   private readonly order = new Map<ModelNode, number>();
   private readonly grouping: ModelNode[] = [];
+  /** Later occurrences of held-once elements (R13.9). */
+  readonly repeated: UnknownEntry[] = [];
+  readonly issues: Issue[] = [];
 
   constructor(readonly root: ModelNode) {
     const visit = (n: ModelNode) => {
@@ -70,28 +81,76 @@ export class BuildContext {
     return out;
   }
 
-  /** The child at `key`, which MS-IPFF2 allows once here; a second one is INVALID_XML. */
+  /** The first child at `key`, which MS-IPFF2 allows once here; later ones are `repeated`. */
   one(node: ModelNode, key: SpecKey): ModelNode | undefined {
     if (!allowsOnce(node.key, key)) {
-      throw new AfterlifeError('INTERNAL', { path: `${node.path} (one: ${key})` });
+      throw new AfterlifeError('INTERNAL', {
+        path: node.path,
+        reason: `one(${key}) on a position MS-IPFF2 does not hold once`,
+      });
     }
-    const found = this.take(node, key);
-    return single(
-      found,
-      `${qnameOf(key)} occurs ${found.length} times in ${node.path}; MS-IPFF2 allows ${qnameOf(key)} once here`,
-    );
+    return this.first(this.take(node, key), node.path, { rule: 'MS-IPFF2' });
   }
 
-  /** The one child among `keys`, members of one xsd:choice that occurs once. */
+  /** The first child among `keys`, members of one xsd:choice that occurs once (R13.9). */
   oneOf(node: ModelNode, keys: readonly SpecKey[]): ModelNode | undefined {
     const choice = MS_IPFF2[node.key]?.choices?.find((g) => keys.every((k) => g.includes(k)));
-    if (!choice) throw new AfterlifeError('INTERNAL', { path: `${node.path} (oneOf)` });
+    if (!choice) {
+      throw new AfterlifeError('INTERNAL', {
+        path: node.path,
+        reason: `oneOf(${keys.join(', ')}) is not one xsd:choice of ${node.key} in MS-IPFF2`,
+      });
+    }
     const found = node.children.filter((c) => (keys as readonly string[]).includes(c.key));
     for (const c of found) this.consumed.add(c);
-    return single(
-      found,
-      `${node.path} holds ${found.length} of ${keys.map(qnameOf).join(', ')}; MS-IPFF2 allows one of them here`,
-    );
+    return this.first(found, node.path, { rule: 'MS-IPFF2', choice: keys.map(qnameOf).join(', ') });
+  }
+
+  /**
+   * The first of `nodes` (document order); every later one becomes one `repeated` unknown entry
+   * for its subtree plus a REPEATED_ELEMENT issue. `rule` says who allows only one: MS-IPFF2, or
+   * the parser (the solution definitions inside the `xsf:extension` wildcard).
+   */
+  first(
+    nodes: readonly ModelNode[],
+    parentPath: string,
+    how: { rule: 'MS-IPFF2' | 'parser'; choice?: string },
+  ): ModelNode | undefined {
+    for (const later of nodes.slice(1)) {
+      this.consumeSubtree(later);
+      this.repeatedNodes.add(later);
+      this.repeated.push(unknownElement(later.element, later.file, 'repeated', true));
+      const element = qnameOf(later.key);
+      const allowed = how.choice === undefined ? element : `one of ${how.choice}`;
+      this.issues.push({
+        code: 'REPEATED_ELEMENT',
+        message: `${later.file}: ${element} at ${later.path} repeats; ${how.rule} allows ${allowed} once in ${parentPath}`,
+        file: later.file,
+        path: later.path,
+        line: later.line,
+        column: later.column,
+        details: {
+          element,
+          parent: parentPath,
+          allowed: 1,
+          rule: how.rule,
+          ...(how.choice === undefined ? {} : { choice: how.choice }),
+        },
+      });
+    }
+    return nodes[0];
+  }
+
+  /** Paths of the repeated (not modelled) subtrees. */
+  repeatedPaths(): string[] {
+    return [...this.repeatedNodes].map((n) => n.path);
+  }
+
+  private readonly repeatedNodes = new Set<ModelNode>();
+
+  private consumeSubtree(n: ModelNode): void {
+    this.consumed.add(n);
+    n.children.forEach((c) => this.consumeSubtree(c));
   }
 
   /** Records a grouping element (`Manifest.containers`). */
@@ -120,21 +179,14 @@ export class BuildContext {
       .map((i) => i.value);
   }
 
-  /**
-   * Scaffold: consumes the subtree of a position whose builder belongs to a later task. Each use
-   * names the task; the list is empty when every builder exists.
-   */
-  notYetBuilt(node: ModelNode, key: SpecKey): void {
-    const mark = (n: ModelNode) => {
-      this.consumed.add(n);
-      n.children.forEach(mark);
-    };
-    this.take(node, key).forEach(mark);
-  }
-
   assertAllConsumed(): void {
     const visit = (n: ModelNode) => {
-      if (!this.consumed.has(n)) throw new AfterlifeError('INTERNAL', { path: n.path });
+      if (!this.consumed.has(n)) {
+        throw new AfterlifeError('INTERNAL', {
+          path: n.path,
+          reason: 'a modelled node was not consumed by any builder',
+        });
+      }
       n.children.forEach(visit);
     };
     visit(this.root);
@@ -147,20 +199,6 @@ function allowsOnce(parent: string, child: string): boolean {
   return Object.values(spec?.children ?? {}).some(
     (c) => typeof c === 'object' && c.key === child && c.viaWildcard,
   );
-}
-
-/** The only node, or undefined; a second one is INVALID_XML at the second, with `reason`. */
-function single(nodes: readonly ModelNode[], reason: string): ModelNode | undefined {
-  const second = nodes[1];
-  if (second) {
-    throw new AfterlifeError('INVALID_XML', {
-      file: second.file,
-      line: second.line,
-      column: second.column,
-      reason,
-    });
-  }
-  return nodes[0];
 }
 
 /** `xsf:rule/exitRuleSet` → `xsf:exitRuleSet`. */
@@ -193,7 +231,17 @@ function opt<K extends string, V>(key: K, value: V | undefined): { [P in K]?: V 
 
 // ---- the manifest -----------------------------------------------------------------------------
 
-export function buildManifest(root: ModelNode): Manifest {
+export interface ManifestBuild {
+  readonly manifest: Manifest;
+  /** `repeated` entries, in document order (R13.9). */
+  readonly unknowns: readonly UnknownEntry[];
+  /** REPEATED_ELEMENT issues, in document order. */
+  readonly issues: readonly Issue[];
+  /** Paths of the repeated subtrees; walker entries inside them belong to the repeated entry. */
+  readonly repeatedPaths: readonly string[];
+}
+
+export function buildManifest(root: ModelNode): ManifestBuild {
   const ctx = new BuildContext(root);
   const R = root;
 
@@ -219,15 +267,6 @@ export function buildManifest(root: ModelNode): Manifest {
   const connectionExtensions = solution.dataConnections
     ? buildConnectionExtensions(ctx, solution.dataConnections, adapters)
     : [];
-  for (const key of [
-    'xsf:documentSignatures',
-    'xsf:listProperties',
-    'xsf:permissions',
-    'xsf:roles',
-    'xsf:scripts',
-  ] as const) {
-    ctx.notYetBuilt(R, key); // task 15
-  }
 
   const manifest: Manifest = {
     documentClass: modelled(R),
@@ -257,10 +296,23 @@ export function buildManifest(root: ModelNode): Manifest {
     ...opt('submit', submit),
     dataAdapters,
     connectionExtensions,
+    promotedFields: buildPromotedFields(ctx, R),
+    promotedFieldExtensions: solution.promotedFieldExtensions,
+    ...opt('signatures', buildSignatures(ctx, R)),
+    ...opt('roles', buildRoles(ctx, R)),
+    ...opt('scripts', buildScripts(ctx, R)),
+    allowedControls: buildAllowedControls(ctx, R),
     containers: [],
   };
   ctx.assertAllConsumed();
-  return { ...manifest, containers: ctx.containers() };
+  const byPosition = (a: { line?: number; column?: number }, b: typeof a) =>
+    (a.line ?? 0) - (b.line ?? 0) || (a.column ?? 0) - (b.column ?? 0);
+  return {
+    manifest: { ...manifest, containers: ctx.containers() },
+    unknowns: [...ctx.repeated].sort(byPosition),
+    issues: [...ctx.issues].sort(byPosition),
+    repeatedPaths: ctx.repeatedPaths(),
+  };
 }
 
 interface Ordered<T> {
@@ -283,6 +335,7 @@ interface SolutionParts {
   blankChecks: Modelled<'xsf3:errorBlank'>[];
   /** `xsf2:dataConnections`, built once the adapters exist. */
   dataConnections?: ModelNode;
+  promotedFieldExtensions: Modelled<'xsf2:fieldExtension'>[];
 }
 
 function buildSolution(ctx: BuildContext, R: ModelNode): SolutionParts {
@@ -294,19 +347,15 @@ function buildSolution(ctx: BuildContext, R: ModelNode): SolutionParts {
   const defs2 = extension.map((e) => ctx.one(e, 'xsf2:solutionDefinition')).filter(isDefined);
   const defs3 = extension.map((e) => ctx.one(e, 'xsf3:solutionDefinition')).filter(isDefined);
   const where = (extensions ?? R).path;
-  const def2 = single(
-    defs2,
-    `xsf2:solutionDefinition occurs ${defs2.length} times in ${where}; the parser models one`,
-  );
-  const def3 = single(
-    defs3,
-    `xsf3:solutionDefinition occurs ${defs3.length} times in ${where}; the parser models one`,
-  );
+  const def2 = ctx.first(defs2, where, { rule: 'parser' });
+  const def3 = ctx.first(defs3, where, { rule: 'parser' });
 
   const viewExtensions: SolutionParts['viewExtensions'] = [];
   let mergedPrintView: MergedPrintView | undefined;
   let server, offline;
   let dataConnections: ModelNode | undefined;
+  let managedCode: Modelled<'xsf2:managedCode'> | undefined;
+  let promotedFieldExtensions: Modelled<'xsf2:fieldExtension'>[] = [];
   if (def2) {
     server = mapOpt(ctx.one(def2, 'xsf2:server'), modelled<'xsf2:server'>);
     offline = mapOpt(ctx.one(def2, 'xsf2:offline'), modelled<'xsf2:offline'>);
@@ -320,8 +369,18 @@ function buildSolution(ctx: BuildContext, R: ModelNode): SolutionParts {
     const mpv = ctx.one(def2, 'xsf2:mergedPrintView');
     if (mpv) mergedPrintView = buildMergedPrintView(ctx, mpv);
     dataConnections = ctx.one(def2, 'xsf2:dataConnections');
-    ctx.notYetBuilt(def2, 'xsf2:listPropertiesExtension'); // task 15
-    ctx.notYetBuilt(def2, 'xsf2:managedCode'); // task 15
+    managedCode = mapOpt(ctx.one(def2, 'xsf2:managedCode'), modelled<'xsf2:managedCode'>);
+    const lpe = ctx.one(def2, 'xsf2:listPropertiesExtension');
+    if (lpe) {
+      ctx.container(lpe);
+      const fe = ctx.one(lpe, 'xsf2:fieldsExtension');
+      if (fe) {
+        ctx.container(fe);
+        promotedFieldExtensions = ctx
+          .take(fe, 'xsf2:fieldExtension')
+          .map(modelled<'xsf2:fieldExtension'>);
+      }
+    }
   }
   let baseUrl;
   let blankChecks: Modelled<'xsf3:errorBlank'>[] = [];
@@ -331,8 +390,15 @@ function buildSolution(ctx: BuildContext, R: ModelNode): SolutionParts {
     if (ve) {
       ctx.container(ve);
       for (const n of ctx.take(ve, 'xsf3:viewExtension')) {
-        ctx.notYetBuilt(n, 'xsf3:signatureLines'); // task 15
-        viewExtensions.push({ node: n, value: modelled<'xsf3:viewExtension'>(n) });
+        const lines = ctx.one(n, 'xsf3:signatureLines');
+        if (lines) ctx.container(lines);
+        const signatureLines = lines
+          ? ctx.take(lines, 'xsf3:signatureLine').map((l) => buildSignatureLine(ctx, l))
+          : [];
+        viewExtensions.push({
+          node: n,
+          value: { ...modelled<'xsf3:viewExtension'>(n), signatureLines },
+        });
       }
     }
     const cv = ctx.one(def3, 'xsf3:customValidation');
@@ -349,6 +415,7 @@ function buildSolution(ctx: BuildContext, R: ModelNode): SolutionParts {
     ...opt('offline', offline),
     ...opt('xsf3', mapOpt(def3, modelled<'xsf3:solutionDefinition'>)),
     ...opt('baseUrl', baseUrl),
+    ...opt('managedCode', managedCode),
   };
   return {
     solution,
@@ -356,6 +423,7 @@ function buildSolution(ctx: BuildContext, R: ModelNode): SolutionParts {
     viewExtensions,
     blankChecks,
     ...opt('dataConnections', dataConnections),
+    promotedFieldExtensions,
   };
 }
 
@@ -801,4 +869,90 @@ function buildConnectionExtensions(
     }),
   );
   return ctx.inOrder(all);
+}
+
+// ---- R12: promoted fields, signatures, roles, code, permissions --------------------------------
+
+function buildPromotedFields(ctx: BuildContext, R: ModelNode): Modelled<'xsf:field'>[] {
+  const lp = ctx.one(R, 'xsf:listProperties');
+  if (!lp) return [];
+  ctx.container(lp);
+  const fields = ctx.one(lp, 'xsf:fields');
+  if (!fields) return [];
+  ctx.container(fields);
+  return ctx.take(fields, 'xsf:field').map(modelled<'xsf:field'>);
+}
+
+function buildSignatures(ctx: BuildContext, R: ModelNode): Signatures | undefined {
+  const ds = ctx.one(R, 'xsf:documentSignatures');
+  if (!ds) return undefined;
+  return {
+    ...modelled<'xsf:documentSignatures'>(ds),
+    blocks: ctx.take(ds, 'xsf:signedDataBlock').map((b) => ({
+      ...modelled<'xsf:signedDataBlock'>(b),
+      ...opt(
+        'message',
+        withText<'xsf:signedDataBlock/message'>(ctx.one(b, 'xsf:signedDataBlock/message')),
+      ),
+    })),
+  };
+}
+
+const SIGNATURE_LINE_TEXT = [
+  'confirmationMessage',
+  'suggestedSignerName',
+  'suggestedSignerTitle',
+  'suggestedSignerEmailAddress',
+] as const;
+
+function buildSignatureLine(ctx: BuildContext, l: ModelNode): SignatureLine {
+  const parts: Partial<Record<(typeof SIGNATURE_LINE_TEXT)[number], WithText<SpecKey>>> = {};
+  for (const name of SIGNATURE_LINE_TEXT) {
+    const n = ctx.one(l, `xsf3:signatureLine/${name}`);
+    const text = n && withText<SpecKey>(n);
+    if (text) parts[name] = text;
+  }
+  return { ...modelled<'xsf3:signatureLine'>(l), ...parts } as SignatureLine;
+}
+
+const MEMBERSHIP: readonly MembershipKey[] = [
+  'xsf:userName',
+  'xsf:group',
+  'xsf:getUserNameFromData',
+];
+
+function buildRoles(ctx: BuildContext, R: ModelNode): Roles | undefined {
+  const roles = ctx.one(R, 'xsf:roles');
+  if (!roles) return undefined;
+  const m = ctx.one(roles, 'xsf:membership');
+  if (m) ctx.container(m);
+  const membership = m
+    ? MEMBERSHIP.flatMap((key) =>
+        ctx.take(m, key).map((n): Ordered<AnyModelled<MembershipKey>> => ({
+          node: n,
+          value: modelled<MembershipKey>(n),
+        })),
+      )
+    : [];
+  return {
+    ...modelled<'xsf:roles'>(roles),
+    roles: ctx.take(roles, 'xsf:role').map(modelled<'xsf:role'>),
+    membership: ctx.inOrder(membership),
+  };
+}
+
+function buildScripts(ctx: BuildContext, R: ModelNode): Scripts | undefined {
+  const s = ctx.one(R, 'xsf:scripts');
+  if (!s) return undefined;
+  return {
+    ...modelled<'xsf:scripts'>(s),
+    scripts: ctx.take(s, 'xsf:script').map(modelled<'xsf:script'>),
+  };
+}
+
+function buildAllowedControls(ctx: BuildContext, R: ModelNode): Modelled<'xsf:allowedControl'>[] {
+  const p = ctx.one(R, 'xsf:permissions');
+  if (!p) return [];
+  ctx.container(p);
+  return ctx.take(p, 'xsf:allowedControl').map(modelled<'xsf:allowedControl'>);
 }

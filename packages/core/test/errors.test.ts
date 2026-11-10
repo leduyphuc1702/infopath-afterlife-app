@@ -11,7 +11,7 @@ const samples: { [C in keyof ErrorDetailsByCode]: ErrorDetailsByCode[C] } = {
   MISSING_MANIFEST: { names: 'a.xsf,b.xsf' },
   UNSAFE_XML: { file: 'manifest.xsf', line: 2, column: 1 },
   INVALID_XML: { file: 'schema.xsd', line: 1, column: 31, encoding: 'iso-2022-kr' },
-  INTERNAL: { path: '/xsf:xDocumentClass[1]/xsf:views[1]' },
+  INTERNAL: { path: '/xsf:xDocumentClass[1]/xsf:views[1]', reason: 'not consumed by a builder' },
 };
 
 test('the code list matches design §11', () => {
@@ -44,6 +44,12 @@ test('messages name the important detail', () => {
   ).toBe('Limit xmlDepth exceeded: 257 > 256 in a.xsd');
   expect(new AfterlifeError('UNSUPPORTED_COMPRESSION', { method: 7, folder: 2 }).message).toBe(
     'Folder 2 uses unsupported compression 7',
+  );
+});
+
+test('INTERNAL names the path and the broken invariant', () => {
+  expect(new AfterlifeError('INTERNAL', { path: '/a[1]', reason: 'not consumed' }).message).toBe(
+    'Internal error at /a[1]: not consumed',
   );
 });
 

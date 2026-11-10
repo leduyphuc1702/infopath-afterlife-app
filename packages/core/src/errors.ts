@@ -22,7 +22,8 @@ export interface ErrorDetailsByCode {
   UNSAFE_XML: { file: string; line: number; column: number };
   /** `reason`: set when the XML is well formed but is not what was expected (a manifest root). */
   INVALID_XML: { file: string; line: number; column: number; encoding?: string; reason?: string };
-  INTERNAL: { path: string };
+  /** A parser bug: `reason` says which invariant broke. */
+  INTERNAL: { path: string; reason: string };
 }
 
 export type ErrorCode = keyof ErrorDetailsByCode;
@@ -66,7 +67,7 @@ const MESSAGES: { [C in ErrorCode]: (d: ErrorDetailsByCode[C]) => string } = {
     `Invalid XML at ${at(d)}` +
     (d.encoding === undefined ? '' : ` (encoding ${d.encoding})`) +
     (d.reason === undefined ? '' : `: ${d.reason}`),
-  INTERNAL: (d) => `Internal error: modelled node not consumed at ${d.path}`,
+  INTERNAL: (d) => `Internal error at ${d.path}: ${d.reason}`,
 };
 
 function errorMessage<C extends ErrorCode>(code: C, details: ErrorDetailsByCode[C]): string {
@@ -87,7 +88,8 @@ export type IssueCode =
   | 'LIMIT_EXCEEDED'
   | 'INVALID_ENCODING'
   | 'XML_WARNING'
-  | 'PATTERN_NOT_EVALUATED';
+  | 'PATTERN_NOT_EVALUATED'
+  | 'REPEATED_ELEMENT';
 
 export interface Issue {
   readonly code: IssueCode;

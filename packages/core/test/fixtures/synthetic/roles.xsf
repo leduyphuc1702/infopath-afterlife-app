@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 15): user roles, which no in-repo sample uses. Names are fictional. -->
+<xsf:xDocumentClass solutionFormatVersion="3.0.0.0" xmlns:xsf="http://schemas.microsoft.com/office/infopath/2003/solutionDefinition">
+	<xsf:roles default="Requester" initiator="Requester" hideStatusBarDisplay="no">
+		<xsf:role name="Requester"></xsf:role>
+		<xsf:role name="Approver"></xsf:role>
+		<xsf:membership>
+			<xsf:userName name="CONTOSO\mai" memberOf="Approver"></xsf:userName>
+			<xsf:group name="CONTOSO\Finance" memberOf="Approver"></xsf:group>
+			<xsf:getUserNameFromData dataObject="Approvers" select="/dfs:myFields/dfs:dataFields/d:Approver/@Login" memberOf="Approver"></xsf:getUserNameFromData>
+			<xsf:userName name="CONTOSO\tim" memberOf="Requester"></xsf:userName>
+		</xsf:membership>
+	</xsf:roles>
+</xsf:xDocumentClass>

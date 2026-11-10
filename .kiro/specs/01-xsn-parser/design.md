@@ -161,7 +161,7 @@ export interface Located { readonly file: string; readonly path: string; readonl
 
 export interface UnknownEntry extends Located {
   readonly kind: 'element' | 'attribute' | 'text';
-  readonly reason: 'notModelled' | 'unexpectedValue';
+  readonly reason: 'notModelled' | 'unexpectedValue' | 'repeated';   // repeated: R13.9, §8.3
   readonly namespace: string | null;
   readonly name: string;                        // local name; '#text' for text
   readonly raw: string;                         // outer XML, `name="value"`, or the text
@@ -491,6 +491,12 @@ walk(element, specKey):
                               : unknown(element, notModelled, documented)  — whole subtree, one entry (R13.1)
                  text (non-whitespace) → unknown(text)                                            (R13.3)
   comments and processing instructions are ignored (R13.5)
+
+The walker does not know what MS-IPFF2 allows once; the builders do (§8.3). `repeated` entries
+(R13.9) are made by the builders and merged with the walker's entries in document order. Walker
+entries inside a repeated subtree are dropped, because that subtree is one entry (R13.1).
+`walkTree` is the same walker with its vocabulary, root and `documented` oracle as options; the
+schemas use it with the XSD vocabulary (§9.1).
 ```
 
 The root must be `xsf:xDocumentClass`. Any other root throws `INVALID_XML` ("not an InfoPath
@@ -510,12 +516,15 @@ manifest").
   `upgrade?`, `submit?`, `editWith?`, …) is read with `one(node, key)`, or `oneOf(node, keys)` for
   the members of an `xsd:choice`. That is allowed only where MS-IPFF2 itself allows the child once:
   the generator records `once` (effective `maxOccurs` 1) and `choices` (an `xsd:choice` occurring
-  once) per position in `ms-ipff2.ts`, and `one`/`oneOf` throw `INTERNAL` for any other position.
-  A second occurrence in a file is `INVALID_XML` at that occurrence, with a `reason` naming the
-  rule, because keeping only the first would drop the second without a trace. The one modelling
-  choice beyond MS-IPFF2: `xsf2:solutionDefinition` and `xsf3:solutionDefinition` sit in a
-  wildcard (`viaWildcard`), and the parser takes at most one of each across all `xsf:extension`
-  elements. Where MS-IPFF2 allows repeats, the field is a list: the content of `xsf:view` is an
+  once) per position in `ms-ipff2.ts`, and `one`/`oneOf` throw `INTERNAL` (a parser bug, with a
+  `reason` naming the misuse) for any other position. In a file, the first occurrence in document
+  order is modelled; each later one (for a choice, each member after the first) is consumed with
+  its subtree, becomes one unknown entry with `reason: 'repeated'` and `documented: true`, and
+  records a `REPEATED_ELEMENT` issue with `details` `{ element, parent, allowed: 1, rule, choice? }`
+  (R13.9, changed from a fatal `INVALID_XML` at the task 14 review). `rule` is `MS-IPFF2`, or
+  `parser` for the one modelling choice beyond MS-IPFF2: `xsf2:solutionDefinition` and
+  `xsf3:solutionDefinition` sit in a wildcard (`viaWildcard`), and the parser takes at most one of
+  each across all `xsf:extension` elements. Where MS-IPFF2 allows repeats, the field is a list: the content of `xsf:view` is an
   unbounded group, so `View.mainpanes`, `printSettings`, `menuAreas`, `toolbars`,
   `unboundButtons` and `xmlToEdit` (across all `xsf:editing`) are lists.
 - **Grouping elements** (added at task 12). Elements that only group others (`xsf:views`,
@@ -669,13 +678,14 @@ Fatal (`AfterlifeError`, thrown):
 | `LIMIT_EXCEEDED` | any limit in §4 (an `xmlDepth` or `xmlBytes` overrun in a non-manifest file is an issue instead) | `limit`, `max`, `observed`, `file?` |
 | `MISSING_MANIFEST` | no `.xsf`, or more than one without `manifest.xsf` | `names` (comma-joined) |
 | `UNSAFE_XML` | DOCTYPE in the manifest | `file`, `line`, `column` |
-| `INVALID_XML` | malformed manifest, unsupported encoding, root not `xDocumentClass` | `file`, `line`, `column`, `encoding?` |
+| `INVALID_XML` | malformed manifest, unsupported encoding, root not `xDocumentClass` (never for XML that is well-formed but invalid against MS-IPFF2, R13.9) | `file`, `line`, `column`, `encoding?`, `reason?` |
 | `INTERNAL` | a builder did not consume a modelled node (§8.3) | `path` |
 
 Non-fatal (`Issue`, in `issues`): `CHECKSUM_MISMATCH`, `MISSING_FILE`, `UNLISTED_FILE`,
 `DUPLICATE_NAME`, `UNSAFE_NAME`, `URN_MISMATCH`, `UNRESOLVED_REFERENCE`, `UNSAFE_XML`,
 `INVALID_XML` and `LIMIT_EXCEEDED` (for non-manifest files), `INVALID_ENCODING`, `XML_WARNING`,
-`PATTERN_NOT_EVALUATED`. The last three are new in this design.
+`PATTERN_NOT_EVALUATED`, `REPEATED_ELEMENT` (R13.9). The last four are new in this design.
+`INTERNAL` carries `{ path, reason }`; the message is `Internal error at <path>: <reason>`.
 
 `AfterlifeError extends Error`, with `readonly code` and `readonly details`; `message` is English
 for logs. User-facing text is mapped in the UI (structure.md). Any other exception escaping
@@ -798,7 +808,8 @@ with `zlib` only in tests as an oracle.
   random modelled elements. The oracle walks the mutated DOM with its own code, independent of the
   table:
   - an element is *modelled* if the result contains an object with its path (§8.4);
-  - it is *unknown* if an `unknowns` entry with `reason: 'notModelled'` has its path or an ancestor's;
+  - it is *unknown* if an `unknowns` entry with `reason: 'notModelled'` or `'repeated'` has its path
+    or an ancestor's (a repeated subtree is not modelled, R13.9);
   - the same for attributes, through `attrs` keys and `/@` paths.
 
   Assert exactly one of the two for every element and non-`xmlns` attribute, and that each inserted

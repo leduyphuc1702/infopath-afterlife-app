@@ -11,8 +11,12 @@ export interface Located {
 /** A manifest or schema node the parser does not model (R13, R15.4). */
 export interface UnknownEntry extends Located {
   readonly kind: 'element' | 'attribute' | 'text';
-  /** `unexpectedValue`: a modelled attribute whose value is outside its list (R13.4). */
-  readonly reason: 'notModelled' | 'unexpectedValue';
+  /**
+   * `unexpectedValue`: a modelled attribute whose value is outside its list (R13.4).
+   * `repeated`: a later occurrence of an element that may occur only once there (R13.9); the
+   * first occurrence is modelled.
+   */
+  readonly reason: 'notModelled' | 'unexpectedValue' | 'repeated';
   readonly namespace: string | null;
   /** Local name; `#text` for text. */
   readonly name: string;

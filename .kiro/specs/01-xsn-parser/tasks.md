@@ -290,7 +290,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R11.1, R11.2, R11.3, R11.4, R11.5, R11.7.
   - Done when: `pnpm check` green.
 
-- [ ] 15. Manifest builder: promoted fields, signatures, roles, code, ActiveX permissions
+- [x] 15. Manifest builder: promoted fields, signatures, roles, code, ActiveX permissions
   - Builders for `listProperties` (the chain `xsf:listProperties` → `xsf:fields` → `xsf:field`)
     and `listPropertiesExtension`, `documentSignatures` with
     `signedDataBlock` and `message`, `xsf3:signatureLines`, `roles` with `role` and `membership`,
@@ -305,15 +305,19 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R12.1, R12.2, R12.3, R12.4 (manifest part), R12.5, R12.6.
   - Done when: `pnpm check` green.
 
-- [ ] 16. Vocabulary coverage: the kitchen-sink manifest
+- [x] 16. Vocabulary coverage: the kitchen-sink manifest
   - `helpers/kitchen-sink.ts`: generates, from `XSF_VOCABULARY` alone, one manifest that places
     every spec key at a legal position with every attribute set (first enum value, `yes`, or `x`).
   - Tests: `xsf/vocabulary.coverage.test.ts` (parse the kitchen sink; every generated element path
     is an object with that `path` in the result and every attribute is in its `attrs`; `unknowns`
     is empty; `INTERNAL` is never thrown), `xsf/unknowns.test.ts` (an unknown element and an
     unknown attribute inserted into a sample manifest at known paths appear once each with those
-    paths; MS-IPFF2 elements left out on purpose, such as `taskpane`, report `documented: true`).
-  - Requirements: R13.1, R13.2, R13.7, R13.8 (end to end through the builders).
+    paths; MS-IPFF2 elements left out on purpose, such as `taskpane`, report `documented: true`;
+    a second copy of a held-once element, such as `xsf:fileNew`, inserted into a sample manifest
+    gives one `repeated` entry and one `REPEATED_ELEMENT` issue, and the first copy is still
+    modelled). The kitchen sink places each key once per parent and one member per `xsd:choice`
+    (the `choices` of `ms-ipff2.ts`, its one input besides the table), so it has no repeats.
+  - Requirements: R13.1, R13.2, R13.7, R13.8, R13.9 (end to end through the builders).
   - Done when: `pnpm check` green.
 
 - [ ] 17. Schema set: loading, indexing, include and import, unknown constructs
@@ -458,7 +462,8 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Test: `property/p12.property.test.ts` (design §13.3: random insertions into random README
     manifests; an oracle that walks the mutated DOM with its own code; exactly one of modelled or
     unknown for every element and non-`xmlns` attribute; each inserted unmodelled node has an entry
-    whose path selects it; `unexpectedValue` entries not counted; 500 runs).
+    whose path selects it; `unexpectedValue` entries not counted; `repeated` entries counted as
+    unknown, and the generator also inserts repeats of held-once elements; 500 runs).
   - Requirements: R20.1, R20.2, R20.3.
   - Done when: `pnpm check` green.
 
@@ -530,6 +535,7 @@ Every requirement id appears in at least one task. Task 28 re-checks all of them
 | R13.6 | 11, 23 |
 | R13.7 | 10, 16 |
 | R13.8 | 9, 10, 11, 16 |
+| R13.9 | 14 (review change), 16, 26 |
 | R14.1, R14.2, R14.5, R14.6 | 18 |
 | R14.3 | 18, 19 |
 | R14.4 | 20 |

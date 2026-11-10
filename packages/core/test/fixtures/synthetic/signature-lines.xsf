@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 15): InfoPath 2010 signature lines (xsf3:signatureLines) on a view, for
+     a signedDataBlock. Names and addresses are fictional. -->
+<xsf:xDocumentClass solutionFormatVersion="3.0.0.0" xmlns:xsf="http://schemas.microsoft.com/office/infopath/2003/solutionDefinition" xmlns:xsf3="http://schemas.microsoft.com/office/infopath/2009/solutionDefinition/extensions">
+	<xsf:views default="Main">
+		<xsf:view name="Main"><xsf:mainpane transform="view1.xsl"></xsf:mainpane></xsf:view>
+	</xsf:views>
+	<xsf:documentSignatures signatureLocation="/my:form/my:signatures">
+		<xsf:signedDataBlock name="approval" data="/my:form" signatureLocation="/my:form/my:signatures" mode="single"></xsf:signedDataBlock>
+	</xsf:documentSignatures>
+	<xsf:extensions>
+		<xsf:extension name="SolutionDefinitionExtensions">
+			<xsf3:solutionDefinition>
+				<xsf3:viewsExtension>
+					<xsf3:viewExtension ref="Main">
+						<xsf3:signatureLines>
+							<xsf3:signatureLine name="line1" signedDataBlock="approval" showDate="yes" signatureType="line">
+								<xsf3:confirmationMessage>I approve this  request.</xsf3:confirmationMessage>
+								<xsf3:suggestedSignerName isCalculation="no">Hung Tran</xsf3:suggestedSignerName>
+								<xsf3:suggestedSignerTitle>Approver</xsf3:suggestedSignerTitle>
+								<xsf3:suggestedSignerEmailAddress isCalculation="yes">/my:form/my:approverEmail</xsf3:suggestedSignerEmailAddress>
+							</xsf3:signatureLine>
+							<xsf3:signatureLine name="stamp1" signedDataBlock="approval" showDate="no" signatureType="stamp"></xsf3:signatureLine>
+						</xsf3:signatureLines>
+					</xsf3:viewExtension>
+				</xsf3:viewsExtension>
+			</xsf3:solutionDefinition>
+		</xsf:extension>
+	</xsf:extensions>
+</xsf:xDocumentClass>

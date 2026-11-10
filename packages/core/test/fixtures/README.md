@@ -25,3 +25,7 @@ is fictional.
   fields and `xsf2` extensions, and the misspelling `sharePointListAdapterRW` (spec 01 task 14).
 - `connectoid.xsf`: `xsf2:connectoid` on an `adoAdapter`, a `webServiceAdapter` and a
   `useHttpHandler`, and an extension whose `ref` names no adapter (spec 01 task 14).
+- `roles.xsf`: `xsf:roles` with roles and every kind of `xsf:membership` entry (spec 01 task 15).
+- `allowed-control.xsf`: `xsf:permissions/xsf:allowedControl` (spec 01 task 15).
+- `signature-lines.xsf`: `xsf3:signatureLines` on a view extension, with every text child
+  (spec 01 task 15).

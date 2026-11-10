@@ -55,7 +55,14 @@ export type ContainerKey =
   | 'xsf:dataObject/query'
   | 'xsf:query'
   | 'xsf:dataAdapters'
-  | 'xsf2:dataConnections';
+  | 'xsf2:dataConnections'
+  | 'xsf:listProperties'
+  | 'xsf:fields'
+  | 'xsf2:listPropertiesExtension'
+  | 'xsf2:fieldsExtension'
+  | 'xsf:permissions'
+  | 'xsf:membership'
+  | 'xsf3:signatureLines';
 
 export interface Manifest {
   readonly documentClass: Modelled<'xsf:xDocumentClass'>; // R7.1
@@ -89,6 +96,15 @@ export interface Manifest {
   readonly dataAdapters: readonly Adapter[];
   /** `xsf2:dataConnections` children, linked to their adapter by `ref` (R11.4). */
   readonly connectionExtensions: readonly ConnectionExtension[];
+  /** `xsf:listProperties/xsf:fields/xsf:field`: promoted fields (R12.1). */
+  readonly promotedFields: readonly Modelled<'xsf:field'>[];
+  /** `xsf2:listPropertiesExtension/xsf2:fieldsExtension/xsf2:fieldExtension` (R12.1). */
+  readonly promotedFieldExtensions: readonly Modelled<'xsf2:fieldExtension'>[];
+  readonly signatures?: Signatures; // R12.2
+  readonly roles?: Roles; // R12.3
+  readonly scripts?: Scripts; // R12.4
+  /** `xsf:permissions/xsf:allowedControl`: ActiveX controls the manifest allows (R12.5). */
+  readonly allowedControls: readonly Modelled<'xsf:allowedControl'>[];
   /** Grouping elements (see ContainerKey), in document order. */
   readonly containers: readonly AnyModelled<ContainerKey>[];
 }
@@ -101,6 +117,8 @@ export interface Solution {
   readonly offline?: Modelled<'xsf2:offline'>;
   readonly xsf3?: Modelled<'xsf3:solutionDefinition'>;
   readonly baseUrl?: Modelled<'xsf3:baseUrl'>;
+  /** `xsf2:managedCode` (R12.4). */
+  readonly managedCode?: Modelled<'xsf2:managedCode'>;
 }
 
 export interface PackageEntry extends Modelled<'xsf:file'> {
@@ -150,7 +168,12 @@ export type ButtonArea<K extends 'xsf:menuArea' | 'xsf:toolbar'> = Modelled<K> &
 
 export type UnboundButton = Modelled<'xsf:unboundControls/button'>;
 
-export type ViewExtension = Modelled<'xsf2:viewExtension'> | Modelled<'xsf3:viewExtension'>;
+export type ViewExtension = Modelled<'xsf2:viewExtension'> | Xsf3ViewExtension;
+
+export interface Xsf3ViewExtension extends Modelled<'xsf3:viewExtension'> {
+  /** `xsf3:signatureLines/xsf3:signatureLine`, in document order (R12.2). */
+  readonly signatureLines: readonly SignatureLine[];
+}
 
 export interface MergedPrintView extends Modelled<'xsf2:mergedPrintView'> {
   readonly printSettings?: PrintSettings;
@@ -284,3 +307,33 @@ export type ConnectionExtension = AnyModelled<ConnectionExtensionKey> & {
    */
   readonly adapterPath?: string;
 };
+
+// ---- R12: promoted fields, signatures, roles, code, permissions --------------------------------
+
+export interface Signatures extends Modelled<'xsf:documentSignatures'> {
+  readonly blocks: readonly SignedDataBlock[];
+}
+
+export interface SignedDataBlock extends Modelled<'xsf:signedDataBlock'> {
+  /** The message shown when signing, verbatim. */
+  readonly message?: WithText<'xsf:signedDataBlock/message'>;
+}
+
+export interface SignatureLine extends Modelled<'xsf3:signatureLine'> {
+  readonly confirmationMessage?: WithText<'xsf3:signatureLine/confirmationMessage'>;
+  readonly suggestedSignerName?: WithText<'xsf3:signatureLine/suggestedSignerName'>;
+  readonly suggestedSignerTitle?: WithText<'xsf3:signatureLine/suggestedSignerTitle'>;
+  readonly suggestedSignerEmailAddress?: WithText<'xsf3:signatureLine/suggestedSignerEmailAddress'>;
+}
+
+export type MembershipKey = 'xsf:userName' | 'xsf:group' | 'xsf:getUserNameFromData';
+
+export interface Roles extends Modelled<'xsf:roles'> {
+  readonly roles: readonly Modelled<'xsf:role'>[];
+  /** `xsf:membership` entries, in document order. */
+  readonly membership: readonly AnyModelled<MembershipKey>[];
+}
+
+export interface Scripts extends Modelled<'xsf:scripts'> {
+  readonly scripts: readonly Modelled<'xsf:script'>[];
+}
