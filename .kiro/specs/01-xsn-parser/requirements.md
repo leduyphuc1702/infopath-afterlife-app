@@ -376,8 +376,11 @@ no longer exist.
    `webServiceAdapter` (with `operation`, `input`), `sharepointListAdapter`,
    `sharepointListAdapterRW`, `davAdapter` (with `folderURL`, `fileName`), `emailAdapter` (with
    `to`, `cc`, `bcc`, `subject`, `intro`, `attachmentFileName`), `submitToHostAdapter`,
-   `bdcAdapter`, `hwsAdapter`, `grooveAdapter`, `useHttpHandler`, `useScriptHandler`,
-   `useQueryAdapter`. All are in the `xsf` namespace. The spelling `sharepointListAdapterRW` is
+   `bdcAdapter`, `hwsAdapter`, `useHttpHandler`, `useScriptHandler`,
+   `useQueryAdapter`. All are in the `xsf` namespace. `grooveAdapter` is not modelled: MS-IPFF2 5.1
+   declares it as a global element but places it under no element, so a file that has it gets an
+   unknown entry. Its `documented` is `false`, because R13.8 asks whether MS-IPFF2 defines the
+   element at that position, and it defines it at none. The spelling `sharepointListAdapterRW` is The spelling `sharepointListAdapterRW` is
    the one in the MS-IPFF2 5.1 XSD; the element index in 2.2.1 writes `sharePointListAdapterRW`.
    Any other spelling becomes an unknown entry (R13).
 4. + THE SYSTEM SHALL extract `xsf2:dataConnections` children and link each to its adapter by `ref`,

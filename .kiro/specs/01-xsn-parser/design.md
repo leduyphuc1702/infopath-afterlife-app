@@ -207,13 +207,17 @@ export interface Manifest {
   readonly importParameters?: Modelled<'xsf:importParameters'>;
   readonly applicationParameters: readonly ApplicationParameters[];
   readonly views: readonly View[]; readonly defaultView?: string;               // R8
+  readonly mergedPrintView?: MergedPrintView;                                   // R8.2 (task 12)
+  readonly unlinkedViewExtensions: readonly ViewExtension[];  // ref names no view (task 12)
   readonly ruleSets: readonly RuleSet[];                                        // R9.1–9.3
-  readonly bindings: readonly EventBinding[];                                   // R9.4–9.5
+  readonly bindings: readonly EventBinding[];                                   // R9.4, document order
+  readonly domEventHandlers: readonly Modelled<'xsf:domEventHandler'>[];        // R9.5, with or without a rule set (task 13)
   readonly calculations: readonly Modelled<'xsf:calculatedField'>[];            // R10.1
   readonly validations: readonly ErrorCondition[];                              // R10.2–10.3
   readonly blankChecks: readonly Modelled<'xsf3:errorBlank'>[];                 // R10.4
-  readonly schemaErrorMessages?: Modelled<'xsf:schemaErrorMessages'>;
+  readonly schemaErrorMessages?: SchemaErrorMessages;                           // with its overrides (task 13)
   readonly dataObjects: readonly DataObject[];                                  // R11.1
+  readonly mainQuery?: Adapter;          // R11.3, the adapter under the root xsf:query (main data source); its queryAction stays unknown
   readonly submit?: Submit;                                                     // R11.2
   readonly dataAdapters: readonly Adapter[];
   readonly connectionExtensions: readonly ConnectionExtension[];                // R11.4
@@ -222,6 +226,7 @@ export interface Manifest {
   readonly roles?: Roles;                                                       // R12.3
   readonly scripts?: Scripts;                                                   // R12.4
   readonly allowedControls: readonly Modelled<'xsf:allowedControl'>[];          // R12.5
+  readonly containers: readonly AnyModelled<ContainerKey>[];  // grouping elements, §8.3 (task 12)
 }
 
 export interface Rule extends Modelled<'xsf:rule'> {
@@ -229,10 +234,9 @@ export interface Rule extends Modelled<'xsf:rule'> {
   readonly exitRuleSet: boolean;            // xsf:exitRuleSet present (R9.3)
 }
 export type Action = Modelled<ActionKey> & { readonly text?: string };   // dialog text, R9.2
-export interface EventBinding extends Located {
-  readonly ruleSet: string;
+export interface EventBinding extends Modelled<'xsf:ruleSetAction'> {  // attrs.ruleSet names the rule set
   readonly trigger:
-    | { kind: 'fieldChange'; match: string; handler: Modelled<'xsf:domEventHandler'> }
+    | { kind: 'fieldChange'; handler: Modelled<'xsf:domEventHandler'> }   // handler.attrs.match
     | { kind: 'onLoad' } | { kind: 'submit' }
     | { kind: 'button'; view?: string; button: Modelled<ButtonKey> };
 }
@@ -242,8 +246,11 @@ export interface Adapter extends Modelled<AdapterKey> {
   readonly containsCredential: boolean;             // R11.5, adoAdapter only
 }
 export interface ErrorCondition extends Modelled<'xsf:errorCondition'> {
-  readonly message: Modelled<'xsf:errorMessage'> & { readonly text: string };  // global errorMessage; verbatim (R10.3)
+  readonly message?: Modelled<'xsf:errorMessage'> & { readonly text: string };  // global errorMessage; verbatim (R10.3); absent when the file has none
 }
+// packages/core/src/xsf/types.ts is the complete, current form of these types (changes at tasks
+// 12–14: lists where MS-IPFF2 lets a position repeat, `containers`, `adapterPath` on
+// ConnectionExtension, Submit's adapters as a list).
 // View, RuleSet, DataObject, Submit, Signatures, Roles, Scripts, PackageEntry, ConnectionExtension
 // follow the same pattern: Modelled<key> plus typed child arrays.
 ```
@@ -388,7 +395,7 @@ does not change when the author renames a prefix.
 `xsf/vocabulary.ts` declares, for every element R7–R12 model:
 
 ```ts
-type AttrSpec = 'string' | 'yesNo' | { readonly enum: readonly string[] };
+type AttrSpec = 'string' | 'yesNo' | { readonly enum: readonly string[] } | { readonly viaWildcard: true };
 type ChildSpec = SpecKey | { readonly key: SpecKey; readonly viaWildcard: true }; // viaWildcard: §8.1 "Extension points"
 interface ElementSpec {
   readonly attrs: Readonly<Record<string, AttrSpec>>;  // key: local name, or '{uri}local' for qualified attributes
@@ -455,8 +462,16 @@ export const XSF_VOCABULARY = {
   modelling choice inside that wildcard. The table marks them `viaWildcard: true` on the parent's
   child entry, and `vocabulary.ms-ipff2.test.ts` checks that every such child is a global element
   of the xsf2 or xsf3 schema and that the parent's content in `ms-ipff2.ts` is a wildcard
-  (`wildcard: true`, recorded by the generator from `xsd:any`). There is no other exception.
-  Anything else inside `xsf:extension` is unknown.
+  (`wildcard: true`, recorded by the generator from `xsd:any`). Anything else inside
+  `xsf:extension` is unknown.
+  The same holds for `xd:autogeneration` (`{http://schemas.microsoft.com/office/infopath/2003}autogeneration`)
+  on `xsf:editWith`, which InfoPath writes and 17 own forms carry: MS-IPFF2 admits it only through
+  `editWith`'s `anyAttribute namespace="http://schemas.microsoft.com/office/infopath/2003"`. It is
+  `{ viaWildcard: true }` in `attrs`; the test checks that MS-IPFF2 does not name it, that it is
+  qualified, and that the parent's `anyAttribute` covers its namespace. A second test pins the
+  full list of exceptions (these three).
+  **Rule:** a name MS-IPFF2 admits only through a wildcard is modelled when real files use it, and
+  it is marked `viaWildcard`. Any new exception follows this rule and is reported at review.
 
 ### 8.2 Walker (`walk.ts`)
 
@@ -491,6 +506,28 @@ manifest").
   never taken by a builder. That means an element in the table was never built into the output. In
   production this cannot happen once the coverage test (§8.5) passes; the check stays on to catch
   regressions.
+- **Positions held once** (added at task 12). A `Manifest` field that holds one object (`fileNew?`,
+  `upgrade?`, `submit?`, `editWith?`, …) is read with `one(node, key)`, or `oneOf(node, keys)` for
+  the members of an `xsd:choice`. That is allowed only where MS-IPFF2 itself allows the child once:
+  the generator records `once` (effective `maxOccurs` 1) and `choices` (an `xsd:choice` occurring
+  once) per position in `ms-ipff2.ts`, and `one`/`oneOf` throw `INTERNAL` for any other position.
+  A second occurrence in a file is `INVALID_XML` at that occurrence, with a `reason` naming the
+  rule, because keeping only the first would drop the second without a trace. The one modelling
+  choice beyond MS-IPFF2: `xsf2:solutionDefinition` and `xsf3:solutionDefinition` sit in a
+  wildcard (`viaWildcard`), and the parser takes at most one of each across all `xsf:extension`
+  elements. Where MS-IPFF2 allows repeats, the field is a list: the content of `xsf:view` is an
+  unbounded group, so `View.mainpanes`, `printSettings`, `menuAreas`, `toolbars`,
+  `unboundButtons` and `xmlToEdit` (across all `xsf:editing`) are lists.
+- **Grouping elements** (added at task 12). Elements that only group others (`xsf:views`,
+  `xsf:package`, `xsf:files`, `xsf:fileProperties`, `xsf:extensions`, `xsf:extension`,
+  `xsf:editing`, `xsf:fragmentToInsert`, `xsf:unboundControls`, the `viewsExtension`s, …) appear
+  once each in `Manifest.containers`, in document order, with their path and attributes, so §8.4
+  holds for them too (`xsf:views/@default`, `xsf:extension/@name`, `xsf:calculations/@treatBlankValueAsZero`).
+- **View extensions** are linked to the view whose `name` equals their `ref`, in document order.
+  One whose `ref` names no view goes to `Manifest.unlinkedViewExtensions`.
+- **Raw XML** (`chooseFragment`, `header`, `footer`) is the content as xmldom's `XMLSerializer`
+  writes it: each element declares the namespaces it uses, and empty elements are written `<a/>`.
+  Text, attributes and whitespace are kept.
 - `EventBinding`s come from each `xsf:ruleSetAction` and its parent key: `domEventHandler` →
   `fieldChange`, `onLoad`, `submit`, `unboundControls/button` (with the view's name) (R9.4).
 - `containsCredential` is true when `/(^|;)\s*(password|pwd)\s*=/i` matches `connectionString` (R11.5).

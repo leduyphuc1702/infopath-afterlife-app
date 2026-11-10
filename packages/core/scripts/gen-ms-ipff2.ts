@@ -40,6 +40,10 @@ type AttrSpec = 'string' | 'yesNo' | { enum: string[] };
 interface Position {
   attrs: Map<string, AttrSpec>;
   children: Set<string>;
+  /** Effective maxOccurs of each child position, summed over the particles it appears in. */
+  maxOccurs: Map<string, number>;
+  /** Children of an xsd:choice that can occur once in total (choice and members maxOccurs 1). */
+  choices: string[][];
   /** Character content is allowed: a simple type, simple content, mixed content or xsd:anyType. */
   text: boolean;
   /** Element content allows any element: an `xsd:any` particle, or no type at all (`xsd:anyType`). */
@@ -159,7 +163,14 @@ const positions = new Map<string, Position>();
 
 function elementPosition(key: string, decl: Element, declNs: string, stack: string[]): void {
   if (positions.has(key)) return;
-  const pos: Position = { attrs: new Map(), children: new Set(), text: false, wildcard: false };
+  const pos: Position = {
+    attrs: new Map(),
+    children: new Set(),
+    maxOccurs: new Map(),
+    choices: [],
+    text: false,
+    wildcard: false,
+  };
   positions.set(key, pos);
   const inline = xsdChildren(decl, 'complexType')[0];
   if (inline) {
@@ -192,7 +203,20 @@ function hasText(ct: Element): boolean {
   return ct.getAttribute('mixed') === 'true' || xsdChildren(ct, 'simpleContent').length > 0;
 }
 
-function complexType(key: string, ct: Element, ns: string, pos: Position, stack: string[]): void {
+/** maxOccurs of a particle; `unbounded` is Infinity. */
+function maxOf(particle: Element): number {
+  const v = particle.getAttribute('maxOccurs');
+  return v === null ? 1 : v === 'unbounded' ? Infinity : Number(v);
+}
+
+function complexType(
+  key: string,
+  ct: Element,
+  ns: string,
+  pos: Position,
+  stack: string[],
+  mult = 1,
+): void {
   for (const c of xsdChildren(ct)) {
     switch (c.localName) {
       case 'complexContent':
@@ -202,18 +226,18 @@ function complexType(key: string, ct: Element, ns: string, pos: Position, stack:
           const base = resolve(d, d.getAttribute('base') ?? '');
           const baseCt = globals.complexType.get(base);
           if (baseCt && d.localName === 'extension')
-            complexType(key, baseCt.el, baseCt.ns, pos, stack);
-          complexType(key, d, ns, pos, stack);
+            complexType(key, baseCt.el, baseCt.ns, pos, stack, mult);
+          complexType(key, d, ns, pos, stack, mult);
         }
         break;
       case 'sequence':
       case 'choice':
       case 'all':
-        particles(key, c, ns, pos, stack);
+        particles(key, c, ns, pos, stack, mult * maxOf(c));
         break;
       case 'group': {
         const g = need(globals.group, resolve(c, c.getAttribute('ref') ?? ''), 'group');
-        complexType(key, g.el, g.ns, pos, stack);
+        complexType(key, g.el, g.ns, pos, stack, mult * maxOf(c));
         break;
       }
       case 'attribute':
@@ -236,32 +260,54 @@ function complexType(key: string, ct: Element, ns: string, pos: Position, stack:
   }
 }
 
-function particles(key: string, model: Element, ns: string, pos: Position, stack: string[]): void {
+/** `mult`: the product of the maxOccurs of `model` and every enclosing particle. */
+function particles(
+  key: string,
+  model: Element,
+  ns: string,
+  pos: Position,
+  stack: string[],
+  mult: number,
+): void {
+  const members: string[] = [];
+  let onlyElements = true;
   for (const c of xsdChildren(model)) {
     if (c.localName === 'sequence' || c.localName === 'choice' || c.localName === 'all') {
-      particles(key, c, ns, pos, stack);
+      onlyElements = false;
+      particles(key, c, ns, pos, stack, mult * maxOf(c));
     } else if (c.localName === 'group') {
+      onlyElements = false;
       const g = need(globals.group, resolve(c, c.getAttribute('ref') ?? ''), 'group');
-      complexType(key, g.el, g.ns, pos, stack);
+      complexType(key, g.el, g.ns, pos, stack, mult * maxOf(c));
     } else if (c.localName === 'element') {
       const ref = c.getAttribute('ref');
+      let childKey: string;
       if (ref !== null) {
         const target = resolve(c, ref);
         need(globals.element, target, 'element');
         const [, uri, local] = /^\{(.*)\}(.*)$/.exec(target)!;
-        pos.children.add(qnameKey(uri!, local!));
+        childKey = qnameKey(uri!, local!);
+        pos.children.add(childKey);
       } else {
         // elementFormDefault="qualified" in all three schemas: a local element is in `ns`.
         const parentNs = key.slice(0, key.indexOf(':'));
         if (PREFIX[ns] !== parentNs)
           throw new Error(`local element in another namespace at ${key}`);
-        const childKey = `${key}/${c.getAttribute('name')}`;
+        childKey = `${key}/${c.getAttribute('name')}`;
         pos.children.add(childKey);
         elementPosition(childKey, c, ns, stack);
       }
+      const max = mult * maxOf(c);
+      pos.maxOccurs.set(childKey, (pos.maxOccurs.get(childKey) ?? 0) + max);
+      if (max !== 1) onlyElements = false;
+      members.push(childKey);
     } else if (c.localName === 'any') {
+      onlyElements = false;
       pos.wildcard = true; // a wildcard declares no names
     }
+  }
+  if (model.localName === 'choice' && mult === 1 && onlyElements && members.length > 1) {
+    pos.choices.push([...members].sort());
   }
 }
 
@@ -286,7 +332,15 @@ function render(retrieved: string): string {
     const p = positions.get(key)!;
     const attrs = [...p.attrs.keys()].sort().map((a) => `${q(a)}: ${spec(p.attrs.get(a)!)}`);
     const children = [...p.children].sort().map(q);
+    const once = [...p.children]
+      .sort()
+      .filter((c) => p.maxOccurs.get(c) === 1)
+      .map(q);
     const extra =
+      (once.length ? `, once: [${once.join(', ')}]` : '') +
+      (p.choices.length
+        ? `, choices: [${p.choices.map((g) => `[${g.map(q).join(', ')}]`).join(', ')}]`
+        : '') +
       (p.text ? ', text: true' : '') +
       (p.wildcard ? ', wildcard: true' : '') +
       (p.anyAttribute === undefined ? '' : `, anyAttribute: ${q(p.anyAttribute)}`);
@@ -309,6 +363,10 @@ ${SECTIONS.map((s) => `// - section ${s.section}, ${s.title}: ${BASE}${s.id}`).j
 // qualified attributes. An attribute is 'yesNo' (typed xdYesNo), an explicit enumeration, or
 // 'string' (anything else, patterns and lists included).
 //
+// \`once\` lists the children whose effective maxOccurs is 1 (the product of maxOccurs through every
+// enclosing particle, summed when a child appears in several). \`choices\` lists groups of
+// children that sit in one xsd:choice that occurs at most once, so at most one of them can occur.
+//
 // Content flags: \`text: true\` marks content that allows characters (a simple type, simple
 // content, mixed content, or xsd:anyType). \`wildcard: true\` marks content that allows any element
 // (an xsd:any particle, or an element with no type, which is xsd:anyType). \`anyAttribute\` is the
@@ -321,6 +379,10 @@ export interface Ipff2Element {
   readonly attrs: Readonly<Record<string, Ipff2Attr>>;
   /** Keys of the child positions. */
   readonly children: readonly string[];
+  /** Children that can occur at most once here (effective maxOccurs 1). */
+  readonly once?: readonly string[];
+  /** Groups of children of which at most one can occur (an xsd:choice occurring once). */
+  readonly choices?: readonly (readonly string[])[];
   /** The content allows characters (simple type, simple content, mixed, or xsd:anyType). */
   readonly text?: true;
   /** The content allows any element (xsd:any, or xsd:anyType). */

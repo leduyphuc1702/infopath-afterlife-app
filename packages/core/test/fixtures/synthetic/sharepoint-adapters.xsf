@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 14): SharePoint list adapters, which no in-repo sample uses, and the
+     misspelling sharePointListAdapterRW (MS-IPFF2 2.2.1 element index), which must be unknown.
+     Hosts and GUIDs are fictional. -->
+<xsf:xDocumentClass solutionFormatVersion="3.0.0.0" xmlns:xsf="http://schemas.microsoft.com/office/infopath/2003/solutionDefinition" xmlns:xsf2="http://schemas.microsoft.com/office/infopath/2006/solutionDefinition/extensions">
+	<xsf:dataObjects>
+		<xsf:dataObject name="Departments" schema="Departments.xsd" initOnLoad="yes">
+			<xsf:query>
+				<xsf:sharepointListAdapter siteUrl="http://forms-legacy/sites/hr/" sharepointGuid="{00000000-0000-0000-0000-000000000001}" infopathGroup="Departments" name="Departments" queryAllowed="yes" submitAllowed="no">
+					<xsf:field sharepointName="Title" infopathName="Title"></xsf:field>
+					<xsf:field sharepointName="Manager" infopathName="Manager" isLookup="yes"></xsf:field>
+				</xsf:sharepointListAdapter>
+			</xsf:query>
+		</xsf:dataObject>
+		<xsf:dataObject name="Requests" schema="Requests.xsd" initOnLoad="no">
+			<xsf:query>
+				<xsf:sharepointListAdapterRW siteURL="http://forms-legacy/sites/hr/" sharePointListID="{00000000-0000-0000-0000-000000000002}" relativeListUrl="Lists/Requests/" name="Requests" queryAllowed="yes" submitAllowed="yes" sortBy="Title" sortAscending="yes" queryOneItemOnly="no">
+					<xsf:field internalName="Title" type="Text" required="yes"></xsf:field>
+					<xsf:field internalName="Days" type="Number" required="no" appendOnly="no"></xsf:field>
+				</xsf:sharepointListAdapterRW>
+			</xsf:query>
+		</xsf:dataObject>
+		<xsf:dataObject name="Misspelt" schema="Misspelt.xsd" initOnLoad="no">
+			<xsf:query>
+				<xsf:sharePointListAdapterRW siteURL="http://forms-legacy/sites/hr/" name="Misspelt"></xsf:sharePointListAdapterRW>
+			</xsf:query>
+		</xsf:dataObject>
+	</xsf:dataObjects>
+	<xsf:extensions>
+		<xsf:extension name="SolutionDefinitionExtensions">
+			<xsf2:solutionDefinition runtimeCompatibility="client server">
+				<xsf2:dataConnections>
+					<xsf2:sharepointListAdapterExtension ref="Departments" sharepointWebGuid="{00000000-0000-0000-0000-000000000003}" queryThisFormOnly="no"></xsf2:sharepointListAdapterExtension>
+					<xsf2:sharepointListAdapterRWExtension ref="Requests" queryThisFormOnly="yes"></xsf2:sharepointListAdapterRWExtension>
+				</xsf2:dataConnections>
+			</xsf2:solutionDefinition>
+		</xsf:extension>
+	</xsf:extensions>
+</xsf:xDocumentClass>

@@ -101,6 +101,54 @@ describe('known entries', () => {
     expect(MS_IPFF2['xsf:rule/exitRuleSet']!.text).toBeUndefined(); // empty complex type
   });
 
+  test('once: xsd:all children of xDocumentClass and submit; not the repeating view content', () => {
+    const root = MS_IPFF2['xsf:xDocumentClass']!;
+    expect(root.once).toEqual(root.children); // xsd:all: every child at most once
+    expect(MS_IPFF2['xsf:submit']!.once).toEqual(MS_IPFF2['xsf:submit']!.children);
+    expect(MS_IPFF2['xsf:view']!.once).toBeUndefined(); // an unbounded group
+    expect(MS_IPFF2['xsf:views']!.once).toBeUndefined(); // view*
+    expect(MS_IPFF2['xsf:rule']!.once).toEqual(['xsf:rule/exitRuleSet']);
+    expect(MS_IPFF2['xsf:errorCondition']!.once).toEqual(['xsf:errorMessage']);
+  });
+
+  test('choices: the three xsd:choice groups that occur once', () => {
+    const choices = Object.entries(MS_IPFF2).flatMap(([k, e]) =>
+      (e.choices ?? []).map((g) => [k, g]),
+    );
+    expect(choices).toEqual([
+      [
+        'xsf:dataObject/query',
+        [
+          'xsf:adoAdapter',
+          'xsf:sharepointListAdapter',
+          'xsf:sharepointListAdapterRW',
+          'xsf:webServiceAdapter',
+          'xsf:xmlFileAdapter',
+        ],
+      ],
+      ['xsf:documentVersionUpgrade', ['xsf:useScriptHandler', 'xsf:useTransform']],
+      [
+        'xsf:query',
+        [
+          'xsf:adoAdapter',
+          'xsf:bdcAdapter',
+          'xsf:queryAction',
+          'xsf:sharepointListAdapter',
+          'xsf:sharepointListAdapterRW',
+          'xsf:webServiceAdapter',
+          'xsf:xmlFileAdapter',
+        ],
+      ],
+    ]);
+  });
+
+  test('every once and choice member is a child of its position', () => {
+    for (const [key, e] of Object.entries(MS_IPFF2)) {
+      for (const c of e.once ?? []) expect(e.children, key).toContain(c);
+      for (const c of (e.choices ?? []).flat()) expect(e.once, key).toContain(c);
+    }
+  });
+
   test('sharepointListAdapterRW is spelled as in MS-IPFF2', () => {
     expect(MS_IPFF2['xsf:sharepointListAdapterRW']).toBeDefined();
     expect(MS_IPFF2['xsf:sharePointListAdapterRW']).toBeUndefined();

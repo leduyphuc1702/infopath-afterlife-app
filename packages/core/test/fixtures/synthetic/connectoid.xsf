@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 14): data connections stored in external .udcx files (xsf2:connectoid),
+     linked to their adapters by ref. Hosts and paths are fictional. -->
+<xsf:xDocumentClass solutionFormatVersion="3.0.0.0" xmlns:xsf="http://schemas.microsoft.com/office/infopath/2003/solutionDefinition" xmlns:xsf2="http://schemas.microsoft.com/office/infopath/2006/solutionDefinition/extensions">
+	<xsf:dataObjects>
+		<xsf:dataObject name="Vendors" schema="Vendors.xsd" initOnLoad="no">
+			<xsf:query>
+				<xsf:adoAdapter name="Vendors" connectionString="Provider=SQLOLEDB.1;Data Source=sql-legacy01;User ID=forms;Password=fictional" commandText="select 1" queryAllowed="yes" submitAllowed="no"></xsf:adoAdapter>
+			</xsf:query>
+		</xsf:dataObject>
+		<xsf:dataObject name="Budget" schema="Budget.xsd" initOnLoad="no">
+			<xsf:query>
+				<xsf:webServiceAdapter name="Budget" wsdlUrl="http://forms-legacy/budget/BudgetService.asmx?WSDL" queryAllowed="yes" submitAllowed="no">
+					<xsf:operation name="GetBudget" soapAction="http://forms-legacy/budget/GetBudget" serviceUrl="http://forms-legacy/budget/BudgetService.asmx">
+						<xsf:input source="BudgetInput.xml"></xsf:input>
+					</xsf:operation>
+				</xsf:webServiceAdapter>
+			</xsf:query>
+		</xsf:dataObject>
+	</xsf:dataObjects>
+	<xsf:submit caption="Submit">
+		<xsf:useHttpHandler href="http://forms-legacy/submit.aspx" method="POST"></xsf:useHttpHandler>
+	</xsf:submit>
+	<xsf:extensions>
+		<xsf:extension name="SolutionDefinitionExtensions">
+			<xsf2:solutionDefinition runtimeCompatibility="client">
+				<xsf2:dataConnections>
+					<xsf2:adoAdapterExtension ref="Vendors" queryFile="vendors.udcx" queryKey="Vendors">
+						<xsf2:connectoid name="Vendors" source="http://forms-legacy/DataConnections/vendors.udcx" siteCollection="http://forms-legacy/" connectionLinkType="relative"></xsf2:connectoid>
+					</xsf2:adoAdapterExtension>
+					<xsf2:webServiceAdapterExtension ref="Budget" trackDataSetChanges="no">
+						<xsf2:connectoid name="Budget" source="budget.udcx"></xsf2:connectoid>
+						<xsf2:relativeQuery replace="BudgetService.asmx"></xsf2:relativeQuery>
+					</xsf2:webServiceAdapterExtension>
+					<xsf2:useHttpHandlerExtension>
+						<xsf2:connectoid name="Submit" source="submit.udcx"></xsf2:connectoid>
+					</xsf2:useHttpHandlerExtension>
+					<xsf2:xmlFileAdapterExtension ref="Nowhere" isRest="no"></xsf2:xmlFileAdapterExtension>
+				</xsf2:dataConnections>
+			</xsf2:solutionDefinition>
+		</xsf:extension>
+	</xsf:extensions>
+</xsf:xDocumentClass>

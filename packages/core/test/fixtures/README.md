@@ -14,3 +14,14 @@ and the encoding it maps to (228 labels).
 
 Used by `test/xml/encoding-labels.test.ts` and `test/browser/encodings.browser.test.ts` to
 measure which labels `TextDecoder` accepts in Node 22 and in a browser Worker (design D11).
+
+## `synthetic/`
+
+Hand-written manifests and schemas for constructs that no in-repo sample uses (design §13.1).
+Written for this project, MIT like the rest of the repository; every host, GUID and name in them
+is fictional.
+
+- `sharepoint-adapters.xsf`: `sharepointListAdapter` and `sharepointListAdapterRW` with their
+  fields and `xsf2` extensions, and the misspelling `sharePointListAdapterRW` (spec 01 task 14).
+- `connectoid.xsf`: `xsf2:connectoid` on an `adoAdapter`, a `webServiceAdapter` and a
+  `useHttpHandler`, and an extension whose `ref` names no adapter (spec 01 task 14).

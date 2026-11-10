@@ -221,7 +221,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R13.1, R13.2, R13.3, R13.4, R13.5, R13.7, R13.8.
   - Done when: `pnpm check` green.
 
-- [ ] 11. The full manifest vocabulary table
+- [x] 11. The full manifest vocabulary table
   - `src/xsf/vocabulary.ts`: `XSF_VOCABULARY`, one entry per position R7–R12 model, each with its
     `req` id, covering requirements Appendix A (forms 01–47 and the public sample) and design §8.1.
   - Tests: `xsf/vocabulary.ms-ipff2.test.ts` (every key, child and attribute exists at that
@@ -236,7 +236,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R13.6 (manifest walk), R13.8.
   - Done when: `pnpm check` green.
 
-- [ ] 12. Manifest builder: identity, package, schemas, views
+- [x] 12. Manifest builder: identity, package, schemas, views
   - `src/xsf/types.ts` (design §5.1), `src/xsf/build.ts` with `take()` and `assertAllConsumed()`,
     and builders for `documentClass`, `solution` (`xsf2:solutionDefinition`, `server`, `offline`,
     `runtimeCompatibility` split, `xsf3`), `package`, `documentSchemas`, `fileNew`, `upgrade`,
@@ -255,7 +255,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R7.1, R7.2, R7.3, R7.4, R7.5, R7.6, R8.1, R8.2, R8.3, R8.4, R8.5.
   - Done when: `pnpm check` green.
 
-- [ ] 13. Manifest builder: rules, bindings, calculations, validation
+- [x] 13. Manifest builder: rules, bindings, calculations, validation
   - Builders for rule sets, rules (`exitRuleSet` flag), every action kind with attributes and text,
     event bindings from each `ruleSetAction` parent, `domEventHandler` attributes, calculated
     fields, error conditions with verbatim messages (the global `xsf:errorMessage`, the child of
@@ -272,8 +272,9 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R9.1, R9.2, R9.3, R9.4, R9.5, R9.6, R10.1, R10.2, R10.3, R10.4, R10.5.
   - Done when: `pnpm check` green.
 
-- [ ] 14. Manifest builder: data connections and submit
-  - Builders for data objects with their query adapter, `xsf:submit` (attributes, adapter or
+- [x] 14. Manifest builder: data connections and submit
+  - Builders for data objects with their query adapter, `mainQuery` (the adapter under the root
+    `xsf:query`; its `queryAction` child stays unknown), `xsf:submit` (attributes, adapter or
     handler, rule set, success and error messages), `xsf:dataAdapters`, every adapter kind in
     R11.3 with its children and endpoint attributes, `xsf2:dataConnections` linked by `ref`
     including `connectoid`, and `containsCredential`.
