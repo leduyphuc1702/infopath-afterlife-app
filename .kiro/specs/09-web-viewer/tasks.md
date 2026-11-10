@@ -57,15 +57,20 @@ Every task from 3 on leaves `pnpm --filter web build` producing a working, shipp
   - Requirements: R5.1, R5.2, R5.3
   - Done when: `pnpm --filter web test && pnpm --filter web e2e` green.
 
-- [ ] 7. Data connections panel
+- [x] 7. Data connections panel
   - `side/connections.ts`, `Connections.tsx`, the "Fields" | "Data connections" tabs.
   - `test/connections.test.ts`.
+  - `Changed in task 7:` the component is `DataConnections.tsx` (a case clash with
+    `connections.ts` on macOS), the tabs are `SideTabs.tsx`, and `e2e/connections.spec.ts` checks
+    the links: card → panel entry, panel field → tree.
   - Requirements: R6.1
   - Done when: `pnpm --filter web test` green.
 
-- [ ] 8. Trust: offline, hostile input, Worker CSP
+- [x] 8. Trust: offline, hostile input, Worker CSP
   - Warm-up and `data-ready` (D7); `e2e/offline.spec.ts`; `e2e/hostile.spec.ts`.
   - Check whether the Worker gets the page's `<meta>` policy (design §6) and record it.
+  - `Changed in task 8:` the check is `e2e/worker-csp.spec.ts` (it does not; design §6). D7's
+    offline font note under the paper is in `shell/fonts.ts` and tested in `e2e/offline.spec.ts`.
   - Requirements: R8.1, R8.2, R8.3
   - Done when: `pnpm --filter web e2e` green.
 

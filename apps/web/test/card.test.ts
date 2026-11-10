@@ -23,6 +23,7 @@ test('form 04 vendor: its drop-down takes its choices from the SQL connection', 
 
 test('form 04 requester name: required, with its validation as written', () => {
   const card = cardFor(ir04, id04('my:requester/my:requesterName'))!;
+  expect(card.required).toBe(true); // a blank check, as the asterisk (spec 03 §9.2)
   const v = card.refs.filter((r) => r.kind === 'Validation');
   expect(v).toHaveLength(1);
   expect(v[0]!.roles).toEqual(['validationMatch', 'validationExpression']);

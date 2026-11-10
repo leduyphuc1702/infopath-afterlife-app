@@ -74,7 +74,7 @@ export const MESSAGES: {
   }),
   RENDER_FAILED: (d, f) => ({
     what: `We couldn't draw the ${str(d.view)} view of ${f}.`,
-    why: `The view's XSL stopped with ${str(d.xsltCode)}: ${str(d.message)}`,
+    why: `The view's XSL stopped with ${str(d.xsltCode)}: ${str(d.message).replace(/[^.!?]$/, '$&.')}`,
     action: 'Choose another view, or look at the fields and connections, which still work.',
   }),
   VIEW_NOT_RENDERABLE: (d, f) => ({

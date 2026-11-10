@@ -5,11 +5,13 @@ import { PaperToolbar, viewCaption } from './paper/PaperToolbar';
 import { ErrorBanner } from './shell/ErrorBanner';
 import { Header } from './shell/Header';
 import { Landing } from './shell/Landing';
-import { loadPaperFonts } from './shell/fonts';
+import { loadPaperFonts, onDemandFacesFailed } from './shell/fonts';
 import { sampleName } from './shell/sample-names';
 import { cardFor, cardForControl } from './side/card';
+import { DataConnections } from './side/DataConnections';
 import { DetailsCard } from './side/DetailsCard';
 import { FieldTree } from './side/FieldTree';
+import { SideTabs } from './side/SideTabs';
 import { TemplateList } from './side/TemplateList';
 import { Unmatched } from './side/Unmatched';
 import { initialState, openTemplate, recordsOf, reducer, unmatched, type Problem } from './store';
@@ -28,6 +30,32 @@ export function App() {
   const latest = useRef(0);
 
   useEffect(() => () => client.terminate(), [client]);
+
+  // Design D7: after `load`, the Worker imports the samples chunk and the four Latin faces load;
+  // then `<html data-ready>` says the page works offline (R8.1).
+  useEffect(() => {
+    let gone = false;
+    const warm = () =>
+      void Promise.allSettled([client.warm(), loadPaperFonts()]).then(() => {
+        if (!gone) document.documentElement.dataset.ready = '';
+      });
+    if (document.readyState === 'complete') warm();
+    else window.addEventListener('load', warm, { once: true });
+    return () => {
+      gone = true;
+      window.removeEventListener('load', warm);
+    };
+  }, [client]);
+
+  const [fontNote, setFontNote] = useState(false);
+  const fontTicket = useRef(0);
+  const onPaperText = useCallback((text: string) => {
+    const ticket = ++fontTicket.current;
+    setFontNote(false);
+    void onDemandFacesFailed(text).then((failed) => {
+      if (ticket === fontTicket.current) setFontNote(failed);
+    });
+  }, []);
 
   /** Applies a Worker answer to an open request; opens the first template it added. */
   const applySession = useCallback((res: ResBody, what: string) => {
@@ -147,6 +175,10 @@ export function App() {
     },
     [rendered, fieldOfMark],
   );
+  const selectField = useCallback(
+    (fieldId: string) => dispatch({ type: 'select', selection: { fieldId, from: 'tree' } }),
+    [],
+  );
   const card =
     template &&
     (s.selection.fieldId !== undefined
@@ -205,11 +237,18 @@ export function App() {
                     outlined={outlined}
                     {...(reveal !== undefined && { reveal })}
                     onPoint={onPoint}
+                    onText={onPaperText}
                   />
-                  {render.issues.length > 0 && (
-                    <details className="afl-notes">
-                      <summary>Notes ({render.issues.length})</summary>
+                  {(render.issues.length > 0 || fontNote) && (
+                    <details className="afl-notes" open={fontNote || undefined}>
+                      <summary>Notes ({render.issues.length + (fontNote ? 1 : 0)})</summary>
                       <ul>
+                        {fontNote && (
+                          <li>
+                            Some characters are shown in a system font: their Calibri font could not
+                            load while offline.
+                          </li>
+                        )}
                         {render.issues.map((i, n) => (
                           <li key={n}>{i.message}</li>
                         ))}
@@ -228,17 +267,37 @@ export function App() {
                   onOpen={(id) => dispatch({ type: 'open', templateId: id })}
                 />
               )}
-              {card && <DetailsCard card={card} />}
-              <section className="afl-panel" aria-labelledby="afl-fields">
-                <h2 id="afl-fields">Fields</h2>
-                <FieldTree
-                  ir={template.ir}
-                  selected={s.selection.fieldId}
-                  onSelect={(fieldId) =>
-                    dispatch({ type: 'select', selection: { fieldId, from: 'tree' } })
+              {card && (
+                <DetailsCard
+                  card={card}
+                  onConnection={(connectionId) =>
+                    dispatch({ type: 'tab', tab: 'connections', connectionId })
                   }
                 />
-              </section>
+              )}
+              <SideTabs
+                tab={s.tab}
+                onTab={(tab) => dispatch({ type: 'tab', tab })}
+                panels={{
+                  fields: (
+                    <FieldTree
+                      ir={template.ir}
+                      selected={s.selection.fieldId}
+                      onSelect={selectField}
+                    />
+                  ),
+                  connections: (
+                    <DataConnections
+                      ir={template.ir}
+                      current={s.connectionId}
+                      onField={(fieldId) => {
+                        selectField(fieldId);
+                        dispatch({ type: 'tab', tab: 'fields' });
+                      }}
+                    />
+                  ),
+                }}
+              />
               <Unmatched records={unmatched(s)} ignored={s.ignored} />
             </aside>
           </div>

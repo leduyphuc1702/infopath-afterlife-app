@@ -1,7 +1,13 @@
 import type { Card } from './card';
 
+interface Props {
+  readonly card: Card;
+  /** Opens the connection's entry in the "Data connections" tab. */
+  readonly onConnection: (connectionId: string) => void;
+}
+
 /** R5.1: what a field is and what touches it. */
-export function DetailsCard({ card }: { readonly card: Card }) {
+export function DetailsCard({ card, onConnection }: Props) {
   return (
     <section className="afl-panel afl-card" aria-labelledby="afl-card-title">
       <h2 id="afl-card-title">{card.label}</h2>
@@ -44,7 +50,10 @@ export function DetailsCard({ card }: { readonly card: Card }) {
         <ul className="afl-refs">
           {card.connections.map((c) => (
             <li key={c.id}>
-              {c.name} <span className="afl-sub">{c.kind}</span>
+              <button type="button" className="afl-link" onClick={() => onConnection(c.id)}>
+                {c.name}
+              </button>{' '}
+              <span className="afl-sub">{c.kind}</span>
             </li>
           ))}
         </ul>

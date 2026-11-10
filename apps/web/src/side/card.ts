@@ -1,7 +1,9 @@
 // Spec 09 R5.1: the details card for a field or a control: path, type, required flag, every
 // rule, calculation and validation that touches it (expressions as written), the data
 // connections it uses, and how many controls show it.
-import type { DepRole, FormIR, IrConnection } from '@afterlife/core';
+import type { DepRole, FormIR } from '@afterlife/core';
+import { connectionKind, connectionName } from './connections';
+import { requiredIds } from './markers';
 import { typeWords } from './tree';
 
 export interface CardRef {
@@ -28,20 +30,6 @@ export interface Card {
   }[];
   readonly controls: number;
 }
-
-const KINDS: Readonly<Record<string, string>> = {
-  adoAdapter: 'Database (SQL)',
-  webServiceAdapter: 'Web service',
-  xmlFileAdapter: 'XML file',
-  sharepointListAdapter: 'SharePoint list',
-  sharepointListAdapterRW: 'SharePoint list',
-  sharePointListAdapter: 'SharePoint list',
-  emailAdapter: 'Email submit',
-  davAdapter: 'SharePoint library submit',
-  hwsAdapter: 'Web service (HTTP)',
-};
-export const connectionKind = (c: IrConnection) => KINDS[c.adapterKind] ?? c.adapterKind;
-export const connectionName = (c: IrConnection) => c.name ?? c.dataSource ?? connectionKind(c);
 
 const ACTIONS: Readonly<Record<string, string>> = {
   assignmentAction: 'set a field',
@@ -144,7 +132,8 @@ export function cardFor(ir: FormIR, fieldId: string): Card | undefined {
     label: node.label,
     path: node.path,
     type: typeWords(node),
-    required: node.kind !== 'group' && node.required,
+    // Spec 03 §9.2, the asterisk's rule: FormIR `required`, or a blank-check validation.
+    required: node.kind !== 'group' && requiredIds(ir).has(node.id),
     repeating: node.repeating,
     refs: [...refs.values()].map(({ d, roles }) => ({ ...d, roles })),
     connections,

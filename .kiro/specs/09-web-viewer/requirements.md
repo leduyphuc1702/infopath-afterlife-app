@@ -116,11 +116,16 @@ As Tim, I want to see every field my form holds, so that I know nothing was lost
   data source; groups, repeating groups marked "Repeating", and fields with their label, type and
   required flag. Oracle: `test/tree.test.ts`: node counts equal FormIR's for forms 01–08 and
   weight-keeper (form 02: 12 fields, 4 groups, 1 repeating; form 08: 200 fields).
-- **R4.2** THE SYSTEM SHALL mark a field "Rule" when a rule reads or writes it, "Calculated" when a
-  calculation targets it, "Validated" when a validation matches it, and "From data connection"
+- **R4.2** `Changed at review (2026-11-11):` "Required" follows the asterisk's rule (spec 03
+  §9.2), which is what an InfoPath user calls required: FormIR `required`, or a blank-check
+  validation on the field; the details card's "Required" line follows the same rule, and
+  "Validated" means a validation other than the blank check. THE SYSTEM SHALL mark a field
+  "Required" by that rule, "Rule" when a rule reads or writes it, "Calculated" when a
+  calculation targets it, "Validated" when such a validation matches it, and "From data connection"
   when a control bound to it takes its choices from a connection or a connection uses an element
   that writes it. Oracle: `test/markers.test.ts` on forms 01–04 against counts taken from FormIR
-  (form 02: `my:totalAmount` is the one calculated field; form 04: both rule assignments read
+  (form 01: Employee name, Employee ID, First day of leave and Last day of leave are Required;
+  form 02: `my:totalAmount` is the one calculated field; form 04: both rule assignments read
   `BudgetService`).
 
 ### R5. X-ray

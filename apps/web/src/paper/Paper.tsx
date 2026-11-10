@@ -18,9 +18,19 @@ interface Props {
   /** Bring this control into view when it changes. */
   readonly reveal?: number;
   readonly onPoint?: (index: number | undefined) => void;
+  /** The paper's text after each render, field values included (design D7's font note). */
+  readonly onText?: (text: string) => void;
 }
 
-export function Paper({ result, label, xray = false, outlined = [], reveal, onPoint }: Props) {
+export function Paper({
+  result,
+  label,
+  xray = false,
+  outlined = [],
+  reveal,
+  onPoint,
+  onText,
+}: Props) {
   const frame = useRef<HTMLElement>(null);
   const host = useRef<HTMLDivElement>(null);
   const [boxes, setBoxes] = useState<readonly Box[]>([]);
@@ -39,7 +49,13 @@ export function Paper({ result, label, xray = false, outlined = [], reveal, onPo
     const root = el.shadowRoot ?? el.attachShadow({ mode: 'open' });
     root.innerHTML = `<style>${result.css}</style>${result.html}`;
     remeasure();
-  }, [result, remeasure]);
+    if (onText) {
+      const values = [...root.querySelectorAll('input, textarea')].map(
+        (e) => (e as HTMLInputElement).value,
+      );
+      onText([root.querySelector('.afl-root')?.textContent ?? '', ...values].join(' '));
+    }
+  }, [result, remeasure, onText]);
 
   useEffect(() => {
     void loadPaperFonts();

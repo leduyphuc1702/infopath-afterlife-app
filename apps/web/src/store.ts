@@ -1,4 +1,5 @@
 // Spec 09 design §5: the page's state. In memory only.
+import type { SideTab } from './side/SideTabs';
 import type {
   FileFailure,
   RecordSummary,
@@ -33,6 +34,9 @@ export interface State {
   readonly recordIndex: number;
   readonly xray: boolean;
   readonly selection: Selection;
+  /** The side panel's tab, and the connection entry opened from the details card (R6.1). */
+  readonly tab: SideTab;
+  readonly connectionId?: string;
   readonly busy?: string;
 }
 
@@ -45,6 +49,7 @@ export const initialState: State = {
   recordIndex: 0,
   xray: false,
   selection: {},
+  tab: 'fields',
 };
 
 export type Action =
@@ -59,16 +64,23 @@ export type Action =
   | { readonly type: 'view'; readonly view: string }
   | { readonly type: 'record'; readonly index: number }
   | { readonly type: 'xray'; readonly on: boolean }
-  | { readonly type: 'select'; readonly selection: Selection };
+  | { readonly type: 'select'; readonly selection: Selection }
+  | { readonly type: 'tab'; readonly tab: SideTab; readonly connectionId?: string };
 
 const defaultView = (t: TemplateSummary) =>
   (t.ir.views.find((v) => v.isDefault) ?? t.ir.views[0])?.name;
+
+const withoutConnection = (s: State): State => {
+  const rest = { ...s };
+  delete (rest as { connectionId?: string }).connectionId;
+  return rest;
+};
 
 function openState(s: State, t: TemplateSummary | undefined): State {
   if (!t) return s;
   const view = defaultView(t);
   return {
-    ...s,
+    ...withoutConnection(s),
     openId: t.templateId,
     ...(view !== undefined ? { view } : {}),
     recordIndex: 0,
@@ -116,6 +128,12 @@ export function reducer(s: State, a: Action): State {
       return { ...s, xray: a.on, selection: a.on ? s.selection : {} };
     case 'select':
       return { ...s, selection: a.selection };
+    case 'tab':
+      return {
+        ...withoutConnection(s),
+        tab: a.tab,
+        ...(a.connectionId !== undefined && { connectionId: a.connectionId }),
+      };
   }
 }
 

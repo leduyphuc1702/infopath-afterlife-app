@@ -47,7 +47,8 @@ main thread (React 18)                              Web Worker (module)
 | D4 | **Native HTML controls styled with tokens; no `@atlaskit/*` components.** | Atlaskit `Select`, `Tabs`, `Tree` | Bundle and Lighthouse budget. Native elements give keyboard and accessibility for free. |
 | D5 | `Changed in task 1:` **the theme CSS strings `@atlaskit/tokens` ships, imported directly** (`dist/esm/artifacts/themes/atlassian-{light,dark,spacing}.js`; no `exports` map blocks it), put in one `<style>`; `shell/theme.ts` sets `<html data-theme="light:light dark:dark spacing:spacing" data-color-mode>` from `prefers-color-scheme` and follows its changes. CSS uses `var(--ds-…)`. | `setGlobalTheme` | Measured 2026-11-11: `setGlobalTheme` raised the entry chunk from 45.7 to 91.6 KB gzip and emitted 25 theme chunks; it raised no violation in the smoke test. The three strings cost 6.4 KB gzip in the entry, with no request and no violation. |
 | D6 | **Samples as one lazy JS chunk imported by the Worker** (`virtual:sample-files`, base64), and a tiny `virtual:sample-list` (names, counts) for the menu. | fetch asset files | One cached chunk, no `fetch`; the Worker decodes it where the bytes are used. |
-| D7 | **Offline by warm-up, not a service worker**: after `load`, the app starts the Worker, which imports the samples chunk, and loads the four Latin Calibri faces (123 KB); then sets `<html data-ready>`. `Changed at review (2026-11-11):` Latin only. Latin Extended, Vietnamese, Greek and Cyrillic keep their `unicode-range` and load on demand while online; offline they fall back to a system font, and the notes under the paper say so when a render uses those characters. | service worker precache; all subsets (459 KB more) | Meets R8.1 (offline after load) with no cache-update logic and inside the font budget. Reload while offline is Later. |
+| D7 | **Offline by warm-up, not a service worker**: after `load`, the app starts the Worker, which imports the samples chunk, and loads the four Latin Calibri faces (123 KB); then sets `<html data-ready>`. `Changed in task 8:` the Worker itself starts when the app mounts
+(the client is created then); the warm-up after `load` only asks it to import the samples chunk. `Changed at review (2026-11-11):` Latin only. Latin Extended, Vietnamese, Greek and Cyrillic keep their `unicode-range` and load on demand while online; offline they fall back to a system font, and the notes under the paper say so when a render uses those characters. | service worker precache; all subsets (459 KB more) | Meets R8.1 (offline after load) with no cache-update logic and inside the font budget. Reload while offline is Later. |
 | D8 | **Hit testing from cached boxes** of `[data-afl-ctrl]`, in paper-content coordinates (§5). | DOM events on the paper | The root is `inert`; per HTML, inert nodes are not hit-test targets, so events reach the host. Checked in task 6: inside a control's box, `shadowRoot.elementFromPoint` hits nothing in the root, and a real pointer moved there by Playwright reaches the frame's `pointermove` (`e2e/xray.spec.ts`). |
 | D9 | **CSP added to `index.html` at build only** (a `transformIndexHtml` plugin, `apply: 'build'`), from one `csp.ts` that also writes `_headers`. | always in `index.html` | Vite's dev server and React refresh use inline scripts. One source keeps the two policies equal (R8.2). |
 | D10 | **No DOMPurify** (§6). | DOMPurify on the main thread | Human decision 8. |
@@ -68,7 +69,7 @@ apps/web/
     files/     collect.ts (drop, picker, folder walk, size checks)
     paper/     Paper.tsx  PaperToolbar.tsx  geometry.ts  XrayOverlay.tsx  fade.ts  paper.css
     side/      TemplateList.tsx  FieldTree.tsx  tree.ts  markers.ts  DetailsCard.tsx  card.ts
-               Connections.tsx  connections.ts  Unmatched.tsx
+               DataConnections.tsx  connections.ts  SideTabs.tsx  Unmatched.tsx
     shell/     Header.tsx  Landing.tsx  Notices.tsx  ErrorBanner.tsx  theme.ts  fonts.ts  app.css
   test/        *.test.ts (node), *.browser.test.ts (chromium)
   e2e/         *.spec.ts, fixtures.ts (request, violation and canary guards), hostile.ts
@@ -77,6 +78,10 @@ packages/core/
   src/xsn/match.ts                              matchRecord (R2, R11), exported from src/index.ts
 .github/workflows/web-pages.yml
 ```
+
+`Changed in task 7:` the panel component is `DataConnections.tsx`, not `Connections.tsx`: on
+macOS's case-insensitive file system `./side/Connections` resolved to `connections.ts`
+(TS1149). The tabs are their own component, `SideTabs.tsx`.
 
 Root scripts gain `test:web` (`pnpm --filter web test`) and `e2e:web`; `check` runs `test:web`.
 
@@ -181,8 +186,11 @@ on the samples:
   index of each group's first field (form 02's expense row comes out in schema order).
 - `Changed in task 6:` selecting from the paper scrolls only the tree's own box, never the page
   (`scrollIntoView` moved the page under the pointer by 39 px in the X-ray test).
-- `markers.ts` (R4.2): Rule = an element of `readBy`/`writtenBy` is a rule or action id;
-  Calculated = a calculation's `targetId`; Validated = a validation's `matchId`; From data
+- `markers.ts` (R4.2): `Changed at review:` Required = FormIR `required` or the target of a
+  blank check (spec 03 §9.2, the asterisk's rule; repeated in the app because the main thread
+  imports core types only); Rule = an element of `readBy`/`writtenBy` is a rule or action id;
+  Calculated = a calculation's `targetId`; Validated = the `matchId` of a validation other than
+  the blank check; From data
   connection = a control with `choicesFrom.connectionId` targets the field, or an element in
   `writtenBy` is in a connection's `lineage.usedBy`, or (`Changed in task 5:`) the field is in a
   connection's `lineage.fieldIds`, the secondary tree the connection fills.
@@ -217,7 +225,7 @@ R6.1). No `'unsafe-eval'`: nothing needs it (table above).
 | Resource exhaustion (cabinet bombs, deep XML, endless templates) | Core's limits and render budget, in the Worker; size checks before reading; the 15 s watchdog |
 | Framing (clickjacking) | `frame-ancestors 'none'` in `_headers`; not possible with `<meta>` (GitHub Pages gap, open question 1) |
 | Third-party code or analytics | None; every e2e test fails on a non-same-origin request; dependencies pinned |
-| The Worker under `<meta>` only | A module Worker takes its policy from its own response headers [VERIFY in task 8]; on GitHub Pages it runs without one. It runs only our bundle, which contains no `eval`. |
+| The Worker under `<meta>` only | `Checked in task 8` (`e2e/worker-csp.spec.ts`, Chromium 1.65's build): the module Worker does **not** get the page's `<meta>` policy; it takes its policy from its own response headers. With `<meta>` only, a same-origin `fetch` is blocked in the page and allowed (200) in the Worker. With `_headers`' policy sent on the Worker script's response, the Worker's `fetch` is blocked and the app still opens and renders a sample. So on GitHub Pages the Worker runs with no CSP; on Cloudflare Pages `_headers` (`/*`) covers it. Either way the Worker runs only our bundle, which has no `eval`, and core's sanitiser output reaches the page, where the `<meta>` policy applies. |
 
 **Why no DOMPurify.** Core sanitises the tree before it is serialised, so no string is re-parsed
 (spec 03 D4); P5 checks it on 500 generated inputs, and the output is byte-identical in Node and a
@@ -293,6 +301,7 @@ event (init script), and a page error.
 | R8.1 | e2e | samples, form 03 file | guards in every spec; `e2e/offline.spec.ts` |
 | R8.2 | unit, e2e | `dist/index.html`, `dist/_headers` | `test/csp.test.ts`; guards |
 | R8.3 | e2e | 20 seeded P5 inputs packed with core's `writeCabinet` (test-only import) | `e2e/hostile.spec.ts` |
+| §6 Worker CSP | e2e | the built Worker, with and without the `_headers` policy on its response | `e2e/worker-csp.spec.ts` (plain Playwright `test`: its probe raises violations on purpose) |
 | R9.1 | command | `vite preview` | `verification.md` |
 | R9.2 | e2e | sample 03 | `e2e/keyboard.spec.ts` |
 | R9.3 | unit | `src/**/*.css` | `test/style.test.ts` |

@@ -183,7 +183,7 @@ function NodeRow({
 }) {
   const n = t.node;
   const chips = [
-    n.kind !== 'group' && n.required && 'Required',
+    m?.required && 'Required',
     n.kind !== 'group' && n.repeating && 'Repeating',
     m?.rule && 'Rule',
     m?.calculated && 'Calculated',
