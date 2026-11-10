@@ -140,9 +140,9 @@ describe.skipIf(!root)('private renders (AFTERLIFE_PRIVATE_SAMPLES, own/ skipped
     }
   });
 
-  test('every named view rendered; no element removed; no unknown function called', () => {
+  test('every named view rendered; nothing removed; no unknown function called', () => {
     expect(totals.rendered).toBe(totals.views);
-    expect(counts.removed.element ?? 0).toBe(0);
+    expect(counts.removed).toEqual({});
     expect(counts.unknownFunctions).toEqual({});
   });
 

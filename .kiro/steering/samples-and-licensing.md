@@ -34,5 +34,7 @@ its row there. The agent cannot write under `samples/`; ask the human to change 
   - Production dependencies are MIT, Apache-2.0, BSD or ISC, with no exceptions (spec 03 chose
     `xsltjs`, MIT). List them in README "Third-party licences".
   - Do not add GPL or proprietary dependencies.
+  - Fonts may be under the SIL Open Font License 1.1 (Carlito, for Calibri), shipped unmodified
+    and listed in README "Third-party licences".
 - Do not copy Microsoft InfoPath UI assets (icons, images). Recreate the look with CSS and Atlaskit icons.
 - "InfoPath" is a Microsoft trademark. Use it descriptively ("for InfoPath forms") and add a non-affiliation note in the README and the Marketplace listing.

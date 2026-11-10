@@ -21,6 +21,7 @@
     "xsltjs": "1.0.0"
   },
   "devDependencies": {
+    "@fontsource/carlito": "5.3.0",
     "parse5": "7.3.0"
   }
 }

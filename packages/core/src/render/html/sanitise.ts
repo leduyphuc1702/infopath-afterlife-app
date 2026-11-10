@@ -50,6 +50,7 @@ export interface Sanitised {
 
 const XHTML = 'http://www.w3.org/1999/xhtml';
 const XD = 'http://schemas.microsoft.com/office/infopath/2003';
+const XML_NS = 'http://www.w3.org/XML/1998/namespace';
 
 /** Dropped with their content. */
 const DROP = new Set([
@@ -212,6 +213,11 @@ function attributes(
     const value = a.value ?? '';
     if (name === 'xmlns' || name.startsWith('xmlns:') || INERT_ATTRS.has(name)) continue;
     if (a.namespaceURI === XD && XD_RECORD_ATTRS.has((a.localName ?? '').toLowerCase())) continue;
+    // §8.4, dropped silently (`Changed at review:` after task 13): `xml:base`, a URL-bearing
+    // attribute nothing needs; and an empty `src` on any element (the private views' empty
+    // pictures give `src=""`), which names the page itself and loads nothing useful.
+    if (name === 'xml:base' || (a.namespaceURI === XML_NS && a.localName === 'base')) continue;
+    if (name === 'src' && /^[\t\n\f\r ]*$/.test(value)) continue;
     if (
       !ATTR_NAME.test(name) ||
       name.startsWith('on') ||

@@ -229,6 +229,18 @@ describe('step 5: attributes (R5.1, R5.2)', () => {
   });
 });
 
+test('xml:base and an empty src go silently, on any element', async () => {
+  const r = await postText(
+    page(
+      '<p xml:base="javascript:/">a</p><span src="">b</span><img src=" &#10;"/>' +
+        '<p><xsl:attribute name="base" namespace="http://www.w3.org/XML/1998/namespace">x</xsl:attribute>c</p>' +
+        '<img src="x.png"/>',
+    ),
+  );
+  expect(inner(r.html)).toBe('<p>a</p><span>b</span><img><p>c</p><img>');
+  expect(removed(r.issues)).toEqual([{ kind: 'url', count: 1 }]);
+});
+
 describe('step 8: inert controls (R5.4)', () => {
   test('editing and focus attributes go silently; id, name and for are prefixed', async () => {
     const r = await postText(

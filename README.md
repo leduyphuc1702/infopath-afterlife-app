@@ -75,6 +75,12 @@ Production dependencies of `@afterlife/core`, all under the MIT licence:
 
 `packages/core/test/render/licences.test.ts` checks this list against the installed packages.
 
+Fonts, shipped unmodified:
+
+| Package | Version | Licence | Use |
+|---|---|---|---|
+| `@fontsource/carlito` | 5.3.0 | SIL Open Font License 1.1 | Carlito, metric-compatible with Calibri, declared as `@font-face` family `Calibri` by the page that shows a render (core's visual test today; the web viewer in spec 09). Core does not inline it. |
+
 ## Licence
 
 MIT, see `LICENSE`. The form templates in `samples/own/` are MIT too. Jira, Jira Service

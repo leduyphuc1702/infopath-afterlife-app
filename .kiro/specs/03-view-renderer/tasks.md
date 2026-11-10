@@ -269,6 +269,9 @@ limits, properties, references and performance.
     record, 16 renders.
   - Write candidate PNGs and a side-by-side page with the InfoPath screenshots, then stop for
     the maintainer's approval. Commit nothing.
+  - `Changed at review:` Calibri resolves to Carlito (`@fontsource/carlito` 5.3.0, OFL-1.1,
+    devDependency), declared by the test page; core stays font-free. Baselines are for macOS
+    Chromium; other platforms skip. Candidates written 2026-11-11; awaiting approval.
   - After approval: commit-ready baselines. Propose the pixel threshold as a `Changed at
     review:` edit to R10.2.
   - Re-check every criterion, and update the `Status` column of `docs/feature-coverage.md` for

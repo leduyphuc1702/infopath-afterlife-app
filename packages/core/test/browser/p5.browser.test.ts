@@ -35,13 +35,10 @@ const FORBIDDEN = new Set([
   ...['plaintext', 'audio', 'video', 'source', 'track', 'param', 'canvas', 'svg', 'math'],
   ...['portal', 'image', 'isindex', 'keygen', 'listing', 'marquee', 'dialog', 'details'],
 ]);
-/**
- * Attributes that must not exist: URL carriers the design drops (§8.2), and focus or editing
- * (R5.4). `xml:base` is not here: HTML documents ignore it, and SVG and MathML never survive.
- */
+/** Attributes that must not exist: URL carriers the design drops (§8.2, §8.4), and focus or editing (R5.4). */
 const DENIED = new Set([
-  ...['srcdoc', 'action', 'formaction', 'ping', 'xlink:href', 'contenteditable', 'tabindex'],
-  ...['accesskey', 'autofocus'],
+  ...['srcdoc', 'action', 'formaction', 'ping', 'xlink:href', 'xml:base', 'contenteditable'],
+  ...['tabindex', 'accesskey', 'autofocus'],
 ]);
 const LOADING = new Set(['src', 'srcset', 'poster', 'background', 'lowsrc', 'dynsrc', 'data']);
 const RASTER = /^data:image\/(?:png|gif|jpeg|bmp);base64,[a-z0-9+/=]*$/i;

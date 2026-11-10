@@ -451,7 +451,10 @@ One walk over the result tree, in this order; each step needs what the one befor
   `meta` and `title`; `xmlns*` attributes; `contenteditable`, `tabindex` and `hidefocus` (step 8).
   Also the `xd:` attributes that hold record data, not a binding or a control name: `xd:inline`
   (a whole attachment or picture as base64; `Changed at review:` after task 7), and `xd:num` and
-  `xd:value` (the raw field value; `Changed at task 9:`). In the 53 views each is written by
+  `xd:value` (the raw field value; `Changed at task 9:`). `Changed at review:` (after task 13)
+  `xml:base`, a URL-bearing attribute nothing needs, and an empty `src` (ASCII whitespace only)
+  on any element: the private views' empty pictures write `src=""`, which was their only
+  `CONTENT_REMOVED`. In the 53 views each is written by
   `xsl:attribute` as the control's `xd:boundProp` (4, 189 and 160 sites). They are matched by the
   InfoPath namespace and local name, whatever the prefix; marks give the path to the same data.
   `CONTENT_REMOVED` is then for content a view really carried. Expected: 0 on every own render;
@@ -587,7 +590,7 @@ little-endian:
 | R8.1 (P5) | property, 500 runs, Chromium | generated XSL + records from the R8.1 shapes. Oracle: `template.innerHTML` and `CSSStyleSheet.replaceSync` in Chromium, then a walk for R5.1 items; `Changed at task 12:` also one root holding everything, the tree re-parsed from Chromium's serialisation walked too, and the parser-closing cases as fixed examples | `test/browser/p5.browser.test.ts`, `test/render/nesting.test.ts` |
 | R9.1 | perf | 106 renders, Node and Worker | §10 |
 | R10.1 | golden | 106 `xsltproc` references; hooks-on vs bare `XSLT.run` | `test/render/xsltproc.test.ts` |
-| R10.2 | visual | 16 default-view renders | `test/browser/visual.browser.test.ts` |
+| R10.2 | visual | 16 default-view renders; `Changed at task 14:` 1007×555 white canvas, Calibri as Carlito (`@fontsource/carlito` 5.3.0, OFL-1.1, devDependency; `test/browser/carlito.ts`), Vitest `toMatchScreenshot` (pixelmatch), baselines for macOS Chromium only, skipped elsewhere | `test/browser/visual.browser.test.ts` |
 | R10.3 | local | private folder minus `own/` | `test/render-private.local.test.ts` |
 | D1, D2, §5.3 | **guard** | `xsltjs/package.json` version `1.0.0`; each §5.3 member exists with its arity; `MAX_DEPTH > templateDepth`; the same `xpath` and xmldom instances; `applyStep` wrapped exactly once, also after a re-import; a probe view proves each hook fires | `test/render/engine-guard.test.ts` |
 
