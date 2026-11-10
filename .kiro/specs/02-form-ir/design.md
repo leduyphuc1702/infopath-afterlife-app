@@ -160,6 +160,7 @@ export interface LabelEvidence {                                                
 
 export interface IrView {                                                                  // R4.1
   id: string; name: string; caption?: string; xslFile?: string; isDefault: boolean; isPrint: boolean;
+  printView?: string;                               // as written; names the view that prints this one
   scanned: boolean;                                 // false when the XSL is missing or unreadable (R4.3)
   controls: BoundControl[]; source: Located;
 }
@@ -251,6 +252,8 @@ Rules the types do not show:
   `readBy` holds the rest and `binding` again. Order: `DepRole` order above, then element order.
 - `isQuery`: spec 01 `role` is `query` or `queryAllowed="yes"`. `isSubmit`: `role` is `submit` or
   `submitAllowed="yes"`. `dataSource` is the data object name, or `main` for `mainQuery`.
+- `IrView.isPrint` (changed at task 14): true when another view's `printView` names this view.
+  MS-IPFF2 types `xsf:view/@printView` as `xsd:string`, a view name, not `yes`/`no`.
 - `Meta.name`: `initialXmlDocument/@caption`; else the URN segment after `infopath:` up to `:-`;
   else `''` with `nameSource: 'none'`.
 

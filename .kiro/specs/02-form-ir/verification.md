@@ -3,14 +3,15 @@
 Evidence that the spec was met, written at task 14. Each row names the passing tests that prove a
 criterion; a criterion with no passing test is not met.
 
-- **Date:** 2026-11-10, 20:45 +07:00.
+- **Date:** 2026-11-10, 20:45 +07:00; re-run at 20:55 after the R4.1 change.
 - **Runtime:** Node v22.23.4, pnpm 12.18.0, Playwright Chromium (HeadlessChrome 158).
-- **Tree:** commit `67c898a` plus the uncommitted task 13 change (`test/private-corpus.local.test.ts`)
-  and the task 14 documents (this file, `tasks.md`, `docs/feature-coverage.md`).
+- **Tree:** commit `1147dd0` plus the uncommitted R4.1 change (`IrView.printView`, `isPrint` from
+  the views that name a print view; review approval 2026-11-10), the four coverage rows, and this
+  file.
 - **Clean install:** the files git would commit (`git ls-files --cached --others
   --exclude-standard`) were copied to an empty folder under `/tmp` with no `node_modules`, and
   every command below ran there. The working copy's `node_modules` was not touched. The folder
-  was deleted afterwards.
+  was deleted afterwards. The table holds the re-run's numbers.
 
 ## Commands and results
 
@@ -19,10 +20,10 @@ Run in the clean folder, in this order:
 | Command | Result |
 |---|---|
 | `pnpm install --frozen-lockfile` | exit 0 |
-| `pnpm check` (typecheck, lint, format check, node project, browser project) | exit 0; node project 70 files passed, 1 skipped (`private-corpus.local.test.ts`, variable unset), 2,933 tests passed; browser project 4 files, 155 tests passed |
-| `vitest run --project perf` (`pnpm test:perf`) | exit 0; 3 files, 101 tests passed; `parseXsn` + `buildFormIR` slowest p95 `08-big-form` 35.57 ms (p50 26.66 ms), budget 300 ms |
+| `pnpm check` (typecheck, lint, format check, node project, browser project) | exit 0; node project 70 files passed, 1 skipped (`private-corpus.local.test.ts`, variable unset), 2,935 tests passed; browser project 4 files, 155 tests passed |
+| `vitest run --project perf` (`pnpm test:perf`) | exit 0; 3 files, 101 tests passed; `parseXsn` + `buildFormIR` slowest p95 `08-big-form` 32.25 ms (p50 25.99 ms), budget 300 ms |
 | `AFTERLIFE_PRIVATE_SAMPLES=$HOME/Desktop/infopath-afterlife/samples vitest run test/private-corpus.local.test.ts` | exit 0; 72 tests passed (read only, nothing written); lines below |
-| `vitest run --project node\|browser\|perf --reporter=json` | 2,934 + 155 + 101 tests: 3,189 passed, 0 failed, 1 skipped (the local-only file). The table below is checked against these reports |
+| `vitest run --project node\|browser\|perf --reporter=json` | 2,936 + 155 + 101 tests: 3,191 passed, 0 failed, 1 skipped (the local-only file). The table below is checked against these reports |
 
 Local check summary (names and counts only; the folder holds the 29 private templates and a copy
 of forms 01–42):
@@ -43,8 +44,12 @@ forms 01–42 (title 556, otherView 14, name 9) gives the maintainer's private c
 
 ## Summary
 
-**39 of 40 criteria pass. R4.1 is open:** its `isPrint` rule and oracle contradict MS-IPFF2 (see
-Notes). Brief items: 6 of 7 pass; AC1 is open for the same reason (it lists `isPrint`).
+**40 of 40 criteria pass, and 7 of 7 brief items.** The first run left R4.1 and AC1 open: R4.1
+read `printView` as a yes/no flag, which MS-IPFF2 contradicts. Its rule was changed (approved
+2026-11-10, "Changed at task 14" in R4.1 and design §5) and both rows now pass.
+
+**Total: 2,935 + 155 + 101 = 3,191 tests in CI, all passed (1 local-only file skipped); plus 72
+local-only, all passed.**
 
 ## R1.1–R15.1
 
@@ -59,7 +64,7 @@ Notes). Brief items: 6 of 7 pass; AC1 is open for the same reason (it lists `isP
 | R3.1 | `test/ir/data-tree.test.ts` › "R3.1 fields and groups" (4/4) | Pass |
 | R3.2 | `test/ir/data-tree.test.ts` › "R3.2 data paths and ids" (2/2); `test/ir/ids.test.ts` (6/6) | Pass |
 | R3.3 | `test/ir/data-tree.test.ts` › "R3.3 README counts" (48/48) | Pass |
-| R4.1 | `test/ir/view-scan.test.ts` › "R4.1 views" (3/3): README Views column, 53 views, form 05 `HR` default. **No test for "the spec 01 synthetic print-settings manifest gives `isPrint` true", and it would fail** (Notes) | **Open** |
+| R4.1 | `test/ir/view-scan.test.ts` › "R4.1 views" (5/5): README Views column, 53 views, form 05 `HR` default, spec 01's print-settings fixture (`Print` is `isPrint`, `Main` keeps `printView: 'Print'`), no sample view has `printView` | Pass |
 | R4.2 | `test/ir/view-scan.test.ts` › "R4.2 bound controls in the samples" (4/4), "R4.3 synthetic views" (`GetDOM`, `DropDown`, dynamic `title`, ActiveX `{{…}}`) | Pass |
 | R4.3 | `test/ir/view-scan.test.ts` › "R4.3 synthetic views" (9/9) | Pass |
 | R4.4 | `test/ir/view-scan.test.ts` › "R4.4 choicesFrom" (2/2), "a text box bound into a secondary source with GetDOM; a filtered list" (1/1) | Pass |
@@ -95,7 +100,7 @@ Notes). Brief items: 6 of 7 pass; AC1 is open for the same reason (it lists `isP
 
 | Item | Brief text (short) | Evidence | Result |
 |---|---|---|---|
-| AC1 | the FormIR parts, including `views[]` with `isPrint` | R1.1, R2–R4, R6–R10; `promotedFields[]` moved to spec 05 (decision 6a). `isPrint` as R4.1 defines it is wrong (Notes) | **Open** |
+| AC1 | the FormIR parts, including `views[]` with `isPrint` | R1.1, R2–R4, R6–R10; `promotedFields[]` moved to spec 05 (decision 6a); `isPrint` per R4.1 as changed at task 14 | Pass |
 | AC2 | label guess in the 8-step order, with the step recorded | R5.1–R5.4 | Pass |
 | AC3 | dependency index: who reads or writes each field | R11.1–R11.5, R12.1 | Pass |
 | AC4 | `internal` endpoints, no network | R8.2, R8.3; `src/ir/**` lint bans `fetch`; spec 01 network stub | Pass |
@@ -105,12 +110,14 @@ Notes). Brief items: 6 of 7 pass; AC1 is open for the same reason (it lists `isP
 
 ## Notes
 
-- **R4.1 `isPrint`.** R4.1 says `isPrint` is true when `printView` is `yes`, and its oracle says
-  spec 01's synthetic manifest gives `isPrint` true. MS-IPFF2 (`xsf:view`, checked 2026-11-10)
-  defines `printView` as "the name of another form view to be used for printing the form view";
-  it is never `yes`. Spec 01's fixture (`test/xsf/build.views.test.ts`) writes
-  `printView="Print"` on view `Main`, so today `isPrint` is false for it and the oracle cannot
-  pass. No sample manifest has `printView`. This needs a decision before the row can pass.
+- **R4.1 `isPrint` (changed at task 14).** MS-IPFF2 (`xsf:view`, checked 2026-11-10) defines
+  `printView` as "the name of another form view to be used for printing the form view"
+  (`xsd:string`). A view is `isPrint` when another view's `printView` names it, and `printView` is
+  kept as written. Spec 01's fixture moved to `test/helpers/synthetic-manifest.ts`
+  (`PRINT_SETTINGS_FIXTURE`) so both specs test the same text. No golden file changed: no sample
+  has `printView`.
+- `docs/feature-coverage.md`: `ir: spec 02` on 32 rows, plus four rows in section J (dependency
+  map, data lineage, dead-connection check inputs, label guess).
 - The R11.5 "Absolute paths" row counts `signedDataBlock/@signatureLocation`, a `DepRole` since
   task 10.
 - `inRepeat` comes from the data tree since task 10; five sample controls changed (forms 06, 23).

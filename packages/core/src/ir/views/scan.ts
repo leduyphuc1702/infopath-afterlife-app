@@ -118,6 +118,11 @@ export function scanViews(input: ViewScanInput): ViewScan {
   };
   let limitHit = false;
 
+  const printTargets = new Set(
+    t.manifest.views
+      .filter((v) => v.attrs.printView !== undefined && v.attrs.printView !== v.attrs.name)
+      .map((v) => v.attrs.printView!),
+  );
   for (const v of t.manifest.views) {
     const name = v.attrs.name ?? '';
     const xslFile = v.mainpanes[0]?.attrs.transform;
@@ -127,7 +132,9 @@ export function scanViews(input: ViewScanInput): ViewScan {
       ...(v.attrs.caption === undefined ? {} : { caption: v.attrs.caption }),
       ...(xslFile === undefined ? {} : { xslFile }),
       isDefault: v.isDefault,
-      isPrint: v.attrs.printView === 'yes',
+      // R4.1 (changed at task 14): printView names the view used for printing (MS-IPFF2 xsf:view).
+      ...(v.attrs.printView === undefined ? {} : { printView: v.attrs.printView }),
+      isPrint: printTargets.has(name),
       source: { file: v.file, path: v.path, line: v.line, column: v.column },
     };
     // A missing file is already spec 01's MISSING_FILE issue (R5.4); the view is not scanned.

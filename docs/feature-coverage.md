@@ -202,6 +202,10 @@ Each line answers a defect recorded in `docs/infopath-ux.md`. None of these exis
 | Always-visible view switcher | Filler had none | 03 |
 | Import and search across years of records | records were files on a share | 11 |
 | Coverage advice that turns a SQL connection into an Automation outline | the connection is dead, the logic still matters | 05 C |
+| Dependency map: select a field, see every rule, calculation, check, view control, connection, handler and signature that reads or writes it | nobody could change a form without breaking something they could not see | 06 / 09; ir: spec 02 (`readBy`/`writtenBy`, 1,566 of 1,566 sample references) |
+| Data lineage: for each list and secondary source, its connection, the fields it fills and what uses it | dropdown data came from places nobody remembered | 06 / 09; ir: spec 02 (`lineage`, `choicesFrom`) |
+| Dead-connection check inputs: every endpoint with its host and an `internal`/`package`/`unknown` badge, passwords redacted | hard-coded internal hosts fail silently from the cloud | 06 / 09 / 12; ir: spec 02 (`endpoints`, `liveness`; `dead` is the viewer's check) |
+| Label guess with its source: the text a person saw next to each field, and where it came from | field names such as `my:claimantDept` mean nothing to the people who filled the form | 05 / 06; ir: spec 02 (`label`, `labelSource`, `labelEvidence`) |
 | Works with no server and no template URL | that is the failure mode that killed every form | 09 |
 | Uninstall removes the app, not the forms | forms must survive us | 05 / 07 |
 

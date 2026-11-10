@@ -145,7 +145,7 @@ const view = obj(
     controls: arr(control),
     source: located,
   },
-  { caption: str, xslFile: str },
+  { caption: str, xslFile: str, printView: str },
 );
 const trigger: Schema = {
   t: 'tagged',

@@ -274,6 +274,10 @@ screen depended on.
    `caption`, `xslFile` (the first `mainpane/@transform`), `isDefault` and `isPrint` (`printView`
    is `yes`). Oracle: the README Views column; form 05 has 3 views with `HR` the default; the
    spec 01 synthetic print-settings manifest gives `isPrint` true.
+   Changed at task 14: `printView` is not a yes/no flag. MS-IPFF2 (`xsf:view`, `xsd:string`)
+   defines it as the name of the view used to print this view. A view is now `isPrint` when
+   another view's `printView` names it, and each view keeps `printView` as written. In the
+   spec 01 fixture, `Main` has `printView="Print"`, so `Print` is `isPrint` and `Main` is not.
 2. THE SYSTEM SHALL scan each view's XSL and record every bound control, in document order, with
    its view, `xd:xctname`, `xd:CtrlId`, the binding as written, its source line, and the FormIR id
    it resolves to. A binding SHALL be resolved against its template context and the `select` of

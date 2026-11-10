@@ -1,11 +1,13 @@
 import { describe, expect, test } from 'vitest';
-import { buildFormIR, type FormIR } from '../../src/index';
+import { buildFormIR, parsePackage, type FormIR } from '../../src/index';
 import { buildConnections } from '../../src/ir/connections';
 import { buildDataTree } from '../../src/ir/data-tree';
 import { IdRegistry } from '../../src/ir/ids';
 import { scanViews, staticAvt } from '../../src/ir/views/scan';
 import type { ParsedTemplate } from '../../src/xsn/parse';
 import { sampleTemplates } from '../helpers/formir';
+import { packageFile } from '../helpers/package';
+import { manifestBytes, PRINT_SETTINGS_FIXTURE } from '../helpers/synthetic-manifest';
 import { viewIR, viewPackage } from '../helpers/view-package';
 import { readmeTable } from '../oracles/readme-table';
 
@@ -36,6 +38,22 @@ describe('R4.1 views', () => {
     const views = samples.flatMap((s) => s.ir.views);
     expect(views).toHaveLength(53);
     expect(views.every((v) => v.scanned)).toBe(true);
+  });
+
+  test("spec 01's print-settings fixture: Print is the print view of Main", () => {
+    const ir = buildFormIR(
+      parsePackage([packageFile('manifest.xsf', manifestBytes(PRINT_SETTINGS_FIXTURE))]),
+    );
+    expect(ir.views.map((v) => [v.name, v.isDefault, v.isPrint, v.printView])).toEqual([
+      ['Main', true, false, 'Print'],
+      ['Print', false, true, undefined],
+    ]);
+    expect(ir.views[1]).not.toHaveProperty('printView');
+  });
+
+  test('no sample view has printView; none is a print view', () => {
+    const views = samples.flatMap((s) => s.ir.views);
+    expect(views.filter((v) => v.isPrint || v.printView !== undefined)).toEqual([]);
   });
 
   test('form 05: 3 views, HR the default', () => {

@@ -19,3 +19,32 @@ ${inner}
 export function manifestBytes(inner: string, rootAttrs?: string): Uint8Array {
   return encode(manifestXml(inner, rootAttrs), 'utf-8');
 }
+
+/**
+ * Spec 01's print-settings fixture (test/xsf/build.views.test.ts): view `Main` names `Print` as
+ * its print view, with print settings, a merged print view and view extensions. Also used by
+ * spec 02 R4.1 (`isPrint`, `printView`).
+ */
+export const PRINT_SETTINGS_FIXTURE = `<xsf:views default="Main">
+  <xsf:view name="Main" caption="Main" printView="Print" showMenuItem="yes" designMode="normal">
+    <xsf:mainpane transform="view1.xsl"/>
+    <xsf:printSettings orientation="landscape" marginUnitsType="cm" topMargin="1.5" header="H" footer="F">
+      <xsf:header><b>Page</b> &amp;p of &amp;P</xsf:header>
+      <xsf:footer>  Confidential  </xsf:footer>
+    </xsf:printSettings>
+    <xsf:toolbar name="tb" caption="Tools"><xsf:button action="xCollection::insert" xmlToEdit="row" caption="Add"/></xsf:toolbar>
+  </xsf:view>
+  <xsf:view name="Print"><xsf:mainpane transform="view2.xsl"/></xsf:view>
+</xsf:views>
+<xsf:extensions><xsf:extension name="SolutionDefinitionExtensions">
+  <xsf2:solutionDefinition>
+    <xsf2:viewsExtension><xsf2:viewExtension ref="Print" readOnly="yes"/><xsf2:viewExtension ref="Gone"/></xsf2:viewsExtension>
+    <xsf2:mergedPrintView isDefault="yes" viewBreak="pageBreak">
+      <xsf:printSettings orientation="portrait"/>
+      <xsf2:includedViews><xsf2:includedView name="Main"/><xsf2:includedView name="Print"/></xsf2:includedViews>
+    </xsf2:mergedPrintView>
+  </xsf2:solutionDefinition>
+  <xsf3:solutionDefinition>
+    <xsf3:viewsExtension><xsf3:viewExtension ref="Main"/></xsf3:viewsExtension>
+  </xsf3:solutionDefinition>
+</xsf:extension></xsf:extensions>`;

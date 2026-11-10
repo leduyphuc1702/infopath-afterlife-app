@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { parseManifest } from '../../src/xsf/parse-manifest';
 import { formNumber, sampleManifests } from '../helpers/manifests';
-import { manifestBytes } from '../helpers/synthetic-manifest';
+import { manifestBytes, PRINT_SETTINGS_FIXTURE } from '../helpers/synthetic-manifest';
 
 // R8.1–R8.5: views, print settings, view extensions, editing controls, buttons.
 
@@ -125,31 +125,7 @@ describe('across forms 01–42 (R8.5)', () => {
 });
 
 describe('synthetic: print settings, header, footer, merged print view, xsf3', () => {
-  const { manifest: m, unknowns } = parseManifest(
-    manifestBytes(`<xsf:views default="Main">
-  <xsf:view name="Main" caption="Main" printView="Print" showMenuItem="yes" designMode="normal">
-    <xsf:mainpane transform="view1.xsl"/>
-    <xsf:printSettings orientation="landscape" marginUnitsType="cm" topMargin="1.5" header="H" footer="F">
-      <xsf:header><b>Page</b> &amp;p of &amp;P</xsf:header>
-      <xsf:footer>  Confidential  </xsf:footer>
-    </xsf:printSettings>
-    <xsf:toolbar name="tb" caption="Tools"><xsf:button action="xCollection::insert" xmlToEdit="row" caption="Add"/></xsf:toolbar>
-  </xsf:view>
-  <xsf:view name="Print"><xsf:mainpane transform="view2.xsl"/></xsf:view>
-</xsf:views>
-<xsf:extensions><xsf:extension name="SolutionDefinitionExtensions">
-  <xsf2:solutionDefinition>
-    <xsf2:viewsExtension><xsf2:viewExtension ref="Print" readOnly="yes"/><xsf2:viewExtension ref="Gone"/></xsf2:viewsExtension>
-    <xsf2:mergedPrintView isDefault="yes" viewBreak="pageBreak">
-      <xsf:printSettings orientation="portrait"/>
-      <xsf2:includedViews><xsf2:includedView name="Main"/><xsf2:includedView name="Print"/></xsf2:includedViews>
-    </xsf2:mergedPrintView>
-  </xsf2:solutionDefinition>
-  <xsf3:solutionDefinition>
-    <xsf3:viewsExtension><xsf3:viewExtension ref="Main"/></xsf3:viewsExtension>
-  </xsf3:solutionDefinition>
-</xsf:extension></xsf:extensions>`),
-  );
+  const { manifest: m, unknowns } = parseManifest(manifestBytes(PRINT_SETTINGS_FIXTURE));
 
   test('no unknown entries', () => {
     expect(unknowns).toEqual([]);

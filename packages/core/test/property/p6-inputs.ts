@@ -110,7 +110,7 @@ const view = rec(
     controls: list(control),
     source: located,
   },
-  { caption: str, xslFile: str },
+  { caption: str, xslFile: str, printView: str },
 );
 const trigger = fc.oneof(
   rec({ kind: fc.constant('fieldChange'), match: str, source: located }, { targetId: str }),

@@ -150,7 +150,7 @@ every task ends green, so every batch does.
     it (shapes and counts only) and stop, without modelling more.
   - Requirements: R1.4.
 
-- [ ] 14. Verification pass
+- [x] 14. Verification pass
   - Clean install in an empty copy of the tracked files, as spec 01 task 34: `pnpm check`,
     `pnpm test:perf`, and the local check.
   - Write `verification.md` in spec 01's style: commands and results, one row per criterion

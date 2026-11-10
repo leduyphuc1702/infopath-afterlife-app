@@ -121,7 +121,10 @@ export interface IrView {
   readonly caption?: string;
   readonly xslFile?: string;
   readonly isDefault: boolean;
+  /** Another view's `printView` names this one (R4.1). */
   readonly isPrint: boolean;
+  /** `xsf:view/@printView` as written: the name of the view used to print this one. */
+  readonly printView?: string;
   /** False when the XSL is missing or unreadable (R4.3). */
   readonly scanned: boolean;
   readonly controls: readonly BoundControl[];
