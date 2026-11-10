@@ -112,10 +112,19 @@ why it has to move.
   | Cause | Date shown | Source |
   |---|---|---|
   | `forms-services-spo` | after July 14, 2026 | techcommunity.microsoft.com, "Support update for InfoPath Forms Services in Microsoft 365" (June 2023) |
-  | `infopath-client` | after July 14, 2026 (extended support ends 7/15/2026 6:59:59 AM Pacific) | learn.microsoft.com, InfoPath 2013 lifecycle |
+  | `infopath-client` | July 14, 2026 (last day of extended support); `Changed at review (2026-11-11):` the page's "7/15/2026 6:59:59 AM" Pacific stays in design §4 as the evidence, not in the UI | learn.microsoft.com, InfoPath 2013 lifecycle |
   | `browser-xslt` | Chrome 158, November 17, 2026 (Origin Trial and Enterprise Policy: Chrome 176, August 17, 2027) | developer.chrome.com, "Deprecating XSLT" |
 
   Oracle: `causes.test.ts` compares the catalogue with this table; the URLs are design §4's.
+- **R2.5** `Added at review (2026-11-11):` a cause's replacement SHALL agree with the class of the
+  element its evidence comes from: an `internal-service` piece from a submit whose class is Native
+  says "The JSM request takes its place"; one from an ActiveX control's server says it goes with
+  the control (Unsupported); queries keep "Manual: rebind or replace with a JSM field". When the
+  pieces differ, each says its own. ActiveX reads "Unsupported: nothing replaces it. The control's
+  class ID is listed so someone can find what it did."; signatures read "Manual: use a JSM
+  approval. …". The Triage chips show short words, the id in the tooltip and the CSV. Oracle:
+  `causes.test.ts` (form 46, form 04, a mixed variant, every replacement against its class);
+  `e2e/triage.spec.ts`.
 - **R2.3** THE death certificate SHALL list no cause without evidence, and SHALL end with the line
   "Workflows attached outside the form cannot be detected from the file. Ask the library owner."
   Oracle: `causes.test.ts` (form 05: `infopath-client` only); `e2e/triage.spec.ts`.
@@ -213,6 +222,8 @@ Traces: brief "Inputs", "Per-form metrics".
 
 Traces: brief AC5, AC6, AC7.
 
+- `Changed in task 9:` spec 09 R7.1's sample set gains the templates of forms 43–47 (14
+  templates, still 153 records); they are in "Triage all samples" only, not in "Try a sample".
 - **R7.1** THE triage of 40 templates (forms 01–08, five copies each under different names) SHALL
   finish in under 60 s in the Worker, measured in Chromium from drop to table; the measured time is
   recorded in `verification.md`. Oracle: `e2e/triage.spec.ts`.

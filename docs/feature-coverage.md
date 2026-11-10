@@ -45,7 +45,7 @@ Editing, rules and live calculation are still spec 04's.
 |---|---|---|---|---|
 | Text (`PlainText`) | 602 | single-line input, type from schema | Native (`ts`/`tl`) | spec 05; render: spec 03 (quirks box, InfoPath row height) |
 | Date picker (`DTPicker`) | 117 | `M/D/YYYY` + calendar button | Native (`da`/`dt`) | spec 05; render: spec 03 (our calendar icon) |
-| Dropdown (`dropdown`) | 112 | fixed choices, no typing | Native (`cd`) | spec 05; render: spec 03 (selected value; `GetDOM` package lists) |
+| Dropdown (`dropdown`; InfoPath 2003 wrote `DropDown`, matched without case) | 112 | fixed choices, no typing | Native (`cd`) | spec 05; render: spec 03 (selected value; `GetDOM` package lists) |
 | Option buttons (`OptionButton`) | 104 | one of N, inline | Native (`cs`) | spec 05; ir: spec 02 (choice labels); render: spec 03 |
 | Checkbox (`CheckBox`) | 72 | boolean | Native (`cm` single choice) | spec 05; ir: spec 02 (`checkboxText` label); render: spec 03 |
 | Section (`Section`) | 59 | bordered group with title | Native (section) | spec 05; render: spec 03 |
@@ -167,6 +167,7 @@ The 51 counted conditions are all `xsf:errorCondition` (MS-IPFF2 2.2.1.2.44).
 | Secondary data sources driving dropdowns | 6 forms | App (lookup source) | spec 05; parsed: spec 01; ir: spec 02 (`choicesFrom`, lineage) |
 | SharePoint list/library submit | format | Native (JSM request) | spec 05; parsed: spec 01; ir: spec 02 (synthetic fixture only) |
 | `submitToHostAdapter` (submit handed to the hosting application) | form 44 in `samples/own/`; `docs/corpus-facts.md` has no count for the third-party corpus | Native (JSM request): the host that receives the submit becomes the JSM request create, so no app code is needed; spec 05 owns the final class | spec 05; parsed: spec 01; ir: spec 02 |
+| `useQueryAdapter` (submit through the main query connection) | 3 of the 29 third-party forms (spec 12 private run, 2026-11-11); synthetic fixture in repo | as the adapter it reuses (a database submit is Manual); Manual when that adapter cannot be found | spec 12 (`classify` resolves it); ir: spec 02 (synthetic fixture only) |
 | Filtered / cascading dropdowns | format | Native (`cc`) when two-level | spec 05 AC 4; ir: spec 02 (`choicesFrom.filterIds`, form 03) |
 
 ## H. Runtime, code, security

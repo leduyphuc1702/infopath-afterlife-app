@@ -53,7 +53,14 @@ export { classify, elementsOf, isBlankCheck } from './coverage/classify';
 export type { Coverage, CoverageItem } from './coverage/classify';
 export { CLASS_WORDS, COVERAGE_CLASSES, COVERAGE_TABLE, EMULATED_TOOLTIP } from './coverage/table';
 export type { CoverageClass, CoverageEntry, ElementKind, RowRef } from './coverage/table';
-export { CAUSE_IDS, CAUSES, WORKFLOW_LINE } from './triage/catalogue';
+export {
+  ACTIVEX_SERVER_REPLACEMENT,
+  CAUSE_IDS,
+  CAUSES,
+  MIXED_REPLACEMENT,
+  SUBMIT_REPLACEMENT,
+  WORKFLOW_LINE,
+} from './triage/catalogue';
 export type { CauseId, CauseInfo } from './triage/catalogue';
 export { causesOf } from './triage/causes';
 export type { Cause, Evidence } from './triage/causes';

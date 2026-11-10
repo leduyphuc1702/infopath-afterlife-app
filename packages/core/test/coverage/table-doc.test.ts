@@ -55,7 +55,10 @@ test('every cited row exists, and its Coverage cell names the class', () => {
 });
 
 test('kind and subtype are unique', () => {
-  const keys = COVERAGE_TABLE.map((e) => `${e.kind}|${e.subtype}`);
+  // Controls match without case, so their subtypes must be unique without case too.
+  const keys = COVERAGE_TABLE.map(
+    (e) => `${e.kind}|${e.kind === 'control' ? e.subtype.toLowerCase() : e.subtype}`,
+  );
   expect(new Set(keys).size).toBe(keys.length);
 });
 

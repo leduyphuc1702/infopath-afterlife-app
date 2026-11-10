@@ -69,6 +69,9 @@ export function Certificate({ row, onOpenForm, onBack }: Props) {
                 <code className="afl-expr" title={e.located.path}>
                   {e.located.file} › {shortPath(e.located.path)}
                 </code>
+                {e.replacement !== undefined && e.replacement !== cause.replacement && (
+                  <span className="afl-sub afl-block">Replaced by: {e.replacement}</span>
+                )}
               </li>
             ))}
           </ul>

@@ -19,3 +19,11 @@ export default async function samples(id?: string): Promise<InputFile[]> {
   if (!s) throw new Error(`no sample ${id}`);
   return [decode(s.template), ...s.records.map(decode)];
 }
+
+/** Spec 12 R4.5: every bundled template, and the records of those that have them. */
+export async function allSamples(): Promise<InputFile[]> {
+  const files = (await import('virtual:sample-files')).default;
+  return Object.keys(files)
+    .sort()
+    .flatMap((id) => [decode(files[id]!.template), ...files[id]!.records.map(decode)]);
+}

@@ -16,6 +16,8 @@ import { FieldTree } from './side/FieldTree';
 import { SideTabs } from './side/SideTabs';
 import { Unmatched } from './side/Unmatched';
 import { Certificate } from './triage/Certificate';
+import { ExportMenu } from './triage/ExportMenu';
+import { PrintPlan } from './triage/PrintPlan';
 import { TriageTable } from './triage/TriageTable';
 import { initialState, openTemplate, recordsOf, reducer, unmatched, type Problem } from './store';
 import { localNow, WorkerClient } from './worker/client';
@@ -117,6 +119,18 @@ export function App() {
     },
     [client, applySession, progress],
   );
+
+  // Spec 12 R4.5: every bundled sample, straight to Triage.
+  const openAllSamples = useCallback(async () => {
+    dispatch({ type: 'busy', what: 'all samples' });
+    const [res] = await Promise.all([client.openAllSamples(progress), loadPaperFonts()]);
+    applySession(res, 'the samples', true);
+  }, [client, applySession, progress]);
+
+  const csv = useCallback(async () => {
+    const r = await client.csv();
+    return r.type === 'csv' ? r.text : undefined;
+  }, [client]);
 
   // R1.1: drop anywhere on the page.
   useEffect(() => {
@@ -245,18 +259,23 @@ export function App() {
         <ErrorBanner problems={failures} />
         {!template ? (
           <>
-            <Landing onSample={(id) => void openSample(id)} />
+            <Landing
+              onSample={(id) => void openSample(id)}
+              onTriageAll={() => void openAllSamples()}
+            />
             <Unmatched records={unmatched(s)} ignored={s.ignored} />
           </>
         ) : s.screen === 'triage' && s.triage ? (
           <>
             <TriageTable
               result={s.triage}
+              actions={<ExportMenu onCsv={csv} />}
               onCertificate={(templateId) =>
                 dispatch({ type: 'screen', screen: 'certificate', templateId })
               }
             />
             <Unmatched records={unmatched(s)} ignored={s.ignored} />
+            <PrintPlan result={s.triage} />
           </>
         ) : s.screen === 'certificate' && certificateRow ? (
           <Certificate

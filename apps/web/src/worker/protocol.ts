@@ -18,6 +18,8 @@ export type Req =
   | { readonly id: number; readonly type: 'warm' }
   | { readonly id: number; readonly type: 'open'; readonly files: readonly InputFile[] }
   | { readonly id: number; readonly type: 'openSample'; readonly sample: string }
+  /** Spec 12 R4.5: every bundled sample, for "Triage all samples". */
+  | { readonly id: number; readonly type: 'openAllSamples' }
   /** Spec 12 R5.1: the session's Triage as CSV. */
   | { readonly id: number; readonly type: 'csv' }
   | {

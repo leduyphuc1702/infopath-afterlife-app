@@ -75,7 +75,13 @@ export const COVERAGE_TABLE: readonly CoverageEntry[] = [
   // A. Controls. `DTPicker_DTText` is the date picker's bound inner control in FormIR.
   ...entry('control', ['PlainText'], 'native', 'A', 'Text (`PlainText`)'),
   ...entry('control', ['DTPicker', 'DTPicker_DTText'], 'native', 'A', 'Date picker (`DTPicker`)'),
-  ...entry('control', ['dropdown'], 'native', 'A', 'Dropdown (`dropdown`)'),
+  ...entry(
+    'control',
+    ['dropdown'],
+    'native',
+    'A',
+    'Dropdown (`dropdown`; InfoPath 2003 wrote `DropDown`, matched without case)',
+  ),
   ...entry('control', ['OptionButton'], 'native', 'A', 'Option buttons (`OptionButton`)'),
   ...entry('control', ['CheckBox'], 'native', 'A', 'Checkbox (`CheckBox`)'),
   // Decision 4 (2026-11-11): sections and nested sections are Native.
@@ -96,7 +102,7 @@ export const COVERAGE_TABLE: readonly CoverageEntry[] = [
   ...entry('control', ['ChoiceSection'], 'emulated', 'A', 'Choice section (`ChoiceSection`)'),
   ...entry('control', ['ChoiceGroup'], 'emulated', 'A', 'Choice group (`ChoiceGroup`)'),
   ...entry('control', ['InlineImage'], 'native', 'A', 'Picture (`InlineImage`)'),
-  ...entry('control', ['ListBox', 'listbox'], 'native', 'A', 'List box / multi-select'),
+  ...entry('control', ['ListBox'], 'native', 'A', 'List box / multi-select'),
   // F. Decision 1 (2026-11-11): every view beyond the default is App.
   ...entry('view', ['*'], 'emulated', 'F', 'Multiple views per form'),
   // C. Rules and actions.
@@ -150,6 +156,15 @@ export const COVERAGE_TABLE: readonly CoverageEntry[] = [
     'native',
     'G',
     '`submitToHostAdapter` (submit handed to the hosting application)',
+  ),
+  // A submit that reuses the main query connection's adapter: classed as that adapter
+  // (`classify` resolves it); this entry is the fallback when it cannot be found.
+  ...entry(
+    'connection',
+    ['useQueryAdapter'],
+    'manual',
+    'G',
+    '`useQueryAdapter` (submit through the main query connection)',
   ),
   ...entry(
     'connection',

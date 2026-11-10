@@ -1,6 +1,6 @@
 # Spec 12: Triage and death certificate, phase A — design
 
-Requirements: `requirements.md` (R1–R8, 28 criteria). Status: **approved, 2026-11-11** (review decisions in `requirements.md`).
+Requirements: `requirements.md` (R1–R8, 29 criteria). Status: **approved, 2026-11-11** (review decisions in `requirements.md`).
 
 ## 1. Architecture
 
@@ -96,6 +96,14 @@ FormIR gives date pickers. The SharePoint list adapters are subtyped `sharepoint
 `sharepointList:submit`. `hwsAdapter` has no entry: it is classed Manual and `unlisted`, which
 needs no row. No in-repo element is `unlisted`.
 
+`Changed after the private-corpus run (2026-11-11):` the run found two unlisted kinds.
+`control:DropDown` (2): InfoPath 2003's spelling of `dropdown`; controls now match the table
+without case, take the table's spelling as their subtype, and count once per field across both
+spellings (FormIR keeps `xctname` as written). `connection:useQueryAdapter` (3): a submit through
+the main query connection; `classify` classes it as that connection's adapter (`resolvedAs`, e.g.
+`adoAdapter`: Manual), and as Manual by its own new G row when there is none. Both have synthetic
+fixtures in `classify.test.ts`; nothing from the private files.
+
 `table-doc.test.ts` (R1.3) finds each cited row by its first cell in the cited section and
 checks that its Coverage cell contains the class word (Native, App, Manual or Unsupported), unless
 the entry has a `verify` note. Section D (expressions) is not an element kind: expressions are
@@ -122,7 +130,7 @@ export function recordEvidence(fileName: string, bytes: Uint8Array): RecordEvide
 | Cause | Detected when (FormIR) | Evidence | Date / source |
 |---|---|---|---|
 | `forms-services-spo` | `meta.browserCompatible` | `meta.source` (`Changed in task 2:` FormIR has no location for `xsf2:solutionDefinition/@runtimeCompatibility`; the evidence text names it) | 2026-07-14, "after July 14, 2026"; https://techcommunity.microsoft.com/t5/microsoft-sharepoint-blog/support-update-for-infopath-forms-services-in-microsoft-365/ba-p/3858190 |
-| `infopath-client` | always | `meta.source` (`xsf:xDocumentClass`) | 2026-07-14, "after July 14, 2026 (extended support ends 7/15/2026 6:59:59 AM Pacific)"; https://learn.microsoft.com/en-us/lifecycle/products/infopath-2013 |
+| `infopath-client` | always | `meta.source` (`xsf:xDocumentClass`) | 2026-07-14, shown "July 14, 2026 (last day of extended support)"; the lifecycle page's extended end date is "7/15/2026 6:59:59 AM" Pacific, the end of July 14 in Redmond; https://learn.microsoft.com/en-us/lifecycle/products/infopath-2013 |
 | `browser-xslt` | a matched record has an `xml-stylesheet` PI in its first 4 KB | the record file and the PI's line | 2026-11-17, "Chrome 158, November 17, 2026; Origin Trial and Enterprise Policy until Chrome 176, August 17, 2027"; https://developer.chrome.com/docs/web-platform/deprecating-xslt |
 | `internal-sql` | a connection with `adapterKind` `adoAdapter` | the connection's `source` | — |
 | `internal-service` | any other connection, or an ActiveX `server`, with an endpoint of `liveness: 'internal'` | each such endpoint's `source`, host named | — |
@@ -192,6 +200,9 @@ export function toCsv(result: TriageResult): string;
 - **Certificate:** a heading with the form name and its wave; one `<article>` per cause with
   date (or "—"), source as an external link (`rel="noreferrer"`, new tab), evidence as
   `file › path` in code, and the replacement; the workflow line last (R2.3).
+- `Changed in task 8:` print uses `display: none` on everything but the plan (`visibility`
+  left the hidden table's height and gave 3–4 blank-tailed pages). The CSV is saved as
+  `afterlife-migration-plan.csv`.
 - **Export:** "Export plan" menu: "CSV" and "Print plan". The print section (`PrintPlan.tsx`) is
   in the page but `display: none` on screen; `@media print` hides everything else.
 - Files: `src/triage/TriageTable.tsx`, `Certificate.tsx`, `PrintPlan.tsx`, `ExportMenu.tsx`,

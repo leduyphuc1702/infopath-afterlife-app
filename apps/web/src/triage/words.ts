@@ -18,7 +18,7 @@ export const EMULATED_TOOLTIP = 'Afterlife runs it in Classic mode';
 /** A cause's title on the certificate; its id is shown beside it. */
 export const CAUSE_TITLES: Readonly<Record<CauseId, string>> = {
   'forms-services-spo': 'InfoPath Forms Services removed from SharePoint Online',
-  'infopath-client': 'InfoPath Filler is out of support',
+  'infopath-client': 'InfoPath 2013 is out of support',
   'browser-xslt': 'Browsers stop drawing the record with XSLT',
   'internal-sql': 'Database on an internal server',
   'internal-service': 'Service on an internal host',
@@ -35,3 +35,15 @@ const PREFIXES: Readonly<Record<string, string>> = {
 /** FormIR writes `{uri}local` steps for view XSL; the certificate shows the usual prefixes. */
 export const shortPath = (path: string) =>
   path.replace(/\{([^}]*)\}/g, (_m, uri: string) => PREFIXES[uri] ?? '');
+
+/** Review 2026-11-11: the Triage chips show these; the id is in the tooltip and the CSV. */
+export const CAUSE_SHORT: Readonly<Record<CauseId, string>> = {
+  'forms-services-spo': 'Forms Services',
+  'infopath-client': 'InfoPath 2013',
+  'browser-xslt': 'Browser XSLT',
+  'internal-sql': 'Internal SQL',
+  'internal-service': 'Internal service',
+  'code-behind': 'Code-behind',
+  activex: 'ActiveX',
+  signatures: 'Signatures',
+};

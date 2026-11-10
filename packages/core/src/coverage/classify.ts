@@ -21,6 +21,8 @@ export interface CoverageItem {
   readonly cites?: RowRef;
   readonly unlisted: boolean;
   readonly verify?: string;
+  /** For `useQueryAdapter`: the adapter kind of the main query connection it reuses. */
+  readonly resolvedAs?: string;
   readonly source: Located;
 }
 
@@ -38,19 +40,32 @@ export const isBlankCheck = (v: IrValidation) =>
 const ACTIVEX_XCTNAME = /^\{+[0-9a-f-]{36}\}+$/i;
 
 /** SharePoint list adapters are one subtype each for query and submit. */
-const connectionSubtype = (c: IrConnection) =>
-  /^share[pP]ointListAdapter/.test(c.adapterKind)
-    ? `sharepointList:${c.isSubmit && !c.isQuery ? 'submit' : 'query'}`
-    : c.adapterKind;
+const connectionSubtype = (
+  c: IrConnection,
+  role: 'query' | 'submit' = c.isSubmit && !c.isQuery ? 'submit' : 'query',
+) => (/^sharepointlistadapter/i.test(c.adapterKind) ? `sharepointList:${role}` : c.adapterKind);
 
-const index = new Map(COVERAGE_TABLE.map((e) => [`${e.kind}|${e.subtype}`, e]));
+/** The main data source's own query connection, which `xsf:useQueryAdapter` submits through. */
+const mainQuery = (ir: FormIR) =>
+  ir.dataConnections.find(
+    (c) => c.dataSource === 'main' && c.isQuery && c.adapterKind !== 'useQueryAdapter',
+  );
+
+/**
+ * Controls match case-insensitively: InfoPath 2003 wrote `DropDown`, later versions `dropdown`.
+ * The key uses the table's spelling, so both are one type.
+ */
+const key = (kind: ElementKind, subtype: string) =>
+  `${kind}|${kind === 'control' ? subtype.toLowerCase() : subtype}`;
+const index = new Map(COVERAGE_TABLE.map((e) => [key(e.kind, e.subtype), e]));
 const lookup = (kind: ElementKind, subtype: string): CoverageEntry | undefined =>
-  index.get(`${kind}|${subtype}`) ?? index.get(`${kind}|*`);
+  index.get(key(kind, subtype)) ?? index.get(`${kind}|*`);
 
 interface Element {
   readonly elementId: string;
   readonly kind: ElementKind;
   readonly subtype: string;
+  readonly resolvedAs?: string;
   readonly source: Located;
 }
 
@@ -60,11 +75,13 @@ export function elementsOf(ir: FormIR): Element[] {
   const seen = new Set<string>();
   for (const v of ir.views)
     for (const c of v.controls) {
-      const subtype = c.xctname ?? '';
-      if (ACTIVEX_XCTNAME.test(subtype)) continue;
-      const key = `${c.targetId ?? c.binding}|${subtype}`;
-      if (seen.has(key)) continue;
-      seen.add(key);
+      const written = c.xctname ?? '';
+      if (ACTIVEX_XCTNAME.test(written)) continue;
+      // The table's spelling when it has the type, so `DropDown` and `dropdown` are one.
+      const subtype = lookup('control', written)?.subtype ?? written;
+      const k = `${c.targetId ?? c.binding}|${subtype.toLowerCase()}`;
+      if (seen.has(k)) continue;
+      seen.add(k);
       out.push({ elementId: c.id, kind: 'control', subtype, source: c.source });
     }
   for (const v of ir.views)
@@ -81,13 +98,18 @@ export function elementsOf(ir: FormIR): Element[] {
       subtype: isBlankCheck(v) ? 'blank' : 'condition',
       source: v.source,
     });
-  for (const c of ir.dataConnections)
+  const main = mainQuery(ir);
+  for (const c of ir.dataConnections) {
+    const resolvedAs =
+      c.adapterKind === 'useQueryAdapter' && main ? connectionSubtype(main, 'submit') : undefined;
     out.push({
       elementId: c.id,
       kind: 'connection',
       subtype: connectionSubtype(c),
+      ...(resolvedAs !== undefined && { resolvedAs }),
       source: c.source,
     });
+  }
   if (ir.codeBehind.present)
     out.push({
       elementId: 'code-behind',
@@ -112,7 +134,9 @@ export function classify(ir: FormIR): Coverage {
     unsupported: 0,
   };
   const items = elementsOf(ir).map((e): CoverageItem => {
-    const hit = lookup(e.kind, e.subtype);
+    // A resolved `useQueryAdapter` is classed as the adapter it reuses.
+    const hit =
+      (e.resolvedAs !== undefined && lookup(e.kind, e.resolvedAs)) || lookup(e.kind, e.subtype);
     const item: CoverageItem = hit
       ? {
           ...e,

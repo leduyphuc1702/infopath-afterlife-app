@@ -1,6 +1,6 @@
 // The virtual modules of plugins/samples.ts.
 declare module 'virtual:sample-list' {
-  const list: readonly { id: string; fileName: string; records: number }[];
+  const list: readonly { id: string; fileName: string; records: number; triageOnly?: true }[];
   export default list;
 }
 declare module 'virtual:sample-files' {

@@ -2,13 +2,24 @@
 // a record. A cause is listed only when there is evidence; catalogue order.
 import type { Endpoint, FormIR } from '../ir/types';
 import type { Located } from '../unknown';
-import { CAUSE_IDS, CAUSES, type CauseId, type CauseInfo } from './catalogue';
+import { classify } from '../coverage/classify';
+import {
+  ACTIVEX_SERVER_REPLACEMENT,
+  CAUSE_IDS,
+  CAUSES,
+  MIXED_REPLACEMENT,
+  SUBMIT_REPLACEMENT,
+  type CauseId,
+  type CauseInfo,
+} from './catalogue';
 import type { RecordEvidence } from './record';
 
 export interface Evidence {
   readonly located: Located;
   /** What the evidence shows, in words: "SQL connection to sql-legacy01". */
   readonly what: string;
+  /** What replaces this piece, when it differs from the cause's default (`internal-service`). */
+  readonly replacement?: string;
 }
 
 export interface Cause extends CauseInfo {
@@ -47,6 +58,7 @@ export function causesOf(ir: FormIR, records: readonly RecordEvidence[] = []): C
       );
 
   const internal = (e: Endpoint) => e.liveness === 'internal';
+  const classes = new Map(classify(ir).items.map((i) => [i.elementId, i.class]));
   for (const c of ir.dataConnections) {
     const name = c.name ?? c.dataSource ?? c.adapterKind;
     if (c.adapterKind === 'adoAdapter') {
@@ -57,10 +69,12 @@ export function causesOf(ir: FormIR, records: readonly RecordEvidence[] = []): C
       });
       continue;
     }
+    const submit = c.isSubmit && !c.isQuery && classes.get(c.id) === 'native';
     for (const e of c.endpoints.filter(internal))
       add('internal-service', {
         located: e.source,
-        what: `${name} (${c.adapterKind}) calls internal host ${e.host ?? e.value}`,
+        what: `${name} (${c.adapterKind}${submit ? ', submit' : ''}) calls internal host ${e.host ?? e.value}`,
+        replacement: submit ? SUBMIT_REPLACEMENT : CAUSES['internal-service'].replacement,
       });
   }
   for (const a of ir.activeX.controls)
@@ -68,6 +82,7 @@ export function causesOf(ir: FormIR, records: readonly RecordEvidence[] = []): C
       add('internal-service', {
         located: a.server.source,
         what: `ActiveX control's server is internal host ${a.server.host ?? a.server.value}`,
+        replacement: ACTIVEX_SERVER_REPLACEMENT,
       });
 
   const cb = ir.codeBehind;
@@ -101,6 +116,11 @@ export function causesOf(ir: FormIR, records: readonly RecordEvidence[] = []): C
 
   return CAUSE_IDS.flatMap((id) => {
     const f = found.get(id);
-    return f ? [{ ...CAUSES[id], evidence: f.evidence, from: f.from }] : [];
+    if (!f) return [];
+    // One replacement for the cause when all its evidence agrees; else each piece says its own.
+    const own = [...new Set(f.evidence.flatMap((e) => (e.replacement ? [e.replacement] : [])))];
+    const replacement =
+      own.length === 0 ? CAUSES[id].replacement : own.length === 1 ? own[0]! : MIXED_REPLACEMENT;
+    return [{ ...CAUSES[id], replacement, evidence: f.evidence, from: f.from }];
   });
 }

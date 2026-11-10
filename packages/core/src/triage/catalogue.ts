@@ -51,7 +51,9 @@ export const CAUSES: Readonly<Record<CauseId, CauseInfo>> = {
   'infopath-client': {
     id: 'infopath-client',
     date: '2026-07-14',
-    dateWords: 'after July 14, 2026 (extended support ends 7/15/2026 6:59:59 AM Pacific)',
+    // The lifecycle page gives "7/15/2026 6:59:59 AM" Pacific as the extended end date, which is
+    // the end of July 14, 2026 in Redmond (design §4); users see the day.
+    dateWords: 'July 14, 2026 (last day of extended support)',
     source: {
       title: 'Microsoft Lifecycle: InfoPath 2013',
       url: 'https://learn.microsoft.com/en-us/lifecycle/products/infopath-2013',
@@ -85,10 +87,29 @@ export const CAUSES: Readonly<Record<CauseId, CauseInfo>> = {
     replacement:
       'Manual: the logic must be rewritten by hand. The event names it handled are listed.',
   },
-  activex: { id: 'activex', dateWords: '—', replacement: 'Unsupported: listed' },
+  activex: {
+    id: 'activex',
+    dateWords: '—',
+    replacement:
+      "Unsupported: nothing replaces it. The control's class ID is listed so someone can find what it did.",
+  },
   signatures: {
     id: 'signatures',
     dateWords: '—',
-    replacement: 'Signer names and times shown as text, "not re-verified"',
+    // Its class is Manual (H "Digital signatures"), so the replacement says so.
+    replacement:
+      'Manual: use a JSM approval. Signer names and times are shown as text, marked "not re-verified".',
   },
 };
+
+/**
+ * `internal-service` evidence says what replaces that piece, by the class of the element it comes
+ * from (review 2026-11-11): a submit whose class is Native becomes the JSM request; an ActiveX
+ * control's server goes with the control; anything else keeps the cause's text.
+ */
+export const SUBMIT_REPLACEMENT = 'The JSM request takes its place';
+export const ACTIVEX_SERVER_REPLACEMENT =
+  'Unsupported: it is called by an ActiveX control, which nothing replaces';
+/** The cause's replacement when its evidence needs different ones. */
+export const MIXED_REPLACEMENT =
+  'Depends on the connection: each piece of evidence says what replaces it';

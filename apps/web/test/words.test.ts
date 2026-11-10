@@ -9,6 +9,8 @@ test("the app's Triage words equal core's", () => {
   expect(words.WORKFLOW_LINE).toBe(WORKFLOW_LINE);
   expect(words.EMULATED_TOOLTIP).toBe(EMULATED_TOOLTIP);
   expect(Object.keys(words.CAUSE_TITLES).sort()).toEqual([...CAUSE_IDS].sort());
+  expect(Object.keys(words.CAUSE_SHORT).sort()).toEqual([...CAUSE_IDS].sort());
+  expect(words.CAUSE_SHORT['infopath-client']).toBe('InfoPath 2013');
 });
 
 test('shortPath gives view XSL paths their usual prefixes', () => {

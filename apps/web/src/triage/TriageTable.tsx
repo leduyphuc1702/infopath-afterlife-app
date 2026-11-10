@@ -1,18 +1,21 @@
 // Spec 12 R4.1, R4.2, R3.1, R6.1: the Triage table, one row per form, then the files that could
 // not be opened. A form's name opens its death certificate.
 import type { TriageResult, TriageRow, Wave } from '@afterlife/core';
+import type { ReactNode } from 'react';
 import { messageOf } from '../messages';
-import { EMULATED_TOOLTIP, WAVE_RULES } from './words';
+import { CAUSE_SHORT, EMULATED_TOOLTIP, WAVE_RULES } from './words';
 import './triage.css';
 
 interface Props {
   readonly result: TriageResult;
   readonly onCertificate: (templateId: string) => void;
+  /** The "Export plan" menu, beside the heading. */
+  readonly actions?: ReactNode;
 }
 
 const dash = (n: number | undefined) => (n === undefined ? '—' : n);
 
-export function TriageTable({ result, onCertificate }: Props) {
+export function TriageTable({ result, onCertificate, actions }: Props) {
   const { totals } = result;
   const forms = result.rows.filter((r): r is TriageRow => r.kind === 'form');
   const waves = ([1, 2, 3] as const satisfies readonly Wave[]).map(
@@ -20,7 +23,10 @@ export function TriageTable({ result, onCertificate }: Props) {
   );
   return (
     <section className="afl-triage" aria-labelledby="afl-triage-h">
-      <h2 id="afl-triage-h">Triage</h2>
+      <div className="afl-triage-head">
+        <h2 id="afl-triage-h">Triage</h2>
+        {actions}
+      </div>
       <p className="afl-sub">
         {totals.forms} {totals.forms === 1 ? 'form' : 'forms'}, {waves.join(', ')}.
         {totals.errors > 0 && ` ${totals.errors} could not be opened.`}
@@ -95,8 +101,8 @@ export function TriageTable({ result, onCertificate }: Props) {
                 <td>
                   <span className="afl-chips">
                     {r.causes.map((c) => (
-                      <span key={c.id} className="afl-chip">
-                        {c.id}
+                      <span key={c.id} className="afl-chip" title={c.id} data-cause={c.id}>
+                        {CAUSE_SHORT[c.id]}
                       </span>
                     ))}
                   </span>

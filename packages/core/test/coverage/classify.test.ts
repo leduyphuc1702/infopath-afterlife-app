@@ -148,3 +148,43 @@ test('R1.2: an unknown control, action and adapter are Manual and unlisted, neve
     ['connection', 'hwsAdapter', 'manual', undefined],
   ]);
 });
+
+// Private-corpus run (2026-11-11): `control:DropDown` 2 and `connection:useQueryAdapter` 3 were
+// unlisted. Synthetic fixtures only.
+test('InfoPath 2003 `DropDown` is the drop-down list box: Native, one type with `dropdown`', async () => {
+  const { viewIR } = await import('../helpers/view-package');
+  const { ir } = viewIR([{ name: 'V', file: 'dropdown-case.xsl' }]);
+  const written = ir.views[0]!.controls.map((c) => c.xctname);
+  expect(written).toEqual(expect.arrayContaining(['DropDown', 'dropdown']));
+  const items = classify(ir).items.filter((i) => i.kind === 'control');
+  expect(items.length).toBeGreaterThan(0);
+  for (const i of items)
+    expect([i.subtype, i.class, i.unlisted]).toEqual(['dropdown', 'native', false]);
+});
+
+test('`useQueryAdapter` is classed as the main query adapter it reuses, else Manual by its own row', async () => {
+  const { viewIR } = await import('../helpers/view-package');
+  const sql =
+    '<xsf:query><xsf:adoAdapter connectionString="Provider=SQLOLEDB.1;Data Source=sql01;Initial Catalog=X" commandText="select 1" queryAllowed="yes" submitAllowed="yes"/></xsf:query>';
+  const submit = '<xsf:submit caption="Submit"><xsf:useQueryAdapter/></xsf:submit>';
+  const conn = (manifest: string) =>
+    classify(
+      viewIR([{ name: 'V', file: 'dropdown-case.xsl' }], undefined, { manifest }).ir,
+    ).items.filter((i) => i.elementId.startsWith('conn:/xsf:submit'));
+  const [db] = conn(sql + submit);
+  expect(db).toMatchObject({
+    subtype: 'useQueryAdapter',
+    resolvedAs: 'adoAdapter',
+    class: 'manual',
+    unlisted: false,
+  });
+  expect(db!.cites).toEqual({ section: 'G', row: '`adoAdapter` (SQL Server)' });
+  // A main query that is a package XML file: the submit takes the file adapter's class.
+  const xml = '<xsf:query><xsf:xmlFileAdapter fileUrl="rows.xml"/></xsf:query>';
+  expect(conn(xml + submit)[0]).toMatchObject({ resolvedAs: 'xmlFileAdapter', class: 'emulated' });
+  // No main query connection to reuse: Manual, citing the useQueryAdapter row.
+  const [lone] = conn(submit);
+  expect(lone).toMatchObject({ subtype: 'useQueryAdapter', class: 'manual', unlisted: false });
+  expect(lone).not.toHaveProperty('resolvedAs');
+  expect(lone!.cites?.row).toBe('`useQueryAdapter` (submit through the main query connection)');
+});

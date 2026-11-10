@@ -1,7 +1,15 @@
 import sampleList from 'virtual:sample-list';
 import { sampleDetail, sampleName } from './sample-names';
 
-export function Landing({ onSample }: { readonly onSample: (id: string) => void }) {
+interface Props {
+  readonly onSample: (id: string) => void;
+  /** Spec 12 R4.5. */
+  readonly onTriageAll: () => void;
+}
+
+const tryList = sampleList.filter((s) => !s.triageOnly);
+
+export function Landing({ onSample, onTriageAll }: Props) {
   return (
     <section className="afl-landing" aria-labelledby="afl-try">
       <p className="afl-context">
@@ -17,9 +25,18 @@ export function Landing({ onSample }: { readonly onSample: (id: string) => void 
       <p className="afl-drop">
         Drop .xsn templates and .xml records anywhere on this page, or a whole folder.
       </p>
+      <div className="afl-triage-all">
+        <button type="button" className="afl-button afl-primary" onClick={onTriageAll}>
+          Triage all samples
+        </button>
+        <span className="afl-sub">
+          {sampleList.length} sample forms in one table: which can move today, and what stops the
+          others.
+        </span>
+      </div>
       <h2 id="afl-try">Try a sample</h2>
       <ul className="afl-samples">
-        {sampleList.map((s) => {
+        {tryList.map((s) => {
           const detail = sampleDetail(s.id, s.records);
           return (
             <li key={s.id}>

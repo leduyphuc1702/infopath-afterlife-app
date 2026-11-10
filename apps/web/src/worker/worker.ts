@@ -1,5 +1,5 @@
 // Spec 09 design §1, §4: the Worker entry. One session per Worker; requests are answered in order.
-import samples from './samples';
+import samples, { allSamples } from './samples';
 import type { Progress, Req, Res, ResBody } from './protocol';
 import { Session, toWireError } from './session';
 
@@ -19,6 +19,8 @@ async function handle(req: Req): Promise<ResBody> {
       return session.open(req.files, progress);
     case 'openSample':
       return session.open(await samples(req.sample), progress);
+    case 'openAllSamples':
+      return session.open(await allSamples(), progress);
     case 'csv':
       return { type: 'csv', text: session.csv() };
     case 'render':

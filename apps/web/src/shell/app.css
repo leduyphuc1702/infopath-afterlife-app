@@ -513,3 +513,22 @@ code {
 .afl-footer a {
   color: var(--ds-link);
 }
+
+.afl-triage-all {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-100) var(--ds-space-150);
+  align-items: center;
+  margin: 0 0 var(--ds-space-200);
+}
+
+.afl-primary {
+  border-color: var(--ds-background-brand-bold);
+  background: var(--ds-background-brand-bold);
+  color: var(--ds-text-inverse);
+  font-weight: 600;
+}
+
+.afl-primary:hover {
+  background: var(--ds-background-brand-bold-hovered);
+}

@@ -5,6 +5,7 @@ import {
   CAUSES,
   causesOf,
   recordEvidence,
+  MIXED_REPLACEMENT,
   WORKFLOW_LINE,
   type CauseId,
 } from '../../src/index';
@@ -124,4 +125,38 @@ test('R6.2: browser-xslt from a record with an xml-stylesheet instruction, none 
 test('every cause has evidence', () => {
   for (const { slug, ir } of samples)
     for (const c of causesOf(ir)) expect(c.evidence.length, `${slug} ${c.id}`).toBeGreaterThan(0);
+});
+
+// Review 2026-11-11: the replacement follows the class of the element the evidence comes from.
+test("form 46's internal host is a Native submit (davAdapter): the JSM request takes its place", () => {
+  const cs = causesOf(samples.find((s) => s.slug.startsWith('46-'))!.ir);
+  const svc = cs.find((c) => c.id === 'internal-service')!;
+  expect(svc.replacement).toBe('The JSM request takes its place');
+  expect(svc.evidence[0]!.what).toContain('davAdapter, submit');
+  const sql = causesOf(samples.find((s) => s.slug.startsWith('04-'))!.ir).find(
+    (c) => c.id === 'internal-service',
+  )!;
+  expect(sql.replacement).toBe('Manual: rebind or replace with a JSM field');
+});
+
+test('a query and a submit to internal hosts: each piece says what replaces it', () => {
+  const f04 = samples.find((s) => s.slug.startsWith('04-'))!.ir;
+  const f46 = samples.find((s) => s.slug.startsWith('46-'))!.ir;
+  const ir = { ...f04, dataConnections: [...f04.dataConnections, ...f46.dataConnections] };
+  const svc = causesOf(ir).find((c) => c.id === 'internal-service')!;
+  expect(svc.replacement).toBe(MIXED_REPLACEMENT);
+  expect(new Set(svc.evidence.map((e) => e.replacement))).toEqual(
+    new Set(['Manual: rebind or replace with a JSM field', 'The JSM request takes its place']),
+  );
+});
+
+test('every replacement agrees with its class: ActiveX Unsupported, signatures and code Manual', () => {
+  expect(CAUSES.activex.replacement).toBe(
+    "Unsupported: nothing replaces it. The control's class ID is listed so someone can find what it did.",
+  );
+  expect(CAUSES.signatures.replacement).toMatch(/^Manual: /);
+  expect(CAUSES['code-behind'].replacement).toMatch(/^Manual: /);
+  expect(CAUSES['internal-sql'].replacement).toMatch(/^Manual: /);
+  expect(CAUSES['infopath-client'].dateWords).toBe('July 14, 2026 (last day of extended support)');
+  for (const id of CAUSE_IDS) expect(CAUSES[id].dateWords, id).not.toMatch(/AM|PM/);
 });

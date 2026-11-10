@@ -55,13 +55,13 @@ Requirements: `requirements.md`. Design: `design.md`. Status: **approved, 2026-1
   - Requirements: R2.3, R4.3
   - Done when: `pnpm --filter web e2e` green.
 
-- [ ] 8. Export plan
+- [x] 8. Export plan
   - `ExportMenu.tsx`, `PrintPlan.tsx`, print CSS.
   - `e2e/export.spec.ts` (CSV download, no request or violation; one page on A4 and Letter).
   - Requirements: R5.1, R5.2
   - Done when: `pnpm --filter web e2e` green.
 
-- [ ] 9. Copy, offline, performance, "Triage all samples"
+- [x] 9. Copy, offline, performance, "Triage all samples"
   - R4.5: forms 43–47 into `plugins/samples.ts` (templates only); the landing button; measure the
     samples chunk (budget at most 150 KB if over 120 KB, reason in spec 09 design §7).
   - `test/copy.test.ts`; `e2e/offline.spec.ts` Triage case; the 40-template measurement;
@@ -81,6 +81,7 @@ Requirements: `requirements.md`. Design: `design.md`. Status: **approved, 2026-1
 |---|---|
 | R1.1–R1.4 | 1 |
 | R2.1–R2.4 | 2 |
+| R2.5 | review fixes before task 8 |
 | R3.1–R3.6 | 3 |
 | R3.7 | 9 |
 | R4.1, R4.2 | 6 |

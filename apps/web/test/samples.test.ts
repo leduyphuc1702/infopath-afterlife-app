@@ -3,7 +3,8 @@ import { expect, test } from 'vitest';
 import { distAssets, readDist } from './dist';
 
 // R7.1: the samples in `dist` are forms 01–08 with their 153 records and weight-keeper, byte for
-// byte; no `-000-empty.xml` and no other file from `samples/`.
+// byte; no `-000-empty.xml` and no other file from `samples/`. Spec 12 R4.5 adds the templates
+// of forms 43–47, without records.
 const SAMPLES = new URL('../../../samples/', import.meta.url);
 
 type Encoded = readonly [string, string, 't' | 'b'];
@@ -17,10 +18,13 @@ async function bundled(): Promise<Record<string, { template: Encoded; records: E
   return ((await import(/* @vite-ignore */ url)) as { default: never }).default;
 }
 
-test('9 templates and 153 records, names and bytes equal to the sources', async () => {
+test('14 templates and 153 records, names and bytes equal to the sources', async () => {
   const files = await bundled();
   const ids = Object.keys(files);
-  expect(ids).toHaveLength(9);
+  expect(ids).toHaveLength(14);
+  expect(ids.filter((id) => /^4[3-7]-/.test(id)).map((id) => files[id]!.records.length)).toEqual([
+    0, 0, 0, 0, 0,
+  ]);
   let records = 0;
   for (const id of ids) {
     const s = files[id]!;
@@ -32,7 +36,7 @@ test('9 templates and 153 records, names and bytes equal to the sources', async 
     expect(s.template[0], id).toBe(xsn.slice(xsn.lastIndexOf('/') + 1));
     expect(decode(s.template).equals(readFileSync(new URL(xsn, src))), id).toBe(true);
     const want =
-      id === 'theill-weight-keeper'
+      id === 'theill-weight-keeper' || /^4[3-7]-/.test(id)
         ? []
         : readdirSync(new URL(`records/${id}/`, src))
             .filter((f) => f.endsWith('.xml') && !f.endsWith('-000-empty.xml'))

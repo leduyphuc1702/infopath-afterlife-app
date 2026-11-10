@@ -163,8 +163,8 @@ export function notices(): { readonly collect: Plugin; readonly write: Plugin } 
         },
         {
           id: 'samples-own',
-          title: 'Sample forms 01–08 and their records',
-          what: 'Written for this project; every person, company and host in them is fictional.',
+          title: 'Sample forms 01–08 and 43–47, and the records of 01–08',
+          what: 'Written for this project; every person, company and host in them is fictional. Forms 43–47 were generated and never opened in InfoPath.',
           license: 'MIT',
           text: own('samples/own/LICENSE'),
           file: 'samples-own.txt',

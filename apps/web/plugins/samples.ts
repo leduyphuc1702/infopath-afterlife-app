@@ -1,4 +1,4 @@
-// Spec 09 R7.1, design D6, §7: the "Try a sample" set, copied from `samples/` at build time and
+// Spec 09 R7.1, design D6, §7 (spec 12 R4.5 adds forms 43–47): the "Try a sample" set, copied from `samples/` at build time and
 // never written back. Forms 01–08 with their records (the `-000-empty.xml` files left out: the
 // pager starts with the template's own empty form) and theill's weight-keeper. Nothing else from
 // `samples/` enters the bundle.
@@ -19,6 +19,8 @@ export interface SampleFile {
 }
 export interface Sample {
   readonly id: string;
+  /** Spec 12 R4.5: forms 43–47 are in "Triage all samples" only, without records. */
+  readonly triageOnly?: true;
   readonly template: SampleFile;
   readonly records: readonly SampleFile[];
 }
@@ -41,12 +43,23 @@ export function loadSamples(): Sample[] {
         .map((r) => read(`own/records/${id}/${r}`));
       return { id, template: read(`own/xsn/${f}`), records };
     });
+  // Spec 12 R4.5: generated on 2026-11-10 and never opened in InfoPath (samples/own/README.md);
+  // they carry code-behind, ActiveX, signatures and dead services. Templates only.
+  const generated = readdirSync(new URL('own/xsn/', SAMPLES_DIR))
+    .filter((f) => /^4[3-7]-.*\.xsn$/.test(f))
+    .sort()
+    .map((f): Sample => ({
+      id: f.slice(0, -'.xsn'.length),
+      triageOnly: true,
+      template: read(`own/xsn/${f}`),
+      records: [],
+    }));
   const theill = {
     id: 'theill-weight-keeper',
     template: read('public/theill-weight-keeper/theill__weight-keeper.xsn'),
     records: [],
   };
-  return [...own, theill];
+  return [...own, theill, ...generated];
 }
 
 const utf8 = new TextDecoder('utf-8', { fatal: true });
@@ -71,6 +84,7 @@ export function samples(): Plugin {
           id: s.id,
           fileName: s.template.name,
           records: s.records.length,
+          ...(s.triageOnly && { triageOnly: true }),
         }));
         return `export default ${JSON.stringify(list)};`;
       }

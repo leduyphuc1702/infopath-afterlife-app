@@ -13,7 +13,10 @@ type Pending = {
   progress?: Progress;
 };
 /** What the Worker was given, to give it again after a restart. */
-type Replay = { type: 'openSample'; sample: string } | { type: 'open'; files: readonly File[] };
+type Replay =
+  | { type: 'openSample'; sample: string }
+  | { type: 'openAllSamples' }
+  | { type: 'open'; files: readonly File[] };
 
 export class WorkerClient {
   private worker: Worker;
@@ -79,8 +82,7 @@ export class WorkerClient {
   private async restart(): Promise<void> {
     this.worker.terminate();
     this.worker = this.start();
-    for (const r of this.replay)
-      await (r.type === 'openSample' ? this.send(r) : this.sendFiles(r.files));
+    for (const r of this.replay) await (r.type === 'open' ? this.sendFiles(r.files) : this.send(r));
   }
 
   private async sendFiles(files: readonly File[], progress?: Progress): Promise<ResBody> {
@@ -106,6 +108,12 @@ export class WorkerClient {
   open(files: readonly File[], progress?: Progress): Promise<ResBody> {
     this.replay.push({ type: 'open', files });
     return this.sendFiles(files, progress);
+  }
+
+  /** Spec 12 R4.5: every bundled sample at once. */
+  openAllSamples(progress?: Progress): Promise<ResBody> {
+    this.replay.push({ type: 'openAllSamples' });
+    return this.send({ type: 'openAllSamples' }, [], progress);
   }
 
   /** Spec 12 R5.1: the open session's Triage as CSV text. */

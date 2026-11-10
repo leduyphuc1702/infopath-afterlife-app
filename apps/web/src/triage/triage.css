@@ -171,3 +171,66 @@
   border-radius: 4px;
   background: var(--ds-background-neutral);
 }
+
+.afl-triage-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-100);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.afl-export ul {
+  left: auto;
+}
+
+/* Spec 12 R5.2: on screen the plan is hidden; in print it is the only thing on the page. */
+.afl-print {
+  display: none;
+}
+
+@media print {
+  @page {
+    margin: 15mm;
+  }
+
+  /* The plan is a child of <main>; everything else is taken out of the layout. */
+  .afl-header,
+  .afl-footer,
+  .afl-main > :not(.afl-print) {
+    display: none !important;
+  }
+
+  .afl-main {
+    padding: 0;
+  }
+
+  .afl-print {
+    display: block;
+    color: var(--ds-text);
+    font-size: 10pt;
+    line-height: 1.35;
+  }
+
+  .afl-print h1 {
+    margin: 0 0 4mm;
+    font-size: 16pt;
+  }
+
+  .afl-print h2 {
+    margin: 5mm 0 2mm;
+    font-size: 11pt;
+  }
+
+  .afl-print p,
+  .afl-print ol,
+  .afl-print ul {
+    margin: 0 0 2mm;
+  }
+
+  .afl-print-foot {
+    margin-top: 6mm;
+    color: var(--ds-text-subtle);
+    font-size: 8pt;
+  }
+}

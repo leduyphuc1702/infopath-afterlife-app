@@ -86,3 +86,20 @@ test('offline, characters outside Latin get a note under the paper', async ({ pa
   for (const url of failed)
     expect(url).toMatch(/\/carlito-(?!latin-\d)[a-z-]+-\d+-(normal|italic)-[\w-]+\.woff2$/);
 });
+
+// Spec 12 R7.3: "Triage all samples" and a certificate work offline after warm-up.
+test('offline: Triage all samples, then a death certificate', async ({ page, context }) => {
+  await page.goto('./');
+  await expect(page.locator('html[data-ready]')).toHaveCount(1);
+  const requested: string[] = [];
+  context.on('request', (r) => requested.push(r.url()));
+  await context.setOffline(true);
+  await page.getByRole('button', { name: 'Triage all samples' }).click();
+  const rows = page.getByRole('region', { name: 'Triage' }).locator('tbody tr');
+  await expect(rows).toHaveCount(14);
+  await rows.filter({ hasText: '45-policy-acknowledgement.xsn' }).getByRole('button').click();
+  await expect(page.getByRole('article', { name: /Digital signatures/ })).toContainText(
+    'Manual: use a JSM approval.',
+  );
+  expect(requested).toEqual([]);
+});

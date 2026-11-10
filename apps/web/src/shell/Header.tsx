@@ -43,22 +43,24 @@ export function Header({ onFiles, onSample, xray, onTriage }: Props) {
         <details className="afl-menu" ref={menu}>
           <summary className="afl-button">Try a sample</summary>
           <ul>
-            {sampleList.map((s) => (
-              <li key={s.id}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    menu.current?.removeAttribute('open');
-                    onSample(s.id);
-                  }}
-                >
-                  {sampleName(s.id)}
-                  {sampleDetail(s.id, s.records) !== '' && (
-                    <span className="afl-count">{sampleDetail(s.id, s.records)}</span>
-                  )}
-                </button>
-              </li>
-            ))}
+            {sampleList
+              .filter((s) => !s.triageOnly)
+              .map((s) => (
+                <li key={s.id}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      menu.current?.removeAttribute('open');
+                      onSample(s.id);
+                    }}
+                  >
+                    {sampleName(s.id)}
+                    {sampleDetail(s.id, s.records) !== '' && (
+                      <span className="afl-count">{sampleDetail(s.id, s.records)}</span>
+                    )}
+                  </button>
+                </li>
+              ))}
           </ul>
         </details>
         {xray && (
