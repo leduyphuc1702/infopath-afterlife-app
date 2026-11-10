@@ -338,11 +338,11 @@ describe('form 02 (R5.2 oracle)', () => {
   });
 
   test('keeps the title, class and xd:binding attributes', () => {
+    // The view's attributes only: our attachment block adds a `title` of its own (R6.7).
     const count = (html: string, attr: string) =>
-      startTags(html).reduce(
-        (n, t) => n + t.attrs.filter(([a]) => a.toLowerCase() === attr).length,
-        0,
-      );
+      startTags(html)
+        .filter((t) => !t.attrs.some(([a, v]) => a === 'class' && v.includes('afl-attachment')))
+        .reduce((n, t) => n + t.attrs.filter(([a]) => a.toLowerCase() === attr).length, 0);
     for (const attr of ['title', 'xd:binding']) {
       expect(count(result.html, attr), attr).toBe(count(engine, attr));
       expect(count(result.html, attr), attr).toBeGreaterThan(0);

@@ -8,7 +8,7 @@
 
 import { dataStep } from '../ir/ids';
 import type { BoundControl, FormIR, IrView } from '../ir/types';
-import { attachmentHeader, sizeText, type Attachment } from './attachment';
+import { attachmentHeader, sizeText, typeText, type Attachment } from './attachment';
 import type { MarkedElement } from './engine/xsltjs';
 import type { ControlMark } from './render';
 import type { HElement, HNode } from './html/serialise';
@@ -188,9 +188,10 @@ export function applyMarks(
 }
 
 /**
- * R6.7: our file icon, the name and the size, as InfoPath showed a filled FileAttachment; the
- * icon alone when the header is unreadable. The name is record data: it is a text node, which the
- * serialiser escapes.
+ * R6.7: a filled FileAttachment as InfoPath showed it (`Changed at review:` a block, not a line):
+ * our file icon at the left, then three lines, the name, the type and the size, with the full
+ * name in `title`. The icon alone when the header is unreadable. The name is record data: a text
+ * node and an attribute value, both escaped by the serialiser.
  */
 function attachmentView(a: Attachment): HElement {
   const span = (cls: string, text?: string, hidden = false): HElement => ({
@@ -200,9 +201,30 @@ function attachmentView(a: Attachment): HElement {
     children: text === undefined ? [] : [{ kind: 'text', text }],
   });
   const icon = span('afl-icon afl-icon-file', undefined, true);
-  const children: HNode[] =
-    'problem' in a
-      ? [icon]
-      : [icon, span('afl-attachment-name', a.name), span('afl-attachment-size', sizeText(a.size))];
-  return { kind: 'element', name: 'span', attrs: [['class', 'afl-attachment']], children };
+  if ('problem' in a)
+    return {
+      kind: 'element',
+      name: 'span',
+      attrs: [['class', 'afl-attachment']],
+      children: [icon],
+    };
+  const text: HElement = {
+    kind: 'element',
+    name: 'span',
+    attrs: [['class', 'afl-attachment-text']],
+    children: [
+      span('afl-attachment-name', a.name),
+      span('afl-attachment-type', typeText(a.name)),
+      span('afl-attachment-size', sizeText(a.size)),
+    ],
+  };
+  return {
+    kind: 'element',
+    name: 'span',
+    attrs: [
+      ['class', 'afl-attachment afl-attachment-filled'],
+      ['title', a.name],
+    ],
+    children: [icon, text],
+  };
 }

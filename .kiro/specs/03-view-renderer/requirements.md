@@ -1,8 +1,8 @@
 # Requirements: 03 view renderer
 
 Source brief: `docs/spec-briefs/03-view-renderer.md`. Phase 1 of 3 (requirements → design → tasks).
-Status: **approved, 2026-11-10** (review answers applied; each change is marked `Changed at
-review:`). Second review, 2026-11-10: five edits after the engine spike, also marked
+Status: **approved, 2026-11-10; done 2026-11-11** (review answers applied; each change is marked
+`Changed at review:`; verified in `verification.md`). Second review, 2026-11-10: five edits after the engine spike, also marked
 `Changed at review:`. Depends on spec 01 (`ParsedTemplate`, the `xml/` layer) and spec 02 (FormIR: views,
 bound controls, validations, ActiveX, data connections and their liveness), both closed.
 
@@ -407,7 +407,11 @@ compare means something.
    screenshot of the same view and state. The pixel threshold SHALL be set after the first
    measurement and recorded in this spec. Oracle: 16 baselines; the 16 InfoPath screenshots as the
    human reference. `Changed at review:` R10.1–R10.2 name the empty record, the file the
-   screenshots were taken from.
+   screenshots were taken from. `Changed at review:` (2026-11-11, after the second candidates)
+   **threshold:** pixelmatch `threshold: 0.1` and `allowedMismatchedPixelRatio: 0.001` (559 of
+   the 558,885 canvas pixels). The goldens already catch content changes byte by byte, so this
+   test is for layout regressions, which move far more than 0.1% of the canvas. The baselines are
+   for macOS Chromium; on any other platform the test skips with a message.
 3. WHERE `AFTERLIFE_PRIVATE_SAMPLES` is set, THE SYSTEM SHALL render every view that a `mainpane`
    names, in every private template, with its empty form, with no throw. It SHALL skip the
    `own/` folder, which holds our own 42 forms. It SHALL print, as names

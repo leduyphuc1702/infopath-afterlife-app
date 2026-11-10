@@ -31,6 +31,9 @@ manifest is the evidence.
 endpoint liveness built from it, and a spec 02 test proves it
 (`.kiro/specs/02-form-ir/verification.md`). These are the inputs of the X-ray, dependency map,
 data lineage and dead-connection check; the screens themselves belong to their specs.
+`render: spec 03` means the view renderer draws it from the view XSL and a record, read-only, in
+Node and a Web Worker, and a spec 03 test proves it (`.kiro/specs/03-view-renderer/verification.md`).
+Editing, rules and live calculation are still spec 04's.
 
 ---
 
@@ -40,23 +43,23 @@ data lineage and dead-connection check; the screens themselves belong to their s
 
 | Control | Count | InfoPath behaviour | Coverage | Status |
 |---|---|---|---|---|
-| Text (`PlainText`) | 602 | single-line input, type from schema | Native (`ts`/`tl`) | spec 05 |
-| Date picker (`DTPicker`) | 117 | `M/D/YYYY` + calendar button | Native (`da`/`dt`) | spec 05 |
-| Dropdown (`dropdown`) | 112 | fixed choices, no typing | Native (`cd`) | spec 05 |
-| Option buttons (`OptionButton`) | 104 | one of N, inline | Native (`cs`) | spec 05; ir: spec 02 (choice labels) |
-| Checkbox (`CheckBox`) | 72 | boolean | Native (`cm` single choice) | spec 05; ir: spec 02 (`checkboxText` label) |
-| Section (`Section`) | 59 | bordered group with title | Native (section) | spec 05 |
-| Repeating table (`RepeatingTable`) | 48 | N rows of fields, aggregate rows | App (repeating) | spec 03/04; ir: spec 02 (`inRepeat`, `columnHeader` label) |
-| Rich text (`RichText`) | 45 | HTML-lite with inline toolbar | Native (`rt`) | spec 05 |
+| Text (`PlainText`) | 602 | single-line input, type from schema | Native (`ts`/`tl`) | spec 05; render: spec 03 (quirks box, InfoPath row height) |
+| Date picker (`DTPicker`) | 117 | `M/D/YYYY` + calendar button | Native (`da`/`dt`) | spec 05; render: spec 03 (our calendar icon) |
+| Dropdown (`dropdown`) | 112 | fixed choices, no typing | Native (`cd`) | spec 05; render: spec 03 (selected value; `GetDOM` package lists) |
+| Option buttons (`OptionButton`) | 104 | one of N, inline | Native (`cs`) | spec 05; ir: spec 02 (choice labels); render: spec 03 |
+| Checkbox (`CheckBox`) | 72 | boolean | Native (`cm` single choice) | spec 05; ir: spec 02 (`checkboxText` label); render: spec 03 |
+| Section (`Section`) | 59 | bordered group with title | Native (section) | spec 05; render: spec 03 |
+| Repeating table (`RepeatingTable`) | 48 | N rows of fields, aggregate rows | App (repeating) | spec 03/04; ir: spec 02 (`inRepeat`, `columnHeader` label); render: spec 03 (rows of the record, each control marked with its row position) |
+| Rich text (`RichText`) | 45 | HTML-lite with inline toolbar | Native (`rt`) | spec 05; render: spec 03 (sanitised, P5) |
 | Button (`Button`) | 42 | runs rules, switches view, submits | App (action) | spec 04; ir: spec 02 (button triggers resolve from the row) |
-| Expression box (`ExpressionBox`) | 30 | computed text, no border | App (read-only field) | spec 03; ir: spec 02 (read-only references; synthetic fixture only) |
-| Repeating section (`RepeatingSection`) | 16 | N sections | App | spec 03; ir: spec 02 (`inRepeat`) |
-| ActiveX (GUID) | 7 | hosted COM control | Unsupported (no host) | spec 05; ir: spec 02 (form 44, `xd:server` endpoint) |
-| Attachment (`FileAttachment`) | 5 | file per field, icon + name + size | Native (`at`) | spec 05 |
+| Expression box (`ExpressionBox`) | 30 | computed text, no border | App (read-only field) | spec 03; ir: spec 02 (read-only references; synthetic fixture only); render: spec 03 (the value the XSL computes; live recalculation is spec 04) |
+| Repeating section (`RepeatingSection`) | 16 | N sections | App | spec 03; ir: spec 02 (`inRepeat`); render: spec 03 |
+| ActiveX (GUID) | 7 | hosted COM control | Unsupported (no host) | spec 05; ir: spec 02 (form 44, `xd:server` endpoint); render: spec 03 (grey placeholder, `UNSUPPORTED_CONTROL`, form 44) |
+| Attachment (`FileAttachment`) | 5 | file per field, icon + name + size | Native (`at`) | spec 05; render: spec 03 (icon, name, type, size block, from the MS-IPFFX header; the file itself is spec 11) |
 | Combobox (`combobox`) | 3 | dropdown that accepts typing | Native (`cd` + other) | spec 05 |
 | Choice section (`ChoiceSection`) | 2 | one of N sections | App | spec 05 |
 | Choice group (`ChoiceGroup`) | 1 | one of N fragments | App | spec 05 |
-| Picture (`InlineImage`) | 1 | embedded image | Native (attachment/image) | spec 05 |
+| Picture (`InlineImage`) | 1 | embedded image | Native (attachment/image) | spec 05; render: spec 03 (the record's raster image as a data URL, form 06) |
 | List box / multi-select | 0 in corpus | scrolling list, multi | Native (`cl`/`cm`) | spec 05 — **untested, no fixture** |
 | Hyperlink, vertical label, scrolling region, horizontal region, plain/bulleted/numbered list, signature line, person picker, external item picker | 0 in corpus | — | Native/App per type | spec 05 — **untested, no fixture** |
 
@@ -70,7 +73,7 @@ control is the cheapest way to close this.
 | Capability | Evidence | Coverage | Status |
 |---|---|---|---|
 | Text, number, date, time, boolean, base64 in XSD | `myschema.xsd` in all 42 samples **[format]** | Native | spec 02; parsed: spec 01; ir: spec 02 |
-| Currency / integer / decimal formatting via `xdFormatting:formatString` | 556 uses | Native (JSM field formatting) or App | spec 04 |
+| Currency / integer / decimal formatting via `xdFormatting:formatString` | 556 uses | Native (JSM field formatting) or App | spec 04; render: spec 03 (every corpus pattern, en-US) |
 | Default values, including `xdDate:Today()` and `xdDate:Now()` | 30 + 2 uses | App (value on create) | spec 04 |
 | Read-only and calculated fields | 52 `calculatedField` | App | spec 04; parsed: spec 01; ir: spec 02 |
 | Repeating fields, optional fields | 59 / 4 declarations | App | spec 02; parsed: spec 01; ir: spec 02 |
@@ -120,11 +123,11 @@ InfoPath extension functions actually used: `xdFormatting:formatString` 556, `xd
 | Capability | Coverage | Status |
 |---|---|---|
 | Full XPath 1.0 | App (evaluator) | spec 04 |
-| `xdMath` (Nz, Eval, Avg, Min, Max) | App | spec 04 |
-| `xdDate` (Today, Now, AddDays, AddSeconds, Add*) | App | spec 04 |
+| `xdMath` (Nz, Eval, Avg, Min, Max) | App | spec 04; render: spec 03 (Nz, Eval, Avg in views; Min and Max have no in-repo fixture) |
+| `xdDate` (Today, Now, AddDays, AddSeconds, Add*) | App | spec 04; render: spec 03 (Today, Now from the `now` input) |
 | `xdFormatting:formatString` (number/date patterns) | App | spec 04 — **the single highest-frequency function; a locale bug here breaks every sample.** The corpus uses 12 distinct patterns: `date` + `dateFormat:Short Date;` 123 times, `currency` + `numDigits:2;…currencyLocale:1033;` 59, `number` with `numDigits:0|2|auto` and `grouping:1|0` 63, `percentage` 6, `time` 6, `datetime` + `timeFormat:h:mm:ss tt|none` 9, `string` + `plainMultiline` 7 |
-| `xdXDocument` (GetDOM, GetNamedNodeProperty, GetFileUrl) | App | spec 04 |
-| `xdUtil`, `xdUser`, `xdEnvironment`, `xdExtension` | App | spec 04 |
+| `xdXDocument` (GetDOM, GetNamedNodeProperty, GetFileUrl) | App | spec 04; render: spec 03 (GetDOM for package sources, GetNamedNodeProperty gives the caller's default) |
+| `xdUtil`, `xdUser`, `xdEnvironment`, `xdExtension` | App | spec 04; render: spec 03 (`xdUser:get-UserName` from the input; the others are unavailable, so guards take their fallback) |
 | Anything not in that list | App, generic | spec 04 — evaluate, or mark the form Manual rather than silently returning empty |
 
 ## E. Validation
@@ -146,12 +149,12 @@ The 51 counted conditions are all `xsf:errorCondition` (MS-IPFF2 2.2.1.2.44).
 
 | Capability | Count | Coverage | Status |
 |---|---|---|---|
-| Multiple views per form | 9 forms, max 4 | App + always-visible switcher | spec 03; parsed: spec 01; ir: spec 02 |
-| Sections, nested sections | 59 | Native/App | spec 03 |
-| Tables used purely for layout | format | App (CSS grid from XSL) | spec 03 |
-| Fixed page width, printing | format | App (print CSS) | spec 03 |
-| Images and background images in views | 1 | Native (attachment) | spec 03 |
-| Fonts, colours, borders authored per control | format | App (must not restyle) | spec 03 |
+| Multiple views per form | 9 forms, max 4 | App + always-visible switcher | spec 03; parsed: spec 01; ir: spec 02; render: spec 03 (every view by name, 53 views; the switcher is spec 09) |
+| Sections, nested sections | 59 | Native/App | spec 03; render: spec 03 |
+| Tables used purely for layout | format | App (CSS grid from XSL) | spec 03; render: spec 03 (the XSL's tables, in MSHTML's quirks layout; row pitches within ±1 px of InfoPath) |
+| Fixed page width, printing | format | App (print CSS) | spec 03; render: spec 03 (fixed widths; print CSS is not built) |
+| Images and background images in views | 1 | Native (attachment) | spec 03; render: spec 03 (package images as data URLs; synthetic fixture only) |
+| Fonts, colours, borders authored per control | format | App (must not restyle) | spec 03; render: spec 03 (view styles scoped to the render root; Calibri as Carlito, supplied by the page) |
 
 ## G. Data connections
 
@@ -185,7 +188,7 @@ The 51 counted conditions are all `xsf:errorCondition` (MS-IPFF2 2.2.1.2.44).
 | Record knows its template by URN, then `href` | `mso-infoPathSolution` | App | spec 11; parsed: spec 01 (template side) |
 | `upgrade.xsl` applied when the template version moved | form 07 vs 01 | App | spec 11; parsed: spec 01 (template side) |
 | Attachments stored beside the record | 5 attachment controls | App | spec 11 |
-| Printing a record as it looked | screenshots, 22 | App (print CSS) | spec 03 |
+| Printing a record as it looked | screenshots, 22 | App (print CSS) | spec 03; render: spec 03 (on screen, 16 baselines of forms 01–08 beside the InfoPath screenshots; print CSS is not built) |
 
 ---
 

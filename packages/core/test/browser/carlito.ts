@@ -19,6 +19,14 @@ const urlOf = (name: string) => {
   return files[key]!;
 };
 
+/**
+ * InfoPath's line heights (spec 03 design §8.1 step 9): GDI rounds the em to whole pixels and
+ * rounds ascent and descent separately, so 10pt Calibri (win metrics 1950/550 per 2048) is
+ * 12 + 3 = 15 px. Chromium's fractional em gives 13 + 4 = 17. These descriptors give 12 + 3 at
+ * 10pt, and match GDI at 9pt, 12pt and 16pt too. The font files are unchanged.
+ */
+const METRICS = 'ascent-override:93%;descent-override:26%;line-gap-override:0%';
+
 /** One rule per subset, weight (400, 700) and style (normal, italic): 28 rules. */
 export function carlitoCss(): string {
   const rules: string[] = [];
@@ -28,7 +36,8 @@ export function carlitoCss(): string {
         const url = urlOf(`carlito-${subset}-${weight}-${style}.woff2`);
         rules.push(
           `@font-face{font-family:Calibri;font-style:${style};font-weight:${weight};` +
-            `font-display:block;src:url(${JSON.stringify(url)}) format("woff2");unicode-range:${range}}`,
+            `font-display:block;src:url(${JSON.stringify(url)}) format("woff2");unicode-range:${range};` +
+            `${METRICS}}`,
         );
       }
     }

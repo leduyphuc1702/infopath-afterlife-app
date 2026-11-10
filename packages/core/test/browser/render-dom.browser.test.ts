@@ -214,3 +214,27 @@ test.each([
     r.parentElement!.remove();
   },
 );
+
+// Task 14 review (design §8.1 step 9, quirks box model): every rendered control lies inside its
+// nearest cell, as in InfoPath, where `width` includes padding and border. Tolerance 0.5 px.
+test.each(cabinets.flatMap((c) => [[c.slug, 'empty'] as const, [c.slug, 'first'] as const]))(
+  '%s %s record: every control box lies inside its nearest td',
+  async (slug, record) => {
+    const r = await mount(slug, record);
+    const controls = [...r.querySelectorAll<HTMLElement>('[data-afl-ctrl]')];
+    expect(controls.length).toBeGreaterThan(0);
+    const outside: string[] = [];
+    for (const el of controls) {
+      const td = el.closest('td');
+      if (td === null) continue;
+      const a = el.getBoundingClientRect();
+      if (a.width === 0 && a.height === 0) continue; // not displayed (a hidden section)
+      const b = td.getBoundingClientRect();
+      const d = [b.left - a.left, a.right - b.right, b.top - a.top, a.bottom - b.bottom];
+      if (d.some((x) => x > 0.5))
+        outside.push(`${el.title || el.className}: ${d.map((x) => x.toFixed(1)).join(' ')}`);
+    }
+    expect(outside).toEqual([]);
+    r.parentElement!.remove();
+  },
+);

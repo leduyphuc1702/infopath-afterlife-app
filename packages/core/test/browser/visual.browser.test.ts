@@ -14,8 +14,9 @@ import { loadCarlito } from './carlito';
 // Vitest's `toMatchScreenshot` takes screenshots until two in a row match, then compares with
 // pixelmatch; baselines live in __screenshots__/visual.browser.test.ts/<name>-chromium-darwin.png.
 // Font rasterisation differs by OS, so the baselines are for macOS Chromium only: elsewhere the
-// test skips with a message. The threshold is pixelmatch's default until the maintainer sets it
-// after reviewing the baselines (R10.2).
+// test skips with a message. Threshold (R10.2, set at review): pixelmatch `threshold: 0.1` per
+// pixel and at most 0.1% of the canvas (559 pixels) different. The goldens already catch content
+// changes byte by byte; this test is for layout regressions, which move far more than that.
 
 const PLATFORM = 'darwin';
 const WIDTH = 1007;
@@ -58,5 +59,8 @@ test.for(
   await document.fonts.ready;
   await expect
     .element(page.elementLocator(canvas))
-    .toMatchScreenshot(`${slug}-${(view.caption ?? view.name).replace(/\s+/g, '-')}-${record}`);
+    .toMatchScreenshot(`${slug}-${(view.caption ?? view.name).replace(/\s+/g, '-')}-${record}`, {
+      comparatorName: 'pixelmatch',
+      comparatorOptions: { threshold: 0.1, allowedMismatchedPixelRatio: 0.001 },
+    });
 });

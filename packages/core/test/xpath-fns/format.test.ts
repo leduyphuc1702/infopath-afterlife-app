@@ -41,17 +41,19 @@ test.each([
   ['.5', 'currency', CURRENCY, '$0.50'],
   ['  42  ', 'currency', CURRENCY, '$42.00'],
   ['999.995', 'currency', CURRENCY, '$1,000.00'],
-  // number, numDigits:0, grouping:1
-  ['1234', 'number', INT, '1,234'],
-  ['1234.5', 'number', INT, '1,235'],
+  // number, numDigits:0, grouping:1: NUMBERFMT groups of 1 (form 08's screenshot: 43 → 4,3)
+  ['43', 'number', INT, '4,3'],
+  ['70', 'number', INT, '7,0'],
+  ['1234', 'number', INT, '1,2,3,4'],
+  ['1234.5', 'number', INT, '1,2,3,5'],
   ['2.5', 'number', INT, '3'],
   ['-2.5', 'number', INT, '(3)'],
   ['0', 'number', INT, '0'],
   ['007', 'number', INT, '7'],
   // number, numDigits:2, grouping:1
-  ['1234.5', 'number', DEC2, '1,234.50'],
+  ['1234.5', 'number', DEC2, '1,2,3,4.50'],
   ['0.125', 'number', DEC2, '0.13'],
-  ['12345678901234567890.125', 'number', DEC2, '12,345,678,901,234,567,890.13'],
+  ['-12.5', 'number', DEC2, '(1,2.50)'],
 ])('%s as %s (%s) → %s', (value, type, options, expected) => {
   expect(formatString(value, type, options)).toBe(expected);
 });
@@ -74,7 +76,7 @@ test.each([
 
 test('negative orders follow the Windows en-US tables', () => {
   const n = (order: number) =>
-    formatString('-1234.5', 'number', `numDigits:1;negativeOrder:${order};grouping:1;`);
+    formatString('-1234.5', 'number', `numDigits:1;negativeOrder:${order};grouping:3;`);
   expect([0, 1, 2, 3, 4].map(n)).toEqual([
     '(1,234.5)',
     '-1,234.5',
@@ -147,7 +149,7 @@ test.each([
     '09-Jan-26',
   ],
   ['time, no options', '09:30:00', 'time', '', '9:30:00 AM'],
-  ['number 0, grouped', '12345.5', 'number', INT, '12,346'],
+  ['number 0, grouped by 1', '12345.5', 'number', INT, '1,2,3,4,6'],
   ['number 2, grouped', '0.1', 'number', DEC2, '0.10'],
   ['number 0, not grouped', '12345.4', 'number', NUM0, '12345'],
   ['number 2, not grouped', '-1234.567', 'number', NUM2, '-1234.57'],
@@ -180,12 +182,25 @@ test.each([
     'percentage, 2 digits, grouped',
     '123.45678',
     'percentage',
-    'numDigits:2;grouping:1;',
+    'numDigits:2;grouping:3;',
     '12,345.68%',
   ],
   ['percentage, negative', '-0.5', 'percentage', PCT, '-50%'],
   ['percentage, positiveOrder 0', '0.5', 'percentage', 'numDigits:0;positiveOrder:0;', '50 %'],
-  ['number auto, grouped', '1234567.125', 'number', 'numDigits:auto;grouping:1;', '1,234,567.125'],
+  ['number auto, grouped', '1234567.125', 'number', 'numDigits:auto;grouping:3;', '1,234,567.125'],
+  ['grouping 0: none', '1234567', 'number', 'numDigits:0;grouping:0;', '1234567'],
+  ['grouping absent: none', '1234567', 'number', 'numDigits:0;', '1234567'],
+  ['grouping 2', '1234567', 'number', 'numDigits:0;grouping:2;', '1,23,45,67'],
+  ['grouping 32: 3, then 2', '123456789', 'number', 'numDigits:0;grouping:32;', '12,34,56,789'],
+  ['grouping 9, short', '12345', 'number', 'numDigits:0;grouping:9;', '12345'],
+  [
+    'grouping 3, 20 digits',
+    '12345678901234567890.125',
+    'number',
+    'numDigits:2;grouping:3;',
+    '12,345,678,901,234,567,890.13',
+  ],
+  ['currency groups by 3 ([seen] form 04)', '1423.94', 'currency', CURRENCY, '$1,423.94'],
   ['negative zero after rounding', '-0.004', 'number', NUM2, '0.00'],
 ])('%s', (_name, value, type, options, expected) => {
   expect(formatString(value, type, options)).toBe(expected);
@@ -219,7 +234,9 @@ test.each([
   ['numDigits out of range', '5', 'number', 'numDigits:100;', 'numDigits'],
   ['negativeOrder out of range', '-5', 'number', 'numDigits:0;negativeOrder:5;', 'negativeOrder'],
   ['currency negativeOrder 16', '-5', 'currency', 'numDigits:0;negativeOrder:16;', 'negativeOrder'],
-  ['grouping 2', '5', 'number', 'numDigits:0;grouping:2;', 'grouping'],
+  ['grouping 10', '5', 'number', 'numDigits:0;grouping:10;', 'grouping'],
+  ['grouping 33', '5', 'number', 'numDigits:0;grouping:33;', 'grouping'],
+  ['grouping yes', '5', 'number', 'numDigits:0;grouping:yes;', 'grouping'],
   ['time with timeFormat:none', '09:30:00', 'time', 'timeFormat:none;', 'timeFormat'],
 ])('%s: the value unchanged, with FORMAT_UNSUPPORTED', (_name, value, type, options, option) => {
   expect(formatStringResult(value, type, options)).toEqual({

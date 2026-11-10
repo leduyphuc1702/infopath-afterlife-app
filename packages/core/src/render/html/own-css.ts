@@ -19,6 +19,48 @@ const REQUIRED = [
 ];
 
 /**
+ * InfoPath laid views out in MSHTML quirks mode (no view has a DOCTYPE). The rules below give
+ * the render root the quirks layout the screenshots show, inside a standards-mode page
+ * (`Changed at review:`, design §8.1 step 9). Each has zero specificity unless noted, so the view's
+ * own rules still win. Measured against the 16 InfoPath screenshots (row pitches, task 14).
+ */
+const QUIRKS = [
+  // Quirks box model: `width` and `height` include padding and border, so a `WIDTH:100%` text
+  // box (padding 1px, border 1pt) or `.xdSection` (padding 1px 1px 1px 5px) fits its cell.
+  ':where(.afl-root,.afl-root *){box-sizing:border-box}',
+  // MSHTML clips what does not fit a column of a `table-layout:fixed` table (MSDN tableLayout:
+  // "the content is wrapped or, if wrapping is not possible, it is clipped"). The screenshots cut
+  // the nested 640 px Employee table at the outer table's edge.
+  ':where(.afl-root table[style*="table-layout:fixed" i]>:is(thead,tbody,tfoot)>tr>:is(td,th))' +
+    '{overflow:hidden}',
+  // IE kept a text box's text baseline. `overflow:hidden` on an inline-block moves its baseline to
+  // the bottom margin edge (CSS 2.1 §10.8.1), adding the strut's descent below it: 6 px a row.
+  // `clip` clips the same and keeps the baseline. Needs the view's specificity to win over its
+  // `.xdTextBox{overflow:hidden}`.
+  '.afl-root[data-afl-scope] .xdTextBox{overflow:clip}',
+  // An empty text box has no line, so its baseline is its bottom edge too; IE gave it the line of
+  // an empty field. A zero-width space (generated, not in the DOM) gives it one: 1 px a row.
+  ':where(.afl-root span[data-afl-ctrl]:empty)::before{content:"\\200b"}',
+  // IE's default body margin, 15px 10px; the view's `BODY{margin-left:…}` still wins.
+  ':where(.afl-root){margin:15px 10px}',
+  // Heading margins of 14pt above and below [VERIFY: IE's default style sheet is not published;
+  // 14pt reproduces the 42 px Expenses row of forms 02 and 04]. Quirks mode ignores the default
+  // top margin of the first element of a cell or the body (MS-CSS21 §7.2, "Default margins"),
+  // also through the leading `div`s InfoPath wraps content in.
+  ':where(.afl-root :is(h1,h2,h3,h4,h5,h6)){margin-top:14pt;margin-bottom:14pt}',
+  ':where(:is(.afl-root,.afl-root td,.afl-root th)>:is(h1,h2,h3,h4,h5,h6):first-child,' +
+    ':is(.afl-root,.afl-root td,.afl-root th)>div:first-child>:is(h1,h2,h3,h4,h5,h6):first-child,' +
+    ':is(.afl-root,.afl-root td,.afl-root th)>div:first-child>div:first-child>' +
+    ':is(h1,h2,h3,h4,h5,h6):first-child){margin-top:0}',
+  // A drop-down is one line of its text plus 6 px, as in the screenshots' 30 px drop-down rows.
+  ':where(.afl-root select:not([multiple]):is(:not([size]),[size="0"],[size="1"]))' +
+    '{min-height:calc(1lh + 6px)}',
+  // A picture control's image adds no descender gap below it (MS-CSS21 Appendix D, almost
+  // standards mode): form 06's scene photo row is 129 px, not 131.
+  ':where(.afl-root .xdInlinePicture>img){vertical-align:top}',
+];
+
+/**
  * R6.3, design §8.1 step 9: an empty bound control keeps at least one line of height and the
  * width the view gives it. InfoPath text boxes and date-picker text are `span`s, on which
  * `min-height` and `width` do nothing while they are inline. `:where()` has zero specificity, so
@@ -44,15 +86,24 @@ const ICONS = [
   '.afl-root .afl-icon-signature{width:20px;border-bottom:2px solid #44546f;' +
     'background:linear-gradient(150deg,transparent 45%,#44546f 45%,#44546f 55%,transparent 55%)}',
   '.afl-root .afl-icon-unknown{border:1px dotted #8590a2}',
-  '.afl-root .afl-icon-file{width:12px;border:1px solid #626f86;border-radius:0 4px 0 0;' +
-    'background:#fff linear-gradient(#8590a2,#8590a2) 2px 5px/6px 1px no-repeat}',
+  '.afl-root .afl-icon-file{width:22px;height:28px;border:1px solid #8590a2;' +
+    'border-radius:0 6px 0 0;background:#fff repeating-linear-gradient(#fff 0 2px,#c1c7d0 2px 3px)' +
+    ' 3px 6px/14px 18px no-repeat;vertical-align:top}',
 ];
 
-/** R6.7: a filled FileAttachment: icon, name, size, on one line as InfoPath showed it. */
-const ATTACHMENT =
-  '.afl-root .afl-attachment{display:inline-flex;align-items:center;gap:4px;white-space:nowrap;' +
-  'max-width:100%;overflow:hidden}.afl-root .afl-attachment-name{overflow:hidden;' +
-  'text-overflow:ellipsis}.afl-root .afl-attachment-size{color:#626f86}';
+/**
+ * R6.7 (`Changed at review:` a block, as `02-expense-report-Claim-filled.png` shows it): a light
+ * box 59 px tall, the 22×28 file icon 11 px in and centred, then name, type and size on three
+ * 14 px lines. Text that does not fit is clipped by the cell, with no ellipsis. Unfilled, the
+ * control shows the icon alone and no box, as InfoPath draws no box for an empty attachment.
+ */
+const ATTACHMENT = [
+  '.afl-root .afl-attachment{display:inline-flex;align-items:center;vertical-align:top}',
+  '.afl-root .afl-attachment-filled{box-sizing:border-box;min-width:100%;min-height:59px;' +
+    'padding:5px 8px 10px 11px;gap:10px;border:1px solid #dcdcdc;white-space:nowrap}',
+  '.afl-root .afl-attachment-text{display:flex;flex-direction:column;align-self:flex-start;' +
+    'line-height:14px}',
+];
 
 /** R6.2: the grey placeholder box drawn for an ActiveX control. */
 const PLACEHOLDER =
@@ -79,8 +130,10 @@ export const OWN_CSS = [
   ROOT,
   ...REQUIRED,
   ...CONTROL_SIZE,
+  // After CONTROL_SIZE: the drop-down `min-height` must win over its `1lh`.
+  ...QUIRKS,
   ...ICONS,
-  ATTACHMENT,
+  ...ATTACHMENT,
   PLACEHOLDER,
   ...DATE_PICKER,
 ].join('\n');

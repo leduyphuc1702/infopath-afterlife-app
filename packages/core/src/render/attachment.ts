@@ -73,3 +73,17 @@ function decodePrefix(b64: string, bytes: number): Uint8Array {
 export function sizeText(size: number): string {
   return `${size} ${size === 1 ? 'byte' : 'bytes'}`;
 }
+
+/**
+ * The file type line InfoPath shows under the name (`Changed at review:` R6.7 block layout):
+ * `txt` gives `Text Document` [seen] (`02-expense-report-Claim-filled.png`); any other extension
+ * gives `<EXT> File`, Windows' text for a type with no registered name [VERIFY]; no extension
+ * gives `File`. The extension is the text after the last dot, compared without case.
+ */
+export function typeText(name: string): string {
+  const dot = name.lastIndexOf('.');
+  const ext = dot < 0 ? '' : name.slice(dot + 1);
+  if (ext === '') return 'File';
+  if (ext.toLowerCase() === 'txt') return 'Text Document';
+  return `${ext.toUpperCase()} File`;
+}

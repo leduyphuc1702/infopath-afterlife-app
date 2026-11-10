@@ -8,6 +8,7 @@
 //               dateFormat:dd MMMM, yyyy;timeFormat:none;        dateFormat:dd-MMM-yy;timeFormat:none;
 //   time        (no options)
 //   number      numDigits:0;negativeOrder:0;grouping:1;          numDigits:2;negativeOrder:0;grouping:1;
+//               (`grouping` is a NUMBERFMT group size: 1 groups single digits, `4,3`)
 //               numDigits:0;negativeOrder:1;   numDigits:2;negativeOrder:1;   numDigits:auto;negativeOrder:1;
 //   currency    numDigits:2;negativeOrder:0;positiveOrder:0;currencyLocale:1033;
 //   percentage  numDigits:0;negativeOrder:1;
@@ -320,8 +321,24 @@ function percent(d: Decimal): Decimal {
   };
 }
 
-function group(int: string): string {
-  return int.replace(/\B(?=(\d{3})+$)/g, ',');
+/**
+ * Groups the integer digits as Windows NUMBERFMT `Grouping` does: `sizes` are the group sizes
+ * from the decimal separator leftwards, the last one repeated; a trailing 0 stops repeating.
+ * `[3]` gives `123,456,789`, `[3, 2]` gives `12,34,56,789`, `[1]` gives `4,3`.
+ */
+function group(int: string, sizes: readonly number[]): string {
+  const parts: string[] = [];
+  let end = int.length;
+  let i = 0;
+  while (end > 0) {
+    const size = sizes[Math.min(i, sizes.length - 1)]!;
+    if (size === 0 || end <= size) break;
+    parts.unshift(int.slice(end - size, end));
+    end -= size;
+    i++;
+  }
+  parts.unshift(int.slice(0, end));
+  return parts.join(',');
 }
 
 /**
@@ -331,7 +348,7 @@ function group(int: string): string {
 function magnitude(
   d: Decimal,
   opts: ReadonlyMap<string, string>,
-  grouping: boolean,
+  grouping: readonly number[],
 ): { text: string; negative: boolean } {
   const digits = opts.get('numDigits');
   if (digits === undefined || !/^(?:\d{1,2}|auto)$/.test(digits))
@@ -339,15 +356,25 @@ function magnitude(
   const r = digits === 'auto' ? d : roundDecimal(d, Number(digits));
   const int = r.int === '' ? '0' : r.int;
   const zero = /^0*$/.test(r.int + r.frac);
-  const text = (grouping ? group(int) : int) + (r.frac === '' ? '' : `.${r.frac}`);
+  const text = group(int, grouping) + (r.frac === '' ? '' : `.${r.frac}`);
   return { text, negative: r.negative && !zero };
 }
 
-function grouped(opts: ReadonlyMap<string, string>): boolean {
+/**
+ * `grouping` is Windows NUMBERFMT `Grouping` (`Changed at review:` it was read as a flag): 0–9
+ * give groups of that many digits, repeated, 0 meaning none; 32 gives 3, then 2 repeated. Form
+ * 08's screenshot shows `grouping:1` as `4,3` for 43 [seen]. Absent means none. Any other value
+ * is FORMAT_UNSUPPORTED.
+ */
+function grouped(opts: ReadonlyMap<string, string>): readonly number[] {
   const g = opts.get('grouping') ?? '0';
-  if (g !== '0' && g !== '1') throw new Unsupported('grouping');
-  return g === '1';
+  if (/^\d$/.test(g)) return [Number(g)];
+  if (g === '32') return [3, 2];
+  throw new Unsupported('grouping');
 }
+
+/** en-US currency groups by 3 with no `grouping` option ([seen] `$1,423.94`, form 04). */
+const CURRENCY_GROUPING = [3];
 
 /** One entry of an order table, from an option; a missing option uses `fallback`. */
 function order<T>(
@@ -409,11 +436,14 @@ const NEGATIVE_CURRENCY: readonly Shape[] = [
   (n) => `(${n} $)`,
 ];
 
-/** en-US currency, always grouped: `350.3` → `$350.30` (docs/infopath-ux.md §3–4, [seen]). */
+/**
+ * en-US currency, always grouped by 3: `350.3` → `$350.30` (docs/infopath-ux.md §3–4, [seen]);
+ * `$1,423.94` in form 04's screenshot [seen]. No corpus currency pattern has `grouping`.
+ */
 function formatCurrency(value: string, opts: ReadonlyMap<string, string>): string | undefined {
   const d = parseDecimal(value);
   if (!d) return undefined;
-  const m = magnitude(d, opts, true);
+  const m = magnitude(d, opts, CURRENCY_GROUPING);
   const pos = order(POSITIVE_CURRENCY, opts, 'positiveOrder', 0);
   const neg = order(NEGATIVE_CURRENCY, opts, 'negativeOrder', 0);
   return m.negative ? neg(m.text) : pos(m.text);

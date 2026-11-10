@@ -79,7 +79,7 @@ Fonts, shipped unmodified:
 
 | Package | Version | Licence | Use |
 |---|---|---|---|
-| `@fontsource/carlito` | 5.3.0 | SIL Open Font License 1.1 | Carlito, metric-compatible with Calibri, declared as `@font-face` family `Calibri` by the page that shows a render (core's visual test today; the web viewer in spec 09). Core does not inline it. |
+| `@fontsource/carlito` | 5.3.0 | SIL Open Font License 1.1 | Carlito, metric-compatible with Calibri, declared as `@font-face` family `Calibri` by the page that shows a render (core's visual test today; the web viewer in spec 09), with `ascent-override: 93%; descent-override: 26%` so line heights match InfoPath's GDI layout. Core does not inline it. |
 
 ## Licence
 

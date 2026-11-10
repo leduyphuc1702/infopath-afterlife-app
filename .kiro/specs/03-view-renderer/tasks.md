@@ -1,7 +1,8 @@
 # Tasks: 03 view renderer
 
 Phase 3 of 3. Requirements: `requirements.md` (approved 2026-11-10, second review the same day).
-Design: `design.md` (approved). Status: **approved, 2026-11-10** (draft committed as `5290271`).
+Design: `design.md` (approved). Status: **approved, 2026-11-10** (draft committed as `5290271`);
+**done, 2026-11-11**: 14 of 14 tasks, `verification.md`.
 
 Changed at review (2026-11-10): task 1 adds pnpm overrides, the idempotent `applyStep` mark and
 the installed-`package.json` licence test; task 2 adds the string charge to the `find` override;
@@ -264,14 +265,21 @@ limits, properties, references and performance.
     and the local check (`AFTERLIFE_PRIVATE_SAMPLES=$HOME/Desktop/infopath-afterlife/samples`),
     then `pnpm check`.
 
-- [ ] 14. Visual acceptance and final check
+- [x] 14. Visual acceptance and final check
   - `test/browser/visual.browser.test.ts`: the default views of forms 01–08, empty and first
     record, 16 renders.
   - Write candidate PNGs and a side-by-side page with the InfoPath screenshots, then stop for
     the maintainer's approval. Commit nothing.
   - `Changed at review:` Calibri resolves to Carlito (`@fontsource/carlito` 5.3.0, OFL-1.1,
     devDependency), declared by the test page; core stays font-free. Baselines are for macOS
-    Chromium; other platforms skip. Candidates written 2026-11-11; awaiting approval.
+    Chromium; other platforms skip. First candidates written 2026-11-11 and not approved.
+  - `Changed at review:` (2026-11-11) four fidelity fixes before the baselines (design §7.1,
+    §8.1 step 9, §9.3): the quirks layout in `own-css.ts`, Carlito line metrics in the page's
+    `@font-face`, `grouping` as a NUMBERFMT group size, and the attachment block. Targets: row
+    pitches of forms 01, 02, 04, 06 and 08 within ±1 px of InfoPath (±3 for multi-line and
+    attachment rows); every control inside its nearest `td` (a permanent assertion in
+    `render-dom.browser.test.ts`); form 08 shows `4,3` and `7,0`. All met; the second
+    baselines were written and the threshold set in R10.2.
   - After approval: commit-ready baselines. Propose the pixel threshold as a `Changed at
     review:` edit to R10.2.
   - Re-check every criterion, and update the `Status` column of `docs/feature-coverage.md` for

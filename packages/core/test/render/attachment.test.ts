@@ -6,7 +6,7 @@ import {
   renderView,
   type PreparedView,
 } from '../../src/index';
-import { attachmentHeader, MAX_NAME_UNITS } from '../../src/render/attachment';
+import { attachmentHeader, typeText, MAX_NAME_UNITS } from '../../src/render/attachment';
 import { packageFile } from '../helpers/package';
 import { r51Items } from '../helpers/r51';
 import { viewCases } from '../helpers/render-cases';
@@ -102,7 +102,7 @@ describe('the header (MS-IPFFX §2.1.3.1)', () => {
   });
 });
 
-test("form 02's first record shows each receipt's icon, name and size", async () => {
+test("form 02's first record shows each receipt's icon, name, type and size", async () => {
   const c = (await viewCases()).find((v) => v.slug === '02-expense-report')!;
   const r = renderView(await prepareView(c.t, buildFormIR(c.t)), {
     now: NOW,
@@ -110,12 +110,12 @@ test("form 02's first record shows each receipt's icon, name and size", async ()
   });
   const shown = [
     ...r.html.matchAll(
-      /<span class="afl-attachment"><span class="afl-icon afl-icon-file" aria-hidden="true"><\/span><span class="afl-attachment-name">([^<]*)<\/span><span class="afl-attachment-size">([^<]*)<\/span><\/span>/g,
+      /<span class="afl-attachment afl-attachment-filled" title="([^"]*)"><span class="afl-icon afl-icon-file" aria-hidden="true"><\/span><span class="afl-attachment-text"><span class="afl-attachment-name">([^<]*)<\/span><span class="afl-attachment-type">([^<]*)<\/span><span class="afl-attachment-size">([^<]*)<\/span><\/span><\/span>/g,
     ),
-  ].map((m) => [m[1], m[2]]);
+  ].map((m) => [m[1], m[2], m[3], m[4]]);
   expect(shown).toEqual([
-    ['receipt-01-1.txt', '109 bytes'],
-    ['receipt-01-2.txt', '110 bytes'],
+    ['receipt-01-1.txt', 'receipt-01-1.txt', 'Text Document', '109 bytes'],
+    ['receipt-01-2.txt', 'receipt-01-2.txt', 'Text Document', '110 bytes'],
   ]);
   expect(r.issues.filter((i) => i.code === 'ATTACHMENT_UNREADABLE')).toEqual([]);
   // The empty record has no attachment, so no display.
@@ -186,6 +186,20 @@ describe('synthetic FileAttachment', () => {
     expect(r.html).toContain(
       '<span class="afl-attachment-name">"&gt;&lt;img src=x onerror=alert(1)&gt;&lt;script&gt;alert(2)&lt;/script&gt;&amp;amp;.txt</span>',
     );
+    expect(r.html).toContain(
+      'title="&quot;&gt;&lt;img src=x onerror=alert(1)&gt;&lt;script&gt;alert(2)&lt;/script&gt;&amp;amp;.txt"',
+    );
     expect(r51Items(r.html, r.css)).toEqual([]);
   });
+});
+
+test.each([
+  ['receipt-01-1.txt', 'Text Document'],
+  ['NOTES.TXT', 'Text Document'],
+  ['scan.pdf', 'PDF File'],
+  ['archive.tar.gz', 'GZ File'],
+  ['README', 'File'],
+  ['trailing.', 'File'],
+])('the type line of %s is %s', (name, type) => {
+  expect(typeText(name)).toBe(type);
 });

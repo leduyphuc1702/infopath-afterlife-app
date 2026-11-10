@@ -1,7 +1,8 @@
 # Design: 03 view renderer
 
 Phase 2 of 3. Requirements: `requirements.md` (R1–R10, 33 criteria, approved 2026-11-10, second
-review the same day). Status: **approved, 2026-11-10** (draft committed as `5290271`).
+review the same day). Status: **approved, 2026-11-10** (draft committed as `5290271`); **done,
+2026-11-11** (`verification.md`).
 
 Changed at review (2026-11-10): D9 approved and made idempotent (§5.3); string and
 result-tree-fragment growth charged, and `RangeError` split (§5.3, §6); marks keyed by file
@@ -312,6 +313,15 @@ blank. Per-render issue sets live in the table `functionTable()` builds for each
   with no `timeFormat` uses `h:mm:ss tt`. [VERIFY: InfoPath's default for `time` with no
   options; no screenshot shows one.]
 - **Numbers.** `numDigits:auto` keeps the fraction as written. `grouping` absent means none.
+  `Changed at review:` (after task 14's first candidates) `grouping` is Windows NUMBERFMT
+  `Grouping`, a group size, not a flag: 0–9 give groups of that many digits, repeated (0: none);
+  32 gives 3, then 2 repeated (`12,34,56,789`); any other value is `FORMAT_UNSUPPORTED` with the
+  value unchanged. **[seen]** form 08's screenshot shows `numDigits:0;negativeOrder:0;grouping:1;`
+  as `4,3` for 43 and `7,0` for 70, and form 07's shows `1,0` for 10. The 36 private views never
+  use `grouping`; 15 own views do (`grouping:1` on 39 controls, 21 of them in form 08), so their
+  goldens change too, e.g. form 10's `776.01` becomes `7,7,6.01`. No screenshot shows a value
+  with three or more integer digits under `grouping:1`. Currency has no `grouping` option in the corpus and groups by 3: **[seen]**
+  `$1,423.94`, `$1,566.33` and `$4,287.32` in form 04's screenshot.
   Order tables: LOCALE_INEGNUMBER 0–4 (default 1), LOCALE_ICURRENCY 0–3 (default 0),
   LOCALE_INEGCURR 0–15 (default 0), LOCALE_IPOSITIVEPERCENT 0–3 (default 1, `n%`),
   LOCALE_INEGATIVEPERCENT 0–11 (default 1). A percentage is the value × 100 on its digits.
@@ -390,6 +400,40 @@ One walk over the result tree, in this order; each step needs what the one befor
    inline element, and InfoPath text boxes are `span`s. `:where()` has zero specificity, so any
    `display` the view sets, in its classes or inline (`DISPLAY: none` on hidden sections), still
    wins. Task 8's browser test is the oracle.
+   `Changed at review:` (task 14, after the first 16 candidates) **quirks layout.** No view has a
+   DOCTYPE, so InfoPath (MSHTML) laid them out in quirks mode. `own-css.ts` `QUIRKS` gives the
+   root that layout inside a standards page, each rule with zero specificity unless noted:
+   - `box-sizing: border-box` on the root and every descendant (quirks box model): a
+     `WIDTH:100%` text box or `.xdSection` fits its cell. Without it, 22 controls in forms 02,
+     04 and 06 stick out of their cells by 1.5 px, and the nested Employee/Requester tables run
+     past the outer table;
+   - `overflow: hidden` on the cells of a `table-layout:fixed` table: MSHTML clips what does not
+     fit a fixed column (MSDN `tableLayout`); the screenshots cut the nested 640 px tables there;
+   - `.xdTextBox{overflow:clip}` (the view's specificity, to beat its `overflow:hidden`):
+     `hidden` puts an inline-block's baseline at its bottom margin edge (CSS 2.1 §10.8.1) and the
+     line gains the strut's descent, 3 px a row; `clip` clips the same and keeps the text
+     baseline, as IE did;
+   - a generated zero-width space in an empty bound `span`, so an empty text box has a line and
+     a text baseline too (1 px a row in the empty records);
+   - the root's margin `15px 10px`, IE's body default (the view's `BODY{margin-left}` still wins);
+   - headings `margin: 14pt 0` [VERIFY: IE's default style sheet is not published; 14pt
+     reproduces the 42 px Expenses row], with the top margin dropped for the first element of the
+     root or a cell, also through the one or two leading `div`s InfoPath wraps content in
+     (MS-CSS21 §7.2 "Default margins");
+   - a one-line drop-down is `1lh + 6px` tall (the 30 px drop-down rows);
+   - a picture control's `img` is `vertical-align: top` (form 06's 129 px photo row).
+
+   **Text box content height** (15 px in InfoPath, 17 px before): GDI lays out 10pt at 96 dpi
+   with an integer 13 px em and rounds ascent and descent separately: Calibri's
+   `usWinAscent`/`usWinDescent` 1950/550 per 2048 give 12 + 3 = 15 px. Chromium uses the
+   fractional 13.33 px em, 12.7 + 3.6, rounded to 13 + 4 = 17. The fix is in the page's
+   `@font-face` for Carlito, not in core: `ascent-override: 93%; descent-override: 26%;
+   line-gap-override: 0%` gives 12 + 3 at 10pt, and matches GDI at 9pt (11 + 3), 12pt (15 + 4)
+   and 16pt (20 + 6). Spec 09's viewer ships the same descriptors.
+
+   Measured against the screenshots (row pitches of forms 01, 02, 04, 06 and 08, first record):
+   every row within ±1 px, the multi-line "What happened" row +3 px; containment is a permanent
+   assertion in `render-dom.browser.test.ts`.
 
 ### 8.2 Sanitiser rules (R5.1, R5.2)
 
@@ -527,10 +571,18 @@ little-endian:
   `header` (size, version or reserved), `nameLength` (below 2 or above 1,024 units, our cap;
   MS-IPFFX sets none), `name` (a zero inside or none at the end), `size` (declared size is not
   the data size).
-- After step 6, the control gets `<span class="afl-attachment">` holding
-  `span.afl-icon.afl-icon-file` (CSS, no Microsoft asset), `span.afl-attachment-name` (a text
-  node: the serialiser escapes it) and `span.afl-attachment-size` (`109 bytes`). Lone surrogates
-  in the name become U+FFFD.
+- After step 6, the control gets `<span class="afl-attachment afl-attachment-filled"
+  title="{name}">` holding `span.afl-icon.afl-icon-file` (CSS, no Microsoft asset) and
+  `span.afl-attachment-text` with three lines: `span.afl-attachment-name` (a text node: the
+  serialiser escapes it), `span.afl-attachment-type` and `span.afl-attachment-size`
+  (`109 bytes`). Lone surrogates in the name become U+FFFD. An unreadable header gives
+  `span.afl-attachment` with the icon alone.
+- `Changed at review:` (task 14) **a block, not a line**, as `02-expense-report-Claim-filled.png`
+  shows it: a light 59 px box from the control's edge, a 22×28 px document icon 11 px in and
+  centred, then name, type and size on three 14 px lines, 10 px right of the icon. Text that does
+  not fit is clipped by the cell, with no ellipsis. The empty control has no box, as in the empty
+  screenshot. Type line: `txt` gives `Text Document` **[seen]**; any other extension gives
+  `<EXT> File`, Windows' text for an unregistered type [VERIFY]; no extension gives `File`.
 - `Changed at review:` the view's own `xd:inline` attribute, which repeats the base64 text, is
   dropped silently (§8.4).
 
