@@ -15,6 +15,11 @@
     "gen:ms-ipff2": "node scripts/gen-ms-ipff2.ts"
   },
   "dependencies": {
-    "@xmldom/xmldom": "0.9.12"
+    "@xmldom/xmldom": "0.9.12",
+    "xpath": "0.0.36",
+    "xsltjs": "1.0.0"
+  },
+  "devDependencies": {
+    "parse5": "7.3.0"
   }
 }

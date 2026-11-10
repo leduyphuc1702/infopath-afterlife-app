@@ -171,6 +171,14 @@ export function unsafe(name: string): string | undefined {
 
 /** `name` of the `<?mso-infoPathSolution …?>` PI in the first 4 KB, if any (D8). */
 export function solutionName(bytes: Uint8Array): string | undefined {
+  return solutionAttribute(bytes, 'name');
+}
+
+/**
+ * An attribute of the `<?mso-infoPathSolution …?>` PI in the first 4 KB, if any (D8). Spec 03
+ * R2.1 reads `name` and `solutionVersion` of a record with it.
+ */
+export function solutionAttribute(bytes: Uint8Array, attribute: string): string | undefined {
   const head = bytes.subarray(0, 4096);
   const b = (i: number) => head[i] ?? -1;
   const label =
@@ -182,6 +190,6 @@ export function solutionName(bytes: Uint8Array): string | undefined {
   const text = new TextDecoder(label).decode(head);
   const pi = /<\?mso-infoPathSolution\b([\s\S]*?)\?>/.exec(text);
   if (!pi) return undefined;
-  const name = /(?:^|\s)name\s*=\s*(["'])([\s\S]*?)\1/.exec(pi[1]!);
-  return name?.[2];
+  const value = new RegExp(`(?:^|\\s)${attribute}\\s*=\\s*(["'])([\\s\\S]*?)\\1`).exec(pi[1]!);
+  return value?.[2];
 }

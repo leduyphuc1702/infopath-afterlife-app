@@ -1,7 +1,14 @@
 # Design: 03 view renderer
 
 Phase 2 of 3. Requirements: `requirements.md` (R1–R10, 33 criteria, approved 2026-11-10, second
-review the same day). Status: **draft for review, 2026-11-10.**
+review the same day). Status: **approved, 2026-11-10** (draft committed as `5290271`).
+
+Changed at review (2026-11-10): D9 approved and made idempotent (§5.3); string and
+result-tree-fragment growth charged, and `RangeError` split (§5.3, §6); marks keyed by file
+(§9.1); one xmldom and one xpath through pnpm overrides (§5.3); the R3.4 licence oracle reads
+installed `package.json` files (§11); InfoPath runtime constructs dropped silently (§8.4); an
+X-ray constraint under `inert` (§8.1); the R6.3 rule for inline controls (§8.1); the slice
+renders in a Worker (task 4).
 
 Spec 01's design is the reference for what this one does not restate: workspace and tools, the
 public API rule, `Located` and `Issue`, the error model, the XML layer, the golden helper, the
@@ -47,7 +54,7 @@ renderView(prepared, {record, now, …})       sync, pure
 | D6 | **`disable-output-escaping` is ignored**: raw text is escaped like any text, with one `OUTPUT_ESCAPING_IGNORED` issue per render. | honour it | The 17 private uses all write field values (paths and `formatString`), that is, record data. Honouring them would let a record inject markup. The 53 views have none. |
 | D7 | **Control marks come from a hook on `literalResultElement`**, which looks up the XSL element by its source position in a FormIR map and evaluates `xd:binding` against the live context node (§9). | instrument `for-each`; inject a mark function into the XSL | The context node is the exact node instance, so positions come for free. Nothing is added to the XSL or the result tree, so the R10.1 HTML cannot change. |
 | D8 | **Formatting without `Intl`**: our own tables and decimal-string rounding (§7). | `Intl.NumberFormat` | ICU builds differ between Node and Chromium; byte parity (R5.3) cannot rest on them. |
-| D9 | **Limits through one budget object per render** (§6). A stateless global wrapper on `xpath`'s `PathExpr.applyStep` charges the processor named in the XPath context. | wall clock; per-instance only | No clock is allowed (R1.4). XPath work happens inside `xpath`, outside any processor method. `xsltjs` already wraps this function globally (`XPathFixes.install`). Ours keeps no state of its own (open question 1). |
+| D9 | **Limits through one budget object per render** (§6). A stateless global wrapper on `xpath`'s `PathExpr.applyStep` charges the processor named in the XPath context. | wall clock; per-instance only | No clock is allowed (R1.4). XPath work happens inside `xpath`, outside any processor method. `xsltjs` already wraps this function globally (`XPathFixes.install`). Ours keeps no state of its own. `Changed at review:` approved; installed at most once (§5.3). |
 | D10 | **R10.1 compares the raw engine output, serialised by `xsltjs`'s own `Serializer`** (test-only export), normalised with parse5 (devDependency, MIT). | compare our serialiser's output | R10.1 checks the engine before post-processing. The spike proved this path 106/106. Our serialiser is checked by the goldens and P5. |
 | D11 | **Scoped CSS is returned separately** (`css`). Every selector is prefixed with the render root's scope attribute, which comes from a pure 32-bit FNV-1a hash of template URN, version and view name. | shadow DOM in core; one shared `.afl-root` | Core has no DOM. Two views on one page (Compare) must not share rules. |
 
@@ -106,9 +113,9 @@ interface RenderInput {
 interface RenderLimits {
   /** Nested template calls, built-in rule calls and xdMath:Eval calls (§6). */
   readonly templateDepth: number;   // 256
-  /** One per instruction, plus 1 + nodes returned per XPath location step. */
+  /** Per instruction 1; per XPath step 1 + nodes; per string result ceil(length / 16). */
   readonly evaluationSteps: number; // 1,000,000
-  /** Characters of text, attribute values and names added to the result tree. */
+  /** Characters added to any result tree, the main one or a variable's, plus 64 per node. */
   readonly outputBytes: number;     // 4 MiB
 }
 interface RenderResult {
@@ -135,9 +142,9 @@ Fatal (`AfterlifeError`, nothing returned):
 | Code | Details | When |
 |---|---|---|
 | `VIEW_NOT_RENDERABLE` (new) | `view`, `reason: 'unknown' \| 'missing' \| 'unparsed'` | R1.3, at prepare |
-| `RENDER_FAILED` (new) | `view`, `xsltCode`, `message`, `line?`, `column?` | an `XsltError` at compile or run; `xsl:message terminate="yes"` |
-| `INVALID_RENDER_INPUT` (new) | `field: 'now' \| 'locale'`, `value` | `now` not ISO 8601 with offset; a locale that is not BCP 47 |
-| `LIMIT_EXCEEDED` | `limit` (now also a `RenderLimits` key), `max`, `observed` | §6; `RangeError` |
+| `RENDER_FAILED` (new) | `view`, `xsltCode`, `message`, `line?`, `column?` | an `XsltError` at compile or run; `xsl:message terminate="yes"`; any other `RangeError` (`xsltCode: 'RangeError'`) |
+| `INVALID_RENDER_INPUT` (new) | `field: 'now' \| 'locale' \| 'record'`, `value` | `now` not ISO 8601 with offset; a locale that is not BCP 47; no record and no `initialXmlDocument` file (task 2) |
+| `LIMIT_EXCEEDED` | `limit` (now also a `RenderLimits` key), `max`, `observed` | §6; a stack-overflow `RangeError` |
 | `INVALID_XML`, `UNSAFE_XML` | as spec 01 | record or XSL (R1.5) |
 | `INTERNAL` | `reason` | an `fs`/`path` stub was reached |
 
@@ -145,7 +152,7 @@ Issues (new codes; aggregated ones carry counts in `details`): `RECORD_TEMPLATE_
 (R2.1), `SECONDARY_DATA_UNAVAILABLE` (R2.2), `EXTERNAL_RESOURCE_BLOCKED` (R3.2),
 `UNKNOWN_FUNCTION` (R4.4), `FORMAT_UNSUPPORTED`, `LOCALE_UNSUPPORTED`, `EXPRESSION_FAILED` (§7),
 `OUTPUT_ESCAPING_IGNORED` (D6), `CONTENT_REMOVED` (§8.2), `UNSUPPORTED_CONTROL` (R6.2),
-`XSL_MESSAGE`, `ENGINE_WARNING` (§5.3). The record's `INVALID_ENCODING` and `XML_WARNING` pass
+`XSL_MESSAGE`, `ENGINE_WARNING` (§5.3), `CONTROL_NOT_MARKED` (§9.1). The record's `INVALID_ENCODING` and `XML_WARNING` pass
 through.
 
 ## 5. Engine adapter (`render/engine/xsltjs.ts`)
@@ -195,9 +202,9 @@ listed here, and the guard test (§11) checks each one.
 | `Processor.js` | `invokeTemplate`, `builtInRule` | depth: wrapper increments, calls through, decrements in `finally` |
 | `Processor.js` | `executeInstruction` | +1 step |
 | `Processor.js` | `literalResultElement(element, ctx)` | marks (§9) |
-| `Processor.js` | `appendText`, `appendNode`, `setAttribute`, `copyNode` | output bytes (copied subtrees measured once, before copying) |
+| `Processor.js` | `appendText`, `appendNode`, `setAttribute`, `copyNode` | output bytes (§6). `copyNode` recurses through `this.copyNode`, `this.appendNode` and `this.appendText`, so each copied node is charged once; the hook adds only the attributes of a deep-copied element, which bypass `setAttribute` |
 | `Processor.js` | `compile(text, styleNode)`, `evaluate(text, ctx, styleNode)` | `xdMath:Eval`; mark bindings |
-| `Processor.js` | `functions` (a `Functions`): `find(local, ns)`, `isAvailable(local, ns)` | unknown functions and availability (§7.2) |
+| `Processor.js` | `functions` (a `Functions`): `find(local, ns)`, `isAvailable(local, ns)` | unknown functions and availability (§7.2); string charges (§6) |
 | `Processor.js` | `static MAX_DEPTH` (3000) | the guard asserts it is above `templateDepth` |
 | `Serializer.js` | `new Serializer(output, cdata).serialize(fragment)` | test-only `engineHtml()` for R10.1 |
 | `xpath` 0.0.36 | `PathExpr.applyStep(step, xpc, node)` | charges `xpc.xslt.processor`'s budget (D9) |
@@ -206,17 +213,27 @@ listed here, and the guard test (§11) checks each one.
   { budget.step(); return proto.executeInstruction.call(p, el, ctx); }`. `Processor` calls these
   as `this.x(...)` and `Functions.resolver()` calls `functions.find` on the instance, so the
   instance properties win.
-- **The `applyStep` wrapper** is installed once, when the adapter loads, after `XPathFixes`. It
-  holds no state: `const b = xpc?.xslt?.processor?.[BUDGET]; const r = orig.call(this, step, xpc,
+- **The `applyStep` wrapper** is installed when the adapter loads, after `XPathFixes`. It holds
+  no state: `const b = xpc?.xslt?.processor?.[BUDGET]; const r = orig.call(this, step, xpc,
   node); b?.charge(1 + r.length); return r;`. Outside one of our renders, `b` is undefined, so
-  other users of `xpath` pay nothing. `xpath` is a direct dependency, pinned to the version
-  `xsltjs` resolves (0.0.36). The guard checks it is the same module instance: the `XPath` that
-  `xsltjs` passes to custom functions as `this.XPath` must be the one we import.
+  other users of `xpath` pay nothing. `Changed at review:` it is idempotent. The wrapper carries
+  `Symbol.for('afterlife.applyStep')`; a second load of the adapter (a test re-import, Vite HMR)
+  sees the mark on `PathExpr.applyStep` and does nothing, so no step is charged twice. The guard
+  test checks the chain holds exactly one marked wrapper.
+- **One xmldom, one xpath.** `xpath` is a direct dependency, pinned to 0.0.36. `Changed at
+  review:` root `pnpm-workspace.yaml` `overrides` pins `@xmldom/xmldom` to 0.9.12 and `xpath` to
+  0.0.36, so a newer release and a lockfile refresh cannot give `xsltjs` a copy core never
+  checked. The guard asserts that `xsltjs` resolves the same module instance of both as core:
+  `XPath` from `xpath` equals the `this.XPath` passed to custom functions, and `xsltjs`'s
+  `DOMImplementation` is xmldom's.
 - **Errors.** `xsltjs` wraps foreign errors (`XsltError.wrap`, `cause` kept). So a hook that stops
   the render first stores its `AfterlifeError` in the budget's abort slot, then throws it. The
   adapter rethrows the stored error, whatever arrives. Any other `XsltError` becomes `RENDER_FAILED
-  {view, xsltCode, message, line, column}`. A `RangeError` becomes `LIMIT_EXCEEDED
-  {limit: 'templateDepth'}`.
+  {view, xsltCode, message, line, column}`. `Changed at review:` only a stack-overflow
+  `RangeError` (message `Maximum call stack size exceeded`, in V8 for Node and Chromium; found
+  directly or as the `cause` of an `XsltError`) becomes `LIMIT_EXCEEDED {limit: 'templateDepth'}`.
+  Any other `RangeError` (invalid string length, invalid array length) becomes `RENDER_FAILED`,
+  never a crash.
 - `xsl:message` gives `XSL_MESSAGE {count}`; with `terminate="yes"`, `RENDER_FAILED`.
 
 ## 6. Limits (R3.3)
@@ -224,8 +241,25 @@ listed here, and the guard test (§11) checks each one.
 | Limit | Default | Measured max (53 / private) | Why this default |
 |---|---|---|---|
 | `templateDepth` | 256 | 3 / 3 | Equal to `xmlDepth` (256), so built-in rules can recurse through any document the parser accepts. Below the `RangeError` at about 1,131 levels (spike, Node) and `MAX_DEPTH` 3000. Task 5 checks 256 levels in a Chromium Worker. |
-| `evaluationSteps` | 1,000,000 | 2,337 instructions + 531 `applyStep` calls / 343 + 130 | About 350 times the measured work. Task 5 measures the time to reach the limit with the R3.3 bombs and lowers the default if it takes over 1 s in Node. |
-| `outputBytes` | 4 MiB | 119,252 / 29,602 characters | 35 times form 08. Package images count towards it. |
+| `evaluationSteps` | 1,000,000 | 2,337 instructions + 531 `applyStep` calls + 22 string steps / 343 + 130 + 4 | About 350 times the measured work. Task 5 measures the time to reach the limit with the R3.3 bombs and lowers the default if it takes over 1 s in Node. |
+| `outputBytes` | 4 MiB | 451,925 / 74,174 (characters + 64 per node; form 08: 1,471 elements) | 9 times form 08. 64 per node approximates xmldom's memory per node (measured about 620–780 bytes per element), so 4 MiB stops at about 65,000 nodes, about 46 MB. Package images count towards it. |
+
+`Changed at review:` two growth paths that no other limit sees.
+
+- **Strings.** A template recursing on `concat($s, $s)` reaches V8's string maximum (about 2^29
+  characters) in about 30 calls, with few steps, little depth and no output. The `functions.find`
+  override wraps the string-building core functions (`concat`, `substring`, `substring-before`,
+  `substring-after`, `translate`, `normalize-space`, `string`) and `xdFormatting:formatString`.
+  Each result charges `ceil(length / 16)` steps. Measured max per render: 344 characters (form
+  08) and 50 (private), 22 and 4 steps, 0.002 % of the budget. At the default, the steps charged
+  for strings in one render stop at 16 Mi characters, 32 MiB as UTF-16, so a doubling bomb stops
+  before its next string reaches 64 MiB.
+- **Result tree fragments.** A variable's content is built with the same `appendText`,
+  `appendNode`, `setAttribute` and `copyNode` calls into a fragment, so `outputBytes` counts it.
+  `copy-of $x` twice into a new variable is charged for both copies.
+
+Task 5 adds a string-doubling bomb and a fragment-doubling bomb. Both must stop with
+`LIMIT_EXCEEDED` before 64 MiB is built.
 
 Each limit overrun throws `LIMIT_EXCEEDED {limit, max, observed}` and returns no partial HTML.
 The record parse keeps spec 01's `xmlDepth` and `xmlBytes`.
@@ -292,11 +326,20 @@ One walk over the result tree, in this order; each step needs what the one befor
    `textarea`, which cannot show `::after`, a `<span class="afl-required-mark">*</span>` instead.
 8. **Inert controls** (R5.4): remove `contenteditable`, `tabindex`, `accesskey`, `autofocus`;
    prefix `id`, `name`, `for` with `afl-` (no page globals shadowed by name). The root carries
-   `inert`: no focus or input in the subtree, same look.
+   `inert`: no focus or input in the subtree, same look. `Changed at review:` constraint for spec
+   09: under `inert`, hit testing skips the subtree, so `event.target` never names a control and
+   `title` ScreenTips do not show. The X-ray finds controls by geometry
+   (`getBoundingClientRect` of `[data-afl-ctrl]`) on an overlay, and shows the ScreenTip text in
+   its panel.
 9. **Serialise** (§8.3), **scope the CSS** (§8.4), and append `own-css.ts`: the asterisk
    (`::after`, about 8 px, `#FF0000`, right 3 px, vertically centred), CSS-drawn icons (no
-   Microsoft asset), the placeholder box, `[data-afl-ctrl]{min-height:1lh}` (R6.3), and
-   `contain: layout paint` on the root so `position: fixed` cannot leave it.
+   Microsoft asset), the placeholder box, the R6.3 rule, and `contain: layout paint` on the root
+   so `position: fixed` cannot leave it. `Changed at review:` R6.3 is
+   `:where(.afl-root [data-afl-ctrl]){min-height:1lh}` plus
+   `:where(.afl-root span[data-afl-ctrl]){display:inline-block}`. `min-height` does nothing on an
+   inline element, and InfoPath text boxes are `span`s. `:where()` has zero specificity, so any
+   `display` the view sets, in its classes or inline (`DISPLAY: none` on hidden sections), still
+   wins. Task 8's browser test is the oracle.
 
 ### 8.2 Sanitiser rules (R5.1, R5.2)
 
@@ -335,8 +378,15 @@ One walk over the result tree, in this order; each step needs what the one befor
   (`e\78pression`) are decoded and comments removed before any check.
 - **Dropped declarations:** the properties `behavior`, `-ms-behavior` and `-moz-binding`; any
   value containing `expression(`, `image(`, `image-set(`, `-webkit-image-set(`, `element(` or
-  `src(`; any `url()` that is not a raster data URL. InfoPath's own
-  `BEHAVIOR: url(#default#…)` rules go this way.
+  `src(`; any `url()` that is not a raster data URL.
+- `Changed at review:` **InfoPath runtime constructs are dropped silently**, not counted in
+  `CONTENT_REMOVED`: `behavior` declarations whose every `url()` is `#default#…` (all 47 own
+  forms: `CalPopup`, `urn::controls/Binder`, `DTPicker`, `xOptional`, `urn::xdPicture`,
+  `urn::xdFileAttachment`, `urn::tables/NDTable`, written `url(…)` or `url (…)`); the head's
+  `meta` and `title`; `xmlns*` attributes; `contenteditable`, `tabindex` and `hidefocus` (step 8).
+  `CONTENT_REMOVED` is then for content a view really carried. Expected: 0 on every own render;
+  task 9 reports counts by kind, and any other InfoPath-only construct found there joins this
+  list with a design edit.
 - **At-rules:** `@media` blocks are kept and their rules scoped. All other at-rules are dropped
   (`@import`, `@font-face`, `@namespace`, `@charset`, `@page`).
 - **Selectors** (lists split at top-level commas): a leading `html`, `body` or `:root` compound
@@ -347,9 +397,13 @@ One walk over the result tree, in this order; each step needs what the one befor
 
 ### 9.1 Technique
 
-- **At prepare:** a map `line:column` → `BoundControl` from FormIR `view.controls[].source`, which
-  spec 02 took from the same xml/ parser that parses the XSL we compile. The compiled stylesheet
-  keeps those element nodes (`stripStylesheet` removes whitespace text only), so positions match.
+- **At prepare:** a map `file:line:column` → `BoundControl` from FormIR `view.controls[].source`,
+  which spec 02 took from the same xml/ parser that parses the XSL we compile. The compiled
+  stylesheet keeps those element nodes (`stripStylesheet` removes whitespace text only), so
+  positions match. `Changed at review:` the key includes the file. The adapter tags each module's
+  document with its package file name (`xsltBaseURI` minus `xsn:///`), so an element in an
+  included stylesheet cannot collide with one in the view. An element with `xd:binding` in a
+  file FormIR did not scan gets no mark, and is counted in one `CONTROL_NOT_MARKED {count}`.
 - **In the run:** the `literalResultElement` hook calls the original method, which appends the
   created element to `ctx.out` and builds its content. It then finds the control by the element's
   position. If the control has a `targetId`, the hook evaluates its `xd:binding` with
@@ -419,7 +473,7 @@ removed. Form 01: four marks with the empty record (`manifest.xsf` lines 79–82
 | R3.1 | golden + local | as R1.1; private check | — |
 | R3.2 | unit | synthetic `http:`, `file:`, absolute, package include/import, `document()`; **default-loader test** (§5.1) | `test/render/loaders.test.ts` |
 | R3.3 | unit + browser | recursion, nested `for-each` bomb, output bomb, `copy-of` bomb, 256 levels in Worker | `test/render/limits.test.ts`, `test/browser/render-limits.browser.test.ts` |
-| R3.4 | lint + unit | `XSLTProcessor` ban; lockfile licences | `test/lint/restricted.test.ts`, `test/render/licences.test.ts` |
+| R3.4 | lint + unit | `XSLTProcessor` ban; the `license` of every production dependency of `packages/core`, transitive ones included, read offline from its installed `package.json` (`Changed at review:` the lockfile has no licence field) | `test/lint/restricted.test.ts`, `test/render/licences.test.ts` |
 | R4.1–R4.5 | unit | one case per function and per corpus pattern; guard view listing every name | `test/xpath-fns/format.test.ts`, `test/render/functions.test.ts` |
 | R5.1, R5.2 | unit | one case per §8.2 rule and §8.4 rule | `test/render/sanitise.test.ts`, `test/render/css.test.ts` |
 | R5.3, R7.1 | browser | Worker parity over 106 goldens | `test/browser/render-parity.browser.test.ts` |
@@ -432,7 +486,7 @@ removed. Form 01: four marks with the empty record (`manifest.xsf` lines 79–82
 | R10.1 | golden | 106 `xsltproc` references; hooks-on vs bare `XSLT.run` | `test/render/xsltproc.test.ts` |
 | R10.2 | visual | 16 default-view renders | `test/browser/visual.browser.test.ts` |
 | R10.3 | local | private folder minus `own/` | `test/render-private.local.test.ts` |
-| D1, D2, §5.3 | **guard** | `xsltjs/package.json` version `1.0.0`; each §5.3 member exists with its arity; `MAX_DEPTH > templateDepth`; `xpath` identity; a probe view proves each hook fires | `test/render/engine-guard.test.ts` |
+| D1, D2, §5.3 | **guard** | `xsltjs/package.json` version `1.0.0`; each §5.3 member exists with its arity; `MAX_DEPTH > templateDepth`; the same `xpath` and xmldom instances; `applyStep` wrapped exactly once, also after a re-import; a probe view proves each hook fires | `test/render/engine-guard.test.ts` |
 
 The guard test fails with the message "xsltjs internals moved: re-read design §5.3" so that a
 version bump cannot pass silently.
@@ -443,13 +497,10 @@ version bump cannot pass silently.
 |---|---|
 | A version bump moves the internals of §5.3 | exact pin; guard test (task 1) |
 | `xsltjs` 1.0.0 is three days old | 106 `xsltproc` references (task 10), goldens, private check |
-| A single XPath call does work that `applyStep` charges do not cover (string functions on huge values) | `outputBytes` and record-size limits bound the inputs. A Worker can be terminated by its page (spec 09); a Forge function has its timeout. |
+| A single XPath call does work that `applyStep` charges do not cover | string results are charged (§6); `outputBytes` and record-size limits bound the inputs. A Worker can be terminated by its page (spec 09); a Forge function has its timeout. |
 | The Worker stack is smaller than Node's | 256-level test in a Chromium Worker (task 5) |
 | The blank-check rule marks too much or too little on other forms | goldens of forms 01–08 reviewed against screenshots (task 14); the private check prints mark counts |
 
-## 13. Open questions
+## 13. Review answers (2026-11-10)
 
-1. **The global `applyStep` wrapper (D9)** is the only clock-free way to count XPath work. It
-   keeps no state, charges the processor named in each XPath context and does nothing outside
-   our renders. Acceptable under "no global mutation that leaks across renders"? Default: yes.
-   If not, `evaluationSteps` counts instructions only.
+1. **The global `applyStep` wrapper (D9):** approved, made idempotent with a symbol mark (§5.3).

@@ -3,8 +3,8 @@ export { readCabinet } from './cab/reader';
 export type { Cabinet, CabinetInfo, PackageFile } from './cab/reader';
 export { AfterlifeError } from './errors';
 export type { ErrorCode, Issue, IssueCode } from './errors';
-export { DEFAULT_LIMITS } from './limits';
-export type { Limits, ParseOptions } from './limits';
+export { DEFAULT_LIMITS, DEFAULT_RENDER_LIMITS } from './limits';
+export type { Limits, ParseOptions, RenderLimits } from './limits';
 export type { Located, UnknownEntry } from './unknown';
 export type { FieldNode, FieldTree } from './xsd/types';
 export type { Manifest } from './xsf/types';
@@ -47,3 +47,7 @@ export type {
   Trigger,
   UnresolvedRef,
 } from './ir/types';
+export { prepareView } from './render/prepare';
+export type { PrepareOptions, PreparedView } from './render/prepare';
+export { renderView } from './render/render';
+export type { ControlMark, RenderInput, RenderResult } from './render/render';

@@ -28,6 +28,15 @@ describe('packages/core/src restrictions', () => {
     ['new DOMParser()', 'export const p = new DOMParser();\n', 'no-restricted-globals'],
     ['Buffer.from(…)', "export const b = Buffer.from('x');\n", 'no-restricted-globals'],
     ["import '@xmldom/xmldom'", "import '@xmldom/xmldom';\n", 'no-restricted-imports'],
+    // spec 03 D1, R3.4
+    ["import 'xsltjs'", "import 'xsltjs';\n", 'no-restricted-imports'],
+    [
+      "import 'xsltjs/scripts/Processor.js'",
+      "import 'xsltjs/scripts/Processor.js';\n",
+      'no-restricted-imports',
+    ],
+    ["import 'xpath'", "import 'xpath';\n", 'no-restricted-imports'],
+    ['new XSLTProcessor()', 'export const p = new XSLTProcessor();\n', 'no-restricted-globals'],
   ];
 
   test.each(cases)('%s is an error', async (_name, code, rule) => {
@@ -47,11 +56,38 @@ describe('packages/core/src restrictions', () => {
   });
 });
 
-describe('packages/core/src/ir restrictions (spec 02 R1.1)', () => {
+describe('spec 03 engine adapter (D1)', () => {
+  const adapter = 'packages/core/src/render/engine/xsltjs.ts';
+
+  test('the adapter may import xsltjs and xpath', async () => {
+    const code = "import 'xsltjs';\nimport 'xsltjs/scripts/Processor.js';\nimport 'xpath';\n";
+    expect(await ruleIds(code, adapter)).toEqual([]);
+  });
+
+  test.each([
+    ["import '@xmldom/xmldom'", "import '@xmldom/xmldom';\n", 'no-restricted-imports'],
+    ["import 'fs'", "import 'fs';\n", 'no-restricted-imports'],
+    ['new XSLTProcessor()', 'export const p = new XSLTProcessor();\n', 'no-restricted-globals'],
+    ['Date.now()', 'export const d = Date.now();\n', 'no-restricted-globals'],
+  ])('the adapter still may not use %s', async (_name, code, rule) => {
+    expect(await ruleIds(code, adapter)).toEqual([rule]);
+  });
+
+  test('src/xml/parse.ts may not import xsltjs', async () => {
+    expect(await ruleIds("import 'xsltjs';\n", 'packages/core/src/xml/parse.ts')).toEqual([
+      'no-restricted-imports',
+    ]);
+  });
+});
+
+describe('packages/core/src/ir, render and xpath-fns restrictions (spec 02 R1.1, spec 03 R1.4)', () => {
   const files = [
     'packages/core/src/ir/x.ts',
     'packages/core/src/ir/views/x.ts',
     'packages/core/src/ir/xpath/x.ts',
+    'packages/core/src/render/x.ts',
+    'packages/core/src/render/html/x.ts',
+    'packages/core/src/xpath-fns/x.ts',
   ];
   const cases: [string, string, string][] = [
     ["import 'node:fs'", "import 'node:fs';\n", 'no-restricted-imports'],
@@ -63,6 +99,11 @@ describe('packages/core/src/ir restrictions (spec 02 R1.1)', () => {
     ['performance.now()', 'export const t = performance.now();\n', 'no-restricted-globals'],
     ['crypto.randomUUID()', 'export const u = crypto.randomUUID();\n', 'no-restricted-globals'],
     ['Math.random()', 'export const r = Math.random();\n', 'no-restricted-properties'],
+    [
+      'new Intl.NumberFormat()',
+      'export const f = new Intl.NumberFormat();\n',
+      'no-restricted-globals',
+    ],
   ];
 
   test.each(files.flatMap((f) => cases.map(([n, c, r]) => [`${f}: ${n}`, c, r, f] as const)))(
@@ -72,7 +113,7 @@ describe('packages/core/src/ir restrictions (spec 02 R1.1)', () => {
     },
   );
 
-  test('the clock rules apply to src/ir only', async () => {
+  test('the clock rules apply to src/ir, src/render and src/xpath-fns only', async () => {
     expect(await ruleIds('export const d = Date.now();\n', 'packages/core/src/x.ts')).toEqual([]);
   });
 });

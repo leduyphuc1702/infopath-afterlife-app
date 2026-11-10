@@ -32,7 +32,16 @@ interface Located {
   readonly columnNumber?: number;
 }
 
-export function parseXml(bytes: Uint8Array, file: string, ctx: XmlContext): ParsedXml {
+/**
+ * Steps 1–3 without the parse: decode, charge `xmlBytes`, prescan (no DOCTYPE, depth). Spec 03
+ * hands the text of an included stylesheet to the XSLT engine, which parses it with the same
+ * @xmldom/xmldom (pinned by the workspace overrides).
+ */
+export function xmlText(
+  bytes: Uint8Array,
+  file: string,
+  ctx: XmlContext,
+): { text: string; encoding: string; issues: Issue[] } {
   const decoded = decode(bytes, file);
 
   const observed = ctx.xmlBytesUsed + bytes.length;
@@ -47,8 +56,42 @@ export function parseXml(bytes: Uint8Array, file: string, ctx: XmlContext): Pars
   ctx.xmlBytesUsed = observed;
 
   prescan(decoded.text, file, ctx.limits.xmlDepth);
+  return { text: decoded.text, encoding: decoded.encoding, issues: [...decoded.issues] };
+}
 
-  const issues: Issue[] = [...decoded.issues];
+export function parseXml(bytes: Uint8Array, file: string, ctx: XmlContext): ParsedXml {
+  const { root, encoding, issues } = parseDom(bytes, file, ctx);
+  const serializer = new XMLSerializer();
+  const serialize = (node: DomNode) => serializer.serializeToString(node as never);
+  return { root: buildTree(root, serialize), encoding, issues };
+}
+
+/**
+ * An @xmldom/xmldom `Document`, opaque outside this file and the spec 03 engine adapter, which
+ * passes it to `xsltjs` (spec 03 design §1).
+ */
+export interface DomDocument {
+  readonly nodeType: 9;
+}
+
+export interface ParsedDom {
+  readonly doc: DomDocument;
+  readonly encoding: string;
+  readonly issues: readonly Issue[];
+}
+
+/** Spec 03: the same steps and limits as `parseXml`, returning the DOM document itself. */
+export function parseXmlDom(bytes: Uint8Array, file: string, ctx: XmlContext): ParsedDom {
+  const { doc, encoding, issues } = parseDom(bytes, file, ctx);
+  return { doc, encoding, issues };
+}
+
+function parseDom(
+  bytes: Uint8Array,
+  file: string,
+  ctx: XmlContext,
+): { root: DomNode; doc: DomDocument; encoding: string; issues: Issue[] } {
+  const { text, encoding, issues } = xmlText(bytes, file, ctx);
   const errors: { line: number; column: number }[] = [];
   const parser = new DOMParser({
     onError: (level, message, handler: { locator?: Located }) => {
@@ -64,7 +107,7 @@ export function parseXml(bytes: Uint8Array, file: string, ctx: XmlContext): Pars
 
   let doc: { documentElement: unknown };
   try {
-    doc = parser.parseFromString(decoded.text, 'text/xml');
+    doc = parser.parseFromString(text, 'text/xml');
   } catch (e) {
     const where = at(e instanceof ParseError ? (e.locator as Located | undefined) : undefined);
     throw new AfterlifeError('INVALID_XML', { file, ...where });
@@ -73,10 +116,7 @@ export function parseXml(bytes: Uint8Array, file: string, ctx: XmlContext): Pars
   if (firstError) throw new AfterlifeError('INVALID_XML', { file, ...firstError });
   const root = doc.documentElement as DomNode | null;
   if (!root) throw new AfterlifeError('INVALID_XML', { file, line: 1, column: 1 });
-
-  const serializer = new XMLSerializer();
-  const serialize = (node: DomNode) => serializer.serializeToString(node as never);
-  return { root: buildTree(root, serialize), encoding: decoded.encoding, issues };
+  return { root, doc: doc as unknown as DomDocument, encoding, issues };
 }
 
 /** xmldom reports line 0 when it has no position (e.g. an empty document). */

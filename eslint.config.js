@@ -19,6 +19,12 @@ const nodeBuiltins = {
   group: ['node:*'],
   message: 'core has no Node-only imports (R17.1).',
 };
+// Spec 03 D1: one adapter owns the XSLT engine and its XPath library.
+const engineOutsideAdapter = {
+  // A regex, not a gitignore-style group: `xpath` must not match core's own `./xpath/` folder.
+  regex: '^(xsltjs(/.*)?|xpath)$',
+  message: 'Only packages/core/src/render/engine/xsltjs.ts imports xsltjs or xpath (spec 03 D1).',
+};
 const restrictedGlobals = [
   ['fetch', 'core makes no network requests (R17.4).'],
   ['XMLHttpRequest', 'core makes no network requests (R17.4).'],
@@ -28,6 +34,7 @@ const restrictedGlobals = [
   ['process', 'core has no Node-only globals (R17.1).'],
   ['Buffer', 'core has no Node-only globals; use Uint8Array (R17.1).'],
   ['require', 'core is ESM only (R17.1).'],
+  ['XSLTProcessor', 'Chrome is removing XSLT; core brings its own engine (spec 03 R3.4).'],
 ].map(([name, message]) => ({ name, message }));
 
 export default defineConfig(
@@ -51,32 +58,70 @@ export default defineConfig(
     rules: {
       'no-restricted-imports': [
         'error',
-        { paths: [...restrictedModules, xmldomOutsideParser], patterns: [nodeBuiltins] },
+        {
+          paths: [...restrictedModules, xmldomOutsideParser],
+          patterns: [nodeBuiltins, engineOutsideAdapter],
+        },
       ],
       'no-restricted-globals': ['error', ...restrictedGlobals],
     },
   },
   {
-    // Spec 02 R1.1: buildFormIR is pure, so FormIR has no clock and no randomness either.
-    files: ['packages/core/src/ir/**/*.ts'],
+    // Spec 02 R1.1 and spec 03 R1.4: FormIR and renders depend on their inputs alone, so there is
+    // no clock and no randomness; the current date is an input.
+    files: [
+      'packages/core/src/ir/**/*.ts',
+      'packages/core/src/render/**/*.ts',
+      'packages/core/src/xpath-fns/**/*.ts',
+    ],
     rules: {
       'no-restricted-globals': [
         'error',
         ...restrictedGlobals,
-        { name: 'Date', message: 'FormIR depends on the template alone (spec 02 R1.1).' },
-        { name: 'performance', message: 'FormIR depends on the template alone (spec 02 R1.1).' },
-        { name: 'crypto', message: 'FormIR depends on the template alone (spec 02 R1.1).' },
+        {
+          name: 'Date',
+          message: 'No clock: the output depends on its inputs (spec 02 R1.1, spec 03 R1.4).',
+        },
+        {
+          name: 'performance',
+          message: 'No clock: the output depends on its inputs (spec 02 R1.1, spec 03 R1.4).',
+        },
+        {
+          name: 'crypto',
+          message: 'No randomness: the output depends on its inputs (spec 02 R1.1).',
+        },
+        {
+          name: 'Intl',
+          message:
+            'ICU differs between Node and Chromium; core formats with its own tables (spec 03 D8).',
+        },
       ],
       'no-restricted-properties': [
         'error',
-        { object: 'Math', property: 'random', message: 'FormIR has no randomness (spec 02 R1.1).' },
+        {
+          object: 'Math',
+          property: 'random',
+          message: 'No randomness (spec 02 R1.1, spec 03 R7).',
+        },
+      ],
+    },
+  },
+  {
+    files: ['packages/core/src/render/engine/xsltjs.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        { paths: [...restrictedModules, xmldomOutsideParser], patterns: [nodeBuiltins] },
       ],
     },
   },
   {
     files: ['packages/core/src/xml/parse.ts'],
     rules: {
-      'no-restricted-imports': ['error', { paths: restrictedModules, patterns: [nodeBuiltins] }],
+      'no-restricted-imports': [
+        'error',
+        { paths: restrictedModules, patterns: [nodeBuiltins, engineOutsideAdapter] },
+      ],
     },
   },
   prettier,

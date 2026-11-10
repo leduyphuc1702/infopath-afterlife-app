@@ -223,9 +223,11 @@ form "like paper".
 4. THE SYSTEM SHALL NOT use the browser's `XSLTProcessor` or `saxon-js`, and every runtime
    dependency SHALL be under MIT, Apache-2.0, BSD or ISC terms, with no exception
    (samples-and-licensing.md). Oracle: a lint rule bans `XSLTProcessor` in core; a test reads the
-   licence of every production dependency of `packages/core` from the lockfile. `Changed at
-   review:` BSD-only became BSD or ISC; (second review) the `xslt-processor` exception is gone,
-   because the spike chose `xsltjs` (MIT).
+   `license` field from the installed `package.json` of every production dependency of
+   `packages/core`, transitive ones included, offline. `Changed at review:` BSD-only became BSD
+   or ISC; (second review) the `xslt-processor` exception is gone, because the spike chose
+   `xsltjs` (MIT); (third review) the oracle reads installed `package.json` files, because
+   `pnpm-lock.yaml` has no licence field.
 
 ### R4. InfoPath extension functions
 Traces: brief AC2, extended by the Evidence tables; Added: `msxsl`, `function-available`.

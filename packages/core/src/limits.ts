@@ -40,3 +40,29 @@ export function resolveLimits(overrides?: Partial<Limits>): Limits {
   }
   return Object.freeze(out);
 }
+
+/** Spec 03 design §6: what one render may do. Every limit is an option of `renderView`. */
+export interface RenderLimits {
+  /** Nested template calls, built-in rule calls and `xdMath:Eval` calls. */
+  readonly templateDepth: number;
+  /** Per instruction 1; per XPath step 1 + nodes; per string result ceil(length / 16). */
+  readonly evaluationSteps: number;
+  /** Characters added to any result tree, the main one or a variable's, plus 64 per node. */
+  readonly outputBytes: number;
+}
+
+export const DEFAULT_RENDER_LIMITS: RenderLimits = Object.freeze({
+  templateDepth: 256,
+  evaluationSteps: 1_000_000,
+  outputBytes: 4 * MiB,
+});
+
+/** Defaults with the given overrides; `undefined` values keep the default. */
+export function resolveRenderLimits(overrides?: Partial<RenderLimits>): RenderLimits {
+  const out: Record<keyof RenderLimits, number> = { ...DEFAULT_RENDER_LIMITS };
+  for (const key of Object.keys(DEFAULT_RENDER_LIMITS) as (keyof RenderLimits)[]) {
+    const value = overrides?.[key];
+    if (value !== undefined) out[key] = value;
+  }
+  return Object.freeze(out);
+}

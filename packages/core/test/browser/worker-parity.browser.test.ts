@@ -65,12 +65,18 @@ test('the Worker bundle builds with no Node built-in (R17.1)', async () => {
   expect(r.error).toBeUndefined();
   expect(r.ok).toBe(true);
   console.log(`Worker bundle: ${r.modules.length} modules, ${r.bytes} bytes`);
-  // The bundle is the parser, not an empty shell: core's entry and its one dependency are in it.
+  // The bundle is the parser, not an empty shell: core's entry and its dependencies are in it.
+  // Spec 03 task 2: the renderer brings xsltjs and xpath, with xsltjs's fs and path mapped to
+  // core's stubs (design §5.2); no other Node built-in is allowed.
   expect(r.modules).toContain('src/index.ts');
-  expect(r.modules).toContain('node_modules/@xmldom/xmldom');
   expect(r.modules.filter((m) => m.startsWith('node_modules/'))).toEqual([
     'node_modules/@xmldom/xmldom',
+    'node_modules/xpath',
+    'node_modules/xsltjs',
   ]);
+  expect(r.modules).toEqual(
+    expect.arrayContaining(['src/render/engine/stubs/fs.ts', 'src/render/engine/stubs/path.ts']),
+  );
 });
 
 test('the same build fails when an entry imports node:fs, so the check can fail', async () => {

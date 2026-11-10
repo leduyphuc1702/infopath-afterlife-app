@@ -8,6 +8,7 @@
 import { builtinModules } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { build, type Plugin, type Rolldown } from 'vite';
+import { xsltjsStubs } from './xsltjs-stubs';
 
 const coreRoot = fileURLToPath(new URL('../../', import.meta.url));
 /** An entry that imports `node:fs`; the browser test uses this literal to show the guard fails. */
@@ -32,7 +33,8 @@ export async function buildWorkerBundle(entry: string): Promise<WorkerBundleResu
       configFile: false,
       root: coreRoot,
       logLevel: 'silent',
-      plugins: [rejectNodeBuiltins(), probe()],
+      // Spec 03 §5.2: xsltjs's `fs` and `path` resolve to core's stubs before the guard runs.
+      plugins: [xsltjsStubs(), rejectNodeBuiltins(), probe()],
       build: {
         write: false,
         minify: false,

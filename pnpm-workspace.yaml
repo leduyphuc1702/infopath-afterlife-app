@@ -4,3 +4,9 @@ packages:
 
 allowBuilds:
   esbuild: true
+
+# Spec 03 design §5.3: xsltjs must parse and build result trees with the same xmldom and xpath
+# instances core checked. A newer release plus a lockfile refresh must not install a second copy.
+overrides:
+  '@xmldom/xmldom': 0.9.12
+  xpath: 0.0.36

@@ -54,6 +54,27 @@ out. If you add a sample, add a row there first.
 Not yet — the app code is being written. The commands will land here as each slice works:
 build, test, `forge deploy`, and the local viewer.
 
+### Bundling `@afterlife/core` for a browser or a Web Worker
+
+The view renderer's XSLT engine, `xsltjs`, has `require('fs')` and `require('path')` at module
+level. Core never lets it reach them: it always passes its own loaders, which read files from the
+`.xsn` package only. A browser or Worker bundle must still resolve the two names. Map them, for
+importers inside `xsltjs` only, to `packages/core/src/render/engine/stubs/fs.ts` and `path.ts`,
+whose functions all throw. `packages/core/test/helpers/xsltjs-stubs.ts` is the Vite plugin the
+tests use; the web viewer and the Forge Custom UI builds use the same mapping.
+
+## Third-party licences
+
+Production dependencies of `@afterlife/core`, all under the MIT licence:
+
+| Package | Version | Licence | Use |
+|---|---|---|---|
+| `@xmldom/xmldom` | 0.9.12 | MIT | XML parsing, in Node and in Web Workers |
+| `xsltjs` | 1.0.0 | MIT | XSLT 1.0 engine for the view renderer |
+| `xpath` | 0.0.36 | MIT | XPath 1.0, used by `xsltjs` and by the renderer |
+
+`packages/core/test/render/licences.test.ts` checks this list against the installed packages.
+
 ## Licence
 
 MIT, see `LICENSE`. The form templates in `samples/own/` are MIT too. Jira, Jira Service

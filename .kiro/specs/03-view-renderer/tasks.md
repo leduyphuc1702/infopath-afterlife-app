@@ -1,7 +1,13 @@
 # Tasks: 03 view renderer
 
 Phase 3 of 3. Requirements: `requirements.md` (approved 2026-11-10, second review the same day).
-Design: `design.md` (draft for review). Status: **draft for review, 2026-11-10.**
+Design: `design.md` (approved). Status: **approved, 2026-11-10** (draft committed as `5290271`).
+
+Changed at review (2026-11-10): task 1 adds pnpm overrides, the idempotent `applyStep` mark and
+the installed-`package.json` licence test; task 2 adds the string charge to the `find` override;
+task 4 renders the slice in a Worker; task 5 adds the string-doubling and fragment-doubling bombs
+and the `RangeError` split; task 8 makes the R6.3 rule work on inline controls; task 9 reports
+`CONTENT_REMOVED` by kind (0 expected).
 
 ## How every task is run and checked
 
@@ -21,23 +27,27 @@ limits, properties, references and performance.
 
 ## Tasks
 
-- [ ] 1. Engine adapter, dependencies and guards
+- [x] 1. Engine adapter, dependencies and guards
   - Add `xsltjs` 1.0.0 and `xpath` 0.0.36 to `packages/core` dependencies, pinned exactly, and
-    `parse5` 7.3.0 as a devDependency. List them in README "Third-party licences" and add the
+    `parse5` 7.3.0 as a devDependency. Root `pnpm-workspace.yaml` `overrides`: `@xmldom/xmldom`
+    0.9.12, `xpath` 0.0.36 (design §5.3). List them in README "Third-party licences" and add the
     `fs`/`path` alias note to the README's build section (design §5.2).
   - `src/render/engine/xsltjs.ts`: compile with the package-only `loader` and `EMPTY_XSL`; a
     `Processor` per run with the `documentLoader`, the silent logger, the `find`/`isAvailable`
-    overrides, fallback mode and test-only `engineHtml()` (§5.1, §5.3, §7.2).
+    overrides, fallback mode and test-only `engineHtml()` (§5.1, §5.3, §7.2). The `applyStep`
+    wrapper with its `Symbol.for('afterlife.applyStep')` mark (counting starts in task 5).
   - `src/render/engine/stubs/fs.ts` and `path.ts`. `src/xml/parse.ts`: `parseXmlDom()`.
   - `eslint.config.js`: `xsltjs`/`xpath` imports only in the adapter; `XSLTProcessor` banned in
     core; the clock ban extended to `render/**` and `xpath-fns/**`.
   - `test/helpers/worker-bundle.ts` and the browser project in `vitest.config.ts`: map `fs` and
     `path` to the stubs for `node_modules/xsltjs/` importers; pre-bundle `xsltjs` and `xpath`.
   - Tests:
-    - `test/render/engine-guard.test.ts` (§11 guard row);
+    - `test/render/engine-guard.test.ts` (§11 guard row): same xmldom and xpath instances,
+      `applyStep` wrapped exactly once after a re-import;
     - `test/render/loaders.test.ts`: the default-loader test (§5.1), and synthetic `http:`,
       `file:`, absolute and package `xsl:include`/`xsl:import`/`document()`;
-    - `test/render/licences.test.ts`: the lockfile licence of every production dependency;
+    - `test/render/licences.test.ts`: the `license` of every production dependency, transitive
+      ones included, from its installed `package.json`, offline;
     - `test/lint/restricted.test.ts`: the new cases;
     - a Worker bundle of the adapter builds with no other built-in.
   - Requirements: R3.2, R3.4, R1.4 (Worker build).
@@ -47,7 +57,7 @@ limits, properties, references and performance.
     - the guard passes on 1.0.0 and fails on a renamed method.
   - Done when: `V --project node test/render test/lint`, then `pnpm check`.
 
-- [ ] 2. `prepareView` and `renderView`, with `formatString`
+- [x] 2. `prepareView` and `renderView`, with `formatString`
   - `src/render/prepare.ts` and `render.ts` (design §1, §3.1, §4):
     - view lookup and default view;
     - the empty form when there is no record;
@@ -58,7 +68,8 @@ limits, properties, references and performance.
   - New codes in `src/errors.ts` (§4.1); `RenderLimits` and `DEFAULT_RENDER_LIMITS` in
     `src/limits.ts`; exports in `src/index.ts`.
   - `src/render/functions.ts`: the allowed set, the unknown-function stub, and the
-    `formatString` binding.
+    `formatString` binding. The `find` override charges string results to the budget (design
+    §6; the limit itself is enforced from task 5).
   - `src/xpath-fns/format.ts`: the 5 patterns of the 53 views (requirements Evidence).
   - Tests: `test/render/prepare.test.ts`, `test/render/input.test.ts`, `test/render/data.test.ts`
     (R2.1 part), `test/render/functions.test.ts` (availability, unknown functions),
@@ -103,15 +114,21 @@ limits, properties, references and performance.
       of leave, and not Department or Working days; its first record has no mark;
     - a synthetic `errorBlank` and a non-nillable `xsd:date` are each marked when empty;
     - with hooks on, form 01's fallback `engineHtml()` equals a bare `XSLT.run`.
+  - `Changed at review:` `test/browser/render-slice.browser.test.ts`: form 01's two records
+    rendered in a Chromium Worker built with the stubs are byte-identical to the Node goldens.
   - Done when: `V --project node test/render` and `V --project browser
-    test/browser/render-dom.browser.test.ts`, then `pnpm check`. **Slice complete.**
+    test/browser/render-dom.browser.test.ts test/browser/render-slice.browser.test.ts`, then
+    `pnpm check`. **Slice complete.**
 
 - [ ] 5. Limits
   - `src/render/engine/budget.ts`; the depth, step and output hooks; the `applyStep` wrapper;
     the abort slot; mapping `RangeError` to `LIMIT_EXCEEDED` (§5.3, §6).
   - Tests:
     - `test/render/limits.test.ts`: infinite recursion, a nested `for-each` bomb, an output bomb,
-      a `copy-of` bomb, nested `xdMath:Eval`, and overrides;
+      a `copy-of` bomb, nested `xdMath:Eval`, overrides, and (`Changed at review:`) a
+      string-doubling bomb (`concat($s, $s)`) and a fragment-doubling bomb (`copy-of $x` twice
+      into a new variable), each stopped with `LIMIT_EXCEEDED` before 64 MiB is built; a
+      non-stack `RangeError` gives `RENDER_FAILED`;
     - `test/browser/render-limits.browser.test.ts`: 256 nested templates render in a Chromium
       Worker, and 257 give `LIMIT_EXCEEDED`.
   - Measure the time each bomb takes to reach the default. If one exceeds 1 s in Node, lower
@@ -163,7 +180,8 @@ limits, properties, references and performance.
     - form 44 shows the placeholder, with one `UNSUPPORTED_CONTROL`;
     - form 02's date pickers and form 08's picture control show the icons, and no `res:` URL is
       left;
-    - every empty `PlainText` control in form 01's empty record is at least one line high;
+    - every empty `PlainText` control in form 01's empty record is at least one line high,
+      including `span`s the view leaves inline (`Changed at review:`);
     - forms 01–08 have no focusable element.
   - Done when: `V --project node test/render` and `V --project browser
     test/browser/render-dom.browser.test.ts`, then `pnpm check`.
@@ -174,7 +192,8 @@ limits, properties, references and performance.
     with the stubs and a throwing `fetch`, are byte-identical to the goldens.
   - Requirements: R1.1, R3.1, R5.3.
   - Oracle: 106 goldens with no engine error; 106/106 identical in the Worker; 0 calls to an
-    unimplemented function.
+    unimplemented function; `CONTENT_REMOVED` counts by kind reported, 0 on every own render
+    (`Changed at review:`).
   - Done when: `V --project node test/render/golden.samples.test.ts` and `V --project browser
     test/browser/render-parity.browser.test.ts`, then `pnpm check`.
 

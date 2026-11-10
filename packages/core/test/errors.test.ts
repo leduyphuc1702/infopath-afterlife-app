@@ -14,6 +14,9 @@ const samples: { [C in keyof ErrorDetailsByCode]: ErrorDetailsByCode[C] } = {
   INTERNAL: { path: '/xsf:xDocumentClass[1]/xsf:views[1]', reason: 'not consumed by a builder' },
   INVALID_IR: { path: '$.fields[0].kind', reason: 'expected one of field, richText' },
   UNSUPPORTED_IR_VERSION: { found: '2' },
+  RENDER_FAILED: { view: 'View 1', xsltCode: 'XTSE0010', message: 'xsl:stylesheet has no version' },
+  VIEW_NOT_RENDERABLE: { view: 'Manager', reason: 'unknown' },
+  INVALID_RENDER_INPUT: { field: 'now', value: '2026-11-10' },
 };
 
 test('the code list matches design §11', () => {
@@ -53,6 +56,17 @@ test('INTERNAL names the path and the broken invariant', () => {
   expect(new AfterlifeError('INTERNAL', { path: '/a[1]', reason: 'not consumed' }).message).toBe(
     'Internal error at /a[1]: not consumed',
   );
+});
+
+test('RENDER_FAILED keeps the message printable ASCII', () => {
+  expect(
+    new AfterlifeError('RENDER_FAILED', {
+      view: 'View 1',
+      xsltCode: 'XPTY0004',
+      message: 'Unknown function \u00e9',
+      line: 3,
+    }).message,
+  ).toBe('View View 1 failed to render (XPTY0004) at line 3: Unknown function ?');
 });
 
 test('details are copied, so changing the input later does not change the error', () => {

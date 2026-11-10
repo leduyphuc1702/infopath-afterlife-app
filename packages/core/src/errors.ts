@@ -1,7 +1,7 @@
 // Typed errors and issues (design §11). Fatal problems throw AfterlifeError; everything else is
 // an Issue in the result. `message` is English for logs; the UI maps `code` to user text.
 
-import type { Limits } from './limits';
+import type { Limits, RenderLimits } from './limits';
 
 /** Detail fields per fatal error code. */
 export interface ErrorDetailsByCode {
@@ -11,7 +11,7 @@ export interface ErrorDetailsByCode {
   CORRUPT_CAB: { offset: number; reason: string; otherOffset?: number };
   /** `line` and `column`: where an `xmlDepth` overrun was found. */
   LIMIT_EXCEEDED: {
-    limit: keyof Limits;
+    limit: keyof Limits | keyof RenderLimits;
     max: number;
     observed: number;
     file?: string;
@@ -28,6 +28,15 @@ export interface ErrorDetailsByCode {
   INVALID_IR: { path: string; reason: string };
   /** Spec 02: an `irVersion` other than the one this build writes; rebuild from the `.xsn`. */
   UNSUPPORTED_IR_VERSION: { found: string };
+  /**
+   * Spec 03: the XSLT engine stopped. `xsltCode` is the engine's code (`XTSE0165`, …) or the name
+   * of a JavaScript error it raised (`RangeError`).
+   */
+  RENDER_FAILED: { view: string; xsltCode: string; message: string; line?: number };
+  /** Spec 03 R1.3: `view` as asked for ('' for the default view of a form with no views). */
+  VIEW_NOT_RENDERABLE: { view: string; reason: 'unknown' | 'missing' | 'unparsed' };
+  /** Spec 03 R1.4: an input that is not what `renderView` accepts. */
+  INVALID_RENDER_INPUT: { field: 'now' | 'locale' | 'record'; value: string };
 }
 
 export type ErrorCode = keyof ErrorDetailsByCode;
@@ -43,6 +52,9 @@ export const ERROR_CODES: readonly ErrorCode[] = [
   'INTERNAL',
   'INVALID_IR',
   'UNSUPPORTED_IR_VERSION',
+  'RENDER_FAILED',
+  'VIEW_NOT_RENDERABLE',
+  'INVALID_RENDER_INPUT',
 ];
 
 export class AfterlifeError<C extends ErrorCode = ErrorCode> extends Error {
@@ -77,7 +89,20 @@ const MESSAGES: { [C in ErrorCode]: (d: ErrorDetailsByCode[C]) => string } = {
   INVALID_IR: (d) => `Not a FormIR at ${d.path}: ${d.reason}`,
   UNSUPPORTED_IR_VERSION: (d) =>
     `FormIR version ${d.found} is not supported; rebuild it from the .xsn`,
+  RENDER_FAILED: (d) =>
+    `View ${ascii(d.view)} failed to render (${ascii(d.xsltCode)})` +
+    (d.line === undefined ? '' : ` at line ${d.line}`) +
+    `: ${ascii(d.message)}`,
+  VIEW_NOT_RENDERABLE: (d) =>
+    `View ${ascii(d.view)} cannot be rendered: ` +
+    { unknown: 'no such view', missing: 'its XSL is missing', unparsed: 'its XSL failed to parse' }[
+      d.reason
+    ],
+  INVALID_RENDER_INPUT: (d) => `Render input ${d.field} is not valid: ${ascii(d.value)}`,
 };
+
+/** Messages are printable ASCII; engine text may quote the view, so other characters become '?'. */
+const ascii = (text: string) => text.replace(/[^\x20-\x7e]/g, '?');
 
 function errorMessage<C extends ErrorCode>(code: C, details: ErrorDetailsByCode[C]): string {
   return (MESSAGES[code] as (d: ErrorDetailsByCode[C]) => string)(details);
@@ -104,6 +129,12 @@ export const ISSUE_CODES = [
   // spec 02
   'UNRESOLVED_BINDING',
   'DUPLICATE_ID',
+  // spec 03
+  'RECORD_TEMPLATE_MISMATCH',
+  'EXTERNAL_RESOURCE_BLOCKED',
+  'UNKNOWN_FUNCTION',
+  'ENGINE_WARNING',
+  'XSL_MESSAGE',
 ] as const;
 export type IssueCode = (typeof ISSUE_CODES)[number];
 
