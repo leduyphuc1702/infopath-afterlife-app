@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 17): xsd:import with no schemaLocation, resolved by namespace. -->
+<xsd:schema targetNamespace="urn:main" xmlns:o="urn:other" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:import namespace="urn:other"/>
+	<xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+	<xsd:element name="root"><xsd:complexType><xsd:sequence><xsd:element ref="o:thing"/></xsd:sequence></xsd:complexType></xsd:element>
+</xsd:schema>

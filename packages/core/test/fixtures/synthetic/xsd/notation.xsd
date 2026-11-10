@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 17): xsd:notation stays an unknown entry (documented: true, R15.4). -->
+<xsd:schema targetNamespace="urn:u" xmlns:u="urn:u" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:notation name="png" public="image/png"/>
+	<xsd:element name="r" type="xsd:string"/>
+</xsd:schema>

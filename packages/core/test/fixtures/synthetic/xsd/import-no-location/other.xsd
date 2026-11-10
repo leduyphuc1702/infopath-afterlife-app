@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="urn:other" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="thing" type="xsd:int"/>
+</xsd:schema>

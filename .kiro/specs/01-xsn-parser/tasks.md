@@ -320,12 +320,14 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R13.1, R13.2, R13.7, R13.8, R13.9 (end to end through the builders).
   - Done when: `pnpm check` green.
 
-- [ ] 17. Schema set: loading, indexing, include and import, unknown constructs
+- [x] 17. Schema set: loading, indexing, include and import, unknown constructs
   - `src/xsd/vocabulary.ts` (design §9.1 modelled list, including `group`, `attributeGroup`,
     `list`, `union`), `src/xsd/schema-set.ts` (every `.xsd` loaded through `xml/`; globals
     indexed by `{namespace}name` for elements, types, attributes, model groups and attribute
-    groups; `include` and `import` by package file name, case-insensitive, last segment; no fetch;
-    `UNRESOLVED_REFERENCE`; main and secondary schema selection).
+    groups, **one table per schema root** (main, each `dataObject/@schema`) holding the files it
+    reaches through `include`/`import`, `DUPLICATE_GLOBAL` for a repeat inside one table (first
+    kept, second still walked); `include` and `import` by package file name, case-insensitive,
+    last segment; no fetch; `UNRESOLVED_REFERENCE`; main and secondary schema selection).
   - Synthetic fixtures under `fixtures/synthetic/xsd/`: `include/`, `remote-location.xsd`
     (`http://…` and `C:\…` locations), `import-no-location/`, and one file per construct that stays
     unknown: `key.xsd`, `keyref.xsd`, `unique.xsd`, `redefine.xsd`, `notation.xsd`,
@@ -333,14 +335,18 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Tests: `xsd/schema-set.test.ts` (form 04 `Vendors.xsd` imports `Vendors1.xsd` and
     `Vendors2.xsd` and their attributes are indexed; include resolves; remote and absolute
     locations are not fetched (`fetch` stubbed to throw) and record `UNRESOLVED_REFERENCE`; main
-    schema from `rootSchema="yes"` and `rootElement`), `xsd/unknown-constructs.test.ts` (each
+    schema from `rootSchema="yes"` and `rootElement`; form 04 has one table per root, so
+    `Vendors` and `BudgetService` each resolve their own `dfs:myFields`; a synthetic package with
+    the same global twice in one root's reach gives one `DUPLICATE_GLOBAL`),
+    `xsd/unknown-constructs.test.ts` (each
     unknown construct gives exactly one unknown entry with its path and `documented: true`; an
     identity constraint's `selector` and `field` are inside that one entry; a made-up `xsd:foo`
     gives `documented: false`).
-  - Requirements: R15.1 (resolution by name and location), R15.2, R15.4, R15.5 (include, remote).
+  - Requirements: R15.1 (resolution by name and location), R15.2, R15.4, R15.5 (include, remote),
+    R15.7.
   - Done when: `pnpm check` green.
 
-- [ ] 18. Field tree: elements, types, cardinality, choice, kind, wildcards, recursion, facets
+- [x] 18. Field tree: elements, types, cardinality, choice, kind, wildcards, recursion, facets
   - `src/xsd/types.ts` (design §5.2), `src/xsd/field-tree.ts` (design §9.2): `ref` and `use`,
     named types through `extension` and `restriction`, raw and effective cardinality through
     `sequence`, `choice` and `all`, `choiceGroup`, the kind table, wildcards with `namespace`,
@@ -363,7 +369,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
     R15.3.
   - Done when: `pnpm check` green.
 
-- [ ] 19. Field tree: model groups, attribute groups, lists and unions
+- [x] 19. Field tree: model groups, attribute groups, lists and unions
   - `src/xsd/field-tree.ts`: group `ref` expanded in place with its cardinality multiplied like a
     `sequence` and recorded in `raw.groups`; self-referencing group cut as `recursive`; attribute
     groups (nested, in document order, with `anyAttribute`); `list` (`itemType` or inline) and
@@ -546,6 +552,7 @@ Every requirement id appears in at least one task. Task 28 re-checks all of them
 | R15.3 | 18, 19 |
 | R15.4 | 17, 19 |
 | R15.5 | 17, 19 |
+| R15.7 | 17, 18 (added at task 17) |
 | R15.6 | 23 |
 | R16.1, R16.2, R16.3 | 22 |
 | R16.4 | 23 |

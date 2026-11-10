@@ -528,7 +528,7 @@ right Jira field.
 ### R15. Resolve schema references and report unknown schema content
 Traces: brief AC6 (`include`, `import`, `ref`, named complex types); Added: cycles, unresolved
 references, unknown constructs; groups, attribute groups, lists and unions (design approval,
-2026-11-10).
+2026-11-10); R15.7 added 2026-11-10 at task 17 (per-root global tables, form 04 evidence).
 
 As a developer, I want schema references resolved inside the package, so the tree is complete
 without network access.
@@ -562,6 +562,14 @@ without network access.
    (`memberTypes` and inline members), and one schema with each construct that stays unknown.
 6. WHEN the schema belongs to any form listed in the `samples/own/README.md` table, or to the
    public sample, THE SYSTEM SHALL report zero unknown schema entries.
+7. THE SYSTEM SHALL resolve references of each schema root (the main schema and each
+   `dataObject/@schema`) only among the root file and the files it reaches through `include` and
+   `import`. IF two globals of the same kind and `{targetNamespace}name` are reachable from one
+   root, THEN THE SYSTEM SHALL use the first, record a `DUPLICATE_GLOBAL` issue naming both files
+   and paths, and still walk the second for unknown content. Added: in form 04, `Vendors.xsd` and
+   `BudgetService.xsd` each declare a global `dfs:myFields`, as InfoPath does for every secondary
+   data source; one table for the package would let one hide the other. Oracle: form 04 has two
+   secondary trees, keyed `Vendors` and `BudgetService`, each with its own children.
 
 ### R16. Per-form counts match `samples/own/README.md`
 Traces: Added (testing.md "CI checks the per-form counts"; feature-coverage K.1).

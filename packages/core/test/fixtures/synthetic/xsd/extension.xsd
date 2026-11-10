@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 18): complexContent extension (base content first), restriction,
+     simpleContent with attributes, and documentation. -->
+<xsd:schema targetNamespace="urn:e" xmlns:e="urn:e" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:complexType name="baseType">
+		<xsd:sequence><xsd:element name="a" type="xsd:string"/></xsd:sequence>
+		<xsd:attribute name="id" type="xsd:ID"/>
+	</xsd:complexType>
+	<xsd:complexType name="derivedType">
+		<xsd:complexContent>
+			<xsd:extension base="e:baseType">
+				<xsd:sequence><xsd:element name="b" type="xsd:int" minOccurs="0"/></xsd:sequence>
+				<xsd:attribute name="extra" type="xsd:string" use="required" default="x"/>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:simpleType name="code"><xsd:restriction base="xsd:token"><xsd:length value="3"/></xsd:restriction></xsd:simpleType>
+	<xsd:simpleType name="upperCode"><xsd:restriction base="e:code"><xsd:pattern value="[A-Z]+"/></xsd:restriction></xsd:simpleType>
+	<xsd:element name="root">
+		<xsd:annotation><xsd:documentation>The root.</xsd:documentation></xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="derived" type="e:derivedType"/>
+				<xsd:element name="price">
+					<xsd:complexType><xsd:simpleContent><xsd:extension base="xsd:decimal"><xsd:attribute name="currency" type="e:code"/></xsd:extension></xsd:simpleContent></xsd:complexType>
+				</xsd:element>
+				<xsd:element name="country" type="e:upperCode" fixed="VNM"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

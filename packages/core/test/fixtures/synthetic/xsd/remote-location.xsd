@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 17): schemaLocation values that must never be fetched. -->
+<xsd:schema targetNamespace="urn:remote" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:import namespace="urn:a" schemaLocation="http://forms-legacy/schemas/a.xsd"/>
+	<xsd:include schemaLocation="C:\forms\schemas\b.xsd"/>
+	<xsd:include schemaLocation="/etc/schemas/c.xsd"/>
+	<xsd:include schemaLocation="missing.xsd"/>
+	<xsd:element name="r" type="xsd:string"/>
+</xsd:schema>

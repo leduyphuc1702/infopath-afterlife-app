@@ -2,7 +2,7 @@
 // sees a parser type: this module describes the DOM it reads structurally, and parse.ts (the only
 // importer of @xmldom/xmldom) hands it the document.
 
-import { attributeStep, elementStep, textStep } from './path';
+import { attributeStep, elementStep, NS, textStep } from './path';
 
 export interface XmlAttribute {
   readonly kind: 'attribute';
@@ -45,6 +45,11 @@ export interface XmlElement {
   innerXml(): string;
   /** The direct text and CDATA children joined, whitespace-only runs included, verbatim. */
   textContent(): string;
+  /**
+   * The namespace bound to `prefix` in scope here; `null` (or `''`) asks for the default
+   * namespace. `xml` is always bound. Unbound gives `null`. For QName values (`ref`, `type`).
+   */
+  lookupNamespace(prefix: string | null): string | null;
 }
 
 /** The parts of a DOM node this module reads. */
@@ -58,6 +63,7 @@ export interface DomNode {
   readonly columnNumber?: number;
   readonly childNodes: ArrayLike<DomNode>;
   readonly attributes?: ArrayLike<DomNode & { readonly value: string }>;
+  lookupNamespaceURI?(prefix: string | null): string | null;
 }
 
 const ELEMENT = 1;
@@ -136,6 +142,11 @@ function element(node: DomNode, path: string, serialize: (n: DomNode) => string)
         .filter((c) => c.nodeType === TEXT || c.nodeType === CDATA)
         .map((c) => c.nodeValue ?? '')
         .join(''),
+    lookupNamespace: (prefix) => {
+      if (prefix === 'xml') return NS.xml;
+      // xmldom 0.9.12 answers the default namespace for '' (not for null).
+      return node.lookupNamespaceURI?.(prefix ?? '') || null;
+    },
   };
 }
 

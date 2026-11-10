@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 19): xsd:union by memberTypes and inline members; one member
+     (an enumeration with '') accepts the empty string, for task 20. -->
+<xsd:schema targetNamespace="urn:u" xmlns:u="urn:u" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:simpleType name="blank"><xsd:restriction base="xsd:string"><xsd:enumeration value=""/></xsd:restriction></xsd:simpleType>
+	<xsd:simpleType name="dateOrBlank"><xsd:union memberTypes="xsd:date u:blank"/></xsd:simpleType>
+	<xsd:element name="root">
+		<xsd:complexType><xsd:sequence>
+			<xsd:element name="due" type="u:dateOrBlank"/>
+			<xsd:element name="size"><xsd:simpleType><xsd:union memberTypes="xsd:int"><xsd:simpleType><xsd:restriction base="xsd:token"><xsd:enumeration value="S"/><xsd:enumeration value="M"/></xsd:restriction></xsd:simpleType></xsd:union></xsd:simpleType></xsd:element>
+			<xsd:element name="limited"><xsd:simpleType><xsd:restriction base="u:dateOrBlank"><xsd:pattern value="\d{4}-.*"/></xsd:restriction></xsd:simpleType></xsd:element>
+		</xsd:sequence></xsd:complexType>
+	</xsd:element>
+</xsd:schema>

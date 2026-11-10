@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 19): xsd:list by itemType and inline, one restricted with length. -->
+<xsd:schema targetNamespace="urn:l" xmlns:l="urn:l" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:simpleType name="codes"><xsd:list itemType="xsd:token"/></xsd:simpleType>
+	<xsd:simpleType name="threeCodes"><xsd:restriction base="l:codes"><xsd:length value="3"/></xsd:restriction></xsd:simpleType>
+	<xsd:element name="root">
+		<xsd:complexType><xsd:sequence>
+			<xsd:element name="tags" type="l:codes"/>
+			<xsd:element name="triple" type="l:threeCodes"/>
+			<xsd:element name="scores"><xsd:simpleType><xsd:list><xsd:simpleType><xsd:restriction base="xsd:int"><xsd:maxInclusive value="10"/></xsd:restriction></xsd:simpleType></xsd:list></xsd:simpleType></xsd:element>
+		</xsd:sequence></xsd:complexType>
+	</xsd:element>
+</xsd:schema>

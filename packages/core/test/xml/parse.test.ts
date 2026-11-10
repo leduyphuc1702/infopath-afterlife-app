@@ -24,6 +24,18 @@ const SAMPLE = `<?xml version="1.0" encoding="UTF-8"?>
   </xsf:views>
 </xsf:xDocumentClass>`;
 
+test('lookupNamespace: prefixes in scope, the default namespace, xml, unbound', () => {
+  const { root } = parse('<a xmlns="urn:d" xmlns:p="urn:p"><b xmlns:p="urn:q"/></a>');
+  const b = root.children[0] as XmlElement;
+  expect(b.lookupNamespace('p')).toBe('urn:q');
+  expect(root.lookupNamespace('p')).toBe('urn:p');
+  expect(b.lookupNamespace(null)).toBe('urn:d');
+  expect(b.lookupNamespace('')).toBe('urn:d');
+  expect(b.lookupNamespace('xml')).toBe('http://www.w3.org/XML/1998/namespace');
+  expect(b.lookupNamespace('zz')).toBeNull();
+  expect(parse('<a/>').root.lookupNamespace(null)).toBeNull();
+});
+
 describe('the tree', () => {
   const { root, encoding, issues } = parse(SAMPLE);
 

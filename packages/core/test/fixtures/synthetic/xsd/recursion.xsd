@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 18): an element that contains itself, and a type that contains itself. -->
+<xsd:schema targetNamespace="urn:r" xmlns:r="urn:r" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:element name="folder">
+		<xsd:complexType><xsd:sequence>
+			<xsd:element name="title" type="xsd:string"/>
+			<xsd:element ref="r:folder" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="node" type="r:nodeType" minOccurs="0"/>
+		</xsd:sequence></xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="nodeType"><xsd:sequence><xsd:element name="child" type="r:nodeType" minOccurs="0"/></xsd:sequence></xsd:complexType>
+</xsd:schema>

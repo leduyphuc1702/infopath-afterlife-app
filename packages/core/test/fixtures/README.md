@@ -29,3 +29,12 @@ is fictional.
 - `allowed-control.xsf`: `xsf:permissions/xsf:allowedControl` (spec 01 task 15).
 - `signature-lines.xsf`: `xsf3:signatureLines` on a view extension, with every text child
   (spec 01 task 15).
+- `xsd/`: schemas for the schema set (spec 01 task 17): `include/` (an include by relative path
+  and a chameleon include, matched case-insensitively by last segment), `remote-location.xsd`
+  (URL, drive-letter, absolute and missing locations, none fetched), `import-no-location/`
+  (import resolved by namespace), and one file per construct that stays unknown (`key`, `keyref`,
+  `unique`, `redefine`, `notation`, `substitutionGroup`, `abstract`, `block`, `final`).
+- `xsd/extension.xsd`, `xsd/recursion.xsd`, `xsd/kinds.xsd`: derivation order and facets,
+  recursion, and one element per row of the kind table (spec 01 task 18).
+- `xsd/group.xsd`, `xsd/attribute-group.xsd`, `xsd/list.xsd`, `xsd/union.xsd`: model groups,
+  attribute groups, lists and unions (spec 01 task 19).

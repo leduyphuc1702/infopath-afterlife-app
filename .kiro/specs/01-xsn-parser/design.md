@@ -42,7 +42,7 @@ bytes ──► cab/ ──► PackageFile[] ──► xsn/ (find manifest, R6 c
 | D6 | **MS-IPFF2 names are generated into core** (`xsf/ms-ipff2.ts`) by a dev script from the XSDs in sections 5.1–5.3. They supply `documented` (R13.8) and the enumeration lists (R13.4), and a test checks that the vocabulary is a subset of them. Approved. The generated file's header names the source (MS-IPFF2 sections 5.1–5.3, URL, retrieval date) and says it holds only element names, attribute names and enumeration values, copied to implement the format, which the Microsoft Open Specifications notice allows. No prose from the spec and no XSD text. | hand-copy; fetch at runtime | Core makes no network requests. The Open Specifications notice allows copies made to implement the format. |
 | D7 | **Extra limit `xmlBytes` = 4 MiB, the total across all XML this spec parses.** Approved, as an option. An overrun in a file other than the manifest is an issue, not a fatal error. | none | P1 (R19) requires ≤ 1 s for any input ≤ 2 MiB. A 2 MiB cabinet can inflate to the 50 MiB cap, and xmldom parses about 9.5 MB/s (4.7 MB in 496 ms, measured). 4 MiB is about 0.45 s of parsing. The largest in-repo form parses 72 KB of XML; across the whole 71-form corpus the largest manifest plus schemas is 45 KB (a third-party template, not in the repo), so 4 MiB is about 90 times that. |
 | D8 | **`template.xml` is not parsed into a DOM.** R6.6 reads only the `mso-infoPathSolution` processing instruction, with a bounded scan of the first 4 KB. | full parse | That is all this spec needs, and it keeps large default data out of the `xmlBytes` budget. |
-| D9 | **Every `.xsd` in the package is loaded into one schema set**, even when it is not referenced. Trees are built only from roots (main, and each `dataObject`). | load only referenced files | Unknown-content checks (R15.4/15.6) then cover every schema file, and include/import resolve by name inside one set. |
+| D9 | **Every `.xsd` in the package is parsed and walked**, even when it is not referenced, **but globals are indexed in one table per schema root** (the main schema, and each `dataObject/@schema`), holding the root file and every file it reaches through `include` and `import`. Trees are built only from roots. Changed 2026-11-10 at task 17: one table for the whole package collided in form 04. | one table for the package (the first D9); load only referenced files | Unknown-content checks (R15.4/15.6) still cover every schema file. Form 04's `Vendors.xsd` and `BudgetService.xsd` both declare a global `dfs:myFields`; InfoPath gives every secondary data source that root, so one shared table would let one declaration win silently in every multi-source form. |
 | D10 | **Lint and format: eslint 10 + typescript-eslint 8 + prettier 3**, with **TypeScript 6.0.3**. Approved. | oxlint + oxfmt; Biome 2.6.6; TypeScript 7.0.2 | typescript-eslint 8.72.1 has type-aware rules (`no-floating-promises` matters with async inflate) and supports TS `>=4.8.4 <6.1.0`. TypeScript 7.0.2 (the native compiler) is outside that range, so 6.0.3, the last JS release, is the newest we can use. oxfmt is pre-1.0 (0.78.0). `no-restricted-imports` and `no-restricted-globals` enforce R17.1 in the editor. |
 | D11 | **Encodings: `TextDecoder` decides, plus one fixed refusal list** (R5.3). A declared label is passed to `new TextDecoder(label, { fatal: true })`; a `RangeError` (unknown label, and every label that maps to `replacement`, which the constructor rejects by the WHATWG spec) is `INVALID_XML`. The canonical `decoder.encoding` is then checked against `REFUSED_ENCODINGS` in `xml/decode.ts`, the encodings that only one runtime supports. | allow only UTF-8/16 (the first R5.3); our own decoders | Decoding is not a safety risk, and old schemas imported from other systems use legacy code pages. Measured 2026-11-10 over the 228 WHATWG labels: Node 26.13 accepts 222, Node 22.23.4 accepts 220; both reject the 6 `replacement` labels, and Node 22 also rejects `iso-8859-16` and `x-user-defined`. Chromium is measured in task 2; the list is whatever the two runtimes do not share. |
 | D12 | **Field kind from the content model; XSD groups, attribute groups, lists and unions modelled** (R14.1, R14.4, R15.1, R15.4). | kind from "has child elements" (the first §9.2); leave groups unknown | Form 45's `signatures2` (only an `xsd:any` in the XML-DSig namespace) would have been a `field` and then `required`. Groups and attribute groups appear in schemas built from web services and line-of-business systems; leaving them unknown would drop their fields from the tree. |
@@ -575,8 +575,15 @@ recover the modelled set from the result alone: collect every object with a `pat
   (R15.4): `key`, `keyref`, `unique`, `redefine`, `notation`, and the attributes
   `substitutionGroup`, `abstract`, `block`, `final`. The unknown entry for an identity constraint
   covers its `selector` and `field` children.
-- Globals are indexed by `{targetNamespace}name`, separately for elements, types, attributes,
-  model groups and attribute groups. `include` and `import` resolve `schemaLocation` against package file names (case-insensitive,
+- **One global table per schema root** (D9, changed at task 17). The roots are the main schema
+  and each `dataObject/@schema`. A root's table holds the root file and every file it reaches
+  through `include` and `import`, transitively. Inside a table, globals are indexed by
+  `{targetNamespace}name`, separately for elements, types, attributes, model groups and attribute
+  groups. A second global of the same kind and name in one table keeps the first (in reach order:
+  the root file, then files in the order their `include`/`import` appear, depth first) and records
+  `DUPLICATE_GLOBAL` with both files and paths; the second declaration is still walked for unknown
+  content. A file that no root reaches is walked but is in no table, and records nothing.
+  `include` and `import` resolve `schemaLocation` against package file names (case-insensitive,
   last path segment only). A URL or absolute path is never fetched; it records
   `UNRESOLVED_REFERENCE` (R15.2). `import` with no `schemaLocation` resolves by namespace when one
   loaded file declares that target namespace. A `ref` to a group or attribute group that is not
@@ -617,6 +624,23 @@ recover the modelled set from the result alone: collect every object with a `pat
 - **Built-in type:** follow `restriction` and `extension` bases to an `xsd:` type. A `list` records
   its item type and a `union` its member types (R14.7), and `builtin` is `xsd:anySimpleType` for
   both. No type and no content means `xsd:anyType`.
+
+- **Details fixed at tasks 18–19** (`src/xsd/types.ts` is the complete form of §5.2):
+  - type names are strings in the path convention: `xsd:string`, `{uri}local`, or `local`;
+  - `children` lists elements in content-model order, then attributes in declaration order;
+  - `complexContent/extension`: the base type's elements, attributes and wildcards come first; a
+    derived attribute with the same name replaces the base's. `complexContent/restriction` uses
+    only its own particles (a restriction restates them);
+  - a group `ref` adds `{ kind: 'group', ref, minOccurs?, maxOccurs? }` to `raw.groups` between the
+    enclosing particle and the group's own particle; `choiceGroup` is the nearest enclosing
+    `xsd:choice` (a group inside a choice gives its members their own id when the group holds a
+    choice of its own);
+  - a model group or attribute group that refers back to itself is not expanded again, and the
+    element whose content holds it is marked `recursive`;
+  - `builtin` is `xsd:anyType` for every complex type, and `xsd:anySimpleType` for lists and unions
+    (R14.7) and for a simple type that cannot be resolved; a reference that cannot be resolved
+    keeps its node and records `UNRESOLVED_REFERENCE` (R15.2);
+  - `description` is the text of the first `xsd:documentation`, tags removed.
 
 ### 9.3 `required` (`empty-string.ts`, R14.4)
 
@@ -684,7 +708,9 @@ Fatal (`AfterlifeError`, thrown):
 Non-fatal (`Issue`, in `issues`): `CHECKSUM_MISMATCH`, `MISSING_FILE`, `UNLISTED_FILE`,
 `DUPLICATE_NAME`, `UNSAFE_NAME`, `URN_MISMATCH`, `UNRESOLVED_REFERENCE`, `UNSAFE_XML`,
 `INVALID_XML` and `LIMIT_EXCEEDED` (for non-manifest files), `INVALID_ENCODING`, `XML_WARNING`,
-`PATTERN_NOT_EVALUATED`, `REPEATED_ELEMENT` (R13.9). The last four are new in this design.
+`PATTERN_NOT_EVALUATED`, `REPEATED_ELEMENT` (R13.9), `DUPLICATE_GLOBAL` (R15.7, `details`:
+`kind`, `name`, `file`, `path`, `otherFile`, `otherPath`, `root`). The last five are new in this
+design.
 `INTERNAL` carries `{ path, reason }`; the message is `Internal error at <path>: <reason>`.
 
 `AfterlifeError extends Error`, with `readonly code` and `readonly details`; `message` is English

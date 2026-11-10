@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 17): xsd:redefine stays an unknown entry (documented: true, R15.4). -->
+<xsd:schema targetNamespace="urn:u" xmlns:u="urn:u" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:redefine schemaLocation="base.xsd"><xsd:simpleType name="t"><xsd:restriction base="u:t"/></xsd:simpleType></xsd:redefine>
+	<xsd:element name="r" type="xsd:string"/>
+</xsd:schema>

@@ -89,7 +89,8 @@ export type IssueCode =
   | 'INVALID_ENCODING'
   | 'XML_WARNING'
   | 'PATTERN_NOT_EVALUATED'
-  | 'REPEATED_ELEMENT';
+  | 'REPEATED_ELEMENT'
+  | 'DUPLICATE_GLOBAL';
 
 export interface Issue {
   readonly code: IssueCode;

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 19): an attribute group referencing another, plus anyAttribute. -->
+<xsd:schema targetNamespace="urn:a" xmlns:a="urn:a" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:attributeGroup name="audit">
+		<xsd:attribute name="createdBy" type="xsd:string"/>
+		<xsd:attributeGroup ref="a:stamp"/>
+		<xsd:anyAttribute namespace="##other" processContents="lax"/>
+	</xsd:attributeGroup>
+	<xsd:attributeGroup name="stamp">
+		<xsd:attribute name="createdOn" type="xsd:dateTime" use="required"/>
+	</xsd:attributeGroup>
+	<xsd:element name="record">
+		<xsd:complexType>
+			<xsd:attribute name="id" type="xsd:int"/>
+			<xsd:attributeGroup ref="a:audit"/>
+			<xsd:attribute name="note" type="xsd:string"/>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 17): xsd:include of a file with the same target namespace and of a
+     chameleon file with none. -->
+<xsd:schema targetNamespace="urn:inc" xmlns:i="urn:inc" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:include schemaLocation="parts/types.xsd"/>
+	<xsd:include schemaLocation="Chameleon.XSD"/>
+	<xsd:element name="root" type="i:rootType"/>
+</xsd:schema>

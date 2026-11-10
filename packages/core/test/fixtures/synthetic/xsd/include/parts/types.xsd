@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="urn:inc" xmlns:i="urn:inc" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:complexType name="rootType"><xsd:sequence><xsd:element ref="i:item"/></xsd:sequence></xsd:complexType>
+</xsd:schema>

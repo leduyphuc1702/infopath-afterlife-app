@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 17): xsd:keyref stays an unknown entry (documented: true, R15.4). -->
+<xsd:schema targetNamespace="urn:u" xmlns:u="urn:u" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="r"><xsd:complexType><xsd:sequence><xsd:element name="i" type="xsd:string"/></xsd:sequence></xsd:complexType>
+		<xsd:keyref name="kr" refer="u:k"><xsd:selector xpath="u:i"/><xsd:field xpath="."/></xsd:keyref>
+	</xsd:element>
+</xsd:schema>

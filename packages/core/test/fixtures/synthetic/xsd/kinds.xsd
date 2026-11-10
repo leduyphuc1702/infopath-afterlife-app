@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic (spec 01 task 18): one element per row of the kind table (design §9.2). -->
+<xsd:schema targetNamespace="urn:k" xmlns:k="urn:k" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:element name="root">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="simple" type="xsd:date"/>
+				<xsd:element name="inlineSimple"><xsd:simpleType><xsd:restriction base="xsd:integer"><xsd:minInclusive value="1"/><xsd:maxInclusive value="5"/></xsd:restriction></xsd:simpleType></xsd:element>
+				<xsd:element name="simpleContent"><xsd:complexType><xsd:simpleContent><xsd:extension base="xsd:string"/></xsd:simpleContent></xsd:complexType></xsd:element>
+				<xsd:element name="rich"><xsd:complexType mixed="true"><xsd:sequence><xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/1999/xhtml" processContents="lax"/></xsd:sequence></xsd:complexType></xsd:element>
+				<xsd:element name="xhtmlNotMixed"><xsd:complexType><xsd:sequence><xsd:any namespace="http://www.w3.org/1999/xhtml"/></xsd:sequence></xsd:complexType></xsd:element>
+				<xsd:element name="wildcardOnly"><xsd:complexType><xsd:sequence><xsd:any namespace="##other" processContents="skip" minOccurs="0"/></xsd:sequence><xsd:anyAttribute namespace="##any"/></xsd:complexType></xsd:element>
+				<xsd:element name="empty"><xsd:complexType/></xsd:element>
+				<xsd:element name="untyped"/>
+				<xsd:element name="anyTyped" type="xsd:anyType" nillable="true"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>
