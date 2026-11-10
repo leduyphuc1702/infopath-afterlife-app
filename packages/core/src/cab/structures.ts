@@ -1,5 +1,6 @@
-// CFHEADER, CFFOLDER and CFFILE parsing (design §6 steps 1–4; R2, R3.1–3.2, R3.5, R4.1–4.3).
-// No data blocks here: every check that must happen before inflation happens in this file.
+// CFHEADER, CFFOLDER, CFFILE and CFDATA headers (design §6 steps 1–5; R2, R3.1–3.3, R3.5,
+// R3.7–3.8, R4.1–4.4, R4.7). Nothing is inflated here: every check that must happen before the
+// first inflation happens in this file, so readCabinet only inflates, checksums and slices.
 
 import { AfterlifeError } from '../errors';
 import type { Limits } from '../limits';
@@ -27,6 +28,21 @@ export interface CabHeader {
   readonly cbCFFolder: number;
   /** Per-block reserve size (0 without flag 0x0004). */
   readonly cbCFData: number;
+  /** End of the CFFILE area: the area is `[coffFiles, filesEnd)`. */
+  readonly filesEnd: number;
+}
+
+/** MSZIP's largest block (R4.4). */
+export const MAX_BLOCK = 32_768;
+
+export interface CabBlock {
+  /** Offset of the CFDATA header. */
+  readonly offset: number;
+  readonly csum: number;
+  readonly cbData: number;
+  readonly cbUncomp: number;
+  /** Offset of the block data (after the header and its reserve). */
+  readonly dataStart: number;
 }
 
 export interface CabFolder {
@@ -36,7 +52,13 @@ export interface CabFolder {
   readonly coffCabStart: number;
   readonly cCFData: number;
   readonly compression: 'none' | 'mszip';
+  /** Its CFDATA blocks, walked and checked; nothing inflated (step 5). */
+  readonly blocks: readonly CabBlock[];
+  /** End of its last block: the folder's data range is `[coffCabStart, end)`. */
+  readonly end: number;
 }
+
+type FolderEntry = Omit<CabFolder, 'blocks' | 'end'>;
 
 export interface CabFileEntry {
   /** Offset of the CFFILE entry. */
@@ -113,19 +135,29 @@ export function readStructures(bytes: Uint8Array, limits: Limits): CabStructures
   }
 
   // Step 3: folders; every compression type is checked before anything is inflated (R2.1, R2.2).
-  const folders: CabFolder[] = [];
+  const entries: FolderEntry[] = [];
+  let declaredBlocks = 0;
   for (let index = 0; index < cFolders; index++) {
     const offset = r.offset;
     const coffCabStart = r.u32('CFFOLDER.coffCabStart');
     const cCFData = r.u16('CFFOLDER.cCFData');
     const typeCompress = r.u16('CFFOLDER.typeCompress');
     r.bytes(cbCFFolder, 'CFFOLDER.abReserve');
-    folders.push({
+    entries.push({
       index,
       offset,
       coffCabStart,
       cCFData,
       compression: compression(typeCompress, index),
+    });
+    declaredBlocks += cCFData;
+  }
+  // R4.7: from the declared counts, before any block header is read.
+  if (declaredBlocks > limits.blocks) {
+    throw new AfterlifeError('LIMIT_EXCEEDED', {
+      limit: 'blocks',
+      max: limits.blocks,
+      observed: declaredBlocks,
     });
   }
 
@@ -159,6 +191,14 @@ export function readStructures(bytes: Uint8Array, limits: Limits): CabStructures
       observed: declared,
     });
   }
+  const filesEnd = r.offset;
+
+  // Step 5a: walk every block header of every folder, bounds only (R3.2).
+  const folders: CabFolder[] = entries.map((f) => walkBlocks(r, f, cbCFData));
+  // Step 5b: no two folders share bytes, and none overlaps the CFFILE area (R3.7).
+  checkOverlaps(folders, coffFiles, filesEnd);
+  // Step 5c: per-block checks, still before any inflation (R3.3, R3.8, R4.1, R4.4).
+  checkBlocks(bytes, folders, limits);
 
   return {
     header: {
@@ -172,10 +212,106 @@ export function readStructures(bytes: Uint8Array, limits: Limits): CabStructures
       coffFiles,
       cbCFFolder,
       cbCFData,
+      filesEnd,
     },
     folders,
     files,
   };
+}
+
+function walkBlocks(r: ByteReader, folder: FolderEntry, cbCFData: number): CabFolder {
+  r.seek(folder.coffCabStart, `CFFOLDER[${folder.index}].coffCabStart`);
+  const blocks: CabBlock[] = [];
+  for (let i = 0; i < folder.cCFData; i++) {
+    const offset = r.offset;
+    const csum = r.u32('CFDATA.csum');
+    const cbData = r.u16('CFDATA.cbData');
+    const cbUncomp = r.u16('CFDATA.cbUncomp');
+    r.bytes(cbCFData, 'CFDATA.abReserve');
+    const dataStart = r.offset;
+    r.bytes(cbData, 'CFDATA.ab');
+    blocks.push({ offset, csum, cbData, cbUncomp, dataStart });
+  }
+  return { ...folder, blocks, end: r.offset };
+}
+
+interface Range {
+  readonly start: number;
+  readonly end: number;
+  /** -1 for the CFFILE area, else the folder index. */
+  readonly index: number;
+}
+
+/**
+ * Sweep over the non-empty ranges sorted by start (the CFFILE area first on a tie, then by folder
+ * index). `offset` is the start of the range that starts later, `otherOffset` the start of the
+ * earlier range it runs into.
+ */
+function checkOverlaps(folders: readonly CabFolder[], coffFiles: number, filesEnd: number): void {
+  const ranges: Range[] = folders
+    .filter((f) => f.end > f.coffCabStart)
+    .map((f) => ({ start: f.coffCabStart, end: f.end, index: f.index }));
+  if (filesEnd > coffFiles) ranges.push({ start: coffFiles, end: filesEnd, index: -1 });
+  ranges.sort((a, b) => a.start - b.start || a.index - b.index);
+
+  let reach: Range | undefined;
+  for (const range of ranges) {
+    if (reach && range.start < reach.end) {
+      throw new AfterlifeError('CORRUPT_CAB', {
+        offset: range.start,
+        otherOffset: reach.start,
+        reason: `${describe(range)} overlaps ${describe(reach)}`,
+      });
+    }
+    if (!reach || range.end > reach.end) reach = range;
+  }
+}
+
+function describe(r: Range): string {
+  const span = `[${r.start}, ${r.end})`;
+  return r.index < 0 ? `the CFFILE area ${span}` : `the CFDATA of folder ${r.index} ${span}`;
+}
+
+function checkBlocks(bytes: Uint8Array, folders: readonly CabFolder[], limits: Limits): void {
+  let total = 0;
+  for (const folder of folders) {
+    for (const b of folder.blocks) {
+      const offset = b.offset;
+      if (b.cbUncomp > MAX_BLOCK) {
+        throw new AfterlifeError('CORRUPT_CAB', {
+          offset,
+          reason: `block declares ${b.cbUncomp} uncompressed bytes; MSZIP allows ${MAX_BLOCK}`,
+        });
+      }
+      if (b.cbUncomp === 0) {
+        throw new AfterlifeError('CORRUPT_CAB', {
+          offset,
+          reason: 'block declares 0 uncompressed bytes',
+        });
+      }
+      total += b.cbUncomp;
+      if (total > limits.uncompressedBytes) {
+        throw new AfterlifeError('LIMIT_EXCEEDED', {
+          limit: 'uncompressedBytes',
+          max: limits.uncompressedBytes,
+          observed: total,
+        });
+      }
+      if (folder.compression === 'mszip') {
+        if (b.cbData < 2 || bytes[b.dataStart] !== 0x43 || bytes[b.dataStart + 1] !== 0x4b) {
+          throw new AfterlifeError('CORRUPT_CAB', {
+            offset,
+            reason: 'MSZIP block has no CK signature',
+          });
+        }
+      } else if (b.cbData !== b.cbUncomp) {
+        throw new AfterlifeError('CORRUPT_CAB', {
+          offset,
+          reason: `stored block has ${b.cbData} data bytes but declares ${b.cbUncomp}`,
+        });
+      }
+    }
+  }
 }
 
 function compression(typeCompress: number, folder: number): 'none' | 'mszip' {

@@ -159,7 +159,9 @@ As a developer, I want a typed error that names what is unsupported, so the UI c
 5. Oracle: synthetic cabinets built in the test suite (headers only; no LZX encoder needed).
 
 ### R3. Fail on input that is not a valid cabinet
-Traces: brief AC3; Added: checksum and size checks.
+Traces: brief AC3; Added: checksum and size checks; R3.7–R3.8 added 2026-11-10 at the task 5
+review (a crafted cabinet could point several folders at the same bytes and multiply the work
+past P1's 1 s bound, R19).
 
 As a developer, I want a typed error with a byte offset, so a broken upload can be diagnosed. As
 Mai, I want a slightly damaged template to open anyway, because this product exists to rescue old
@@ -179,17 +181,27 @@ files.
 6. Oracle: truncations and byte flips of the in-repo cabinets (also exercised by P1). For R3.4, an
    in-repo cabinet with one checksum byte flipped: parses, returns the same files, and has exactly
    one `CHECKSUM_MISMATCH` issue.
+7. IF the CFDATA ranges of two folders overlap, or a folder's CFDATA range overlaps the CFFILE
+   area, THEN THE SYSTEM SHALL fail with `CORRUPT_CAB` naming both offsets (`offset`, the start
+   of the later range, and `otherOffset`, the start of the range it runs into). A folder's range
+   is known only by walking its block headers, so THE SYSTEM SHALL walk every block header of
+   every folder, checking each against the input length, before the first block is inflated.
+   Added (see Traces). Oracle: synthetic cabinets in `cab/hardening.test.ts`.
+8. IF an MSZIP or stored block declares `cbUncomp` 0, THEN THE SYSTEM SHALL fail with
+   `CORRUPT_CAB` at the block. In MS-CAB only the split blocks of multi-cabinet sets have it, and
+   those are refused by R2.3. Added (see Traces).
 
 ### R4. Enforce resource limits
-Traces: brief AC4; Added: input size, block size and XML depth limits (tech.md "Security rules").
+Traces: brief AC4; Added: input size, block size and XML depth limits (tech.md "Security rules");
+R4.7 added 2026-11-10 at the task 5 review, with R3.7 (P1 bound).
 
 As Mai, I want a hostile or broken file to stop quickly, so one bad file cannot freeze the batch.
 
-1. IF the total declared or actual uncompressed size exceeds 50 MB, THEN THE SYSTEM SHALL stop
+1. IF the total declared or actual uncompressed size exceeds 50 MiB, THEN THE SYSTEM SHALL stop
    with `LIMIT_EXCEEDED` (limit `uncompressedBytes`) before inflating further.
 2. IF the cabinet declares more than 2,000 files, THEN THE SYSTEM SHALL stop with
    `LIMIT_EXCEEDED` (limit `entries`) before reading them.
-3. IF the input is larger than 20 MB, THEN THE SYSTEM SHALL stop with `LIMIT_EXCEEDED` (limit
+3. IF the input is larger than 20 MiB, THEN THE SYSTEM SHALL stop with `LIMIT_EXCEEDED` (limit
    `inputBytes`) before parsing. The largest in-repo cabinet is 19.5 KB.
 4. IF a CFDATA block declares more than 32,768 uncompressed bytes, THEN THE SYSTEM SHALL fail with
    `CORRUPT_CAB` (the MSZIP maximum).
@@ -197,7 +209,13 @@ As Mai, I want a hostile or broken file to stop quickly, so one bad file cannot 
    `LIMIT_EXCEEDED` (limit `xmlDepth`). The check SHALL run before the document is built, because
    the XML parser has no depth limit of its own.
 6. THE SYSTEM SHALL accept every limit as an option with these values as defaults, and report the
-   limit name, the limit and the observed value in the error.
+   limit name, the limit and the observed value in the error. Sizes are binary: 1 MiB is
+   1,048,576 bytes.
+7. IF the folders declare more than 4,096 CFDATA blocks in total (the sum of the CFFOLDER
+   `cCFData` values), THEN THE SYSTEM SHALL stop with `LIMIT_EXCEEDED` (limit `blocks`) before any
+   block header is read. 50 MiB at 32 KiB per block is 1,600 blocks, so 4,096 leaves room for
+   writers that use smaller blocks; the in-repo cabinets have at most 9 blocks per folder.
+   Added (see Traces).
 
 ### R5. Parse XML safely
 Traces: brief AC7; Added: DOCTYPE rejection, encodings, Worker-safe parser.
@@ -595,7 +613,7 @@ As Mai, I want a folder of 300 templates to triage in minutes, so I can work thr
 ### R19. Property P1: the parser never hangs and never throws an untyped error
 Traces: brief P1.
 
-1. For any byte array up to 2 MB, generated as random bytes or as mutations of the in-repo
+1. For any byte array up to 2 MiB, generated as random bytes or as mutations of the in-repo
    cabinets (bit flips, truncation, splices, header field changes), THE SYSTEM SHALL return a
    result or throw an `AfterlifeError` with a code from this spec within 1 s.
 2. The same SHALL hold for mutated manifests and schemas repacked into a valid cabinet, so the
@@ -621,8 +639,8 @@ Traces: Added (enforces R13; P2–P11 are taken in testing.md, so this takes P12
 |---|---|
 | AC1 MSZIP, bytes equal `bsdtar` | R1, R16.4, R17.3 |
 | AC2 LZX/Quantum | R2 |
-| AC3 not a cabinet / truncated | R3 |
-| AC4 50 MB / 2,000 entries | R4 |
+| AC3 not a cabinet / truncated | R3 (R3.7–R3.8 added) |
+| AC4 50 MiB / 2,000 entries | R4 |
 | AC5 manifest extraction | R7–R12; completeness R13, R20 |
 | AC6 field tree, include/import/ref/named types | R14, R15 |
 | AC7 no XXE, no DTD | R5 |
@@ -645,7 +663,7 @@ These were the open questions of the first draft. Each is resolved in the requir
    `repeating + optional` (R16.1).
 5. **Doc corrections:** made in infopath-domain.md, feature-coverage.md (C and E, citing
    MS-IPFF2), brief 02 (FormIR `unknowns[]`) and tech.md.
-6. **Limits:** 20 MB input and XML depth 256 are approved (R4.3, R4.5).
+6. **Limits:** 20 MiB input and XML depth 256 are approved (R4.3, R4.5).
 7. **Checksum mismatch:** not fatal. A `CHECKSUM_MISMATCH` issue when the block still inflates to
    exactly `cbUncomp`; inflate failure or a wrong length stays fatal (R3.3, R3.4).
 8. **Fixtures:** forms 43–47 (browser-compatible; ActiveX with `submitToHostAdapter`;

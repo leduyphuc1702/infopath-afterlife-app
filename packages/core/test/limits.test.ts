@@ -2,20 +2,22 @@ import { deflateRawSync } from 'node:zlib';
 import { describe, expect, test } from 'vitest';
 import { readStructures } from '../src/cab/structures';
 import { DEFAULT_LIMITS, resolveLimits, type Limits } from '../src/limits';
+import { parseXml, xmlContext } from '../src/xml/parse';
 import { readCabinet } from '../src/index';
 import { writeCabinet } from './helpers/cab-writer';
-import { catchRejection } from './helpers/catch-error';
+import { catchError, catchRejection } from './helpers/catch-error';
 
-const MB = 1024 * 1024;
+const MiB = 1024 * 1024;
 
 describe('defaults and overrides (R4.6)', () => {
-  test('defaults are 20 MB, 50 MB, 2,000, 256 and 4 MB', () => {
+  test('defaults are 20 MiB, 50 MiB, 2,000 entries, 4,096 blocks, depth 256 and 4 MiB', () => {
     expect(DEFAULT_LIMITS).toEqual({
-      inputBytes: 20 * MB,
-      uncompressedBytes: 50 * MB,
+      inputBytes: 20 * MiB,
+      uncompressedBytes: 50 * MiB,
       entries: 2_000,
+      blocks: 4_096,
       xmlDepth: 256,
-      xmlBytes: 4 * MB,
+      xmlBytes: 4 * MiB,
     });
     expect(Object.isFrozen(DEFAULT_LIMITS)).toBe(true);
   });
@@ -71,16 +73,16 @@ describe('cabinet structure limits (R4.2, R4.3)', () => {
     );
   });
 
-  test('20 MB passes the input check; 20 MB + 1 byte gives LIMIT_EXCEEDED inputBytes first', () => {
-    const exact = new Uint8Array(20 * MB);
+  test('20 MiB passes the input check; 20 MiB + 1 byte gives LIMIT_EXCEEDED inputBytes first', () => {
+    const exact = new Uint8Array(20 * MiB);
     expect(() => readStructures(exact, DEFAULT_LIMITS)).toThrow(
       expect.objectContaining({ code: 'CORRUPT_CAB' }),
     );
-    const over = new Uint8Array(20 * MB + 1);
+    const over = new Uint8Array(20 * MiB + 1);
     expect(() => readStructures(over, DEFAULT_LIMITS)).toThrow(
       expect.objectContaining({
         code: 'LIMIT_EXCEEDED',
-        details: { limit: 'inputBytes', max: 20 * MB, observed: 20 * MB + 1 },
+        details: { limit: 'inputBytes', max: 20 * MiB, observed: 20 * MiB + 1 },
       }),
     );
   });
@@ -103,19 +105,19 @@ describe('uncompressed size and block limits (R4.1, R4.4)', () => {
   const zeros32k = ck(deflateRawSync(new Uint8Array(32_768)));
   const garbage = new Uint8Array([0x43, 0x4b, 0xff, 0xff, 0xff, 0xff]);
 
-  test('a declared 51 MB stops before any block is inflated', async () => {
+  test('a declared 51 MiB stops before any block is inflated', async () => {
     const { bytes } = writeCabinet([{ name: 'big.xml', bytes: new Uint8Array(10) }], {
-      fileFields: { 0: { cbFile: 51 * MB } },
+      fileFields: { 0: { cbFile: 51 * MiB } },
       blockFields: { '0:0': { ab: garbage } },
     });
     expect(await catchRejection(readCabinet(bytes))).toMatchObject({
       code: 'LIMIT_EXCEEDED',
-      details: { limit: 'uncompressedBytes', max: 50 * MB, observed: 51 * MB },
+      details: { limit: 'uncompressedBytes', max: 50 * MiB, observed: 51 * MiB },
     });
   });
 
-  test('actual output past 50 MB stops before the block that would pass it', async () => {
-    // 1,600 blocks of 32 KB are exactly 50 MB. Block 1,601 is garbage: had the reader inflated
+  test('actual output past 50 MiB stops before the block that would pass it', async () => {
+    // 1,600 blocks of 32 KiB are exactly 50 MiB. Block 1,601 is garbage: had the reader inflated
     // it, the error would be CORRUPT_CAB.
     const blocks = Array.from({ length: 1_600 }, () => ({ ab: zeros32k, cbUncomp: 32_768 }));
     blocks.push({ ab: garbage, cbUncomp: 32_768 });
@@ -124,11 +126,11 @@ describe('uncompressed size and block limits (R4.1, R4.4)', () => {
     });
     expect(await catchRejection(readCabinet(bytes))).toMatchObject({
       code: 'LIMIT_EXCEEDED',
-      details: { limit: 'uncompressedBytes', max: 50 * MB, observed: 50 * MB + 32_768 },
+      details: { limit: 'uncompressedBytes', max: 50 * MiB, observed: 50 * MiB + 32_768 },
     });
   });
 
-  test('exactly 50 MB of output is accepted', async () => {
+  test('exactly 50 MiB of output is accepted', async () => {
     const blocks = Array.from({ length: 1_600 }, () => ({ ab: zeros32k, cbUncomp: 32_768 }));
     const { bytes } = writeCabinet([{ name: 'tiny.xml', bytes: new Uint8Array(1) }], {
       folders: [{ blocks }],
@@ -166,6 +168,34 @@ describe('uncompressed size and block limits (R4.1, R4.4)', () => {
     expect(await catchRejection(readCabinet(bytes))).toMatchObject({
       code: 'CORRUPT_CAB',
       details: { offset: layout.blocks[0]![0] },
+    });
+  });
+});
+
+describe('xmlBytes across documents (D7, R4.6)', () => {
+  const doc = (n: number) => new TextEncoder().encode(`<r>${'x'.repeat(n - 7)}</r>`);
+
+  test('the budget is shared by every document parsed with one context', () => {
+    const ctx = xmlContext(resolveLimits({ xmlBytes: 1_000 }));
+    parseXml(doc(600), 'manifest.xsf', ctx);
+    expect(ctx.xmlBytesUsed).toBe(600);
+    expect(catchError(() => parseXml(doc(401), 'schema.xsd', ctx))).toMatchObject({
+      code: 'LIMIT_EXCEEDED',
+      details: { limit: 'xmlBytes', max: 1_000, observed: 1_001, file: 'schema.xsd' },
+    });
+    // The refused document is not charged; one that fits still parses.
+    expect(ctx.xmlBytesUsed).toBe(600);
+    parseXml(doc(400), 'view1.xsl', ctx);
+    expect(ctx.xmlBytesUsed).toBe(1_000);
+  });
+
+  test('the default is 4 MiB', () => {
+    const ctx = xmlContext(DEFAULT_LIMITS);
+    parseXml(doc(4 * MiB), 'a.xml', ctx);
+    expect(catchError(() => parseXml(doc(8), 'b.xml', ctx)).details).toMatchObject({
+      limit: 'xmlBytes',
+      max: 4 * MiB,
+      observed: 4 * MiB + 8,
     });
   });
 });

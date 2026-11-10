@@ -40,7 +40,7 @@ bytes ──► cab/ ──► PackageFile[] ──► xsn/ (find manifest, R6 c
 | D4 | **XML: `@xmldom/xmldom` 0.9.12, wrapped by `xml/`**, with our own decoding and pre-scan in front of it. | `saxes` (ISC, SAX only), `txml` (MIT, no locations), `fast-xml-parser` (MIT, no DOM) | Checks in §7.1. It meets R5 once we decode bytes ourselves and reject DOCTYPE and depth before it runs. No other MIT parser is needed. |
 | D5 | **One vocabulary table drives extraction and the unknown check** (§8). | hand-written extractors plus a separate "known names" list | Two lists drift. With one table, "modelled" is a property of the table plus the walker, and tests can check it mechanically (§8.5). |
 | D6 | **MS-IPFF2 names are generated into core** (`xsf/ms-ipff2.ts`) by a dev script from the XSDs in sections 5.1–5.3. They supply `documented` (R13.8) and the enumeration lists (R13.4), and a test checks that the vocabulary is a subset of them. Approved. The generated file's header names the source (MS-IPFF2 sections 5.1–5.3, URL, retrieval date) and says it holds only element names, attribute names and enumeration values, copied to implement the format, which the Microsoft Open Specifications notice allows. No prose from the spec and no XSD text. | hand-copy; fetch at runtime | Core makes no network requests. The Open Specifications notice allows copies made to implement the format. |
-| D7 | **Extra limit `xmlBytes` = 4 MB, the total across all XML this spec parses.** Approved, as an option. An overrun in a file other than the manifest is an issue, not a fatal error. | none | P1 (R19) requires ≤ 1 s for any input ≤ 2 MB. A 2 MB cabinet can inflate to the 50 MB cap, and xmldom parses about 9.5 MB/s (4.7 MB in 496 ms, measured). 4 MB is about 0.45 s of parsing. The largest in-repo form parses 72 KB of XML; across the whole 71-form corpus the largest manifest plus schemas is 45 KB (a third-party template, not in the repo), so 4 MB is about 90 times that. |
+| D7 | **Extra limit `xmlBytes` = 4 MiB, the total across all XML this spec parses.** Approved, as an option. An overrun in a file other than the manifest is an issue, not a fatal error. | none | P1 (R19) requires ≤ 1 s for any input ≤ 2 MiB. A 2 MiB cabinet can inflate to the 50 MiB cap, and xmldom parses about 9.5 MB/s (4.7 MB in 496 ms, measured). 4 MiB is about 0.45 s of parsing. The largest in-repo form parses 72 KB of XML; across the whole 71-form corpus the largest manifest plus schemas is 45 KB (a third-party template, not in the repo), so 4 MiB is about 90 times that. |
 | D8 | **`template.xml` is not parsed into a DOM.** R6.6 reads only the `mso-infoPathSolution` processing instruction, with a bounded scan of the first 4 KB. | full parse | That is all this spec needs, and it keeps large default data out of the `xmlBytes` budget. |
 | D9 | **Every `.xsd` in the package is loaded into one schema set**, even when it is not referenced. Trees are built only from roots (main, and each `dataObject`). | load only referenced files | Unknown-content checks (R15.4/15.6) then cover every schema file, and include/import resolve by name inside one set. |
 | D10 | **Lint and format: eslint 10 + typescript-eslint 8 + prettier 3**, with **TypeScript 6.0.3**. Approved. | oxlint + oxfmt; Biome 2.6.6; TypeScript 7.0.2 | typescript-eslint 8.72.1 has type-aware rules (`no-floating-promises` matters with async inflate) and supports TS `>=4.8.4 <6.1.0`. TypeScript 7.0.2 (the native compiler) is outside that range, so 6.0.3, the last JS release, is the newest we can use. oxfmt is pre-1.0 (0.78.0). `no-restricted-imports` and `no-restricted-globals` enforce R17.1 in the editor. |
@@ -110,11 +110,12 @@ export type {
 export interface ParseOptions { readonly limits?: Partial<Limits> }
 
 export interface Limits {
-  readonly inputBytes: number;        // 20 MB   (R4.3)
-  readonly uncompressedBytes: number; // 50 MB   (R4.1)
+  readonly inputBytes: number;        // 20 MiB  (R4.3)
+  readonly uncompressedBytes: number; // 50 MiB  (R4.1)
   readonly entries: number;           // 2,000   (R4.2)
+  readonly blocks: number;            // 4,096   (R4.7), total CFDATA blocks across folders
   readonly xmlDepth: number;          // 256     (R4.5)
-  readonly xmlBytes: number;          // 4 MB    (D7)
+  readonly xmlBytes: number;          // 4 MiB   (D7)
 }
 
 export interface TemplateCounts {      // R16.1, one field per README column
@@ -291,18 +292,29 @@ export interface FieldNode {
    If `cFiles > entries`, throw `LIMIT_EXCEEDED` before reading any CFFILE (R4.2).
 3. **Folders:** read compression type `typeCompress & 0x000F`: 0 = none, 1 = MSZIP; 2 (Quantum) and
    3 (LZX) throw `UNSUPPORTED_COMPRESSION` with the method name and folder index; any other value
-   throws with the number (R2.1–2.2). All folders are checked before any inflation.
+   throws with the number (R2.1–2.2). All folders are checked before any inflation. If the sum of
+   the `cCFData` values is over `blocks`, throw `LIMIT_EXCEEDED` before any block header is read
+   (R4.7).
 4. **Files:** read all CFFILE entries. If the declared total size is over `uncompressedBytes`,
    throw `LIMIT_EXCEEDED` (R4.1). Names are decoded with `TextDecoder('utf-8')` if attribute `0x80`
    is set, else `TextDecoder('windows-1252')` (R1.4). `iFolder` must exist (R3.5).
-5. **Data blocks**, one folder at a time, `history` reset per folder (R1.2):
-   - bounds-check the block (R3.2), `cbUncomp ≤ 32768` (R4.4), and for MSZIP the `CK` signature (R3.3);
+5. **Block headers, all folders, before the first inflate** (added 2026-11-10, R3.7–R3.8):
+   walk every CFDATA header of every folder with no inflation, bounds-checking each header and
+   its data against the input (R3.2); the folder's range is `[coffCabStart, end of last block)`.
+   Sort the non-empty folder ranges and the CFFILE area `[coffFiles, end of last CFFILE)` by start
+   and sweep: a range that starts before the furthest end so far is `CORRUPT_CAB` with `offset`
+   (its start) and `otherOffset` (the start of the range it runs into). Then, per block:
+   `cbUncomp ≤ 32768` (R4.4), `cbUncomp ≠ 0` (R3.8), the running declared total against
+   `uncompressedBytes` (R4.1), and for MSZIP the `CK` signature, for type 0 `cbData == cbUncomp`
+   (R3.3). Every check that does not need inflated bytes is done here.
+6. **Data blocks**, one folder at a time, `history` reset per folder (R1.2):
    - checksum: if `csum ≠ 0` and `checksum(data, then cbData‖cbUncomp) ≠ csum`, record
      `CHECKSUM_MISMATCH` with the offset and both values, but only after the block has inflated to
      the right length (R3.4). The algorithm matched all 59 in-repo checksums;
    - inflate (§6.1), append the output, keep the last 32,768 bytes of folder output as history;
-   - add to the running total and stop with `LIMIT_EXCEEDED` as soon as it passes `uncompressedBytes`.
-6. **Slicing:** each CFFILE takes `[uoffFolderStart, +cbFile)` of its folder's output; if that range
+   - the running total was checked in step 5 from the declared sizes, and each block's output
+     equals its declared size (§6.1), so the actual total cannot pass `uncompressedBytes`.
+7. **Slicing:** each CFFILE takes `[uoffFolderStart, +cbFile)` of its folder's output; if that range
    goes past the folder's end, throw `CORRUPT_CAB` (R3.5).
 
 ### 6.1 `inflateBlock(data, history, expected)`
@@ -605,7 +617,7 @@ Fatal (`AfterlifeError`, thrown):
 |---|---|---|
 | `UNSUPPORTED_COMPRESSION` | folder type 2, 3 or other | `method` (`LZX`, `Quantum` or the number), `folder` |
 | `UNSUPPORTED_CAB` | multi-cabinet flags | `feature` (`prevCabinet`, `nextCabinet`) |
-| `CORRUPT_CAB` | not `MSCF`, out-of-bounds read, missing `CK`, inflate failure or wrong length, bad folder index or range, `cbUncomp` > 32,768 | `offset`, `reason` |
+| `CORRUPT_CAB` | not `MSCF`, out-of-bounds read, missing `CK`, inflate failure or wrong length, bad folder index or range, `cbUncomp` > 32,768 or 0, overlapping folder ranges or a folder overlapping the CFFILE area | `offset`, `reason`, `otherOffset?` (overlaps only: the start of the other range) |
 | `LIMIT_EXCEEDED` | any limit in §4 (an `xmlDepth` or `xmlBytes` overrun in a non-manifest file is an issue instead) | `limit`, `max`, `observed`, `file?` |
 | `MISSING_MANIFEST` | no `.xsf`, or more than one without `manifest.xsf` | `names` (comma-joined) |
 | `UNSAFE_XML` | DOCTYPE in the manifest | `file`, `line`, `column` |
@@ -703,7 +715,8 @@ with `zlib` only in tests as an oracle.
 | R1.2, D2 | spike, then unit | the 7 multi-block cabinets: output equals the zlib-dictionary oracle, in Node and in a Worker | `cab/inflate.spike.test.ts`, `browser/inflate.browser.test.ts` |
 | R2 | unit | cab-writer: types 2, 3, 7; flags 1, 2, 4 | `cab/unsupported.test.ts` |
 | R3 | unit | truncations at every structure boundary; bad `CK`; wrong length; bad folder index; flipped checksum → one `CHECKSUM_MISMATCH` and the same files | `cab/corrupt.test.ts` |
-| R4 | unit | cab-writer: 2,001 entries; a declared 51 MB; 20 MB + 1 input; `cbUncomp` 32,769; deep XML; `xmlBytes` | `limits.test.ts` |
+| R3.7, R3.8, R4.7 | unit | overlapping folders; folder over the CFFILE area; 4,097 declared blocks; zero-length block; crafted 2 MiB cabinets (several folders on one run of tiny blocks) fail in under 100 ms | `cab/hardening.test.ts` |
+| R4 | unit | cab-writer: 2,001 entries; a declared 51 MiB; 20 MiB + 1 input; `cbUncomp` 32,769; deep XML; `xmlBytes` | `limits.test.ts` |
 | R5 | unit, browser | XML attack set; encoding set; WHATWG labels accepted the same way in Node and the Worker | `xml/safety.test.ts`, `xml/decode.test.ts`, `browser/encodings.browser.test.ts` |
 | R6 | unit | synthetic packages via `parsePackage` | `xsn/package.test.ts` |
 | R7–R12 | golden, unit | README forms + public sample; synthetic fixtures for items with no sample | `golden.samples.test.ts`, `xsf/build.test.ts` |
@@ -723,7 +736,7 @@ with `zlib` only in tests as an oracle.
 
 - **P1** (R19): three fast-check generators. 1,000 runs each in CI. Each run is timed with
   `performance.now()` and must finish in 1 s.
-  1. `fc.uint8Array({ maxLength: 2 MB })`;
+  1. `fc.uint8Array({ maxLength: 2 MiB })`;
   2. mutations of a sample cabinet: bit flips, truncation, splices of two cabinets, and header
      fields overwritten with boundary values;
   3. valid cabinets (cab-writer) whose manifest or schema text has been mutated: dropped tags,

@@ -1,16 +1,12 @@
-// readCabinet (design §6 steps 5–6; R1, R3.2–R3.6, R4.1, R4.4). Structures first (every check
-// that must precede inflation), then the data blocks of each folder with fresh history, then
-// each file sliced from its folder's output.
+// readCabinet (design §6 steps 6–7; R1, R3.3–R3.6). readStructures first (every check that must
+// precede inflation, block headers included), then the blocks of each folder inflated with fresh
+// history, then each file sliced from its folder's output.
 
 import { AfterlifeError, type Issue } from '../errors';
-import { resolveLimits, type Limits, type ParseOptions } from '../limits';
-import { ByteReader } from './bytes';
+import { resolveLimits, type ParseOptions } from '../limits';
 import { cfDataChecksum } from './checksum';
 import { WINDOW, inflateBlock } from './inflate';
 import { readStructures, type CabFolder } from './structures';
-
-/** MSZIP's largest block (R4.4). */
-const MAX_BLOCK = 32_768;
 
 export interface CabinetInfo {
   readonly versionMajor: number;
@@ -48,11 +44,10 @@ export async function readCabinet(bytes: Uint8Array, options?: ParseOptions): Pr
   const limits = resolveLimits(options?.limits);
   const { header, folders, files } = readStructures(bytes, limits);
   const issues: Issue[] = [];
-  const budget = { used: 0 };
 
   const outputs: Uint8Array[] = [];
   for (const folder of folders) {
-    outputs.push(await readFolder(bytes, folder, header.cbCFData, limits, budget, issues));
+    outputs.push(await readFolder(bytes, folder, issues));
   }
 
   const result: PackageFile[] = files.map((f) => {
@@ -96,82 +91,36 @@ export async function readCabinet(bytes: Uint8Array, options?: ParseOptions): Pr
 async function readFolder(
   bytes: Uint8Array,
   folder: CabFolder,
-  cbCFData: number,
-  limits: Limits,
-  budget: { used: number },
   issues: Issue[],
 ): Promise<Uint8Array> {
-  const r = new ByteReader(bytes);
-  r.seek(folder.coffCabStart, `CFFOLDER[${folder.index}].coffCabStart`);
-  const chunks: Uint8Array[] = [];
+  const result = new Uint8Array(folder.blocks.reduce((n, b) => n + b.cbUncomp, 0));
   let history: Uint8Array = new Uint8Array(0);
-  let total = 0;
+  let at = 0;
 
-  for (let i = 0; i < folder.cCFData; i++) {
-    const offset = r.offset;
-    const csum = r.u32('CFDATA.csum');
-    const cbData = r.u16('CFDATA.cbData');
-    const cbUncomp = r.u16('CFDATA.cbUncomp');
-    r.bytes(cbCFData, 'CFDATA.abReserve');
-    const data = r.bytes(cbData, 'CFDATA.ab');
-
-    if (cbUncomp > MAX_BLOCK) {
-      throw new AfterlifeError('CORRUPT_CAB', {
-        offset,
-        reason: `block declares ${cbUncomp} uncompressed bytes; MSZIP allows ${MAX_BLOCK}`,
-      });
-    }
-    if (budget.used + cbUncomp > limits.uncompressedBytes) {
-      throw new AfterlifeError('LIMIT_EXCEEDED', {
-        limit: 'uncompressedBytes',
-        max: limits.uncompressedBytes,
-        observed: budget.used + cbUncomp,
-      });
-    }
-
-    let out: Uint8Array;
-    if (folder.compression === 'mszip') {
-      if (cbData < 2 || data[0] !== 0x43 || data[1] !== 0x4b) {
-        throw new AfterlifeError('CORRUPT_CAB', {
-          offset,
-          reason: 'MSZIP block has no CK signature',
-        });
-      }
-      out = await inflateBlock(data.subarray(2), history, cbUncomp, offset);
-    } else {
-      if (cbData !== cbUncomp) {
-        throw new AfterlifeError('CORRUPT_CAB', {
-          offset,
-          reason: `stored block has ${cbData} data bytes but declares ${cbUncomp}`,
-        });
-      }
-      out = data;
-    }
+  for (const b of folder.blocks) {
+    const data = bytes.subarray(b.dataStart, b.dataStart + b.cbData);
+    // readStructures has checked CK, the stored length and every limit.
+    const out =
+      folder.compression === 'mszip'
+        ? await inflateBlock(data.subarray(2), history, b.cbUncomp, b.offset)
+        : data;
 
     // Only a block that decoded to the right length gets here, so a mismatch is not fatal (R3.4).
-    if (csum !== 0) {
-      const computed = cfDataChecksum(bytes.subarray(offset + 4, offset + 8 + cbCFData), data);
-      if (computed !== csum) {
+    if (b.csum !== 0) {
+      const computed = cfDataChecksum(bytes.subarray(b.offset + 4, b.dataStart), data);
+      if (computed !== b.csum) {
         issues.push({
           code: 'CHECKSUM_MISMATCH',
-          message: `CFDATA checksum at offset ${offset} is ${hex(csum)}; the block gives ${hex(computed)}`,
-          offset,
-          details: { stored: csum, computed },
+          message: `CFDATA checksum at offset ${b.offset} is ${hex(b.csum)}; the block gives ${hex(computed)}`,
+          offset: b.offset,
+          details: { stored: b.csum, computed },
         });
       }
     }
 
-    chunks.push(out);
-    total += out.length;
-    budget.used += out.length;
+    result.set(out, at);
+    at += out.length;
     history = tail(history, out);
-  }
-
-  const result = new Uint8Array(total);
-  let at = 0;
-  for (const c of chunks) {
-    result.set(c, at);
-    at += c.length;
   }
   return result;
 }

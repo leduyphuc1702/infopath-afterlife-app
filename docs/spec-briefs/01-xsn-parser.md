@@ -11,7 +11,7 @@ Read an InfoPath template (.xsn) entirely in TypeScript, in both Node and the br
 1. WHEN given a .xsn that uses MSZIP compression, THE SYSTEM SHALL return every contained file with bytes identical to `bsdtar -xf` output, for every `.xsn` in `samples/own/xsn/` and `samples/public/`.
 2. IF the cabinet uses LZX or Quantum compression, THEN THE SYSTEM SHALL fail with `UNSUPPORTED_COMPRESSION` naming the method.
 3. IF the input is not a cabinet, or is truncated, THEN THE SYSTEM SHALL fail with `CORRUPT_CAB` and the byte offset.
-4. IF the decompressed total exceeds 50 MB, or the entry count exceeds 2,000, THEN THE SYSTEM SHALL stop with `LIMIT_EXCEEDED` (zip-bomb guard).
+4. IF the decompressed total exceeds 50 MiB, or the entry count exceeds 2,000, THEN THE SYSTEM SHALL stop with `LIMIT_EXCEEDED` (zip-bomb guard).
 5. WHEN parsing `manifest.xsf`, THE SYSTEM SHALL extract:
    - views and their XSL files;
    - rule sets, rules and actions (assignment, dialog, switchView, query, submit, openNew, close);
@@ -36,7 +36,7 @@ Read an InfoPath template (.xsn) entirely in TypeScript, in both Node and the br
 8. THE SYSTEM SHALL parse each `.xsn` in `samples/own/` and `samples/public/` in under 300 ms (p95) on Node 22.
 
 ## Correctness properties
-- **P1:** for any random or mutated byte array of up to 2 MB, the parser returns a result or a typed `AfterlifeError` within 1 s. It never hangs and never throws an untyped exception.
+- **P1:** for any random or mutated byte array of up to 2 MiB, the parser returns a result or a typed `AfterlifeError` within 1 s. It never hangs and never throws an untyped exception.
 
 ## Out of scope
 - Writing or repacking .xsn files.

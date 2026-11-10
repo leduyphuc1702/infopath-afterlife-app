@@ -7,8 +7,17 @@ import type { Limits } from './limits';
 export interface ErrorDetailsByCode {
   UNSUPPORTED_COMPRESSION: { method: 'LZX' | 'Quantum' | number; folder: number };
   UNSUPPORTED_CAB: { feature: 'prevCabinet' | 'nextCabinet' };
-  CORRUPT_CAB: { offset: number; reason: string };
-  LIMIT_EXCEEDED: { limit: keyof Limits; max: number; observed: number; file?: string };
+  /** `otherOffset`: the start of the range an overlapping folder runs into (R3.7). */
+  CORRUPT_CAB: { offset: number; reason: string; otherOffset?: number };
+  /** `line` and `column`: where an `xmlDepth` overrun was found. */
+  LIMIT_EXCEEDED: {
+    limit: keyof Limits;
+    max: number;
+    observed: number;
+    file?: string;
+    line?: number;
+    column?: number;
+  };
   MISSING_MANIFEST: { names: string };
   UNSAFE_XML: { file: string; line: number; column: number };
   INVALID_XML: { file: string; line: number; column: number; encoding?: string };
@@ -48,7 +57,8 @@ const MESSAGES: { [C in ErrorCode]: (d: ErrorDetailsByCode[C]) => string } = {
   CORRUPT_CAB: (d) => `Corrupt cabinet at offset ${d.offset}: ${d.reason}`,
   LIMIT_EXCEEDED: (d) =>
     `Limit ${d.limit} exceeded: ${d.observed} > ${d.max}` +
-    (d.file === undefined ? '' : ` in ${d.file}`),
+    (d.file === undefined ? '' : ` in ${d.file}`) +
+    (d.line === undefined ? '' : ` at ${d.line}:${d.column ?? 0}`),
   MISSING_MANIFEST: (d) => `No manifest found among: ${d.names}`,
   UNSAFE_XML: (d) => `Document type declaration refused at ${at(d)}`,
   INVALID_XML: (d) =>

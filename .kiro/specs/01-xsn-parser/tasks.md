@@ -101,7 +101,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
     `src/cab/bytes.ts` (`ByteReader`: little-endian `u8/u16/u32`, `bytes(n)`, `seek`; every read
     outside the input throws `CORRUPT_CAB` with `offset` and `reason`).
   - Tests: `errors.test.ts` (codes, `details`, `instanceof`, English `message`), `limits.test.ts`
-    (defaults are 20 MB, 50 MB, 2,000, 256 and 4 MB; partial overrides), `cab/bytes.test.ts`
+    (defaults are 20 MiB, 50 MiB, 2,000, 256 and 4 MiB; partial overrides), `cab/bytes.test.ts`
     (reads at every boundary; offset in the error).
   - Requirements: R3.2, R4.6.
   - Done when: `pnpm check` green.
@@ -120,7 +120,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
     cabinets: version 1.3, flags 0, one MSZIP folder; reserve skipped), `cab/unsupported.test.ts`
     (types 2 and 3 name `Quantum` and `LZX` and the folder index; type 7 gives the number; flags
     1 and 2 give `UNSUPPORTED_CAB` with the feature; flag 4 reads normally), additions to
-    `limits.test.ts` (2,001 declared files; 20 MB + 1 byte input).
+    `limits.test.ts` (2,001 declared files; 20 MiB + 1 byte input).
   - Requirements: R2.1, R2.2, R2.3, R2.4, R2.5, R3.1, R4.2, R4.3.
   - Done when: `pnpm check` green.
 
@@ -136,10 +136,13 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
     `cab/corrupt.test.ts` (truncation at every structure boundary of one sample cabinet gives
     `CORRUPT_CAB` with the offset; missing `CK`; wrong `cbUncomp`; bad folder index; file range
     past the folder; one flipped checksum byte in a sample cabinet: same files, exactly one
-    `CHECKSUM_MISMATCH` with both values), additions to `limits.test.ts` (declared 51 MB; actual
-    output past 50 MB stops before the next block; `cbUncomp` 32,769 is `CORRUPT_CAB`).
+    `CHECKSUM_MISMATCH` with both values), additions to `limits.test.ts` (declared 51 MiB; actual
+    output past 50 MiB stops before the next block; `cbUncomp` 32,769 is `CORRUPT_CAB`).
   - Requirements: R1.1, R1.2, R1.3, R1.4, R1.5, R3.2, R3.3, R3.4, R3.5, R3.6, R4.1, R4.4.
   - Done when: `pnpm check` green.
+  - Hardening, added at review 2026-11-10: block headers of all folders walked before the first
+    inflate, overlap check (R3.7), `cbUncomp` 0 refused (R3.8), `blocks` limit (R4.7);
+    `cab/hardening.test.ts`.
 
 - [x] 6. Cabinet oracle over every sample
   - `oracles/public-sample.ts` (the six sizes and SHA-256 values of requirements Appendix B).
@@ -150,7 +153,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R1.6.
   - Done when: `pnpm check` green.
 
-- [ ] 7. XML decoding and the pre-scan
+- [x] 7. XML decoding and the pre-scan
   - `src/xml/decode.ts` (design §7.2 step 1 and D11: BOM, UTF-16 byte patterns, declared label,
     `TextDecoder` with `fatal: true`, `REFUSED_ENCODINGS`, `INVALID_ENCODING` fallback),
     `src/xml/prescan.ts` (step 3: DOCTYPE outside comments and CDATA → `UNSAFE_XML` with line and
@@ -168,7 +171,7 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Requirements: R4.5, R5.2, R5.3, R5.7 (encodings, depth).
   - Done when: `pnpm check` green.
 
-- [ ] 8. XML parsing, nodes, paths and the `xmlBytes` budget
+- [x] 8. XML parsing, nodes, paths and the `xmlBytes` budget
   - `src/xml/parse.ts` (the only importer of `@xmldom/xmldom`; `onError` mapping to
     `INVALID_XML` and `XML_WARNING`), `src/xml/node.ts` (`XmlElement`: local name, namespace,
     attributes without `xmlns`, element and non-whitespace text children, line, column,
@@ -489,10 +492,12 @@ Every requirement id appears in at least one task. Task 28 re-checks all of them
 | R3.1 | 4 |
 | R3.2 | 3, 5 |
 | R3.3, R3.4, R3.5, R3.6 | 5 |
+| R3.7, R3.8 | 5 (hardening, added after review) |
 | R4.1, R4.4 | 5 |
 | R4.2, R4.3 | 4 |
 | R4.5 | 7, 21 |
 | R4.6 | 3, 8 |
+| R4.7 | 5 (hardening, added after review) |
 | R5.1, R5.5, R5.6 | 8 |
 | R5.2 | 7 |
 | R5.3 | 2, 7 |
