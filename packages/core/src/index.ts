@@ -12,6 +12,8 @@ export { countTemplate } from './xsn/counts';
 export type { TemplateCounts } from './xsn/counts';
 export { parsePackage, parseXsn } from './xsn/parse';
 export type { ParsedTemplate } from './xsn/parse';
+export { matchRecord } from './xsn/match';
+export type { RecordMatch, TemplateKey } from './xsn/match';
 export { buildFormIR } from './ir/build';
 export type { FormIROptions } from './ir/build';
 export { FORMIR_VERSION, parseFormIR, serialiseFormIR } from './ir/json';

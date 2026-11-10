@@ -4,7 +4,7 @@ import { defineConfig } from 'vitest/config';
 import { WHATWG_LABELS, probeLabels } from './test/helpers/encoding-labels';
 import { sampleCabinets } from './test/helpers/samples';
 import { buildWorkerBundle } from './test/helpers/worker-bundle';
-import { xsltjsStub, xsltjsStubs } from './test/helpers/xsltjs-stubs';
+import { xsltjsStub, xsltjsStubs } from './host/vite';
 import { zlibOracleSha256 } from './test/helpers/zlib-oracle';
 
 // Browser commands run in the Node test process, so browser tests can compare with Node

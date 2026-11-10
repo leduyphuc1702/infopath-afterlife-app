@@ -1,0 +1,22 @@
+/* Spec 09 D2, R9.3: the only file with colour literals. The paper is white, as InfoPath's page
+   was, in light and dark mode alike; the field around it takes the page's tokens. */
+.afl-paper-frame {
+  position: relative;
+  overflow: auto;
+  padding: var(--ds-space-200, 16px);
+  background: var(--ds-surface-sunken);
+}
+
+.afl-paper-host {
+  all: initial;
+  /* A new block formatting context, as core's test canvas is: the root's 15px top margin
+     (InfoPath's body margin) stays inside the page instead of collapsing through it. */
+  display: flow-root;
+  width: max-content;
+  min-width: 100%;
+  min-height: 555px;
+  background: #fff;
+  color: #000;
+  color-scheme: light;
+  box-shadow: var(--ds-shadow-raised);
+}

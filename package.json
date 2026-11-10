@@ -8,14 +8,16 @@
     "node": ">=22.12 <23"
   },
   "scripts": {
-    "typecheck": "pnpm --filter @afterlife/core run typecheck",
+    "typecheck": "pnpm --filter @afterlife/core run typecheck && pnpm --filter web run typecheck",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "pnpm --filter @afterlife/core run test",
     "test:browser": "pnpm --filter @afterlife/core run test:browser",
     "test:perf": "pnpm --filter @afterlife/core run test:perf",
-    "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test && pnpm test:browser"
+    "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test && pnpm test:browser && pnpm test:web",
+    "test:web": "pnpm --filter web test",
+    "e2e:web": "pnpm --filter web e2e"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

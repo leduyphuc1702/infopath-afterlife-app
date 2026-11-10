@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["node", "vite/client"],
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "paths": {
+      "xpath": ["../../packages/core/src/render/engine/xpath-module.d.ts"]
+    },
+    "allowImportingTsExtensions": true
+  },
+  "include": [
+    "src",
+    "test",
+    "e2e",
+    "plugins",
+    "*.ts",
+    "../../packages/core/src/render/engine/vendor.d.ts"
+  ]
+}

@@ -8,7 +8,7 @@
 import { builtinModules } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { build, type Plugin, type Rolldown } from 'vite';
-import { xsltjsStubs } from './xsltjs-stubs';
+import { xsltjsStubs } from '../../host/vite';
 
 const coreRoot = fileURLToPath(new URL('../../', import.meta.url));
 /** An entry that imports `node:fs`; the browser test uses this literal to show the guard fails. */

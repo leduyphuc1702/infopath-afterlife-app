@@ -38,13 +38,28 @@ const restrictedGlobals = [
 ].map(([name, message]) => ({ name, message }));
 
 export default defineConfig(
-  { ignores: ['**/node_modules/', 'coverage/', 'test-results/', 'samples/', 'docs/', '.kiro/'] },
+  {
+    ignores: [
+      '**/node_modules/',
+      'coverage/',
+      'test-results/',
+      'samples/',
+      'docs/',
+      '.kiro/',
+      'apps/web/dist/',
+      'apps/web/playwright-report/',
+    ],
+  },
   js.configs.recommended,
   tseslint.configs.recommendedTypeChecked,
   {
     languageOptions: {
       parserOptions: {
-        project: ['./packages/core/tsconfig.json', './packages/core/test/tsconfig.json'],
+        project: [
+          './packages/core/tsconfig.json',
+          './packages/core/test/tsconfig.json',
+          './apps/web/tsconfig.json',
+        ],
         tsconfigRootDir: import.meta.dirname,
       },
     },
@@ -121,6 +136,26 @@ export default defineConfig(
       'no-restricted-imports': [
         'error',
         { paths: restrictedModules, patterns: [nodeBuiltins, engineOutsideAdapter] },
+      ],
+    },
+  },
+  {
+    // Spec 09 design §1: core runs only in the Worker; the main thread imports its types alone,
+    // so the main bundle carries neither xsltjs nor xmldom.
+    files: ['apps/web/src/**/*.{ts,tsx}'],
+    ignores: ['apps/web/src/worker/worker.ts', 'apps/web/src/worker/session.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@afterlife/core',
+              allowTypeImports: true,
+              message: 'Only the Worker runs core (spec 09 design §1); import types only.',
+            },
+          ],
+        },
       ],
     },
   },

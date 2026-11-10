@@ -1,6 +1,9 @@
 # Spec 09: standalone web viewer, phase A — design
 
-Requirements: `requirements.md` (R1–R11, 25 criteria). Status: **draft, 2026-11-11**.
+Requirements: `requirements.md` (R1–R11, 25 criteria). Status: **approved, 2026-11-11**.
+
+Changed at review (2026-11-11): `connect-src 'none'` (§6). Changed in task 1: the build plugins
+live in `apps/web/plugins/`, because the root `.gitignore` ignores every `plugins/` folder.
 
 **Checked for this design (2026-11-11, `npm view` and `npm pack` into a temp folder, since
 deleted, unless stated):**
@@ -39,10 +42,10 @@ main thread (React 18)                              Web Worker (module)
 | # | Decision | Alternatives | Why |
 |---|---|---|---|
 | D1 | **The Worker owns the session**: file bytes are transferred once; the main thread asks for renders by id. | parse on the main thread; send bytes per render | `PreparedView` holds a compiled stylesheet and cannot be cloned. Transfer avoids copies. Keeps the main thread free (R9.1). |
-| D2 | **Paper in an open shadow root** on a host with `all: initial; display: block; color-scheme: light`. View CSS and HTML go into the shadow root. | plain `div` (core's own test page) | Core scopes view CSS (spec 03 D11) but not the page's CSS. A shadow root stops our selectors; `all: initial` stops inherited colour, font and `color-scheme` (dark mode would turn native `select` dark). `@font-face` stays in the document, which Chromium requires. |
+| D2 | **Paper in an open shadow root** on a host with `all: initial; display: flow-root; color-scheme: light`. `Changed in task 3:` `flow-root`, not `block`: the root's 15 px top margin collapsed through a `block` host and the paper sat 15 px high (59,487 pixels off core's baseline; 0 after). View CSS and HTML go into the shadow root. | plain `div` (core's own test page) | Core scopes view CSS (spec 03 D11) but not the page's CSS. A shadow root stops our selectors; `all: initial` stops inherited colour, font and `color-scheme` (dark mode would turn native `select` dark). `@font-face` stays in the document, which Chromium requires. |
 | D3 | **Host helpers in core under `packages/core/host/`**: `host/vite.ts` (`xsltjsStubs()`, moved from `test/helpers/xsltjs-stubs.ts`) and `host/carlito.ts` (`carlitoCss({unicode, fileUrl})`, the metrics and the rule text, moved from `test/browser/carlito.ts`). Exports `./host/vite` and `./host/carlito`. Core's tests import the same files. | copy into the app; export from `src/index.ts` | One source for the stub mapping and the font rules (human decision 7). Not core API: `src/` stays free of Vite and fonts. `@fontsource/carlito` stays a dev dependency of core; the app adds it (5.3.0) and passes its own `unicode.json` and file URLs. |
 | D4 | **Native HTML controls styled with tokens; no `@atlaskit/*` components.** | Atlaskit `Select`, `Tabs`, `Tree` | Bundle and Lighthouse budget. Native elements give keyboard and accessibility for free. |
-| D5 | **Tokens through `setGlobalTheme({colorMode: 'auto', light: 'light', dark: 'dark', spacing: 'spacing'})`**, CSS with `var(--ds-…)`. | deep-import the theme strings | Public API. It loads theme chunks with `import()` and adds `<style>` elements, both allowed by the CSP. Fallback, if task 1 measures over 25 KB gzip: import `dist/esm/artifacts/themes/atlassian-{light,dark}.js` (no `exports` map blocks it). [VERIFY in task 1: no request, no violation, gzip cost] |
+| D5 | `Changed in task 1:` **the theme CSS strings `@atlaskit/tokens` ships, imported directly** (`dist/esm/artifacts/themes/atlassian-{light,dark,spacing}.js`; no `exports` map blocks it), put in one `<style>`; `shell/theme.ts` sets `<html data-theme="light:light dark:dark spacing:spacing" data-color-mode>` from `prefers-color-scheme` and follows its changes. CSS uses `var(--ds-…)`. | `setGlobalTheme` | Measured 2026-11-11: `setGlobalTheme` raised the entry chunk from 45.7 to 91.6 KB gzip and emitted 25 theme chunks; it raised no violation in the smoke test. The three strings cost 6.4 KB gzip in the entry, with no request and no violation. |
 | D6 | **Samples as one lazy JS chunk imported by the Worker** (`virtual:sample-files`, base64), and a tiny `virtual:sample-list` (names, counts) for the menu. | fetch asset files | One cached chunk, no `fetch`; the Worker decodes it where the bytes are used. |
 | D7 | **Offline by warm-up, not a service worker**: after `load`, the app starts the Worker, which imports the samples chunk, and loads the Latin and Latin Extended Calibri faces (4 styles); then sets `<html data-ready>`. | service worker precache | Meets R8.1 (offline after load) with no cache-update logic. Reload while offline is Later. Other scripts (Greek, Cyrillic) fall back to a system font offline. |
 | D8 | **Hit testing from cached boxes** of `[data-afl-ctrl]`, in paper-content coordinates (§5). | DOM events on the paper | The root is `inert`; per HTML, inert nodes are not hit-test targets, so events reach the host [VERIFY in task 6]. |
@@ -55,12 +58,13 @@ main thread (React 18)                              Web Worker (module)
 ```
 apps/web/
   index.html  vite.config.ts  vitest.config.ts  playwright.config.ts  package.json  tsconfig.json
-  build/       csp.ts (policy, meta plugin, _headers writer)  samples.ts (virtual modules)
+  plugins/     csp.ts (policy, meta plugin, _headers writer)  samples.ts (virtual modules)
                notices.ts (writes dist/notices.html and dist/licenses/* from the bundle's packages)
   public/      favicon.svg
   src/
     main.tsx  App.tsx  store.ts (reducer, actions)  messages.ts (three-part texts)
     worker/    worker.ts  session.ts  protocol.ts (shared types)  client.ts (main-side, watchdog)
+               samples.ts (decodes the lazy samples chunk)
     files/     collect.ts (drop, picker, folder walk, size checks)
     paper/     Paper.tsx  PaperToolbar.tsx  geometry.ts  XrayOverlay.tsx  fade.ts  paper.css
     side/      TemplateList.tsx  FieldTree.tsx  tree.ts  markers.ts  DetailsCard.tsx  card.ts
@@ -186,15 +190,16 @@ on the samples:
 
 ## 6. CSP and threat model
 
-Policy (`build/csp.ts`, one string):
+Policy (`plugins/csp.ts`, one string):
 
 ```
 default-src 'none'; script-src 'self'; worker-src 'self'; style-src 'self' 'unsafe-inline';
-img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'
+img-src 'self' data:; font-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'
 ```
 
 `_headers` (Cloudflare Pages, `/*`): the same plus `; frame-ancestors 'none'`, and
 `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`. Relaxations, with reasons:
+`Changed at review:` `connect-src 'none'`, against brief AC5's `'self'`, since nothing fetches.
 `'unsafe-inline'` in `style-src` only, for the views' `style` attributes and the per-render
 `<style>` (human decision); `data:` in `img-src`, for package images that core inlines (spec 03
 R6.1). No `'unsafe-eval'`: nothing needs it (table above).
@@ -202,7 +207,7 @@ R6.1). No `'unsafe-eval'`: nothing needs it (table above).
 | Threat | Defence |
 |---|---|
 | Script from a hostile XSL or record (P5 shapes) | Core's allowlist sanitiser on the result tree, in the Worker (spec 03 D4, D5; P5, 500 runs); `script-src 'self'` with no inline or eval; the root is `inert` inside a shadow root |
-| Data leaving through URLs (images, CSS `url()`, links, forms, `<base>`) | Core drops external resources (`EXTERNAL_RESOURCE_BLOCKED`); `img-src`, `font-src`, `connect-src` limited to self; `form-action 'none'`; `base-uri 'none'` |
+| Data leaving through URLs (images, CSS `url()`, links, forms, `<base>`) | Core drops external resources (`EXTERNAL_RESOURCE_BLOCKED`); `img-src` and `font-src` limited to self, `connect-src 'none'`; `form-action 'none'`; `base-uri 'none'` |
 | Resource exhaustion (cabinet bombs, deep XML, endless templates) | Core's limits and render budget, in the Worker; size checks before reading; the 15 s watchdog |
 | Framing (clickjacking) | `frame-ancestors 'none'` in `_headers`; not possible with `<meta>` (GitHub Pages gap, open question 1) |
 | Third-party code or analytics | None; every e2e test fails on a non-same-origin request; dependencies pinned |
@@ -217,7 +222,7 @@ R8.2's tests.
 
 ## 7. Samples, fonts, notices, bundle budget
 
-- `build/samples.ts` (Vite plugin): reads `samples/own/xsn/0[1-8]-*.xsn`, their
+- `plugins/samples.ts` (Vite plugin): reads `samples/own/xsn/0[1-8]-*.xsn`, their
   `records/<slug>/*.xml` without `-000-empty.xml`, and
   `samples/public/theill-weight-keeper/theill__weight-keeper.xsn`; it never writes under
   `samples/`. Names come from FormIR at run time; the list module holds slug, file name and record
@@ -225,26 +230,31 @@ R8.2's tests.
 - Fonts: `@fontsource/carlito` 5.3.0 in the app; `import.meta.glob('…/files/*.woff2', {query:
   '?url'})` emits all 28 files; `unicode-range` makes the browser fetch only what text needs.
   The OFL text is copied to `dist/licenses/`. README "Third-party licences" gains the app's rows.
-- `build/notices.ts` (`generateBundle`): collects package names from the bundles' module ids,
+- `plugins/notices.ts` (`generateBundle`): collects package names from the bundles' module ids,
   reads each `license` and licence file from `node_modules`, writes `dist/licenses/` and the data
   for `Notices.tsx`, and fails the build on a licence outside MIT, Apache-2.0, BSD, ISC or OFL-1.1.
 
 | Bundle (gzip) | Budget | Expected |
 |---|---|---|
-| Entry JS + CSS (React, app, tokens loader) | 100 KB | ~45 React + ~25 app + tokens [VERIFY] |
-| Theme chunks loaded (light or dark, spacing) | 10 KB | 3.5 + 0.6 |
-| Worker | 160 KB | 129 measured with esbuild |
-| Samples chunk | 120 KB | xsn ~100 (base64, already compressed) + 20 |
-| Fonts fetched at warm-up | 260 KB raw | 8 faces of ~30 KB |
+| Entry JS + CSS (React, app, tokens) | 100 KB | 55.1 + 0.8 measured at task 3 (React 45.7, tokens 6.4) |
+| Theme chunks | 0 | none: the themes are in the entry (D5) |
+| Worker | 160 KB | 126.1 measured at task 3 |
+| Samples chunk | 120 KB | 96.1 measured at task 3 |
+| Fonts fetched for an English form | 260 KB raw | 123 KB measured at task 3: the 4 Latin faces. Latin Extended's 4 faces are 336 KB more; task 8 decides whether warm-up takes them (D7) |
 
-`test/budget.test.ts` reads `dist/.vite/manifest.json` and gzips each file.
+`test/budget.test.ts` reads `dist/.vite/manifest.json` and gzips each file (gzip -9).
+
+**Lighthouse 13.6.0, task 3** (desktop preset, `vite preview` under the sub-path, Playwright's
+Chromium, 2026-11-11): performance 100 (FCP 0.2 s, LCP 0.2 s, TBT 0 ms, CLS 0), accessibility
+100. It measures the landing state; no sample is open.
 
 ## 8. Build and hosting
 
 - `vite.config.ts`: `base: './'`; `plugins: [react(), samples(), csp(), notices()]`;
   `worker: { format: 'es', plugins: () => [xsltjsStubs()] }`; `build.manifest: true`. The stub
   plugin is needed in the Worker build only, since the main bundle imports no core code (§1).
-  [VERIFY in task 1: `base: './'` with a module Worker and `?url` font assets under a sub-path]
+  Checked in task 3: under `vite preview --base /infopath-afterlife-app/`, the module Worker, its
+  lazy samples chunk and the font files all load from the sub-path, with no violation.
 - `web-pages.yml`: `workflow_dispatch`; `permissions: contents: read, pages: write, id-token:
   write`; checkout, pnpm setup, Node 22, `pnpm install --frozen-lockfile`,
   `pnpm --filter web build`, upload `apps/web/dist`, deploy. [VERIFY in task 9: current major
@@ -257,7 +267,8 @@ R8.2's tests.
 core). E2E: `@playwright/test` 1.65.0, `webServer`: build, then
 `vite preview --base /infopath-afterlife-app/ --strictPort`. `e2e/fixtures.ts` gives every test
 three guards that fail it: a request whose origin is not the page's (page and Worker requests
-[VERIFY in task 3 that Worker requests reach `page.on('request')`]), a `securitypolicyviolation`
+checked in task 3: the Worker's `import()` of the samples chunk reaches `context.on('request')`,
+which the guard uses), a `securitypolicyviolation`
 event (init script), and a page error.
 
 | Id | Kind | Fixture | File |
@@ -288,5 +299,5 @@ event (init script), and a page error.
    pixels compared with core's test page. Task 3 compares form 02 with core's baseline first.
 2. **Lighthouse performance.** The 28 font files, the theme loader and warm-up could hurt it.
    Measured at task 3, while the design is still cheap to change; warm-up waits for `load`.
-3. **CSP in practice.** Vite chunks, `setGlobalTheme` and the Worker must raise no violation, and
+3. **CSP in practice.** Vite chunks and the Worker must raise no violation, and
    hosts differ (open question 1). The guards run from task 1.

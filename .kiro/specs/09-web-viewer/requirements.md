@@ -1,7 +1,9 @@
 # Spec 09: standalone web viewer, phase A — requirements
 
-Brief: `docs/spec-briefs/09-web-viewer.md`. Status: **draft, 2026-11-11**, written with
-`design.md` and `tasks.md` in one turn at the human's request.
+Brief: `docs/spec-briefs/09-web-viewer.md`. Status: **approved, 2026-11-11** (drafts committed as `4c13ec8`).
+
+Changed at review (2026-11-11): `connect-src 'none'` instead of brief AC5's `'self'` (R8.2);
+open questions answered (end of file).
 
 ## Introduction
 
@@ -182,7 +184,8 @@ As Quang, I want proof that no form data leaves the machine, so that I can let s
   the network goes offline after the page is ready, opening a sample, paging, switching views and
   dropping a file SHALL still work. Oracle: every e2e test fails on a non-same-origin request;
   `e2e/offline.spec.ts`.
-- **R8.2** THE SYSTEM SHALL carry the CSP of design §6 as a `<meta>` tag in `dist/index.html`, and
+- **R8.2** `Changed at review:` `connect-src 'none'`, against brief AC5's `'self'`: nothing
+  fetches, so the strictest value wins. THE SYSTEM SHALL carry the CSP of design §6 as a `<meta>` tag in `dist/index.html`, and
   `dist/_headers` SHALL send the same policy plus `frame-ancestors 'none'`; no page SHALL raise a
   CSP violation. Oracle: `test/csp.test.ts` compares the two policies; every e2e test fails on a
   `securitypolicyviolation` event.
@@ -226,12 +229,15 @@ As the human publishing the site, I want a static folder and a workflow I run my
 
 Traces: Added: human decision 2 (core `matchRecord`), testing.md (core logic gets properties).
 
-- **R11.1** For any bytes (random, and XML with zero, one or two `mso-infoPathSolution`
+- **R11.1** `Changed in task 2:` a version missing on either side counts as equal (as render's
+  mismatch check does), and a record whose first 4 KB hold no instruction with a `name` is
+  `noSolution`. For any bytes (random, and XML with zero, one or two `mso-infoPathSolution`
   instructions whose `name` and `solutionVersion` come from a pool of 3 URNs and 3 versions, in
   either quote style, before or after the 4 KB window) and any list of up to 5 template keys from
   the same pools, `matchRecord` SHALL return without throwing; the result SHALL be the same for
-  every order of the list (compared by the matched key); and it SHALL be `exact` exactly when a key
-  has the record's URN and version. Bound: 1,000 runs, under 2 s, in
+  every order of the list (compared by the matched key); it SHALL be `exact` exactly when a key
+  has the record's URN and its version (or either version is missing); and it SHALL be
+  `noSolution` when the first instruction in the first 4 KB has no `name`, or there is none. Bound: 1,000 runs, under 2 s, in
   `packages/core/test/property/p14.property.test.ts`.
 
 ## Traceability
@@ -251,24 +257,15 @@ Traces: Added: human decision 2 (core `matchRecord`), testing.md (core logic get
 | Hosting | R10.1, R10.2 |
 | Added (human decisions 4, 9, 10) | R5.1–R5.3, R9.2, R9.3 |
 
-## Open questions
+## Open questions (answered 2026-11-11)
 
-1. **Host.** A `<meta>` CSP cannot carry `frame-ancestors`, and a same-origin module Worker takes
-   its policy from its own response headers, not from the page's `<meta>` [VERIFY in task 8].
-   GitHub Pages cannot set headers. Default: the GitHub Pages workflow as asked, plus
-   `_headers`; I recommend Cloudflare Pages for the public URL.
-2. **Workflow trigger.** Default: `workflow_dispatch` only, so a push never deploys.
-3. **`connect-src`.** Nothing in the design fetches (samples arrive as a script chunk). `'none'`
-   would be stricter. Default: `'self'`, as the brief says.
-4. **Sample empty records.** Default: the eight `-000-empty.xml` files are left out, because the
-   pager already starts with the template's empty form.
-5. **Weight-keeper notice.** `samples/public/theill-weight-keeper/README.md` points to the upstream
-   licence but does not carry its copyright line, which MIT requires in copies. Default: the
-   notices page carries "Copyright (c) 2015 Peter Theill" from
-   `github.com/theill/iquomi/blob/master/LICENSE` (read 2026-11-11); please add that LICENSE file
-   under `samples/public/` yourself.
-6. **Host helpers in core.** Default: a new `packages/core/host/` folder with package exports
-   `@afterlife/core/host/vite` and `@afterlife/core/host/carlito` (design D3); structure.md needs a
-   line for it.
-7. **Locale.** Default: every render uses `en-US`, the locale of the samples; a locale picker is
-   Later.
+1. **Host.** Cloudflare Pages is recommended for the public URL; the human picks when publishing.
+   Both deliverables stay: `_headers` and the GitHub Pages workflow.
+2. **Workflow trigger.** `workflow_dispatch` only.
+3. **`connect-src`.** `'none'` (R8.2, design §6).
+4. **Sample empty records.** Left out; the pager starts with the template's empty form.
+5. **Weight-keeper notice.** `samples/public/theill-weight-keeper/LICENSE` is the upstream file,
+   unchanged; the notices page reads that file.
+6. **Host helpers in core.** `packages/core/host/` with package exports, approved; structure.md
+   updated.
+7. **Locale.** `en-US`.
