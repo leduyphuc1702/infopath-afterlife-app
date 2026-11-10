@@ -1,4 +1,5 @@
 // Spec 09 design §5: the page's state. In memory only.
+import type { TriageResult } from '@afterlife/core';
 import type { SideTab } from './side/SideTabs';
 import type {
   FileFailure,
@@ -37,8 +38,14 @@ export interface State {
   /** The side panel's tab, and the connection entry opened from the details card (R6.1). */
   readonly tab: SideTab;
   readonly connectionId?: string;
+  /** Spec 12 design §6: Triage, one form's certificate, or the form itself. */
+  readonly screen: Screen;
+  readonly certificateId?: string;
+  readonly triage?: TriageResult;
   readonly busy?: string;
 }
+
+export type Screen = 'form' | 'triage' | 'certificate';
 
 export const initialState: State = {
   templates: [],
@@ -50,17 +57,25 @@ export const initialState: State = {
   xray: false,
   selection: {},
   tab: 'fields',
+  screen: 'form',
 };
 
 export type Action =
   | { readonly type: 'busy'; readonly what?: string }
-  | { readonly type: 'session'; readonly session: SessionRes; readonly open?: string }
+  | {
+      readonly type: 'session';
+      readonly session: SessionRes;
+      readonly open?: string;
+      /** Spec 12 R4.1: files that leave two or more templates open show Triage. */
+      readonly screen?: Screen;
+    }
   | {
       readonly type: 'input';
       readonly ignored: readonly string[];
       readonly problems: readonly Problem[];
     }
   | { readonly type: 'open'; readonly templateId: string }
+  | { readonly type: 'screen'; readonly screen: Screen; readonly templateId?: string }
   | { readonly type: 'view'; readonly view: string }
   | { readonly type: 'record'; readonly index: number }
   | { readonly type: 'xray'; readonly on: boolean }
@@ -102,12 +117,28 @@ export function reducer(s: State, a: Action): State {
         templates: a.session.templates,
         records: a.session.records,
         failures: a.session.failures,
+        triage: a.session.triage,
+        ...(a.screen !== undefined && { screen: a.screen }),
       };
       const wanted = a.session.templates.find((t) => t.templateId === a.open);
       const still = a.session.templates.find((t) => t.templateId === s.openId);
       if (wanted) return openState(next, wanted);
       if (still) return next;
       return openState(next, a.session.templates[0]);
+    }
+    case 'screen': {
+      const t =
+        a.templateId === undefined
+          ? undefined
+          : s.templates.find((x) => x.templateId === a.templateId);
+      // A certificate keeps the open form; "Open form" opens the certificate's template.
+      if (a.screen === 'form' && t && t.templateId !== s.openId)
+        return { ...openState(s, t), screen: 'form' };
+      return {
+        ...s,
+        screen: a.screen,
+        ...(t && a.screen === 'certificate' && { certificateId: t.templateId }),
+      };
     }
     case 'input':
       return {

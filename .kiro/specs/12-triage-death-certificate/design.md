@@ -180,6 +180,12 @@ export function toCsv(result: TriageResult): string;
   `triage` (replaces `TemplateList`; spec 09 R1.3 gets a `Changed in spec 12:` note). A row →
   `certificate` for that template; "Open form" → `form` (today's paper, tree, X-ray); a "Triage"
   link in the header goes back.
+- `Changed in task 6:` only files the user opens switch to Triage when they leave two or more
+  templates open; "Try a sample" still opens that sample's form (spec 09 behaviour), and the
+  header's "Triage" button is there whenever two or more templates are open. The page repeats
+  core's user-facing strings in `src/triage/words.ts` (types-only rule, spec 09 §1), and
+  `test/words.test.ts` checks them against core. Progress messages also restart the 15 s
+  watchdog, so a large folder is not cut off while the Worker is still reporting.
 - **Table:** a native `<table>` with a caption, sticky header and a row per form; the row's name
   is a button (keyboard). Wave header: a button with `aria-describedby` on a tooltip that opens
   on focus and hover (R4.2). Cause ids show as chips; error rows show the three-part message.

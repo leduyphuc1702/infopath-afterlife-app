@@ -7,14 +7,22 @@ import {
   matchRecord,
   parseXsn,
   prepareView,
+  recordEvidence,
   renderView,
+  toCsv,
+  triage,
+  type ErrorCode,
   type FormIR,
   type ParsedTemplate,
   type PreparedView,
+  type RecordEvidence,
+  type TriageRecord,
+  type TriageResult,
 } from '@afterlife/core';
 import type {
   FileFailure,
   InputFile,
+  Progress,
   RecordSummary,
   RenderedRes,
   SessionRes,
@@ -32,6 +40,8 @@ interface StoredRecord {
   readonly recordId: string;
   readonly fileName: string;
   readonly bytes: Uint8Array;
+  /** Spec 12 R6.2: what its first 4 KB say about its template. */
+  readonly evidence: RecordEvidence;
 }
 
 /** `instanceof` alone gives `AfterlifeError<any>`; this narrows to the union of codes. */
@@ -54,8 +64,11 @@ export class Session {
   private readonly failures: FileFailure[] = [];
   private next = 1;
 
-  async open(files: readonly InputFile[]): Promise<SessionRes> {
-    for (const f of files) {
+  private last: TriageResult | undefined;
+
+  async open(files: readonly InputFile[], progress?: Progress): Promise<SessionRes> {
+    for (const [i, f] of files.entries()) {
+      progress?.({ type: 'progress', index: i + 1, total: files.length, fileName: f.name });
       const bytes = new Uint8Array(f.bytes);
       const ext = f.name.slice(f.name.lastIndexOf('.') + 1).toLowerCase();
       try {
@@ -83,7 +96,12 @@ export class Session {
         max: DEFAULT_LIMITS.xmlBytes,
         observed: bytes.byteLength,
       });
-    this.records.push({ recordId: `r${this.next++}`, fileName, bytes });
+    this.records.push({
+      recordId: `r${this.next++}`,
+      fileName,
+      bytes,
+      evidence: recordEvidence(fileName, bytes),
+    });
     this.records.sort(byName);
   }
 
@@ -104,12 +122,39 @@ export class Session {
             : m;
       return { recordId: r.recordId, fileName: r.fileName, match };
     });
+    this.last = this.triage(records);
     return {
       type: 'session',
       templates: this.templates.map((t) => t.summary),
       records,
       failures: [...this.failures],
+      triage: this.last,
     };
+  }
+
+  /** Spec 12: the session's templates, matched records and template failures, triaged. */
+  private triage(records: readonly RecordSummary[]): TriageResult {
+    const tr: TriageRecord[] = records.map((r, i) => {
+      const { evidence } = this.records[i]!;
+      return r.match.kind === 'unmatched'
+        ? { evidence }
+        : { evidence, templateId: r.match.templateId };
+    });
+    return triage({
+      templates: this.templates.map((t) => t.summary),
+      records: tr,
+      failures: this.failures
+        .filter((f) => f.fileName.toLowerCase().endsWith('.xsn'))
+        .map((f) => ({
+          fileName: f.fileName,
+          code: f.error.code === 'WORKER_FAILED' ? 'INTERNAL' : (f.error.code as ErrorCode),
+        })),
+    });
+  }
+
+  /** Spec 12 R5.1: the plan as CSV, from the last session answer. */
+  csv(): string {
+    return toCsv(this.last ?? this.triage([]));
   }
 
   async render(

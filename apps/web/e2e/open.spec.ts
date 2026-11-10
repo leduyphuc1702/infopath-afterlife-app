@@ -55,12 +55,12 @@ test('forms 01 and 07 with all their records: two templates, 30 and 10 records',
     ...recordPaths('01-leave-request'),
     ...recordPaths('07-leave-request-v2'),
   ]);
-  const rows = page.getByRole('region', { name: 'Templates (2)' }).locator('tbody tr');
+  // Spec 12 R4.1: two templates show Triage, which replaced the phase A template list.
+  const rows = page.getByRole('region', { name: 'Triage' }).locator('tbody tr');
   await expect(rows).toHaveCount(2);
-  await expect(rows.nth(0)).toContainText('01-leave-request.xsn');
-  await expect(rows.nth(0).locator('td').nth(3)).toHaveText('30');
-  await expect(rows.nth(1)).toContainText('07-leave-request-v2.xsn');
-  await expect(rows.nth(1).locator('td').nth(3)).toHaveText('10');
+  const records = (file: string) => rows.filter({ hasText: file }).locator('td').nth(10);
+  await expect(records('01-leave-request.xsn')).toHaveText('30');
+  await expect(records('07-leave-request-v2.xsn')).toHaveText('10');
   await expect(page.getByRole('region', { name: /Records not matched/ })).toHaveCount(0);
 });
 

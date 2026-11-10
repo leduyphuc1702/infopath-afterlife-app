@@ -25,25 +25,31 @@ Requirements: `requirements.md`. Design: `design.md`. Status: **approved, 2026-1
   - Requirements: R3.1–R3.6, R5.1 (core), R6.1
   - Done when: `vitest run --project node test/triage test/property/p8.property.test.ts test/property/p10.property.test.ts` green.
 
-- [ ] 4. Private-corpus run
+- [x] 4. Private-corpus run
   - `test/triage-private.local.test.ts`; run it once with the human's variable set; counts into
     `verification.md`; propose table changes for any `[VERIFY]` row the counts settle.
   - Requirements: R8.1
   - Done when: skipped without the variable; with it, exit 0 and counts only.
+  - `Changed at review (2026-11-11):` written and checked skipped; the human runs it on the
+    private corpus and reports the counts for `verification.md`. File names are replaced by an
+    index before triage, so nothing from the corpus can reach the output.
 
-- [ ] 5. Worker: triage in the session, progress, CSV request
+- [x] 5. Worker: triage in the session, progress, CSV request
   - `src/worker/protocol.ts`, `session.ts`, `client.ts`.
   - `test/protocol.browser.test.ts` gains the progress and CSV cases.
   - Requirements: R4.4, R5.1 (Worker)
   - Done when: `pnpm --filter web test` green.
 
-- [ ] 6. Triage screen
+- [x] 6. Triage screen
   - `src/triage/TriageTable.tsx`, `waves.ts`, `triage.css`, store `screen`; spec 09 R1.3 note.
+  - `Changed in task 6:` `waves.ts` is `words.ts` (wave rules, workflow line, Emulated tooltip,
+    cause titles, `shortPath`), checked equal to core's strings by `test/words.test.ts`.
+    `TemplateList.tsx` is removed; the header's "Triage" button goes back from a form.
   - `e2e/triage.spec.ts` (table, tooltip, keyboard, unknown record counts).
   - Requirements: R4.1, R4.2, R6.1
   - Done when: `pnpm --filter web test && pnpm --filter web e2e` green.
 
-- [ ] 7. Death certificate
+- [x] 7. Death certificate
   - `src/triage/Certificate.tsx`; "Open form" and the way back.
   - `e2e/triage.spec.ts` gains the certificate cases.
   - Requirements: R2.3, R4.3

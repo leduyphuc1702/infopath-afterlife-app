@@ -101,6 +101,18 @@ test(`${RUNS} hostile templates and records: no script, dialog, request or viola
     ]);
     const opened = page.locator('.afl-form-name', { hasText: `Hostile-${n}` });
     const refused = page.getByRole('alert').filter({ hasText: `${name}.xsn` });
+    // Spec 12: from the second template on, files open on Triage; the form is reached through
+    // its row and its death certificate, so both screens see the hostile files too.
+    const row = page
+      .getByRole('region', { name: 'Triage' })
+      .locator('tbody tr')
+      .filter({ hasText: `${name}.xsn` })
+      .getByRole('button');
+    await expect(opened.or(refused).or(row).first()).toBeVisible();
+    if (await row.count()) {
+      await row.click();
+      await page.getByRole('button', { name: 'Open form' }).click();
+    }
     await expect(opened.or(refused).first()).toBeVisible();
     // A file that does not open adds no template; a view that fails to render still opens it.
     if ((await opened.count()) === 0) {

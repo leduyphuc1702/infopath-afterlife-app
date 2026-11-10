@@ -15,13 +15,14 @@ export const COVERAGE_CLASSES: readonly CoverageClass[] = [
  * `Changed at review (2026-11-11):` users see "Emulated" (the brief's word, with the tooltip
  * below); `docs/feature-coverage.md` says "App". This is the mapping between the two.
  */
-export const CLASS_WORDS: Readonly<Record<CoverageClass, { readonly ui: string; readonly doc: string }>> =
-  {
-    native: { ui: 'Native', doc: 'Native' },
-    emulated: { ui: 'Emulated', doc: 'App' },
-    manual: { ui: 'Manual', doc: 'Manual' },
-    unsupported: { ui: 'Unsupported', doc: 'Unsupported' },
-  };
+export const CLASS_WORDS: Readonly<
+  Record<CoverageClass, { readonly ui: string; readonly doc: string }>
+> = {
+  native: { ui: 'Native', doc: 'Native' },
+  emulated: { ui: 'Emulated', doc: 'App' },
+  manual: { ui: 'Manual', doc: 'Manual' },
+  unsupported: { ui: 'Unsupported', doc: 'Unsupported' },
+};
 export const EMULATED_TOOLTIP = 'Afterlife runs it in Classic mode';
 
 export type ElementKind =
@@ -83,7 +84,13 @@ export const COVERAGE_TABLE: readonly CoverageEntry[] = [
   ...entry('control', ['RichText'], 'native', 'A', 'Rich text (`RichText`)'),
   ...entry('control', ['Button'], 'emulated', 'A', 'Button (`Button`)'),
   ...entry('control', ['ExpressionBox'], 'emulated', 'A', 'Expression box (`ExpressionBox`)'),
-  ...entry('control', ['RepeatingSection'], 'emulated', 'A', 'Repeating section (`RepeatingSection`)'),
+  ...entry(
+    'control',
+    ['RepeatingSection'],
+    'emulated',
+    'A',
+    'Repeating section (`RepeatingSection`)',
+  ),
   ...entry('control', ['FileAttachment'], 'native', 'A', 'Attachment (`FileAttachment`)'),
   ...entry('control', ['combobox'], 'native', 'A', 'Combobox (`combobox`)'),
   ...entry('control', ['ChoiceSection'], 'emulated', 'A', 'Choice section (`ChoiceSection`)'),
@@ -118,7 +125,13 @@ export const COVERAGE_TABLE: readonly CoverageEntry[] = [
   ...entry('calculation', ['*'], 'emulated', 'B', 'Read-only and calculated fields'),
   // E. Decision 3 (2026-11-11): a blank check is Native (`rq`), authored message or not.
   ...entry('validation', ['blank'], 'native', 'E', '`xsf:errorCondition`'),
-  ...entry('validation', ['condition'], 'emulated', 'E', 'Custom XPath validation with author message'),
+  ...entry(
+    'validation',
+    ['condition'],
+    'emulated',
+    'E',
+    'Custom XPath validation with author message',
+  ),
   // G. Data connections.
   ...entry('connection', ['adoAdapter'], 'manual', 'G', '`adoAdapter` (SQL Server)'),
   ...entry('connection', ['webServiceAdapter'], 'manual', 'G', '`webServiceAdapter` (SOAP)'),
@@ -144,7 +157,7 @@ export const COVERAGE_TABLE: readonly CoverageEntry[] = [
     'manual',
     'G',
     'Secondary data sources driving dropdowns',
-    'no row names a SharePoint list query; its source dies with SharePoint, so Manual, not the row\'s App',
+    "no row names a SharePoint list query; its source dies with SharePoint, so Manual, not the row's App",
   ),
   // H. Runtime, code, security. Decision 2 (2026-11-11): code-behind is Manual.
   ...entry('codeBehind', ['*'], 'manual', 'H', 'Managed code / VBA / script'),

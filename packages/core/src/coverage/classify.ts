@@ -82,7 +82,12 @@ export function elementsOf(ir: FormIR): Element[] {
       source: v.source,
     });
   for (const c of ir.dataConnections)
-    out.push({ elementId: c.id, kind: 'connection', subtype: connectionSubtype(c), source: c.source });
+    out.push({
+      elementId: c.id,
+      kind: 'connection',
+      subtype: connectionSubtype(c),
+      source: c.source,
+    });
   if (ir.codeBehind.present)
     out.push({
       elementId: 'code-behind',
@@ -92,14 +97,20 @@ export function elementsOf(ir: FormIR): Element[] {
       source: ir.codeBehind.handlers[0]?.source ?? ir.meta.source,
     });
   const ax = ir.activeX.controls.length > 0 ? ir.activeX.controls : ir.activeX.allowed;
-  for (const a of ax) out.push({ elementId: a.id, kind: 'activeX', subtype: '*', source: a.source });
+  for (const a of ax)
+    out.push({ elementId: a.id, kind: 'activeX', subtype: '*', source: a.source });
   for (const s of [...ir.signatures.blocks, ...ir.signatures.signatureLines])
     out.push({ elementId: s.id, kind: 'signature', subtype: '*', source: s.source });
   return out;
 }
 
 export function classify(ir: FormIR): Coverage {
-  const counts: Record<CoverageClass, number> = { native: 0, emulated: 0, manual: 0, unsupported: 0 };
+  const counts: Record<CoverageClass, number> = {
+    native: 0,
+    emulated: 0,
+    manual: 0,
+    unsupported: 0,
+  };
   const items = elementsOf(ir).map((e): CoverageItem => {
     const hit = lookup(e.kind, e.subtype);
     const item: CoverageItem = hit

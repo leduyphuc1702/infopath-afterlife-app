@@ -62,6 +62,8 @@ installing anything.
   `test/messages.test.ts` (every core `ERROR_CODES` entry and every app code has three non-empty
   parts); `e2e/open.spec.ts` drops a truncated copy of form 02 with form 03: one message, form 03
   open.
+- `Changed in spec 12 (2026-11-11):` with two or more templates open, the Triage table (spec 12
+  R4.1) replaces the template list below; its Records column keeps R1.3's oracle counts.
 - **R1.3** WHILE more than one template is open, THE SYSTEM SHALL list them (form name, file name,
   version, number of views, number of matched records) and show one at a time. Oracle:
   `e2e/open.spec.ts` drops forms 01 and 07 with all their records: two rows, 30 and 10 records.

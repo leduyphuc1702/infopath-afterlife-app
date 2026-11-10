@@ -1,0 +1,173 @@
+/* Spec 12: the Triage table and the death certificate. Tokens only (spec 09 R9.3). */
+.afl-triage h2,
+.afl-certificate h2 {
+  margin: 0 0 var(--ds-space-050);
+  font-size: 20px;
+}
+
+.afl-triage-scroll {
+  overflow-x: auto;
+  margin-top: var(--ds-space-150);
+}
+
+.afl-triage-table {
+  font-size: 13px;
+}
+
+.afl-triage-table th[scope='col'] {
+  position: sticky;
+  top: 0;
+  background: var(--ds-surface);
+  color: var(--ds-text-subtle);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.afl-triage-table td {
+  font-variant-numeric: tabular-nums;
+}
+
+.afl-triage-table tbody th {
+  min-width: 200px;
+  font-weight: normal;
+}
+
+.afl-triage-error th,
+.afl-triage-error td {
+  background: var(--ds-background-danger);
+}
+
+.afl-block {
+  display: block;
+}
+
+.afl-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-050);
+}
+
+.afl-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.afl-wave {
+  display: inline-block;
+  min-width: 20px;
+  padding: 0 var(--ds-space-050);
+  border-radius: 3px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.afl-wave[data-wave='1'] {
+  background: var(--ds-background-success);
+  color: var(--ds-text-success);
+}
+
+.afl-wave[data-wave='2'] {
+  background: var(--ds-background-information);
+  color: var(--ds-text-information);
+}
+
+.afl-wave[data-wave='3'] {
+  background: var(--ds-background-warning);
+  color: var(--ds-text-warning);
+}
+
+.afl-tip {
+  position: relative;
+}
+
+.afl-tip-button {
+  padding: 0;
+  border: 0;
+  border-bottom: 1px dashed var(--ds-border-bold);
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: help;
+}
+
+.afl-tip-body {
+  display: none;
+  position: absolute;
+  z-index: 20;
+  top: 100%;
+  left: 0;
+  width: 320px;
+  margin-top: var(--ds-space-050);
+  padding: var(--ds-space-100);
+  border-radius: 4px;
+  background: var(--ds-background-neutral-bold);
+  color: var(--ds-text-inverse);
+  font-weight: normal;
+  white-space: normal;
+}
+
+.afl-tip-body span {
+  display: block;
+}
+
+.afl-tip:hover .afl-tip-body,
+.afl-tip:focus-within .afl-tip-body {
+  display: grid;
+  gap: var(--ds-space-050);
+}
+
+.afl-certificate {
+  max-width: 880px;
+}
+
+.afl-cert-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-100) var(--ds-space-150);
+  align-items: center;
+  margin: var(--ds-space-150) 0;
+}
+
+.afl-cert-causes {
+  margin: var(--ds-space-200) 0 var(--ds-space-100);
+  font-size: 16px;
+}
+
+.afl-cause {
+  display: grid;
+  gap: var(--ds-space-075);
+  margin-bottom: var(--ds-space-150);
+  padding: var(--ds-space-150);
+  border: 1px solid var(--ds-border);
+  border-left: 4px solid var(--ds-border-danger);
+  border-radius: 4px;
+  background: var(--ds-surface-raised);
+}
+
+.afl-cause h4,
+.afl-cause h5 {
+  margin: 0;
+}
+
+.afl-cause h4 {
+  font-size: 15px;
+}
+
+.afl-cause h5 {
+  color: var(--ds-text-subtle);
+  font-size: 12px;
+}
+
+.afl-cause .afl-expr {
+  word-break: break-all;
+}
+
+.afl-workflow {
+  padding: var(--ds-space-100) var(--ds-space-150);
+  border-radius: 4px;
+  background: var(--ds-background-neutral);
+}

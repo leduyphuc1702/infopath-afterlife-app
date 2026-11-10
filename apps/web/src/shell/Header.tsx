@@ -7,15 +7,22 @@ interface Props {
   readonly onSample: (id: string) => void;
   /** Absent while no template is open: X-ray has nothing to show. */
   readonly xray?: { readonly on: boolean; readonly toggle: () => void };
+  /** Spec 12: back to Triage, when two or more templates are open. */
+  readonly onTriage?: () => void;
 }
 
-export function Header({ onFiles, onSample, xray }: Props) {
+export function Header({ onFiles, onSample, xray, onTriage }: Props) {
   const input = useRef<HTMLInputElement>(null);
   const menu = useRef<HTMLDetailsElement>(null);
   return (
     <header className="afl-header">
       <h1>InfoPath Afterlife</h1>
       <div className="afl-header-actions">
+        {onTriage && (
+          <button type="button" className="afl-button" onClick={onTriage}>
+            Triage
+          </button>
+        )}
         <button type="button" className="afl-button" onClick={() => input.current?.click()}>
           Open files
         </button>

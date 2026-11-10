@@ -116,13 +116,28 @@ test('R1.2: an unknown control, action and adapter are Manual and unlisted, neve
         ...view,
         controls: [
           ...view.controls,
-          { ...view.controls[0]!, id: 'ctl:x', binding: 'my:x', targetId: 'f:main:/x', xctname: 'Hologram' },
+          {
+            ...view.controls[0]!,
+            id: 'ctl:x',
+            binding: 'my:x',
+            targetId: 'f:main:/x',
+            xctname: 'Hologram',
+          },
         ],
       },
       ...base.views.slice(1),
     ],
-    rules: [{ ...rule, actions: [...rule.actions, { ...rule.actions[0]!, id: 'action:x', kind: 'teleportAction' }] }, ...base.rules.slice(1)],
-    dataConnections: [...base.dataConnections, { ...base.dataConnections[0]!, id: 'conn:x', adapterKind: 'hwsAdapter' }],
+    rules: [
+      {
+        ...rule,
+        actions: [...rule.actions, { ...rule.actions[0]!, id: 'action:x', kind: 'teleportAction' }],
+      },
+      ...base.rules.slice(1),
+    ],
+    dataConnections: [
+      ...base.dataConnections,
+      { ...base.dataConnections[0]!, id: 'conn:x', adapterKind: 'hwsAdapter' },
+    ],
   };
   const c = classify(ir);
   expect(c.items.length).toBe(classify(base).items.length + 3);

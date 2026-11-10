@@ -22,7 +22,10 @@ function sections(): Map<string, string[][]> {
       continue;
     }
     if (!line.startsWith('|') || !current) continue;
-    const cells = line.slice(1, -1).split(' | ').map((c) => c.trim().replace(/^\| ?| ?\|$/g, ''));
+    const cells = line
+      .slice(1, -1)
+      .split(' | ')
+      .map((c) => c.trim().replace(/^\| ?| ?\|$/g, ''));
     if (cells.every((c) => /^-+$/.test(c))) continue;
     if (coverageCol < 0) {
       coverageCol = cells.indexOf('Coverage');
@@ -39,7 +42,9 @@ test('every cited row exists, and its Coverage cell names the class', () => {
   for (const e of COVERAGE_TABLE) {
     const row = s.get(e.cites.section)?.find(([first]) => first === e.cites.row);
     if (!row) {
-      problems.push(`${e.kind}:${e.subtype}: no row "${e.cites.row}" in section ${e.cites.section}`);
+      problems.push(
+        `${e.kind}:${e.subtype}: no row "${e.cites.row}" in section ${e.cites.section}`,
+      );
       continue;
     }
     const word = CLASS_WORDS[e.class].doc;

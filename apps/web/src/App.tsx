@@ -1,3 +1,4 @@
+import type { TriageRow } from '@afterlife/core';
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { fromDataTransfer, sortInput } from './files/collect';
 import { Paper } from './paper/Paper';
@@ -13,20 +14,22 @@ import { DataConnections } from './side/DataConnections';
 import { DetailsCard } from './side/DetailsCard';
 import { FieldTree } from './side/FieldTree';
 import { SideTabs } from './side/SideTabs';
-import { TemplateList } from './side/TemplateList';
 import { Unmatched } from './side/Unmatched';
+import { Certificate } from './triage/Certificate';
+import { TriageTable } from './triage/TriageTable';
 import { initialState, openTemplate, recordsOf, reducer, unmatched, type Problem } from './store';
 import { localNow, WorkerClient } from './worker/client';
-import type { FailedRes, RenderedRes, ResBody } from './worker/protocol';
+import type { FailedRes, Progress, RenderedRes, ResBody } from './worker/protocol';
 
 /** The latest render answer; the previous paper stays up while the next one is drawn. */
-type Render = (RenderedRes | FailedRes) & { readonly first?: boolean };
+/** `templateId`: the template it was made for; another template's render is never shown. */
+type Render = (RenderedRes | FailedRes) & { readonly first?: boolean; readonly templateId: string };
 
 export function App() {
   const client = useMemo(() => new WorkerClient(), []);
   const [now] = useState(localNow);
   const [s, dispatch] = useReducer(reducer, initialState);
-  const [render, setRender] = useState<Render>();
+  const [latestRender, setRender] = useState<Render>();
   const known = useRef(new Set<string>());
   const latest = useRef(0);
   const faded = useRef(new Set<string>());
@@ -60,8 +63,16 @@ export function App() {
   }, []);
 
   /** Applies a Worker answer to an open request; opens the first template it added. */
-  const applySession = useCallback((res: ResBody, what: string) => {
+  const [reading, setReading] = useState<string>();
+  const progress: Progress = useCallback(
+    (p) => setReading(`Reading ${p.index} of ${p.total}: ${p.fileName}`),
+    [],
+  );
+
+  /** `triage`: files were opened by the user, so two or more templates show Triage (R4.1). */
+  const applySession = useCallback((res: ResBody, what: string, triage = false) => {
     dispatch({ type: 'busy' });
+    setReading(undefined);
     if (res.type !== 'session') {
       if (res.type === 'failed')
         dispatch({ type: 'input', ignored: [], problems: [{ fileName: what, error: res.error }] });
@@ -69,7 +80,14 @@ export function App() {
     }
     const added = res.templates.find((t) => !known.current.has(t.templateId));
     for (const t of res.templates) known.current.add(t.templateId);
-    dispatch({ type: 'session', session: res, ...(added && { open: added.templateId }) });
+    const screen =
+      triage && added && res.templates.length >= 2 ? 'triage' : added ? 'form' : undefined;
+    dispatch({
+      type: 'session',
+      session: res,
+      ...(added && { open: added.templateId }),
+      ...(screen && { screen }),
+    });
   }, []);
 
   const openFiles = useCallback(
@@ -85,19 +103,19 @@ export function App() {
         type: 'busy',
         what: c.files.length === 1 ? c.files[0]!.name : `${c.files.length} files`,
       });
-      const [res] = await Promise.all([client.open(c.files), loadPaperFonts()]);
-      applySession(res, 'the files');
+      const [res] = await Promise.all([client.open(c.files, progress), loadPaperFonts()]);
+      applySession(res, 'the files', true);
     },
-    [client, applySession],
+    [client, applySession, progress],
   );
 
   const openSample = useCallback(
     async (id: string) => {
       dispatch({ type: 'busy', what: sampleName(id) });
-      const [res] = await Promise.all([client.openSample(id), loadPaperFonts()]);
+      const [res] = await Promise.all([client.openSample(id, progress), loadPaperFonts()]);
       applySession(res, sampleName(id));
     },
-    [client, applySession],
+    [client, applySession, progress],
   );
 
   // R1.1: drop anywhere on the page.
@@ -125,7 +143,7 @@ export function App() {
   );
 
   useEffect(() => {
-    if (!template || !view) return;
+    if (!template || !view || s.screen !== 'form') return;
     const ticket = ++latest.current;
     void client.render(template.templateId, view.name, record?.recordId, now).then((r) => {
       if (ticket !== latest.current) return; // a newer request is on its way
@@ -133,9 +151,13 @@ export function App() {
       // R9.3: the first successful render of each template fades in.
       const first = r.type === 'rendered' && !faded.current.has(template.templateId);
       if (first) faded.current.add(template.templateId);
-      setRender({ ...r, first });
+      setRender({ ...r, first, templateId: template.templateId });
     });
-  }, [client, now, template, view, record]);
+  }, [client, now, template, view, record, s.screen]);
+
+  // The previous paper stays up while the next render of the same template is drawn; a render
+  // of another template (opened from Triage, or a stale failure) is not shown under this one.
+  const render = latestRender?.templateId === template?.templateId ? latestRender : undefined;
 
   // X-ray (R5): marks[i] is the i-th `[data-afl-ctrl]` element (design §5).
   const rendered = render?.type === 'rendered' ? render : undefined;
@@ -193,6 +215,10 @@ export function App() {
         ? cardForControl(template.ir, s.selection.controlId)
         : undefined);
 
+  const certificateRow = s.triage?.rows.find(
+    (r): r is TriageRow => r.kind === 'form' && r.templateId === s.certificateId,
+  );
+
   const label =
     template && view
       ? `${template.ir.meta.name}, ${viewCaption(view)} view, ${record ? record.fileName : 'empty form'}`
@@ -203,13 +229,18 @@ export function App() {
       <Header
         onFiles={(f) => void openFiles(f)}
         onSample={(id) => void openSample(id)}
-        {...(template && {
-          xray: { on: s.xray, toggle: () => dispatch({ type: 'xray', on: !s.xray }) },
-        })}
+        {...(template &&
+          s.screen === 'form' && {
+            xray: { on: s.xray, toggle: () => dispatch({ type: 'xray', on: !s.xray }) },
+          })}
+        {...(s.templates.length >= 2 &&
+          s.screen !== 'triage' && {
+            onTriage: () => dispatch({ type: 'screen', screen: 'triage' }),
+          })}
       />
       <main className="afl-main">
         <div aria-live="polite" className="afl-status">
-          {s.busy !== undefined && `Opening ${s.busy}…`}
+          {s.busy !== undefined && (reading ?? `Opening ${s.busy}…`)}
         </div>
         <ErrorBanner problems={failures} />
         {!template ? (
@@ -217,6 +248,24 @@ export function App() {
             <Landing onSample={(id) => void openSample(id)} />
             <Unmatched records={unmatched(s)} ignored={s.ignored} />
           </>
+        ) : s.screen === 'triage' && s.triage ? (
+          <>
+            <TriageTable
+              result={s.triage}
+              onCertificate={(templateId) =>
+                dispatch({ type: 'screen', screen: 'certificate', templateId })
+              }
+            />
+            <Unmatched records={unmatched(s)} ignored={s.ignored} />
+          </>
+        ) : s.screen === 'certificate' && certificateRow ? (
+          <Certificate
+            row={certificateRow}
+            onBack={() => dispatch({ type: 'screen', screen: 'triage' })}
+            onOpenForm={() =>
+              dispatch({ type: 'screen', screen: 'form', templateId: certificateRow.templateId })
+            }
+          />
         ) : (
           <div className="afl-workspace">
             <div className="afl-work">
@@ -266,14 +315,6 @@ export function App() {
               )}
             </div>
             <aside className="afl-side" aria-label="About this form">
-              {s.templates.length > 1 && (
-                <TemplateList
-                  templates={s.templates}
-                  openId={s.openId}
-                  recordsOf={(id) => recordsOf(s, id).length}
-                  onOpen={(id) => dispatch({ type: 'open', templateId: id })}
-                />
-              )}
               {card && (
                 <DetailsCard
                   card={card}

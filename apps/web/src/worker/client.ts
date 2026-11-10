@@ -1,11 +1,17 @@
 // Spec 09 design §4: the page's side of the Worker. Each request gets an id and a promise; an
 // answer that takes more than 15 s ends the Worker, which is started again and given the files
 // it held (the watchdog; core's own budgets should make it unnecessary).
-import type { InputFile, ReqBody, ResBody } from './protocol';
+import type { InputFile, Progress, ReqBody, Res, ResBody } from './protocol';
 
 export const WATCHDOG_MS = 15_000;
 
-type Pending = { resolve: (r: ResBody) => void; timer: ReturnType<typeof setTimeout> };
+type Pending = {
+  resolve: (r: ResBody) => void;
+  timer: ReturnType<typeof setTimeout>;
+  /** Restarts the watchdog: progress means the Worker is alive (spec 12 R4.4). */
+  arm: () => void;
+  progress?: Progress;
+};
 /** What the Worker was given, to give it again after a restart. */
 type Replay = { type: 'openSample'; sample: string } | { type: 'open'; files: readonly File[] };
 
@@ -25,10 +31,15 @@ export class WorkerClient {
 
   private start(): Worker {
     const w = this.create();
-    w.onmessage = (e: MessageEvent<ResBody & { id: number }>) => {
+    w.onmessage = (e: MessageEvent<Res>) => {
       const { id, ...body } = e.data;
       const p = this.pending.get(id);
       if (!p) return;
+      if (body.type === 'progress') {
+        p.arm();
+        p.progress?.(body);
+        return;
+      }
       clearTimeout(p.timer);
       this.pending.delete(id);
       p.resolve(body);
@@ -36,18 +47,31 @@ export class WorkerClient {
     return w;
   }
 
-  private send(body: ReqBody, transfer: Transferable[] = []): Promise<ResBody> {
+  private send(
+    body: ReqBody,
+    transfer: Transferable[] = [],
+    progress?: Progress,
+  ): Promise<ResBody> {
     const id = this.nextId++;
     return new Promise((resolve) => {
-      const timer = setTimeout(() => {
+      const expire = () => {
         this.pending.delete(id);
         resolve({
           type: 'failed',
           error: { code: 'WORKER_TIMEOUT', details: { ms: this.timeoutMs } },
         });
         void this.restart();
-      }, this.timeoutMs);
-      this.pending.set(id, { resolve, timer });
+      };
+      const p: Pending = {
+        resolve,
+        timer: setTimeout(expire, this.timeoutMs),
+        arm: () => {
+          clearTimeout(p.timer);
+          p.timer = setTimeout(expire, this.timeoutMs);
+        },
+        ...(progress && { progress }),
+      };
+      this.pending.set(id, p);
       this.worker.postMessage({ ...body, id }, transfer);
     });
   }
@@ -59,13 +83,14 @@ export class WorkerClient {
       await (r.type === 'openSample' ? this.send(r) : this.sendFiles(r.files));
   }
 
-  private async sendFiles(files: readonly File[]): Promise<ResBody> {
+  private async sendFiles(files: readonly File[], progress?: Progress): Promise<ResBody> {
     const input: InputFile[] = await Promise.all(
       files.map(async (f) => ({ name: f.name, bytes: await f.arrayBuffer() })),
     );
     return this.send(
       { type: 'open', files: input },
       input.map((f) => f.bytes),
+      progress,
     );
   }
 
@@ -73,14 +98,19 @@ export class WorkerClient {
     return this.send({ type: 'warm' });
   }
 
-  openSample(sample: string): Promise<ResBody> {
+  openSample(sample: string, progress?: Progress): Promise<ResBody> {
     this.replay.push({ type: 'openSample', sample });
-    return this.send({ type: 'openSample', sample });
+    return this.send({ type: 'openSample', sample }, [], progress);
   }
 
-  open(files: readonly File[]): Promise<ResBody> {
+  open(files: readonly File[], progress?: Progress): Promise<ResBody> {
     this.replay.push({ type: 'open', files });
-    return this.sendFiles(files);
+    return this.sendFiles(files, progress);
+  }
+
+  /** Spec 12 R5.1: the open session's Triage as CSV text. */
+  csv(): Promise<ResBody> {
+    return this.send({ type: 'csv' });
   }
 
   render(

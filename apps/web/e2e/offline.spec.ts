@@ -36,11 +36,17 @@ test('after warm-up, a sample, paging, views and dropped files all work offline'
   await expect(paper('Accounting view, 03-travel-request-002.xml')).toBeVisible();
 
   // Files opened while offline.
+  // Two templates now: Triage, a certificate and the form (spec 12 R7.3), all offline.
   await pick(page, [xsnPath('02-expense-report'), ...recordPaths('02-expense-report', 2)]);
+  await expect(page.getByRole('region', { name: 'Triage' }).locator('tbody tr')).toHaveCount(2);
+  await page.getByRole('button', { name: 'Expense Report' }).click();
+  await expect(
+    page.getByRole('heading', { name: 'Death certificate: Expense Report' }),
+  ).toBeVisible();
+  await page.getByRole('button', { name: 'Open form' }).click();
   await expect(paper('Claim view, empty form')).toBeVisible();
   await page.getByRole('button', { name: 'Next' }).click();
   await expect(paper('Claim view, 02-expense-report-001.xml')).toBeVisible();
-  await expect(page.getByRole('region', { name: 'Templates (2)' })).toBeVisible();
 
   expect({ requested, failed }).toEqual({ requested: [], failed: [] });
 });

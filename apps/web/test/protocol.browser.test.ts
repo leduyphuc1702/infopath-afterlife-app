@@ -72,3 +72,44 @@ test('the watchdog answers WORKER_TIMEOUT and replays the session into a new Wor
   expect(made).toBe(2);
   expect(sent.slice(0, 2)).toEqual(['1:openSample', '2:openSample']);
 });
+
+// Spec 12 R4.4, R5.1: per-file progress before the answer, the session's Triage, and its CSV.
+test('open: one progress message per file, in order, then the session with its Triage', async () => {
+  const client = new WorkerClient(worker);
+  const names = ['01-leave-request', '02-expense-report', '03-travel-request'];
+  const input = names.map((n) => new File([b64(files[n]!.template[1])], `${n}.xsn`));
+  const seen: string[] = [];
+  const s = (await client.open(input, (p) =>
+    seen.push(`${p.index}/${p.total} ${p.fileName}`),
+  )) as SessionRes;
+  expect(seen).toEqual([
+    '1/3 01-leave-request.xsn',
+    '2/3 02-expense-report.xsn',
+    '3/3 03-travel-request.xsn',
+  ]);
+  expect(s.triage.totals.forms).toBe(3);
+  const ids = new Set(s.templates.map((t) => t.templateId));
+  for (const r of s.triage.rows) expect(r.kind === 'form' && ids.has(r.templateId)).toBe(true);
+  // No record opened: counts are unknown, not 0 (R6.1).
+  expect(s.triage.rows.map((r) => (r.kind === 'form' ? r.records : 'error'))).toEqual([
+    undefined,
+    undefined,
+    undefined,
+  ]);
+  const csv = (await client.csv()) as { type: 'csv'; text: string };
+  expect(csv.type).toBe('csv');
+  const lines = csv.text.trimEnd().split('\r\n');
+  expect(lines).toHaveLength(4);
+  expect(lines[0]).toContain('Emulated');
+  client.terminate();
+});
+
+test('a sample: progress per file, records counted in its Triage row', async () => {
+  const client = new WorkerClient(worker);
+  let n = 0;
+  const s = (await client.openSample('06-safety-incident', () => n++)) as SessionRes;
+  expect(n).toBe(1 + files['06-safety-incident']!.records.length);
+  const row = s.triage.rows[0]!;
+  expect(row.kind === 'form' && row.records).toBe(10);
+  client.terminate();
+});
