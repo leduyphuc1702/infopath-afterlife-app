@@ -1,9 +1,9 @@
 # Requirements: 03 view renderer
 
 Source brief: `docs/spec-briefs/03-view-renderer.md`. Phase 1 of 3 (requirements → design → tasks).
-Status: **draft for review, 2026-11-10.** Depends on spec 01 (`ParsedTemplate`, the `xml/` layer)
-and spec 02 (FormIR: views, bound controls, ActiveX, data connections and their liveness), both
-closed.
+Status: **approved, 2026-11-10** (review answers applied; each change is marked `Changed at
+review:`). Depends on spec 01 (`ParsedTemplate`, the `xml/` layer) and spec 02 (FormIR: views,
+bound controls, validations, ActiveX, data connections and their liveness), both closed.
 
 ## Introduction
 
@@ -21,8 +21,10 @@ The renderer is a pure function of its inputs. It runs no script from the form, 
 request and reads no clock; the current date and the user name are inputs.
 
 Out of scope, and the spec that owns each item:
-- live rules, calculations, validation states (the required asterisk, the dashed red border) and
-  editing: spec 04, which calls this renderer;
+- live rules, calculations, live validation (the dashed red border, messages, the asterisk
+  appearing or going away as the user types) and editing: spec 04, which calls this renderer.
+  `Changed at review:` the static required asterisk on an empty control is in this spec (R6.6);
+  the empty screenshots show it and the viewer demo uses only this spec;
 - the viewer UI, including the view selector, zoom, the sepia fade and printing: spec 09;
 - the Original view panel and the SHA-256 seal: spec 08;
 - matching a record to its template, `upgrade.xsl`, embedded attachments: spec 11;
@@ -37,9 +39,19 @@ Out of scope, and the spec that owns each item:
 - **Default view**: the FormIR view with `isDefault`; with none, the first view.
 - **Empty form**: the file named by `xsf:fileNew/xsf:initialXmlDocument/@href` (`template.xml` in
   all 48 samples).
+- **Empty record**: `samples/own/records/<slug>/<slug>-000-empty.xml`, one per own template (47).
+  It differs from `template.xml` only in the `mso-infoPathSolution` `href`. The capture script
+  `allshots.ps1` opened it for every "empty" screenshot. The public sample has none and uses
+  `template.xml`. `Changed at review:` added; the empty-state oracles use it.
 - **Record**: a filled XML document, such as `samples/own/records/<slug>/<slug>-001.xml`. Its
   `mso-infoPathSolution` processing instruction names the template URN and `solutionVersion`.
-- **Engine**: the XSLT 1.0 processor with its XPath 1.0 evaluator (open question 1).
+- **First record**: `<slug>-001.xml` (the public sample: `sampledata.xml`). The capture script
+  opened it for every "filled" screenshot.
+- **Blank check** (`Changed at review:` added for R6.6): a FormIR validation of `kind: blank`, or
+  of `kind: errorCondition` whose `expressionContext` is `.` and whose expression, with whitespace
+  removed, is `.=""`. Form 01's four asterisks come from the second kind (Evidence).
+- **Engine**: the XSLT 1.0 processor with its XPath 1.0 evaluator, chosen in the design by a
+  measured spike on the 53 views (tech.md). `Changed at review:` was open question 1.
 - **Extension function**: a function in an InfoPath or MSXML namespace (`xdFormatting`,
   `xdXDocument`, `xdImage`, `xdDate`, `xdMath`, `xdUser`, `msxsl`, `ipApp`).
 - **Guard**: `function-available('<name>')` in an `xsl:when` test, with an `xsl:otherwise`
@@ -102,8 +114,21 @@ counts only):
   `xdXDocument:GetNamedNodeProperty` and `ipApp:GetMajorVersion`.
 - Instructions beyond ours include `copy-of` 422, `copy` 136, `call-template`, `param` and
   `with-param`.
-- [VERIFY: spec 02 counted 36 private views (mainpane transforms); this count is 58 view files.
-  The difference may be XSL files that no `mainpane` names.]
+- `GetNamedNodeProperty` is defined in MS-IPFF2 §2.4.3.9.3. Every private call reads state the
+  InfoPath runtime sets (signature status `IsValidSignature`, `SignedBy`, `SignedOn`; a
+  `filterVersion`; a control id on a repeating group), and each passes a literal default as its
+  third argument (maintainer, 2026-11-10, shapes only).
+- The 58 view files include XSL files that no `mainpane` names. `Changed at review:` the local
+  check renders every view a `mainpane` names and counts the other `.xsl` files separately
+  (R10.3).
+
+**Required asterisk** (`samples/own/screenshots/01-leave-request-Request-empty.png`, checked
+2026-11-10): the asterisk shows on Employee name, Employee ID, First day of leave and Last day of
+leave. Those are exactly the four fields of form 01 with an `xsf:errorCondition` whose expression
+is `. = ""` (`manifest.xsf` lines 79–82). Working days (`. < 1 or . > 30`) and Department show
+none. Form 01 has no `xsf3:errorBlank`, and no FormIR `required` field (its strings are never
+required, spec 01 R14.8, and its dates are `nillable`). `docs/infopath-ux.md` §3 lists three of
+the four; it omits Employee ID.
 
 **`xsltproc` as a reference** (`/usr/bin/xsltproc`, libxml 2.9.13, libxslt 1.1.35, run
 2026-11-10):
@@ -119,7 +144,8 @@ counts only):
 `$350.30`; an empty dropdown shows its authored placeholder (`Select...`).
 
 **Screenshots:** 16 of the 22 in `samples/own/screenshots/` are default views (forms 01–08, empty
-and filled). [VERIFY: the filled screenshots show record `-001.xml`.]
+and filled). `Changed at review:` the capture script `allshots.ps1` opened the first record for
+"filled" and the empty record for "empty" (maintainer, 2026-11-10).
 
 ## Requirements
 
@@ -131,8 +157,9 @@ record, so that I can see a form nobody can open any more.
 
 1. WHEN given a `ParsedTemplate`, its FormIR, a view name and an XML document, THE SYSTEM SHALL
    return a render result: the sanitised HTML of the view body, its scoped style rules and a list
-   of issues. Oracle: a golden render result per view of the 53 views, for the empty form and for
-   the first record (`-001.xml`; the public sample's `sampledata.xml`).
+   of issues. Oracle: a golden render result per view of the 53 views, for the empty record
+   (`-000-empty.xml`; the public sample's `template.xml`) and for the first record.
+   `Changed at review:` the empty state uses the empty record, which the screenshots show.
 2. WHEN no view name is given, THE SYSTEM SHALL render the default view; WHEN no XML document is
    given, THE SYSTEM SHALL render the empty form. Oracle: form 05 renders `HR`; form 03 renders
    `Employee`; the result for form 01 with no document equals the result with `template.xml`.
@@ -141,10 +168,12 @@ record, so that I can see a form nobody can open any more.
    reason, and SHALL NOT return partial HTML. Oracle: an unknown name; spec 02's missing-view and
    broken-view fixtures.
 4. THE SYSTEM SHALL be synchronous and pure: no network request, no file or clock access. The
-   current date and time (`now`), the locale and the user name SHALL be inputs. It SHALL run
-   unchanged in Node 22 and a Web Worker without a DOM. Oracle: the spec 01 lint restrictions and
-   the spec 02 clock ban extended to the renderer's modules; a Worker build with Node built-ins
-   refused (spec 01 R17.1).
+   current date and time (`now`, a required ISO date-time with offset), the locale and the user
+   name (optional, empty when not given) SHALL be inputs, with no fallback to a clock or the
+   environment. It SHALL run unchanged in Node 22 and a Web Worker without a DOM. Oracle: the
+   spec 01 lint restrictions and the spec 02 clock ban extended to the renderer's modules; a
+   Worker build with Node built-ins refused (spec 01 R17.1); a call without `now` fails to
+   type-check. `Changed at review:` `now` required, user name optional, no fallback.
 5. THE SYSTEM SHALL parse the XML document as hostile input through core's `xml/` layer, with its
    limits and no DTD. A document that is not well-formed SHALL be an `AfterlifeError`
    (`INVALID_XML`, `UNSAFE_XML` or `LIMIT_EXCEEDED`). Oracle: the spec 01 XML safety fixtures used
@@ -186,9 +215,13 @@ form "like paper".
    in the design, overridable), THEN THE SYSTEM SHALL stop with `AfterlifeError`
    `LIMIT_EXCEEDED` naming the limit. Oracle: synthetic views with an infinitely recursive
    template and an output bomb (nested `for-each` over a large record).
-4. THE SYSTEM SHALL NOT use the browser's `XSLTProcessor`, and every runtime dependency SHALL be
-   under MIT, Apache-2.0 or BSD terms. Oracle: a lint rule bans `XSLTProcessor` in core; a test
-   reads the licence of every production dependency of `packages/core` from the lockfile.
+4. THE SYSTEM SHALL NOT use the browser's `XSLTProcessor` or `saxon-js`, and every runtime
+   dependency SHALL be under MIT, Apache-2.0, BSD or ISC terms. The one exception is
+   `xslt-processor` (LGPL-3.0, unmodified, pinned), and only if the design's spike picks it and
+   the maintainer agrees (samples-and-licensing.md). Oracle: a lint rule bans `XSLTProcessor` in
+   core; a test reads the licence of every production dependency of `packages/core` from the
+   lockfile, with the exception listed by name. `Changed at review:` the steering now names the
+   exception; BSD-only became BSD or ISC to match it.
 
 ### R4. InfoPath extension functions
 Traces: brief AC2, extended by the Evidence tables; Added: `msxsl`, `function-available`.
@@ -222,8 +255,13 @@ recognise my form.
    issue per function name with the number of calls. Oracle: a synthetic view calling
    `ipApp:GetMajorVersion()` unguarded.
 5. THE SYSTEM SHALL compute `xdDate:Today` and `xdDate:Now` from the `now` input and
-   `xdUser:get-UserName` from the user-name input (empty when not given). Oracle: unit cases; two
-   renders with different `now` differ only in those values.
+   `xdUser:get-UserName` from the user-name input (empty when not given). `GetNamedNodeProperty`
+   (MS-IPFF2 §2.4.3.9.3, cited in the design) SHALL return its third argument, the caller's
+   default, because every property it reads is state the InfoPath runtime sets (signature status,
+   `filterVersion`, control ids). Oracle: unit cases; two renders with different `now` differ only
+   in those values; a synthetic view calling `GetNamedNodeProperty(., 'IsValidSignature',
+   'false')` gives `false`. `Changed at review:` `GetNamedNodeProperty` behaviour settled (was
+   open question 4).
 
 ### R5. Safe output without a DOM
 Traces: brief AC3, brief P5; Added: no DOM (core runs in a Worker), inert controls, scoped styles
@@ -256,7 +294,8 @@ open it, so that the free viewer is safe to use on anything.
    inside a page and checks the computed style of an element outside the root.
 
 ### R6. What InfoPath showed that the XSL alone does not
-Traces: brief AC4–AC7; Added: control marks (spec 04 and the X-ray need them).
+Traces: brief AC4–AC7; Added: control marks (spec 04 and the X-ray need them); Added at review:
+the required asterisk (R6.6; the empty screenshots show it).
 
 As Tim (form owner), I want the original form next to the converted one to look like the form I
 built, so that I can trust the comparison.
@@ -277,6 +316,15 @@ built, so that I can trust the comparison.
    of the node instance it shows (with positions, such as
    `/my:expenseClaim[1]/my:expenses[1]/my:expense[2]/my:amount[1]`). Oracle: form 02's first
    record has one mark per `my:amount` row, each with its row's position.
+6. WHEN a bound control's node is empty in the document, and its field is FormIR `required` or the
+   target of a blank check, THE SYSTEM SHALL draw InfoPath's required mark on it: a small red `*`
+   (about 8 px, `#FF0000`) a few pixels inside the right edge, vertically centred, with no border
+   change and no message (`docs/infopath-ux.md` §3). The mark is static: no event handling, and
+   no other validation is evaluated (spec 04 owns live validation). Oracle: form 01's empty
+   record marks Employee name, Employee ID, First day of leave and Last day of leave, and not
+   Department or Working days (`01-leave-request-Request-empty.png`); its first record has no
+   mark; a synthetic `xsf3:errorBlank` and a non-nillable `xsd:date` field are each marked when
+   empty. `Changed at review:` added (was open question 7, defaulted to spec 04).
 
 ### R7. Property P4: rendering is deterministic
 Traces: brief P4 (testing.md).
@@ -302,9 +350,10 @@ Traces: brief P5 (testing.md).
 ### R9. Performance
 Traces: brief AC1; tech.md budget "render one view in under 100 ms (p95, browser)".
 
-1. THE SYSTEM SHALL render each of the 53 views, empty and with the first record, in under 100 ms
-   at p95 over 20 runs, in Node 22 and in a Chromium Web Worker; form 08 (171 KB view, 200
-   fields) reported separately. Oracle: the perf project and a browser perf test.
+1. THE SYSTEM SHALL render each of the 53 views, with the empty record and with the first
+   record, in under 100 ms at p95 over 20 runs, in Node 22 and in a Chromium Web Worker; form 08
+   (171 KB view, 200 fields) reported separately. Oracle: the perf project and a browser perf
+   test.
 
 ### R10. References and visual acceptance
 Traces: brief "Visual acceptance", changed (Evidence: `xsltproc` cannot run InfoPath functions);
@@ -314,20 +363,24 @@ As Tim, I want proof that the renderer draws my form as InfoPath did, so that th
 compare means something.
 
 1. THE SYSTEM SHALL, in fallback mode and before the R5–R6 post-processing, give the same HTML as
-   `xsltproc` for every one of the 53 views, empty and with the first record, after a normalisation
-   the design defines (whitespace, attribute order, namespace declarations). The `xsltproc`
-   references SHALL be made by a committed script with the libxslt version recorded, and
-   committed, so CI does not need `xsltproc`. Oracle: 106 reference files; every own extension
+   `xsltproc` for every one of the 53 views, with the empty record and with the first record, after
+   a normalisation the design defines (whitespace, attribute order, namespace declarations). The
+   `xsltproc` references SHALL be made by a committed script with the libxslt version recorded,
+   and committed, so CI does not need `xsltproc`. Oracle: 106 reference files; every own extension
    call is guarded (Evidence), so all 53 views qualify.
-2. THE SYSTEM SHALL pass a Playwright visual test of the default view of forms 01–08, empty and
-   with the first record (16 renders), against baseline PNGs of its own render. Each baseline is
-   committed only after the maintainer approves it side by side with the InfoPath screenshot of
-   the same view and state. The pixel threshold SHALL be set after the first measurement and
-   recorded in this spec. Oracle: 16 baselines; the 16 InfoPath screenshots as the human reference.
-3. WHERE `AFTERLIFE_PRIVATE_SAMPLES` is set, THE SYSTEM SHALL render every view of every private
-   template with its empty form with no throw, and print, as names and counts only: issues by
-   code, calls to unimplemented functions by name (expected 0), guard results by name, and the
-   slowest render. Oracle: run locally by the maintainer; CI skips it.
+2. THE SYSTEM SHALL pass a Playwright visual test of the default view of forms 01–08, with the
+   empty record and with the first record (16 renders), against baseline PNGs of its own render.
+   Each baseline is committed only after the maintainer approves it side by side with the InfoPath
+   screenshot of the same view and state. The pixel threshold SHALL be set after the first
+   measurement and recorded in this spec. Oracle: 16 baselines; the 16 InfoPath screenshots as the
+   human reference. `Changed at review:` R10.1–R10.2 name the empty record, the file the
+   screenshots were taken from.
+3. WHERE `AFTERLIFE_PRIVATE_SAMPLES` is set, THE SYSTEM SHALL render every view that a `mainpane`
+   names, in every private template, with its empty form, with no throw. It SHALL print, as names
+   and counts only: issues by code, calls to unimplemented functions by name (expected 0), guard
+   results by name, the slowest render, and the number of `.xsl` files no `mainpane` names
+   (counted, not rendered). Oracle: run locally by the maintainer; CI skips it. `Changed at
+   review:` the view set is defined (was open question 6).
 
 ## Traceability
 
@@ -346,60 +399,41 @@ compare means something.
 | P4 deterministic | R7.1 |
 | P5 sanitiser | R8.1 |
 | Visual acceptance | R10.1–R10.2 (changed: default views only; `xsltproc` as a structural oracle, not a picture reference) |
-| Added | R1.2–R1.5, R2, R3.2–R3.4, R5.4–R5.5, R6.5, R10.3 |
+| Added | R1.2–R1.5, R2, R3.2–R3.4, R5.4–R5.5, R6.5, R6.6, R10.3 |
 
-**Total: 32 criteria** (R1.1–R10.3).
+**Total: 33 criteria** (R1.1–R10.3). `Changed at review:` R6.6 added.
 
-## Open questions
+## Review answers (2026-11-10)
 
-1. **Which XSLT engine?** Facts from the npm registry and each package's README, 2026-11-10.
-   "Size" is the npm unpacked size, not the bundle; the design measures the bundle.
+All seven open questions were answered by the maintainer; each change above carries a
+`Changed at review:` note.
 
-   | Engine | Licence | XSLT 1.0 | Size | Node 22 and Worker, no DOM | Extension functions |
-   |---|---|---|---|---|---|
-   | `xsltjs` 1.0.0 (Xcential) | MIT | "all XSLT 1.0 instructions, declarations and functions"; 94% of the W3C XSLT 1.0 tests | 181 KB; depends on `@xmldom/xmldom` 0.9.12 (ours) and `xpath` 0.0.36 (MIT) | Node: yes, synchronous `XSLT.run()`. Worker: [VERIFY] its `Stylesheet.js` requires `fs` and `path` and calls `fetch` for includes, so the bundle must stub them | Yes: JS functions per namespace URI, called with the XPath context |
-   | `@tradik/xslt-processor` 1.3.4 | BSD-3-Clause | "every element and function" of XSLT 1.0, with listed deviations | 5.6 MB | Needs a DOM; the README suggests `jsdom` for Node. [VERIFY] whether `@xmldom/xmldom` is enough | [VERIFY] not documented in the README |
-   | `xslt-polyfill` 1.0.36 (Chrome team) | BSD-3-Clause | libxslt compiled to Wasm, Chrome's behaviour | 2.8 MB | Browser polyfill: needs `document`; Wasm compile needs `wasm-unsafe-eval` in CSP | No JS functions (libxslt C level); `msxsl:node-set` fails as in `xsltproc` |
-   | `libxslt-wasm` 0.0.20 | MIT | libxslt 1.1 | 0.9 MB | Node; uses JSPI to intercept `fetch`. Worker [VERIFY] | EXSLT modules only; no JS functions |
-   | `xslt-processor` 5.1.3 (DesignLiquido) | **LGPL-3.0** | XSLT 1.0 with its own XPath | 6.3 MB | Yes, no DOM | Non-standard functions built in; custom ones [VERIFY] |
-   | SaxonJS 2.7 / 3 beta | proprietary ("see LICENSE") | XSLT 3.0 (1.0 by compatibility) | 2.4 MB | Yes | Yes |
-   | Our own XSLT 1.0 interpreter on `@xmldom/xmldom` + `xpath` (MIT) | MIT (ours) | only what the 53 views and the private views use | small | Yes | Yes, and shared with spec 04's runtime |
+1. **Engine:** not decided on paper. The design picks it from a measured spike on the 53 views.
+   `xsltjs` (MIT) is preferred; `xslt-processor` (LGPL-3.0) is a fallback that needs the
+   maintainer's OK (tech.md). Paper facts from the npm registry and each README, kept for the
+   design ("Size" is the npm unpacked size, not the bundle). The spike settles each `[VERIFY]`
+   cell and records the result in `design.md`:
 
-   **Recommendation: `xsltjs`.** It is the only candidate that meets all four filters on paper:
-   MIT, pure JS, no DOM, and JS extension functions. It also builds on the XML library core
-   already uses. Its `xpath` dependency can host the same function library (`src/xpath-fns/`)
-   that spec 04's runtime needs.
+| Engine | Licence | XSLT 1.0 | Size | Node 22 and Worker, no DOM | Extension functions |
+|---|---|---|---|---|---|
+| `xsltjs` 1.0.0 (Xcential) | MIT | "all XSLT 1.0 instructions, declarations and functions"; 94% of the W3C XSLT 1.0 tests | 181 KB; depends on `@xmldom/xmldom` 0.9.12 (ours) and `xpath` 0.0.36 (MIT) | Node: yes, synchronous `XSLT.run()`. Worker: [VERIFY] its `Stylesheet.js` requires `fs` and `path` and calls `fetch` for includes, so the bundle must stub them | Yes: JS functions per namespace URI, called with the XPath context |
+| `@tradik/xslt-processor` 1.3.4 | BSD-3-Clause | "every element and function" of XSLT 1.0, with listed deviations | 5.6 MB | Needs a DOM; the README suggests `jsdom` for Node. [VERIFY] whether `@xmldom/xmldom` is enough | [VERIFY] not documented in the README |
+| `xslt-polyfill` 1.0.36 (Chrome team) | BSD-3-Clause | libxslt compiled to Wasm, Chrome's behaviour | 2.8 MB | Browser polyfill: needs `document`; Wasm compile needs `wasm-unsafe-eval` in CSP | No JS functions (libxslt C level); `msxsl:node-set` fails as in `xsltproc` |
+| `libxslt-wasm` 0.0.20 | MIT | libxslt 1.1 | 0.9 MB | Node; uses JSPI to intercept `fetch`. Worker [VERIFY] | EXSLT modules only; no JS functions |
+| `xslt-processor` 5.1.3 (DesignLiquido) | **LGPL-3.0** | XSLT 1.0 with its own XPath | 6.3 MB | Yes, no DOM | Non-standard functions built in; custom ones [VERIFY] |
+| SaxonJS 2.7 / 3 beta | proprietary ("see LICENSE") | XSLT 3.0 (1.0 by compatibility) | 2.4 MB | Yes | Yes |
+| Our own XSLT 1.0 interpreter on `@xmldom/xmldom` + `xpath` (MIT) | MIT (ours) | only what the 53 views and the private views use | small | Yes | Yes, and shared with spec 04's runtime |
 
-   The design spike must check four things on the 53 views:
-   - the Worker bundle with `fs`, `path` and `fetch` stubbed;
-   - `function-available` for registered functions;
-   - `output method="html"` serialisation;
-   - the 100 ms budget.
-
-   **Fallback:** our own interpreter over the same two libraries. If no candidate passes, the
-   spike measures what that costs. `xslt-processor` is out under the MIT/Apache/BSD rule, and
-   SaxonJS is out under tech.md.
-2. **Steering conflicts.** These are your edits to make; I have not changed steering:
-   - `tech.md` and `samples-and-licensing.md` name `xslt-processor` (LGPL-3.0, "fine with an MIT
-     repo"), which the licence rule in R3.4 now excludes;
-   - `tech.md` names DOMPurify for sanitising, but DOMPurify needs a DOM, which a Worker and Node
-     lack (R5.3);
-   - `testing.md` and the brief ask for reference PNGs made by `xsltproc`, which R10 replaces.
-
-   Default: core sanitises on its own tree with no DOMPurify. The viewer (spec 09) may add
-   DOMPurify as a second layer in the page. The steering text is updated to match R3.4, R5.3 and
-   R10.
-3. **`now` and user name.** Default: `now` is a required input (ISO date-time with offset). The
-   user name is optional and empty by default. Neither has a fallback to a clock or the
-   environment.
-4. **`GetNamedNodeProperty`.** I have not found its definition. Default: return the template's
-   named property for that node when one exists, else the third argument, with the source cited
-   in the design. If no source is found, return the third argument and record an issue.
-5. **Which record is "filled"?** Default: the first record, `-001.xml`, for golden files,
-   baselines and the screenshot comparison. If the filled screenshots show another record, use
-   that one for R10.2.
-6. **58 view files or 36 views in the private corpus?** Default: the local check renders every
-   view a `mainpane` names, and counts any other `.xsl` files separately (names and counts only).
-7. **Required asterisk.** InfoPath shows a red asterisk on empty required fields
-   (`docs/infopath-ux.md` §3). Default: spec 04 adds it with the other validation states; this
-   spec renders the static view only.
+2. **Steering:** edited by the maintainer. Core sanitises by itself and the viewer may add
+   DOMPurify on top (tech.md); visual baselines are our own render, approved against the InfoPath
+   screenshots, and `xsltproc` gives structural references only (testing.md). R3.4 follows the
+   licence exception in samples-and-licensing.md.
+3. **`now` and user name:** both inputs, no fallback to a clock or the environment (R1.4).
+4. **`GetNamedNodeProperty`:** MS-IPFF2 §2.4.3.9.3; return the third argument (R4.5, Evidence).
+5. **Records:** the screenshots show `-000-empty.xml` (empty) and `-001.xml` (filled). The empty
+   record is the empty-state oracle in R1.1, R9.1 and R10.1–R10.2; R1.2 (no document → the empty
+   form, `template.xml`) is unchanged.
+6. **Private views:** render every view a `mainpane` names; count other `.xsl` files (R10.3).
+7. **Required asterisk:** in this spec, static (R6.6). Doc edit for the maintainer:
+   `docs/infopath-ux.md` §3 should list Employee ID with the other three marked fields (the
+   screenshot shows four).
