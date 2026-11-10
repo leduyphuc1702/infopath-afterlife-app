@@ -1,5 +1,5 @@
 // Spec 09 design §1, §4: the Worker entry. One session per Worker; requests are answered in order.
-import samples, { allSamples } from './samples';
+import samples, { allSamples, warmSamples } from './samples';
 import type { Progress, Req, Res, ResBody } from './protocol';
 import { Session, toWireError } from './session';
 
@@ -13,7 +13,7 @@ async function handle(req: Req): Promise<ResBody> {
   const progress: Progress = (p) => scope.postMessage({ ...p, id: req.id });
   switch (req.type) {
     case 'warm':
-      await samples();
+      await warmSamples();
       return { type: 'ready' };
     case 'open':
       return session.open(req.files, progress);

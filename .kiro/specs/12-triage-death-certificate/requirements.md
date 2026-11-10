@@ -191,6 +191,13 @@ As Mai, I want to see the whole folder at once, then one form's certificate.
   InfoPath. IF the samples chunk goes over 120 KB gzip, THEN its budget (spec 09 design §7) MAY
   rise to at most 150 KB, with the reason recorded. Oracle: `e2e/triage.spec.ts` (14 rows);
   `apps/web/test/samples.test.ts`, `budget.test.ts`.
+  `Changed at review (2026-11-11):` "Triage all samples" opens all 47 own forms plus
+  weight-keeper (48 templates) with the 153 records of forms 01–08, and the table reads "48 forms,
+  wave 1: 23, wave 2: 17, wave 3: 8", core's split. Forms 09–42 (34 templates, no records) are a
+  second lazy chunk, `virtual:sample-more`, budget at most 200 KB gzip (spec 09 design §7), not in
+  the first load; the warm-up prefetches it after the samples chunk, so it works offline. They keep
+  core's names; "Try a sample" stays forms 01–08 and weight-keeper. Oracle: `e2e/triage.spec.ts`
+  (48 rows, the split, timing), `e2e/offline.spec.ts`, `test/samples.test.ts`, `test/budget.test.ts`.
 
 ### R5. Export
 

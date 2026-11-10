@@ -12,6 +12,8 @@ import type { Plugin } from 'vite';
 const SAMPLES_DIR = new URL('../../../samples/', import.meta.url);
 const LIST = 'virtual:sample-list';
 const FILES = 'virtual:sample-files';
+/** Spec 12 R4.5 (`Changed at review (2026-11-11):`): forms 09–42, templates only, own chunk. */
+const MORE = 'virtual:sample-more';
 
 export interface SampleFile {
   readonly name: string;
@@ -62,6 +64,19 @@ export function loadSamples(): Sample[] {
   return [...own, theill, ...generated];
 }
 
+/** Forms 09–42: templates only, for "Triage all samples"; a second lazy chunk. */
+export function loadMoreSamples(): Sample[] {
+  return readdirSync(new URL('own/xsn/', SAMPLES_DIR))
+    .filter((f) => /^(09|[1-3]\d|4[0-2])-.*\.xsn$/.test(f))
+    .sort()
+    .map((f) => ({
+      id: f.slice(0, -'.xsn'.length),
+      triageOnly: true,
+      template: read(`own/xsn/${f}`),
+      records: [],
+    }));
+}
+
 const utf8 = new TextDecoder('utf-8', { fatal: true });
 /** `[name, text]` when the bytes are UTF-8 that encodes back to the same bytes, else base64. */
 function encode(f: SampleFile): [string, string, 't' | 'b'] {
@@ -77,16 +92,22 @@ function encode(f: SampleFile): [string, string, 't' | 'b'] {
 export function samples(): Plugin {
   return {
     name: 'afterlife:samples',
-    resolveId: (id) => (id === LIST || id === FILES ? `\0${id}` : null),
+    resolveId: (id) => (id === LIST || id === FILES || id === MORE ? `\0${id}` : null),
     load(id) {
       if (id === `\0${LIST}`) {
-        const list = loadSamples().map((s) => ({
+        const list = [...loadSamples(), ...loadMoreSamples()].map((s) => ({
           id: s.id,
           fileName: s.template.name,
           records: s.records.length,
           ...(s.triageOnly && { triageOnly: true }),
         }));
         return `export default ${JSON.stringify(list)};`;
+      }
+      if (id === `\0${MORE}`) {
+        const files = Object.fromEntries(
+          loadMoreSamples().map((s) => [s.id, { template: encode(s.template), records: [] }]),
+        );
+        return `export default ${JSON.stringify(files)};`;
       }
       if (id === `\0${FILES}`) {
         const files = Object.fromEntries(

@@ -11,3 +11,10 @@ declare module 'virtual:sample-files' {
   >;
   export default files;
 }
+declare module 'virtual:sample-more' {
+  type Encoded = readonly [string, string, 't' | 'b'];
+  const files: Readonly<
+    Record<string, { readonly template: Encoded; readonly records: readonly [] }>
+  >;
+  export default files;
+}

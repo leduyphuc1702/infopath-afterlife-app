@@ -96,7 +96,11 @@ test('offline: Triage all samples, then a death certificate', async ({ page, con
   await context.setOffline(true);
   await page.getByRole('button', { name: 'Triage all samples' }).click();
   const rows = page.getByRole('region', { name: 'Triage' }).locator('tbody tr');
-  await expect(rows).toHaveCount(14);
+  // All 48: the forms 09–42 chunk was prefetched by the warm-up (spec 12 R4.5).
+  await expect(rows).toHaveCount(48);
+  await rows.filter({ hasText: '27-project-charter.xsn' }).getByRole('button').click();
+  await expect(page.getByRole('region', { name: /^Death certificate:/ })).toBeVisible();
+  await page.getByRole('button', { name: 'Back to Triage' }).click();
   await rows.filter({ hasText: '45-policy-acknowledgement.xsn' }).getByRole('button').click();
   await expect(page.getByRole('article', { name: /Digital signatures/ })).toContainText(
     'Manual: use a JSM approval.',

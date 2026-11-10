@@ -69,6 +69,16 @@ R8.3: seed 20261111, 20 inputs: {"opened":20,"refused":0,"rendered":38,"renderFa
 `xml-stylesheet` in the in-repo records: 0 of 348 (`causes.test.ts`); `browser-xslt` 0 in the
 private corpus too.
 
+## Addendum: all 48 forms in "Triage all samples" (review, 2026-11-11)
+
+| Check | Result |
+|---|---|
+| `e2e/triage.spec.ts` › "Triage all samples" | 48 rows, "48 forms, wave 1: 23, wave 2: 17, wave 3: 8", equal to core over the 48 templates; click to table **329 ms** (48 templates, 153 records) |
+| `e2e/offline.spec.ts` › Triage all samples offline | 48 rows and a form 27 certificate with the network off after `data-ready`, no request |
+| `test/samples.test.ts` | forms 09–42: 34 templates, byte-equal, no records, own chunk |
+| `test/budget.test.ts` | forms 09–42 chunk 172.1 KB / 200; samples 118.8 / 120 unchanged; entry 70.3 / 100 |
+| Lighthouse 13.6.0, same command | performance 100, accessibility 100; both sample chunks requested after load |
+
 ## R8.1: private corpus (the human's runs, 2026-11-11)
 
 ### First run, before the fixes

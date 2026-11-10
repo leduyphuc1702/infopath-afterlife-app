@@ -70,3 +70,25 @@ test('no other sample file is in dist', () => {
   const chunk = distAssets().find((f) => f.startsWith('_virtual_sample-files-'))!;
   expect(readDist(`assets/${chunk}`).toString('utf8')).not.toContain('-000-empty.xml');
 });
+
+// Spec 12 R4.5: the second chunk holds the 34 templates of forms 09–42, byte for byte, no records.
+test('forms 09–42: 34 templates in their own chunk, equal to the sources', async () => {
+  const file = distAssets().find((f) => /^_virtual_sample-more-.*\.js$/.test(f));
+  expect(file).toBeDefined();
+  const url = `data:text/javascript;base64,${readDist(`assets/${file}`).toString('base64')}`;
+  const more = (
+    (await import(/* @vite-ignore */ url)) as {
+      default: Record<string, { template: Encoded; records: Encoded[] }>;
+    }
+  ).default;
+  const ids = Object.keys(more).sort();
+  expect(ids).toHaveLength(34);
+  expect([ids[0], ids.at(-1)]).toEqual(['09-it-access-request', '42-incident-rca']);
+  for (const id of ids) {
+    expect(more[id]!.records, id).toEqual([]);
+    expect(
+      decode(more[id]!.template).equals(readFileSync(new URL(`own/xsn/${id}.xsn`, SAMPLES))),
+      id,
+    ).toBe(true);
+  }
+});

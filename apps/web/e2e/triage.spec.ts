@@ -110,24 +110,30 @@ test('form 44: ActiveX is Unsupported; view paths use the usual prefixes', async
   await expect(ax).toContainText('view1.xsl › /xsl:stylesheet[1]/xsl:template[1]/');
 });
 
-// R4.5: one button on the landing page triages every bundled template.
-test('"Triage all samples": 14 forms, wave 1: 2, wave 2: 4, wave 3: 8', async ({ page }) => {
+// R4.5 (`Changed at review (2026-11-11):` all 47 own forms plus weight-keeper): one button on
+// the landing page triages every bundled template; the split must equal core's over the 48.
+test('"Triage all samples": 48 forms, wave 1: 23, wave 2: 17, wave 3: 8', async ({ page }) => {
+  await expect(page.locator('html[data-ready]')).toHaveCount(1);
+  const t0 = Date.now();
   await page.getByRole('button', { name: 'Triage all samples' }).click();
   const rows = table(page).locator('tbody tr');
-  await expect(rows).toHaveCount(14);
-  await expect(table(page)).toContainText('14 forms, wave 1: 2, wave 2: 4, wave 3: 8.');
-  // Records of forms 01–08 are counted; 43–47 and weight-keeper have none.
+  await expect(rows).toHaveCount(48);
+  console.log(`R4.5: 48 templates and 153 records, click to table ${Date.now() - t0} ms`);
+  await expect(table(page)).toContainText('48 forms, wave 1: 23, wave 2: 17, wave 3: 8.');
+  // Records of forms 01–08 are counted; the others have none.
   await expect(rowOf(page, '02-expense-report.xsn').locator('td').nth(10)).toHaveText('30');
   await expect(rowOf(page, '44-contract-approval-task.xsn').locator('td').nth(10)).toHaveText('0');
-  // Bundled samples show their display name (sample-names.ts).
+  await expect(rowOf(page, '09-it-access-request.xsn').locator('td').nth(10)).toHaveText('0');
+  // Bundled samples show their display name (sample-names.ts); 09–42 keep core's.
   await expect(rowOf(page, 'theill__weight-keeper.xsn').getByRole('button')).toHaveText(
     'Weight keeper',
   );
-  // Forms 43–47 are in Triage only, not in "Try a sample".
-  await page.locator('.afl-menu summary', { hasText: 'Try a sample' }).click();
-  await expect(
-    page.locator('.afl-menu li button', { hasText: 'Contract approval task' }),
-  ).toHaveCount(0);
+  // "Try a sample" stays forms 01–08 and weight-keeper.
+  const menu = page.locator('.afl-menu', {
+    has: page.locator('summary', { hasText: 'Try a sample' }),
+  });
+  await menu.locator('summary').click();
+  await expect(menu.locator('li button')).toHaveCount(9);
 });
 
 // R7.1: 40 templates (forms 01–08, five copies each under other names), from drop to table.
