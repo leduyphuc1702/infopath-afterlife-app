@@ -12,6 +12,8 @@ const samples: { [C in keyof ErrorDetailsByCode]: ErrorDetailsByCode[C] } = {
   UNSAFE_XML: { file: 'manifest.xsf', line: 2, column: 1 },
   INVALID_XML: { file: 'schema.xsd', line: 1, column: 31, encoding: 'iso-2022-kr' },
   INTERNAL: { path: '/xsf:xDocumentClass[1]/xsf:views[1]', reason: 'not consumed by a builder' },
+  INVALID_IR: { path: '$.fields[0].kind', reason: 'expected one of field, richText' },
+  UNSUPPORTED_IR_VERSION: { found: '2' },
 };
 
 test('the code list matches design §11', () => {

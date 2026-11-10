@@ -1,7 +1,11 @@
 # Tasks: 02 FormIR
 
-Phase 3 of 3. Requirements: `requirements.md` (approved 2026-11-10). Design: `design.md` (draft,
-reviewed together with this file). Status: **draft, 2026-11-10.**
+Phase 3 of 3. Requirements: `requirements.md` (approved 2026-11-10). Design: `design.md`
+(approved). Status: **approved 2026-11-10** (checkpoint `89930d3`).
+
+Changed at review (2026-11-10): tasks 6 and 7 gain fixtures for the private-corpus view shapes
+(ExpressionBox expressions, `GetDOM` bindings, `xctname` case, ActiveX attribute value templates,
+group bindings, `xd:server`); task 13 prints unresolved counts by reason and `xctname`.
 
 ## How every task is run and checked
 
@@ -14,7 +18,7 @@ every task ends green, so every batch does.
 
 ## Tasks
 
-- [ ] 1. Types, ids and JSON
+- [x] 1. Types, ids and JSON
   - `src/ir/types.ts` (design §5), `src/ir/ids.ts` (§4: field, group, manifest and view ids,
     compact paths, the `#n` suffix with `DUPLICATE_ID`), `src/ir/json.ts` (§9: `serialiseFormIR`,
     `parseFormIR` with `INVALID_IR` and `UNSUPPORTED_IR_VERSION`); new error and issue codes in
@@ -25,7 +29,7 @@ every task ends green, so every batch does.
     path on a hand-built FormIR, `__proto__` in `attrs`).
   - Requirements: R13.1 (serialiser), R13.2 (id functions), R14 (error cases).
 
-- [ ] 2. Build skeleton: meta, fields and groups, pass-through
+- [x] 2. Build skeleton: meta, fields and groups, pass-through
   - `src/ir/build.ts` (pipeline of §3.2 with stages 3–7 empty), `src/ir/meta.ts`,
     `src/ir/data-tree.ts` (fields, groups, data paths, `NameIndex`). Labels are the Title Case
     name (step 8) until task 8.
@@ -36,7 +40,7 @@ every task ends green, so every batch does.
     issues first, synthetic `ParsedTemplate` with no main schema).
   - Requirements: R1.1, R1.3, R2, R3, R10.
 
-- [ ] 3. Rules, calculations, validations, code-behind, signatures
+- [x] 3. Rules, calculations, validations, code-behind, signatures
   - `src/ir/elements.ts` (stage 3), with `PendingExpr` records for stage 7.
   - Tests: `test/ir/elements.test.ts` (README Rules, Calcs, Checks per row; 8 triggers; form 01
     `endDate` two validations; `errorBlank` and signature-line synthetic fixtures; forms 45, 46, 47).
@@ -63,17 +67,25 @@ every task ends green, so every batch does.
   - Tests: `test/ir/xpath-tokens.test.ts` (`div`, `mod`, `and` as operators and as names, `*` both
     ways, literals, nested predicates, `GetDOM`, `current()`, `xdMath:Eval`);
     `test/ir/xpath-resolve.test.ts` (one case per unresolved reason; prefix scope from a manifest
-    map and from an XSL element).
+    map and from an XSL element; a `GetDOM("src")/z:row/@ows_x` binding with `z` from the XSL
+    scope; an ExpressionBox-style expression `xdMath:Avg(<repeating path>)` and `string("…")`
+    with no path).
   - Requirements: R11.1, R11.2, R11.4.
 
 - [ ] 7. View scan
   - `src/ir/views/scan.ts` (design §6.1): contexts, bound controls, `choicesFrom`, ActiveX,
     `viewXmlBytes`; `FormIROptions`.
   - Fixtures: `test/fixtures/synthetic/views/` (a mode called twice, a mode never called,
-    `call-template`, a missing view, a view that is not well-formed, an unbound `object`), written
+    `call-template`, a missing view, a view that is not well-formed, an unbound `object`; and, for
+    the private-corpus shapes: an ExpressionBox over a repeating field and one over a string
+    literal, a text box bound into a secondary source with `GetDOM`, `DropDown` next to
+    `dropdown`, an ActiveX object with `{{…}}` in `xd:xctname`, a dynamic `title`, a group
+    binding with `xd:boundProp="xd:inline"` and an `xd:server` on a single-label host), written
     for this project.
   - Tests: `test/ir/view-scan.test.ts` (707 of 707 bindings resolve, 0 issues; form 02 `my:amount`;
-    form 03 and 04 `choicesFrom`; form 44 ActiveX; each synthetic case; the limit as an option).
+    form 03 and 04 `choicesFrom`; form 44 ActiveX; each synthetic case, including read-only
+    `readBy`-only references, `dynamicAttrs`, a group `targetId` and the `xd:server` endpoint
+    `internal`/`singleLabel`; the limit as an option).
   - Requirements: R4, R15 (limit).
 
 - [ ] 8. Labels
@@ -113,8 +125,11 @@ every task ends green, so every batch does.
 
 - [ ] 13. Local private check
   - Extend `test/private-corpus.local.test.ts` (design §10): `buildFormIR` returns for every file;
-    `afterAll` prints FormIR issue codes, generations and `labelSource` counts. Run once with
-    `AFTERLIFE_PRIVATE_SAMPLES=$HOME/Desktop/infopath-afterlife/samples` and paste the lines.
+    `afterAll` prints FormIR issue codes, generations, `labelSource` counts, and
+    `UNRESOLVED_BINDING` and `UNRESOLVED_REFERENCE` counts by reason and by `xctname`. Run once
+    with `AFTERLIFE_PRIVATE_SAMPLES=$HOME/Desktop/infopath-afterlife/samples` and paste the lines.
+    The aim is 0 for the review shapes; if anything else remains, list it (shapes and counts only)
+    and stop, without modelling more.
   - Requirements: R1.4.
 
 - [ ] 14. Verification pass

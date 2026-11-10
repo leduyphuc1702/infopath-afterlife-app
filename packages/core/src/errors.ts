@@ -24,6 +24,10 @@ export interface ErrorDetailsByCode {
   INVALID_XML: { file: string; line: number; column: number; encoding?: string; reason?: string };
   /** A parser bug: `reason` says which invariant broke. */
   INTERNAL: { path: string; reason: string };
+  /** Spec 02: JSON that is not a FormIR; `path` is a JSON path such as `$.fields[3].kind`. */
+  INVALID_IR: { path: string; reason: string };
+  /** Spec 02: an `irVersion` other than the one this build writes; rebuild from the `.xsn`. */
+  UNSUPPORTED_IR_VERSION: { found: string };
 }
 
 export type ErrorCode = keyof ErrorDetailsByCode;
@@ -37,6 +41,8 @@ export const ERROR_CODES: readonly ErrorCode[] = [
   'UNSAFE_XML',
   'INVALID_XML',
   'INTERNAL',
+  'INVALID_IR',
+  'UNSUPPORTED_IR_VERSION',
 ];
 
 export class AfterlifeError<C extends ErrorCode = ErrorCode> extends Error {
@@ -68,6 +74,9 @@ const MESSAGES: { [C in ErrorCode]: (d: ErrorDetailsByCode[C]) => string } = {
     (d.encoding === undefined ? '' : ` (encoding ${d.encoding})`) +
     (d.reason === undefined ? '' : `: ${d.reason}`),
   INTERNAL: (d) => `Internal error at ${d.path}: ${d.reason}`,
+  INVALID_IR: (d) => `Not a FormIR at ${d.path}: ${d.reason}`,
+  UNSUPPORTED_IR_VERSION: (d) =>
+    `FormIR version ${d.found} is not supported; rebuild it from the .xsn`,
 };
 
 function errorMessage<C extends ErrorCode>(code: C, details: ErrorDetailsByCode[C]): string {
@@ -75,22 +84,28 @@ function errorMessage<C extends ErrorCode>(code: C, details: ErrorDetailsByCode[
 }
 
 /** Non-fatal problem codes (design §11). */
-export type IssueCode =
-  | 'CHECKSUM_MISMATCH'
-  | 'MISSING_FILE'
-  | 'UNLISTED_FILE'
-  | 'DUPLICATE_NAME'
-  | 'UNSAFE_NAME'
-  | 'URN_MISMATCH'
-  | 'UNRESOLVED_REFERENCE'
-  | 'UNSAFE_XML'
-  | 'INVALID_XML'
-  | 'LIMIT_EXCEEDED'
-  | 'INVALID_ENCODING'
-  | 'XML_WARNING'
-  | 'PATTERN_NOT_EVALUATED'
-  | 'REPEATED_ELEMENT'
-  | 'DUPLICATE_GLOBAL';
+/** Every issue code, for runtime checks (spec 02 `parseFormIR`). */
+export const ISSUE_CODES = [
+  'CHECKSUM_MISMATCH',
+  'MISSING_FILE',
+  'UNLISTED_FILE',
+  'DUPLICATE_NAME',
+  'UNSAFE_NAME',
+  'URN_MISMATCH',
+  'UNRESOLVED_REFERENCE',
+  'UNSAFE_XML',
+  'INVALID_XML',
+  'LIMIT_EXCEEDED',
+  'INVALID_ENCODING',
+  'XML_WARNING',
+  'PATTERN_NOT_EVALUATED',
+  'REPEATED_ELEMENT',
+  'DUPLICATE_GLOBAL',
+  // spec 02
+  'UNRESOLVED_BINDING',
+  'DUPLICATE_ID',
+] as const;
+export type IssueCode = (typeof ISSUE_CODES)[number];
 
 export interface Issue {
   readonly code: IssueCode;

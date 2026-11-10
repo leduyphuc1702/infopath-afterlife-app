@@ -1,7 +1,12 @@
 # Design: 02 FormIR
 
-Phase 2 of 3. Requirements: `requirements.md` (R1–R15, approved 2026-11-10). Status: **draft,
-2026-11-10**, waiting for review together with `tasks.md`.
+Phase 2 of 3. Requirements: `requirements.md` (R1–R15, approved 2026-11-10). Status: **approved
+2026-11-10** (checkpoint `89930d3`), with the review changes below.
+
+Changed at review (2026-11-10): E5 and §9 (strict parsing; a new part bumps `irVersion`); §5
+imports from the owning modules; §5, §6.1, §7.4 and §8 for four shapes found in the private
+corpus views (ExpressionBox bindings that are expressions, `GetDOM` bindings, `xctname` case,
+ActiveX attribute value templates, group bindings and `xd:server`); §10 typo; §12 answered.
 
 Spec 01's design is the reference for everything this one does not restate: workspace and tools
 (§12), module rules and the public API through `src/index.ts` (§3, §4), `Located`, `Issue` and
@@ -26,7 +31,7 @@ parity harness (task 24), the perf project (task 27), and the local private chec
 | E2 | **One tokenizer and one resolver for bindings and expressions** (§7). | a separate binding resolver | Spec 04 can replace the tokenizer later behind the same `resolvePath` contract. |
 | E3 | **Ids are readable strings derived from paths** (§4), not hashes. | SHA-256 of the path | Tim diffs FormIR as text (R13). A hash hides what changed. The ids are longer, but the JSON is for diffs and tools, not people. |
 | E4 | **A hand-written validator for `parseFormIR`, strict about extra keys.** | zod or ajv; lenient parsing | tech.md allows no new dependency without need. Strict parsing makes `serialise(parse(s)) === s` exact (R14). |
-| E5 | **FormIR keeps only what R1–R11 name.** Facets, `sharePoint` and promoted fields stay in `ParsedTemplate`. Spec 05 can add them as optional parts with no version change. | copy the whole field node | Lean output; the viewer and Triage do not need them. See open question 1. |
+| E5 | **FormIR keeps only what R1–R11 name.** Facets, `sharePoint` and promoted fields stay in `ParsedTemplate`. Any new part, optional or not, bumps `irVersion`. | copy the whole field node; optional parts with no version change | Lean output; the viewer and Triage do not need them. FormIR is derived data, never the source of truth: a consumer that meets another version rebuilds it from the `.xsn`, so version skew costs nothing (review answer 1). |
 | E6 | **The view scan is a static walk of the XSL tree.** No XSLT runs (spec 03 renders). Only the constructs in §6.1 are understood; a control under anything else is kept with an `UNRESOLVED_BINDING` issue. | run the XSLT with instrumentation | The scan must work before spec 03 exists, and it must name what it did not understand. |
 | E7 | **View XSL gets its own XML context** with `xmlBytes` set to `viewXmlBytes` (default 4 MiB, R15). | share spec 01's 4 MiB budget | Form 08's view alone is 171 KB; the budgets cover different files. |
 
@@ -109,7 +114,9 @@ All in `src/ir/types.ts`. Spec 01 types are imported, not re-declared. Every pro
 absent, never `undefined` (`exactOptionalPropertyTypes`, as spec 01).
 
 ```ts
-import type { FieldNode, Issue, Located, UnknownEntry } from '../index';  // spec 01
+import type { Issue } from '../errors';                 // spec 01, from the owning modules:
+import type { Located, UnknownEntry } from '../unknown'; // src/ never imports src/index.ts
+import type { FieldNode } from '../xsd/types';
 type Attrs = Record<string, string>;
 type DataSource = string;                           // 'main' or an xsf:dataObject/@name
 
@@ -158,8 +165,11 @@ export interface IrView {                                                       
 }
 export interface BoundControl {                                                            // R4.2
   id: string; xctname?: string; ctrlId?: string;
-  binding: string; targetId?: string;               // as written; the field or group, when resolved
-  title?: string;                                   // non-empty ScreenTip, own or of its DTPicker
+  binding: string;                                  // as written
+  targetId?: string;                                // the field or group, when the whole binding is one path
+  readOnly: boolean;                                // ExpressionBox: the binding is an expression
+  title?: string;                                   // static non-empty ScreenTip, own or of its DTPicker
+  dynamicAttrs?: string[];                          // read attributes that are dynamic AVTs (§6.1), e.g. ['title']
   inRepeat: boolean;                                // inside a repeating row (§6.1)
   choice?: { label: string; value?: string };       // option buttons (R5.1)
   choicesFrom?: ChoicesFrom; source: Located;
@@ -218,6 +228,7 @@ export interface Signatures {                                                   
 }
 export interface ActiveX {                                                                 // R4.5
   controls: { id: string; view: string; classid?: string; binding?: string; targetId?: string;
+              server?: Endpoint;                    // xd:server (§8)
               source: Located }[];
   allowed: { id: string; clsid?: string; cabFile?: string; source: Located }[];
 }
@@ -261,10 +272,12 @@ Only these, each seen in our 53 views or recorded for the private corpus in requ
 | `xsl:if`, `xsl:choose`/`xsl:when`/`xsl:otherwise` | all views | Transparent: children scanned in the same context; tests not read (spec 04) |
 | `xsl:text` | all views | Label text (§6.2) |
 | `xsl:value-of`, `xsl:attribute`, `xsl:variable` | all views; `$val` 3 times | Ignored for context and text |
-| any element with `xd:binding` | 707 in 53 views | A bound control (R4.2), resolved against the context. Inner bound parts do not occur nested (0 of 707) |
-| `xd:xctname` of a control and of its parent | PlainText, dropdown, DTPicker_DTText (parent DTPicker), CheckBox, OptionButton, RichText, FileAttachment, InlineImage | `xctname`; the parent `DTPicker`'s `title` stands in for the control's (R5.1 step 1); `OptionButton` gives `choice` (value `xd:onValue`, label = text after it up to the next control) |
+| any element with `xd:binding` | 707 in 53 own views; 423 in 36 private views | A bound control (R4.2), resolved against the context. Inner bound parts do not occur nested (0 of 707). The binding may start with `xdXDocument:GetDOM("name")` (private: 4 `PlainText` bound to `GetDOM("…")/z:row/@ows_…`), resolved by §7 with prefixes from the control's scope (E1). It may resolve to a group (ActiveX, below) |
+| `xd:xctname="ExpressionBox"` | private: 14 controls | Read-only. The binding is an expression (`xdMath:Avg(<path>)`, `string("…")`): tokenised as in §7; each resolved path is a `readBy` with role `binding`, never `writtenBy`; `targetId` only when the whole binding is one path; only literals → no reference, no issue |
+| `xd:xctname` of a control and of its parent, compared case-insensitively and kept as written | PlainText, dropdown (private: also `DropDown` ×2), DTPicker_DTText (parent DTPicker), CheckBox, OptionButton, RichText, FileAttachment, InlineImage | `xctname`; the parent `DTPicker`'s `title` stands in for the control's (R5.1 step 1); `OptionButton` gives `choice` (value `xd:onValue`, label = text after it up to the next control) |
 | `td`, `th`, `tr`, `table`, `thead`, `tbody`, in no namespace or XHTML | all views | Cells for labels (§6.2) |
-| `object` with `classid`, or `class` containing `xdActiveX` | form 44 | `activeX.controls` (R4.5); its `xd:binding` resolves like any control |
+| `object` with `classid`, or `class` containing `xdActiveX` | form 44; private: 7 in 2 workflow-task forms, all `clsid:61e40d31-993d-4777-8fa0-19ca59b6d0bb` (the Contact Selector [VERIFY: the name]) | `activeX.controls` (R4.5). Its `xd:binding` (with `xd:boundProp="xd:inline"`) resolves like any control, here to a group id. `xd:server` is an endpoint (§8) |
+| attribute value templates on literal result elements (XSLT 1.0 §7.6.2) | private: `xd:xctname="{{61e40d31-…}}"` on every ActiveX object | Every attribute the scan reads (`title`, `xd:xctname`, `xd:CtrlId`, `classid`, `xd:server`, `xd:onValue`) is decoded: `{{` → `{`, `}}` → `}`. A value with an unescaped `{…}` is dynamic: the property is absent and its name goes to `dynamicAttrs`. A dynamic `title` is not a label source (R5.1 step 1). `xd:binding` is read as written |
 
 Not understood, so a control under them gets `UNRESOLVED_BINDING`: `xsl:call-template` and named
 templates, `xsl:import`/`xsl:include` in a view, `match` patterns with `|` or predicates, and
@@ -337,7 +350,9 @@ resolved 1,566 of 1,566 references in the 48 samples with these rules (requireme
 
 ### 7.4 Assembly (`dependencies.ts`)
 
-Each resolved reference becomes a `Reference` in `dependencies.references` (element order of the
+A control's binding reference is both `readBy` and `writtenBy` (role `binding`), except for a
+read-only control (ExpressionBox), which is `readBy` only. Each resolved reference becomes a
+`Reference` in `dependencies.references` (element order of the
 FormIR arrays, then text order) and one `DepRef` on the target's `dependencies.readBy` or `.writtenBy`
 (§5 notes). A connection's `lineage.fieldIds` are the nodes of its `dataSource` tree that any reference
 reaches; `usedBy` are the ids of elements with such a reference plus controls whose `choicesFrom`
@@ -345,7 +360,7 @@ names the connection.
 
 ## 8. Endpoints (R8.2–R8.4)
 
-Sources: `wsdlUrl`, `serviceUrl` (on `xsf:operation`), `fileUrl`, `folderURL/@value`, `siteUrl`,
+Sources: `xd:server` on ActiveX controls (static values only; private: `http://<single-label host>:<port>`, so `internal`, `singleLabel`), `wsdlUrl`, `serviceUrl` (on `xsf:operation`), `fileUrl`, `folderURL/@value`, `siteUrl`,
 `siteURL`, `connectoid/@source` (via `connectionExtensions`), ADO `connectionString`, and
 `meta.publishUrl`. `soapAction` and e-mail values are not endpoints.
 
@@ -393,6 +408,9 @@ redacted string. Spec 01's `containsCredential` regex finds the same keys.
   §5: required keys, no extra keys, value types and enum members. The first failure is
   `INVALID_IR` with `details.path` such as `$.fields[3].labelSource`. Record-typed values (`attrs`)
   are copied into objects with only own keys, so a key named `__proto__` round-trips as data.
+- Strict on purpose (review answer 1): an unknown part or key is `INVALID_IR`, and any new part,
+  optional or not, bumps `irVersion`. A consumer that gets `UNSUPPORTED_IR_VERSION` rebuilds the
+  FormIR from the `.xsn` with its own `buildFormIR`.
 
 ## 10. Test plan
 
@@ -423,7 +441,7 @@ entry).
 - **P6** builds `FormIR` values directly from arbitraries per part. It varies: the number of each
   element (0–5), presence of every optional property, every enum member, strings with quotes,
   backslashes, newlines, non-BMP characters and keys such as `__proto__` in `attrs`, integer line
-  and column values,. The 48 sample FormIRs are run
+  and column values. The 48 sample FormIRs are run
   through the same round trip.
 - **P13** takes a sample's `ParsedTemplate` and adds one calculated field (a `Modelled` object, no
   XML) whose target is a chosen field and whose expression mixes 1–4 inserted field references
@@ -445,14 +463,7 @@ values and `labelSource` values. Same rules: names and counts only, no snapshots
 | Label counts of R5.1 (`title` 585, `leftCell` 2, `otherView` 14, `name` 5) were derived, not run | Task 8's sample test counts them; a mismatch stops the task |
 | Build time with view parsing | Task 12 measures; xmldom parses about 9.5 MB/s (spec 01 D7), so form 08's 171 KB view is about 18 ms |
 
-## 12. Open questions (only you can answer)
+## 12. Review answers (2026-11-10)
 
-1. **What FormIR leaves out (E5).** Facets, `FieldNode.sharePoint` and promoted fields stay in
-   `ParsedTemplate`. Spec 05 would add them to FormIR as optional parts. Default: yes, and adding
-   an optional part does not change `irVersion`; but because `parseFormIR` is strict (E4), an older
-   build rejects FormIR from a newer one. Is that acceptable, or should `parseFormIR` ignore unknown
-   top-level parts?
-2. **Readable ids (E3).** Ids are path strings (up to about 120 characters for view controls), so
-   a diff shows what moved; a designer edit to a view's table layout changes its control ids.
-   Default: keep them readable. The alternative is a short hash, stable only as long as the path is.
-
+1. `parseFormIR` stays strict; any new part bumps `irVersion` (E5, §9).
+2. Ids stay readable (E3).

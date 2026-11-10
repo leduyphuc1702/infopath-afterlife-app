@@ -12,3 +12,38 @@ export { countTemplate } from './xsn/counts';
 export type { TemplateCounts } from './xsn/counts';
 export { parsePackage, parseXsn } from './xsn/parse';
 export type { ParsedTemplate } from './xsn/parse';
+export { buildFormIR } from './ir/build';
+export type { FormIROptions } from './ir/build';
+export { FORMIR_VERSION, parseFormIR, serialiseFormIR } from './ir/json';
+export type {
+  ActiveX,
+  ActiveXControl,
+  Attrs,
+  BoundControl,
+  ChoicesFrom,
+  CodeBehind,
+  CodeHandler,
+  DataSource,
+  DepRef,
+  DepRole,
+  Endpoint,
+  FormIR,
+  Generation,
+  IrAction,
+  IrCalculation,
+  IrConnection,
+  IrField,
+  IrGroup,
+  IrRule,
+  IrValidation,
+  IrView,
+  LabelEvidence,
+  LabelSource,
+  LivenessReason,
+  Meta,
+  Reference,
+  SignedBlock,
+  Signatures,
+  Trigger,
+  UnresolvedRef,
+} from './ir/types';
