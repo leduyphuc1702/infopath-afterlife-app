@@ -6,7 +6,8 @@ company, host and file in the data is fictional.
 
 They were built to exercise the parts of the InfoPath file format that real legacy forms
 use, so the parser, converter and viewer have realistic input instead of a single toy form.
-The set is also the corpus behind `research/corpus/TRIAGE.md`.
+It is also the in-repo part of the 71-form corpus counted in `docs/corpus-facts.md`; the
+script that counts it lives in a research workspace outside this repo.
 
 ## What was verified
 
@@ -41,54 +42,54 @@ hand (timesheets, NCRs, risk assessments, budget transfers, GDPR requests and so
 on).
 
 Every one of the 42 was opened in InfoPath Filler 2013 on Windows 11 ARM as part
-of building this set; the wave column comes from the same rule the app's Triage
-uses (1 = converts without a human, 2 = has an external connection that needs
-confirming, 3 = code-behind or an unsupported control).
+of building this set. There is no wave column: the app's Triage assigns waves from
+the converter's coverage counts (spec brief 12), so the expected waves are its output,
+not an input fixed here.
 
-| # | Folder | Views | Fields | Records | Rules | Calcs | Checks | Repeating | Wave |
-|---|---|---|---|---|---|---|---|---|---|
-| 1 | `01-leave-request` | 1 | 11 | 30 | 1 | 0 | 6 | 0 | 1 |
-| 2 | `02-expense-report` | 1 | 16 | 30 | 0 | 1 | 3 | 1 | 1 |
-| 3 | `03-travel-request` | 2 | 22 | 30 | 1 | 0 | 4 | 0 | 1 |
-| 4 | `04-purchase-request` | 1 | 20 | 20 | 3 | 4 | 3 | 1 | 2 |
-| 5 | `05-new-hire-onboarding` | 3 | 25 | 20 | 3 | 0 | 2 | 1 | 1 |
-| 6 | `06-safety-incident` | 1 | 20 | 10 | 0 | 0 | 3 | 2 | 1 |
-| 7 | `07-leave-request-v2` | 1 | 12 | 10 | 1 | 0 | 6 | 0 | 1 |
-| 8 | `08-big-form` | 1 | 209 | 3 | 0 | 0 | 0 | 0 | 1 |
-| 9 | `09-it-access-request` | 1 | 15 | 5 | 0 | 0 | 2 | 0 | 1 |
-| 10 | `10-timesheet` | 1 | 13 | 5 | 0 | 1 | 2 | 1 | 1 |
-| 11 | `11-overtime-request` | 1 | 14 | 5 | 0 | 0 | 0 | 0 | 1 |
-| 12 | `12-vendor-onboarding` | 1 | 13 | 5 | 0 | 0 | 0 | 0 | 1 |
-| 13 | `13-contract-renewal` | 1 | 10 | 5 | 0 | 0 | 0 | 0 | 1 |
-| 14 | `14-change-request` | 1 | 13 | 5 | 0 | 0 | 1 | 1 | 1 |
-| 15 | `15-problem-report` | 1 | 11 | 5 | 0 | 0 | 0 | 1 | 1 |
-| 16 | `16-equipment-loan` | 1 | 7 | 5 | 0 | 0 | 1 | 0 | 1 |
-| 17 | `17-vehicle-log` | 1 | 8 | 5 | 0 | 1 | 1 | 0 | 1 |
-| 18 | `18-mileage-claim` | 1 | 11 | 5 | 0 | 2 | 0 | 1 | 1 |
-| 19 | `19-training-request` | 1 | 14 | 5 | 0 | 0 | 0 | 0 | 1 |
-| 20 | `20-course-evaluation` | 1 | 6 | 5 | 0 | 0 | 0 | 0 | 1 |
-| 21 | `21-customer-complaint` | 1 | 8 | 5 | 0 | 0 | 0 | 0 | 1 |
-| 22 | `22-quality-inspection` | 1 | 10 | 5 | 0 | 0 | 0 | 1 | 1 |
-| 23 | `23-non-conformance` | 1 | 11 | 5 | 0 | 0 | 0 | 1 | 1 |
-| 24 | `24-risk-assessment` | 1 | 10 | 5 | 0 | 1 | 1 | 1 | 1 |
-| 25 | `25-audit-finding` | 1 | 8 | 5 | 0 | 0 | 0 | 0 | 1 |
-| 26 | `26-meeting-minutes` | 1 | 15 | 5 | 0 | 0 | 0 | 2 | 1 |
-| 27 | `27-project-charter` | 1 | 12 | 5 | 0 | 0 | 0 | 0 | 1 |
-| 28 | `28-budget-transfer` | 1 | 7 | 5 | 0 | 0 | 1 | 0 | 1 |
-| 29 | `29-invoice-approval` | 1 | 13 | 5 | 0 | 3 | 0 | 1 | 1 |
-| 30 | `30-petty-cash` | 1 | 11 | 5 | 0 | 1 | 0 | 1 | 1 |
-| 31 | `31-travel-perdiem` | 1 | 10 | 5 | 0 | 2 | 0 | 1 | 1 |
-| 32 | `32-visitor-registration` | 1 | 8 | 5 | 0 | 0 | 0 | 0 | 1 |
-| 33 | `33-badge-request` | 1 | 12 | 5 | 0 | 0 | 0 | 0 | 1 |
-| 34 | `34-facilities-work-order` | 1 | 8 | 5 | 0 | 0 | 0 | 0 | 1 |
-| 35 | `35-stationery-order` | 1 | 10 | 5 | 0 | 2 | 0 | 1 | 1 |
-| 36 | `36-conference-registration` | 1 | 13 | 5 | 0 | 0 | 0 | 0 | 1 |
-| 37 | `37-certification-renewal` | 1 | 7 | 5 | 0 | 0 | 0 | 0 | 1 |
-| 38 | `38-asset-disposal` | 1 | 8 | 5 | 0 | 0 | 0 | 0 | 1 |
-| 39 | `39-data-subject-request` | 1 | 8 | 5 | 0 | 0 | 0 | 0 | 1 |
-| 40 | `40-supplier-scorecard` | 1 | 10 | 5 | 0 | 1 | 1 | 1 | 1 |
-| 41 | `41-timesheet-approval` | 2 | 7 | 5 | 0 | 0 | 1 | 0 | 1 |
-| 42 | `42-incident-rca` | 2 | 6 | 5 | 0 | 0 | 0 | 0 | 1 |
+| # | Folder | Views | Fields | Records | Rules | Calcs | Checks | Repeating |
+|---|---|---|---|---|---|---|---|---|
+| 1 | `01-leave-request` | 1 | 11 | 30 | 1 | 0 | 6 | 0 |
+| 2 | `02-expense-report` | 1 | 16 | 30 | 0 | 1 | 3 | 1 |
+| 3 | `03-travel-request` | 2 | 22 | 30 | 1 | 0 | 4 | 0 |
+| 4 | `04-purchase-request` | 1 | 20 | 20 | 3 | 4 | 3 | 1 |
+| 5 | `05-new-hire-onboarding` | 3 | 25 | 20 | 3 | 0 | 2 | 1 |
+| 6 | `06-safety-incident` | 1 | 20 | 10 | 0 | 0 | 3 | 2 |
+| 7 | `07-leave-request-v2` | 1 | 12 | 10 | 1 | 0 | 6 | 0 |
+| 8 | `08-big-form` | 1 | 209 | 3 | 0 | 0 | 0 | 0 |
+| 9 | `09-it-access-request` | 1 | 15 | 5 | 0 | 0 | 2 | 0 |
+| 10 | `10-timesheet` | 1 | 13 | 5 | 0 | 1 | 2 | 1 |
+| 11 | `11-overtime-request` | 1 | 14 | 5 | 0 | 0 | 0 | 0 |
+| 12 | `12-vendor-onboarding` | 1 | 13 | 5 | 0 | 0 | 0 | 0 |
+| 13 | `13-contract-renewal` | 1 | 10 | 5 | 0 | 0 | 0 | 0 |
+| 14 | `14-change-request` | 1 | 13 | 5 | 0 | 0 | 1 | 1 |
+| 15 | `15-problem-report` | 1 | 11 | 5 | 0 | 0 | 0 | 1 |
+| 16 | `16-equipment-loan` | 1 | 7 | 5 | 0 | 0 | 1 | 0 |
+| 17 | `17-vehicle-log` | 1 | 8 | 5 | 0 | 1 | 1 | 0 |
+| 18 | `18-mileage-claim` | 1 | 11 | 5 | 0 | 2 | 0 | 1 |
+| 19 | `19-training-request` | 1 | 14 | 5 | 0 | 0 | 0 | 0 |
+| 20 | `20-course-evaluation` | 1 | 6 | 5 | 0 | 0 | 0 | 0 |
+| 21 | `21-customer-complaint` | 1 | 8 | 5 | 0 | 0 | 0 | 0 |
+| 22 | `22-quality-inspection` | 1 | 10 | 5 | 0 | 0 | 0 | 1 |
+| 23 | `23-non-conformance` | 1 | 11 | 5 | 0 | 0 | 0 | 1 |
+| 24 | `24-risk-assessment` | 1 | 10 | 5 | 0 | 1 | 1 | 1 |
+| 25 | `25-audit-finding` | 1 | 8 | 5 | 0 | 0 | 0 | 0 |
+| 26 | `26-meeting-minutes` | 1 | 15 | 5 | 0 | 0 | 0 | 2 |
+| 27 | `27-project-charter` | 1 | 12 | 5 | 0 | 0 | 0 | 0 |
+| 28 | `28-budget-transfer` | 1 | 7 | 5 | 0 | 0 | 1 | 0 |
+| 29 | `29-invoice-approval` | 1 | 13 | 5 | 0 | 3 | 0 | 1 |
+| 30 | `30-petty-cash` | 1 | 11 | 5 | 0 | 1 | 0 | 1 |
+| 31 | `31-travel-perdiem` | 1 | 10 | 5 | 0 | 2 | 0 | 1 |
+| 32 | `32-visitor-registration` | 1 | 8 | 5 | 0 | 0 | 0 | 0 |
+| 33 | `33-badge-request` | 1 | 12 | 5 | 0 | 0 | 0 | 0 |
+| 34 | `34-facilities-work-order` | 1 | 8 | 5 | 0 | 0 | 0 | 0 |
+| 35 | `35-stationery-order` | 1 | 10 | 5 | 0 | 2 | 0 | 1 |
+| 36 | `36-conference-registration` | 1 | 13 | 5 | 0 | 0 | 0 | 0 |
+| 37 | `37-certification-renewal` | 1 | 7 | 5 | 0 | 0 | 0 | 0 |
+| 38 | `38-asset-disposal` | 1 | 8 | 5 | 0 | 0 | 0 | 0 |
+| 39 | `39-data-subject-request` | 1 | 8 | 5 | 0 | 0 | 0 | 0 |
+| 40 | `40-supplier-scorecard` | 1 | 10 | 5 | 0 | 1 | 1 | 1 |
+| 41 | `41-timesheet-approval` | 2 | 7 | 5 | 0 | 0 | 1 | 0 |
+| 42 | `42-incident-rca` | 2 | 6 | 5 | 0 | 0 | 0 | 0 |
 
 ## Layout
 
