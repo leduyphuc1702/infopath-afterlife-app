@@ -1,7 +1,10 @@
 # Design: 01 .xsn parser (CAB + manifest + schema)
 
+> Addendum 2026-11-10: §15 (R21, real InfoPath files) is new and waits for approval.
+
 Phase 2 of 3. Requirements: `requirements.md` (R1–R20, approved 2026-11-10, amended at design
-approval). Status: **approved 2026-11-10**, with the answers and changes applied: D1, D7, D10 and
+approval). Status: **approved 2026-11-10**, with the answers
+and changes applied: D1, D7, D10 and
 `src/xsn/` approved; field kind from the content model (§9.2); encodings (§7.2); XSD groups,
 attribute groups, lists and unions (§9); forms 43–47 (§8.1, §14).
 
@@ -473,6 +476,8 @@ export const XSF_VOCABULARY = {
   full list of exceptions (these three).
   **Rule:** a name MS-IPFF2 admits only through a wildcard is modelled when real files use it, and
   it is marked `viaWildcard`. Any new exception follows this rule and is reported at review.
+  Amended by §15 (R21): two more exceptions, `xsf3:solutionPropertiesExtension2009` and
+  `allowedLinkImages`, so the pinned list has five.
 
 ### 8.2 Walker (`walk.ts`)
 
@@ -905,3 +910,112 @@ with `zlib` only in tests as an oracle.
 | A file that is valid but large hits the 1 s P1 bound in CI | `xmlBytes` (D7); per-run timing reported; limits are options |
 | The vocabulary table grows large and hard to review | One entry per element, each with its `req` id; the coverage and MS-IPFF2 tests do the mechanical checking |
 | Groups and attribute groups get no in-repo fixture (none of the 54 schemas uses them) | Synthetic schemas in `xsd/groups.test.ts`; the field-tree code path for a group `ref` is the same as for a `sequence`, so the README forms exercise it too |
+
+## 15. Addendum: real InfoPath files (R21, decision 17, 2026-11-10)
+
+Tasks 29–34. Nothing in §1–§14 changes except where this section says so.
+
+### 15.1 Namespaces (R21.1)
+
+`Manifest.namespaces: Readonly<Record<string, string>>`, built in `xsf/parse-manifest.ts` from the
+root element's attributes that are namespace declarations (`xmlns` → key `""`, `xmlns:p` → key
+`p`), in the order written. It is the only new field every golden file gains. Spec 02 resolves
+expression prefixes with it. Declarations below the root are not collected: 0 of 48 in-repo
+manifests and 1 of 29 private ones have any, and that one declares `xsf2`, which no expression
+uses. If spec 02 meets an expression prefix that is not in the map, it reports the reference as
+unresolved (spec 02 R11.4), so a nested declaration cannot be lost silently.
+
+### 15.2 Vocabulary entries (R21.2–R21.4)
+
+New `XSF_VOCABULARY` keys, each with `req: 'R21.2'` (or `R21.3`, `R21.4`) and the attributes of
+its `ms-ipff2.ts` entry:
+
+| Key | Children | Builder output |
+|---|---|---|
+| `xsf:importSource` | none | `Manifest.importSources: Modelled<'xsf:importSource'>[]` (beside `importParameters`) |
+| `xsf:menu` | `xsf:button`, `xsf:menu` | `Menu = Modelled<'xsf:menu'> & { buttons; menus: Menu[] }`; `ButtonArea` gains `menus: Menu[]`; `View` gains `menus: Menu[]` |
+| `xsf:taskpane` | none | `Manifest.taskpane?` |
+| `xsf2:preview` | none | `Solution.preview?` |
+| `xsf2:solutionPropertiesExtension` | the 11 branch elements | `Solution.propertiesExtension?: Modelled<…> & { branches: AnyModelled<BranchKey>[] }` |
+| `xsf2:admin` … `xsf2:wss` (11) | none | inside `branches`, document order |
+| `xsf2:toolbar` | `xsf2:commands` | `Solution.serverToolbar?: Modelled<…> & { commands: Modelled<'xsf2:command'>[] }` |
+| `xsf2:commands`, `xsf2:command` | `xsf2:command` / none | `commands` is a container (§8.3 "Grouping elements") |
+| `xsf2:xmlToEditExtension` | none | `xsf2:viewExtension` gains `xmlToEditExtensions[]`; each is also linked from the `XmlToEdit` whose `name` equals `ref` (`XmlToEdit.extensions[]`); one whose `ref` names no `xmlToEdit` of that view stays on the view extension only |
+| `xsf3:solutionPropertiesExtension2009` (`viaWildcard` under `xsf:extension`) | `xsf3:solutionMode` | `Solution.propertiesExtension2009?: Modelled<…> & { solutionMode?: Modelled<'xsf3:solutionMode'> }` |
+
+Notes:
+- `xsf2:toolbar` is a global element in MS-IPFF2 5.2, used only under `xsf2:server`; its key is
+  `xsf2:toolbar` (global, §8.1 "Keys are positions"). `xsf:toolbar` stays a different key.
+- `xsf:menu` is global and recursive. `R8.4`'s button list (`View.menuAreas[].buttons`,
+  `toolbars[].buttons`) does not flatten menus; spec 02 walks `menus` to list every button.
+- `one()`/`oneOf()` apply where `ms-ipff2.ts` says `once` (`preview`, `solutionPropertiesExtension`,
+  `xsf2:toolbar` in `xsf2:server`, `commands`, `solutionMode`). `solutionPropertiesExtension2009` is held
+  once across all `xsf:extension` elements by the parser rule of §8.3.
+- `importSource/@transform`, `importSource/@schema` and relative `taskpane/@href` are added to
+  the reference list in `xsn/package.ts` (R6.2), with the same `MISSING_FILE` issue.
+- **Wildcard exceptions.** `xsf3:solutionPropertiesExtension2009` passes the existing check for a
+  `viaWildcard` child (a global element of the xsf3 schema; the parent's content is a wildcard).
+  `allowedLinkImages` is the first unqualified `viaWildcard` attribute, so the attribute check
+  changes from "qualified, and the parent's `anyAttribute` covers its namespace" to "the parent's
+  `anyAttribute` covers its namespace; an unqualified name is covered only by `##any` or
+  `##local`". `xsf2:xmlToEditExtension` declares `##any`. The pinned list of exceptions becomes
+  five: `xsf2:solutionDefinition`, `xsf3:solutionDefinition`, `xd:autogeneration`,
+  `xsf3:solutionPropertiesExtension2009`, `allowedLinkImages`.
+
+`ms-ipff2.ts` is not regenerated: every name above is already in it (checked 2026-11-10).
+
+### 15.3 SharePoint attributes on schema elements (R21.5)
+
+`FieldNode` gains `sharePoint?: Readonly<Partial<Record<SharePointAttr, string>>>`, where
+`SharePointAttr` is the 11 local names of R21.5, read from the declaration (`source`) only, absent
+when the declaration has none (so the in-repo golden field trees do not change). In
+`xsd/vocabulary.ts`, `xsd:element` gains an attribute rule for the namespace
+`http://schemas.microsoft.com/office/2009/metadata/properties/metaAttributes` restricted to those
+11 names. XSD 1.0 admits them through the `openAttrs` `anyAttribute namespace="##other"` of
+every schema component; the rule is written as an explicit allow-list so that a twelfth `ma:`
+name, or any other foreign attribute, still becomes an unknown entry with `documented: false`.
+An `ma:` attribute on an `xsd:element` with `ref` stays unknown (0 in the corpus).
+
+### 15.4 Local-only private-corpus check (R21.6)
+
+`test/private-corpus.local.test.ts`, in the Vitest `node` project:
+- `describe.skipIf(!process.env.AFTERLIFE_PRIVATE_CORPUS)`; the folder is read with `readdirSync`
+  recursively; files whose name ends in `.xsn` (any case) are sorted by relative path;
+- one test per file: `parseXsn` resolves, `issues` is empty, `unknowns` is empty. The assertion
+  message is built from `{ code }` and `{ kind, namespace, name, path }` only;
+- an `afterAll` prints one line: files, parsed, total issues, total unknowns;
+- no `toMatchSnapshot`, no `toMatchFileSnapshot`, no file writes. A lint rule is not needed; the
+  test file is reviewed.
+
+Steering (`testing.md`, `structure.md`) names the variable `AFTERLIFE_PRIVATE_SAMPLES`; this check
+uses `AFTERLIFE_PRIVATE_CORPUS`, as the maintainer asked. The maintainer's folder also holds a copy
+of forms 01–42 under `own/xsn/`; the recursive search parses them too, and they must pass.
+
+### 15.5 Fixtures and tests
+
+`test/fixtures/synthetic/real-infopath/`, written for this project (no text from any third-party
+file): `import-source.xsf`, `menus.xsf` (a menu inside a menu area, a toolbar and another menu),
+`taskpane.xsf`, `preview.xsf`, `solution-properties.xsf` (three branches), `server-toolbar.xsf`,
+`xml-to-edit-extension.xsf` (with and without `allowedLinkImages`, one `ref` that names no
+`xmlToEdit`), `solution-properties-2009.xsf` (and a second copy for R13.9), `sharepoint-meta.xsd`
+(all 11 `ma:` names, one unlisted `ma:` name, one other foreign attribute, one `ma:` on a `ref`).
+
+| Req | Kind | Fixture | File |
+|---|---|---|---|
+| R21.1 | unit, golden | form 01; all samples | `xsf/build.identity.test.ts`, `golden.samples.test.ts` |
+| R21.2 | unit | one fixture per element | `xsf/build.real-infopath.test.ts`, `xsn/package.test.ts` (new references) |
+| R21.3, R21.4 | unit | `solution-properties-2009.xsf`, `xml-to-edit-extension.xsf` | `xsf/build.real-infopath.test.ts`, `xsf/vocabulary.ms-ipff2.test.ts` (five exceptions) |
+| R21.5 | unit | `sharepoint-meta.xsd` | `xsd/sharepoint-meta.test.ts` |
+| R21.6 | local only | `AFTERLIFE_PRIVATE_CORPUS` | `private-corpus.local.test.ts` |
+| R21.7 | golden, existing | the 48 samples | `golden.samples.test.ts`, `unknowns.samples.test.ts`, `counts.samples.test.ts` |
+
+P12 (R20) needs no change: its generator inserts nodes into the in-repo manifests, and the new
+vocabulary keys enlarge the modelled set it checks against.
+
+### 15.6 Risks
+
+| Risk | Retired by |
+|---|---|
+| The private corpus has other unmodelled names that only appear once these subtrees are modelled | Checked 2026-11-10 inside every unknown subtree: all names are MS-IPFF2 names at their position except `allowedLinkImages` (R21.4) |
+| A later private form brings a new name | R21.6 fails locally and names it; the fix follows the §8.1 rule |
+| The golden diff hides a real change among the new empty lists | Task 29 regenerates goldens for `namespaces` alone; task 30's diff adds only empty lists, reviewed separately |

@@ -3,7 +3,8 @@
 Source brief: `docs/spec-briefs/01-xsn-parser.md`. Phase 1 of 3 (requirements → design → tasks).
 Status: **approved 2026-11-10**, with the decisions listed at the end. Amended the same day at
 design approval (decisions 10–16): field kind (R14), encodings (R5.3), XSD groups, attribute
-groups, lists and unions (R14, R15), forms 43–47, and one inflater (R17.2).
+groups, lists and unions (R14, R15), forms 43–47, and one inflater (R17.2). Addendum R21 (real
+InfoPath files, decision 17) added 2026-11-10 after the private-corpus run; its tasks are 29–34.
 
 ## Introduction
 
@@ -264,6 +265,8 @@ migrating.
    references are: `xsf:file/@name`, `mainpane/@transform`, `useTransform/@transform`,
    `initialXmlDocument/@href`, `documentSchema/@location`, `dataObject/@schema`,
    `xmlFileAdapter/@fileUrl` (when relative), `operation/xsf:input/@source`, script and code file names.
+   Amended by R21.2: also `importSource/@transform`, `importSource/@schema` and `taskpane/@href`
+   (when relative).
 3. IF a referenced file is absent, THEN THE SYSTEM SHALL record a `MISSING_FILE` issue with the
    reference's path.
 4. IF a package file is not listed in `xsf:files`, THEN THE SYSTEM SHALL record an `UNLISTED_FILE`
@@ -672,6 +675,100 @@ Traces: Added (enforces R13; P2–P11 are taken in testing.md, so this takes P12
    keeps in `raw` without modelling it node by node (design §8.3).
 3. At least 500 runs in CI.
 
+## Addendum: real InfoPath files (2026-11-10)
+
+### R21. Real InfoPath files
+Traces: Added: private-corpus evidence 2026-11-10. Amends R6.2, R8.4, R13.6, R14 and R15.6.
+
+As Mai, I want the templates Microsoft and other vendors actually shipped to parse with nothing
+unknown, so the X-ray shows the form and not a list of parser gaps.
+
+**Evidence (2026-11-10).** The maintainer ran the spec 01 parser (commit `f8582a3`) on the private
+corpus: 29 templates saved by real InfoPath (15 Microsoft sample templates, 13 other third-party
+forms, and the public sample), which stay outside the repo. All 29 parse, nothing throws, and
+there are 0 issues, but 348 unknown entries remain, all `notModelled`: 61 in manifests, 287 in
+schemas, up to 208 in one form. The agent re-ran the same parser on the same files the same day
+(read only, counts and names only) and got the same totals. By position:
+
+| Kind | Name | Position | MS-IPFF2 | Entries | Forms |
+|---|---|---|---|---|---|
+| element | `xsf:importSource` | `xsf:importParameters` | 5.1, at that position | 3 | 3 |
+| element | `xsf:menu` | `xsf:menuArea` | 5.1, at that position | 5 | 5 |
+| element | `xsf:taskpane` | `xsf:xDocumentClass` | 5.1, at that position | 1 | 1 |
+| element | `xsf2:preview` | `xsf2:solutionDefinition` | 5.2, at that position | 6 | 6 |
+| element | `xsf2:solutionPropertiesExtension` | `xsf2:solutionDefinition` | 5.2, at that position | 6 | 6 |
+| element | `xsf2:toolbar` | `xsf2:server` | 5.2, at that position | 8 | 8 |
+| element | `xsf2:xmlToEditExtension` | `xsf2:viewExtension` | 5.2, at that position | 30 | 12 |
+| element | `xsf3:solutionPropertiesExtension2009` | `xsf:extension` | 5.3 global element, placed under no element | 2 | 2 |
+| attribute | 11 names in the `ma:` namespace (below) | `xsd:element` | not MS-IPFF2; XSD 1.0 admits foreign attributes there | 287 | 2 |
+
+`ma:` is `http://schemas.microsoft.com/office/2009/metadata/properties/metaAttributes`, which
+SharePoint writes into the schemas of list and workflow data sources (`dfschema.xsd`,
+`qfschema.xsd`, `typeschema.xsd`). Counts: `readOnly` 95, `displayName` 77, `allowDeletion` 45,
+`formatCategory` 20, `formatSpec` 20, `SearchPeopleOnly` 7, `SharePointGroup` 7,
+`auxDataSourceName`, `auxChoicesXPath`, `auxValue`, `auxDisplay` 4 each. They sit on 95 element
+declarations (74 global, 21 local), never on a `ref`. [VERIFY: which Microsoft Open Specification
+documents this namespace; a web search on 2026-11-10 found none.]
+
+Checked by the agent inside those entries (names and enumerated values only):
+- every attribute and child inside them is declared by MS-IPFF2 at its position, and every
+  enumerated or `xdYesNo` value is inside its list, with one exception: 15 of the 30
+  `xsf2:xmlToEditExtension` elements also carry `allowedLinkImages` (`yes`/`no`), which MS-IPFF2
+  does not name; the element's `anyAttribute namespace="##any"` admits it;
+- the 3 `importSource` elements name a `transform` and a `schema` that are in the package; the
+  `taskpane/@href` is an absolute URL;
+- 1 of the 29 manifests declares a namespace below the root (`xsf2`, on
+  `xsf2:solutionDefinition`); in the 48 in-repo manifests every declaration is on the root.
+
+1. THE SYSTEM SHALL return `manifest.namespaces`: the namespace declarations on the manifest's root
+   element, prefix → URI as written, with the default namespace under the key `""`. Declarations
+   below the root are not included. Oracle: form 01 maps `my` to
+   `http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:00:00`; the 48 golden
+   files.
+2. THE SYSTEM SHALL model, with every attribute MS-IPFF2 declares for them and their children:
+   - `xsf:importSource` in `xsf:importParameters`; its `transform` and `schema` join the package
+     references of R6.2;
+   - `xsf:menu` wherever MS-IPFF2 places it (`xsf:view`, `xsf:menuArea`, `xsf:toolbar`, another
+     `xsf:menu`), with its `xsf:button` children, which are buttons for R8.4 with the menu they
+     sit in;
+   - `xsf:taskpane` (`caption`, `href`); `href` joins the R6.2 references when it is relative;
+   - `xsf2:preview` (`domain`, `sampleData`, `userRole`);
+   - `xsf2:solutionPropertiesExtension` (`branch`) and its children `xsf2:admin`,
+     `contentType`, `contentTypeTemplate`, `entity`, `groove`, `install`, `list`, `mail`,
+     `share`, `workflowInitAssoc` and `wss`;
+   - `xsf2:toolbar` in `xsf2:server` (`enabledTop`, `enabledBottom`) with
+     `xsf2:commands/xsf2:command` (`action`, `caption`);
+   - `xsf2:xmlToEditExtension` in `xsf2:viewExtension` (`ref`, `allowLinkedImages`,
+     `excludeEmbeddedImages`), linked to the view's `xsf:xmlToEdit` whose `name` equals `ref`.
+
+   The names and enumerations come from `ms-ipff2.ts`, as for every other entry (design D6).
+   Oracle: one synthetic manifest per element, in the project's own wording; the vocabulary
+   coverage and MS-IPFF2 tests (design §8.5).
+3. THE SYSTEM SHALL model `xsf3:solutionPropertiesExtension2009` with its `xsf3:solutionMode` child
+   as a child of `xsf:extension` admitted through that element's wildcard (`viaWildcard`, design
+   §8.1), and take at most one across all `xsf:extension` elements, as for `xsf2:solutionDefinition`
+   (R13.9, rule `parser`). Oracle: a synthetic manifest; a second copy gives one `repeated` entry.
+4. THE SYSTEM SHALL model `allowedLinkImages` on `xsf2:xmlToEditExtension` as an attribute admitted
+   through `anyAttribute` (`viaWildcard`), kept as written with no enumeration check. Oracle: a
+   synthetic manifest; the pinned list of wildcard exceptions (design §8.1) grows from three to
+   five.
+5. THE SYSTEM SHALL keep the 11 `ma:` attributes listed in the evidence, when they are on an
+   `xsd:element` declaration, on that node's `sharePoint` object, keyed by local name, as the
+   strings written. Every other attribute in the `ma:` namespace, an `ma:` attribute on a `ref`,
+   and every other foreign attribute stay unknown entries (`documented: false`). Oracle: a
+   synthetic schema with all 11, one unlisted `ma:` attribute and one attribute in another
+   namespace.
+6. WHEN the template is in the folder named by the environment variable `AFTERLIFE_PRIVATE_CORPUS`,
+   THE SYSTEM SHALL parse it with no throw, zero issues and zero unknown entries. The check
+   (`private-corpus.local.test.ts`) SHALL find every `*.xsn` under that folder, recursively, read
+   only; SHALL be skipped when the variable is unset; SHALL print counts, and on failure the
+   file's relative path and the code, kind, namespace and name of each issue or unknown entry,
+   never `raw`, attribute values or text; and SHALL write no snapshot or file. Oracle: run locally
+   by the maintainer; CI skips it.
+7. THE SYSTEM SHALL keep R13.6, R15.6 and R16 true for the 48 in-repo samples: zero unknown
+   entries, the README counts, and golden files that change only by `namespaces` and by the new
+   empty lists. Oracle: the regenerated golden files, reviewed as a diff.
+
 ## Traceability
 
 | Brief item | Requirements |
@@ -687,6 +784,7 @@ Traces: Added (enforces R13; P2–P11 are taken in testing.md, so this takes P12
 | P1 | R19 |
 | Notes: README counts as reference numbers | R16 |
 | Added | R6, R13, R16, R17, R20; + items in R2–R5, R7–R12, R14–R15 |
+| Added: private-corpus evidence 2026-11-10 | R21 (amends R6.2, R8.4, R13.6, R14, R15.6) |
 
 ## Decisions (2026-11-10)
 
@@ -729,6 +827,14 @@ Added at design approval (2026-11-10):
     synthetic fixture.
 16. **R17.2 follows D1:** one inflater, `DecompressionStream('deflate-raw')`, in every runtime;
     tech.md updated to match.
+
+Added after the private-corpus run (2026-11-10):
+
+17. **Real InfoPath files (R21):** model the seven documented manifest elements, the 2009
+    extension through the `xsf:extension` wildcard, `allowedLinkImages` through `anyAttribute`,
+    the SharePoint `ma:` attributes on schema elements, and `Manifest.namespaces` (needed by spec
+    02). A local-only check keeps the private corpus at zero unknowns without its files entering
+    the repo. Tasks 29–34.
 
 ## Appendix A: manifest vocabulary of forms 01–47 and the public sample (must give zero unknown entries)
 

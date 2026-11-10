@@ -1,7 +1,8 @@
 # Tasks: 01 .xsn parser (CAB + manifest + schema)
 
 Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 2026-11-10). Design:
-`design.md` (approved 2026-11-10). Status: **approved 2026-11-10.**
+`design.md` (approved 2026-11-10). Status: **approved 2026-11-10.** Tasks 29–34 (R21) added the same day and wait for
+approval.
 
 ## How every task is run and checked
 
@@ -496,9 +497,83 @@ Phase 3 of 3. Requirements: `requirements.md` (R1–R20, approved and amended 20
   - Done when: `pnpm check` and `pnpm test:perf` green, the criterion table has no failing row, and
     the `docs/feature-coverage.md` diff is in the report.
 
+## Addendum tasks: real InfoPath files (R21, added 2026-11-10, not started)
+
+Same rules as above: one task per turn, `pnpm check` green, no commits. Design §15.
+
+- [ ] 29. `Manifest.namespaces`
+  - `xsf/parse-manifest.ts`, `xsf/types.ts`: collect the root element's namespace declarations
+    (§15.1).
+  - Tests: `xsf/build.identity.test.ts` (form 01 `my`; the public sample's prefixes; a synthetic
+    manifest with a default namespace and a declaration below the root, which is not collected).
+  - Regenerate the 48 golden files (`vitest -u`); the report shows that the only change is the new
+    `namespaces` object.
+  - Requirements: R21.1, R21.7.
+  - Done when: `pnpm check` green.
+
+- [ ] 30. The seven documented manifest elements
+  - `xsf/vocabulary.ts`, `xsf/build.ts`, `xsf/types.ts`: the keys and builder outputs of the §15.2
+    table except the 2009 extension (`importSource`, `menu`, `taskpane`, `xsf2:preview`,
+    `xsf2:solutionPropertiesExtension` and its 11 branches, `xsf2:toolbar` with `commands` and
+    `command`, `xsf2:xmlToEditExtension` with its `XmlToEdit` link).
+  - `xsn/package.ts`: `importSource/@transform`, `importSource/@schema`, relative
+    `taskpane/@href` as R6.2 references.
+  - Fixtures: `fixtures/synthetic/real-infopath/` `import-source.xsf`, `menus.xsf`, `taskpane.xsf`,
+    `preview.xsf`, `solution-properties.xsf`, `server-toolbar.xsf`, `xml-to-edit-extension.xsf`
+    (without `allowedLinkImages` for now), in our own wording.
+  - Tests: `xsf/build.real-infopath.test.ts` (each element with every attribute, nesting of
+    menus, the `ref` link and an unlinked `ref`), `xsn/package.test.ts` (a missing import transform
+    gives `MISSING_FILE`), the existing vocabulary coverage and MS-IPFF2 tests.
+  - Regenerate golden files; the diff adds only empty lists (`importSources`, `menus`, …).
+  - Requirements: R21.2, R21.7 (amends R6.2, R8.4).
+  - Done when: `pnpm check` green.
+
+- [ ] 31. Wildcard exceptions: the 2009 extension and `allowedLinkImages`
+  - `xsf/vocabulary.ts`: `xsf3:solutionPropertiesExtension2009` (`viaWildcard` child of
+    `xsf:extension`) with `xsf3:solutionMode`; `allowedLinkImages` (`viaWildcard` attribute) on
+    `xsf2:xmlToEditExtension`. `xsf/build.ts`: `Solution.propertiesExtension2009`, held once by the
+    parser rule.
+  - `xsf/vocabulary.ms-ipff2.test.ts`: the attribute check of §15.2 (unqualified names only under
+    `##any` or `##local`) and the pinned list of five exceptions.
+  - Fixtures: `solution-properties-2009.xsf` and a copy with two of them; add
+    `allowedLinkImages` to `xml-to-edit-extension.xsf`.
+  - Tests: `xsf/build.real-infopath.test.ts` (both constructs; the second 2009 extension is one
+    `repeated` entry with a `REPEATED_ELEMENT` issue, rule `parser`).
+  - Requirements: R21.3, R21.4.
+  - Done when: `pnpm check` green.
+
+- [ ] 32. SharePoint `ma:` attributes on `FieldNode`
+  - `xsd/vocabulary.ts`, `xsd/field-tree.ts`, `xsd/types.ts`: the allow-list rule and
+    `FieldNode.sharePoint` (§15.3).
+  - Fixture: `fixtures/synthetic/real-infopath/sharepoint-meta.xsd`.
+  - Tests: `xsd/sharepoint-meta.test.ts` (the 11 names land on `sharePoint`; an unlisted `ma:`
+    name, another foreign attribute and an `ma:` attribute on a `ref` are unknown entries with
+    `documented: false`); the in-repo golden field trees do not change.
+  - Requirements: R21.5, R21.7.
+  - Done when: `pnpm check` green.
+
+- [ ] 33. Local-only private-corpus check
+  - `test/private-corpus.local.test.ts` as in §15.4: skipped unless `AFTERLIFE_PRIVATE_CORPUS`
+    is set; recursive `*.xsn`; no throw, zero issues, zero unknowns; messages and the summary line
+    carry codes, kinds, namespaces, names, paths and counts only; no snapshots and no writes.
+  - Run it once with `AFTERLIFE_PRIVATE_CORPUS=$HOME/Desktop/infopath-afterlife/samples` (read
+    only) and put the summary line in the report; the maintainer runs it too.
+  - Requirements: R21.6.
+  - Done when: `pnpm check` green (the check skipped), and the local run reports 0 issues and 0
+    unknowns for every file.
+
+- [ ] 34. Re-check R21 and the earlier criteria
+  - Clean install, `pnpm check`, `pnpm test:perf`, and the local corpus check.
+  - Append R21.1–R21.7 rows to `verification.md`, each with its passing tests, and re-run the
+    rows for R6.2, R8.4, R13.6, R15.6 and R16.
+  - Requirements: R21 (re-check), R6.2, R8.4, R13.6, R15.6, R16.
+  - Done when: `pnpm check` and `pnpm test:perf` green, the local check green, and every R21 row
+    in `verification.md` passes.
+
 ## Coverage check
 
-Every requirement id appears in at least one task. Task 28 re-checks all of them.
+Every requirement id appears in at least one task. Task 28 re-checks R1–R20; task 34 re-checks R21
+and the criteria it amends.
 
 | Requirement | Tasks |
 |---|---|
@@ -564,10 +639,16 @@ Every requirement id appears in at least one task. Task 28 re-checks all of them
 | R18.2 | 27 |
 | R19.1, R19.2, R19.3 (P1) | 25 |
 | R20.1, R20.2, R20.3 (P12) | 26 |
+| R21.1 | 29 |
+| R21.2 | 30 |
+| R21.3, R21.4 | 31 |
+| R21.5 | 32 |
+| R21.6 | 33 |
+| R21.7 | 29, 30, 32, 34 |
 
 Properties: P1 → task 25, P12 → task 26.
 
 Browser-only tasks or checks: task 1 (`browser/harness.browser.test.ts`), task 2
 (`browser/inflate.browser.test.ts`, `browser/encodings.browser.test.ts`), task 24 (whole task).
 
-**Total: 28 tasks.**
+**Total: 34 tasks** (28 done, 6 added 2026-11-10).

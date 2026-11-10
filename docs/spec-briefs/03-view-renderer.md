@@ -3,6 +3,8 @@
 ## Summary
 Render any InfoPath view (`viewN.xsl` + XML data) to safe HTML. Use a pure-JS XSLT engine and shims for InfoPath's extension functions. Chrome's removal of XSLT does not affect us.
 
+The static scan of view XSL (control inventory, `xd:binding`, labels, dependency references) belongs to spec 02 and reaches this spec through FormIR. This spec only renders.
+
 ## User stories
 - As an auditor, I want an old record to look exactly as it did when it was signed.
 - As Tim, I want to see my original form next to the converted version.
