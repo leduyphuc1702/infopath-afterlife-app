@@ -2,23 +2,23 @@
 
 Every task ends with the app working and `pnpm check` green. Test first where a test is named.
 
-- [ ] 1. Expression evaluator and function table
+- [x] 1. Expression evaluator and function table
   - `runtime/evaluate.ts`, `runtime/functions.ts` (D5–D8), on `xpath` and `xpath-fns`.
   - Requirements: R3.1, R3.2, R3.3, R3.4
   - Done when: `test/runtime/evaluate.test.ts` covers every function in D6, an unknown function,
     `GetDOM` on forms 03 and 04.
-- [ ] 2. `FillSession` and the change cycle; P7, P18
+- [x] 2. `FillSession` and the change cycle; P7, P18
   - `runtime/session.ts`, `runtime/graph.ts` (D9–D11), `runtime/cycle.ts` (D12–D14); onLoad
     (E3); P18 added to `testing.md`.
   - Requirements: R1.1, R1.2, R1.4, R2.1, R2.2, R2.3, R11.1, R11.2
   - Done when: `cycle.test.ts` (form 02 total, form 04 chain in rows, form 01 onLoad, loop
     entry), P7 300 runs, P18 100 runs green.
-- [ ] 3. Calculation oracle and the cycle budget in Node
+- [x] 3. Calculation oracle and the cycle budget in Node
   - `test/runtime/calc-oracle.test.ts` (E1), `test/perf/fill.perf.test.ts` (forms 04, 08).
   - Requirements: R11.3, R2.4
   - Done when: matches counted over the 95 records, every mismatch listed with its expression
     and explained; p95 logged.
-- [ ] 4. Validation and its oracle
+- [x] 4. Validation and its oracle
   - `runtime/validate.ts` (D16): required, types, facets, errorConditions.
   - Requirements: R5.1, R11.4
   - Done when: `validate.test.ts` (one case per kind) and `validate-oracle.test.ts` over every

@@ -1,0 +1,410 @@
+// Spec 04 R1, R2, design D1, D9–D14: a working copy of one record and the change cycle over it.
+// Pure: no Worker, no clock (`now` comes with each command), no network.
+
+import type { FormIR, IrCalculation, IrRule } from '../ir/types';
+import { resolveLimits } from '../limits';
+import { dataPath } from '../render/marks';
+import { packageFiles } from '../render/prepare';
+import {
+  parseXmlDom,
+  serialiseXml,
+  xmlContext,
+  emptyDocument,
+  type DomDocument,
+} from '../xml/parse';
+import type { ParsedTemplate } from '../xsn/parse';
+import { runCycle, type Change, type Dirty, type Step } from './cycle';
+import { Evaluator, NotEvaluated, textOf, type RtNode } from './evaluate';
+import { fieldIndex, type FieldIndex } from './model';
+import { NO_QUERIES, runRuleSet, type RuleEffects, type RuleHost } from './rules';
+import { TRACE_CAP, type TraceEntry } from './trace';
+import { validate, type Invalid } from './validate';
+
+const XSI = 'http://www.w3.org/2001/XMLSchema-instance';
+/** D3: a plain positional child path, optionally ending in an attribute. */
+const PATH =
+  /^(\/([A-Za-z_][\w.-]*:)?[A-Za-z_][\w.-]*\[[1-9]\d*\])+(\/@([A-Za-z_][\w.-]*:)?[A-Za-z_][\w.-]*)?$/;
+
+/** R1.4: a command that names no editable node. Spec 04 task 5 maps it to `FILL_PATH`. */
+export class FillCommandError extends Error {
+  constructor(
+    readonly path: string,
+    readonly reason: 'syntax' | 'none' | 'notField' | 'calculated',
+  ) {
+    super(`${path}: ${reason}`);
+  }
+}
+
+export interface FillOptions {
+  /** Record bytes; absent: the template's `initialXmlDocument` (R1.1). */
+  readonly record?: Uint8Array;
+  readonly now: string;
+  /** Tests only: skip R1.2 (onLoad and the first recalculation), to read stored values. */
+  readonly initial?: false;
+}
+
+export interface FillAnswer {
+  readonly changes: readonly {
+    readonly path: string;
+    readonly before: string;
+    readonly after: string;
+  }[];
+  readonly trace: readonly TraceEntry[];
+  readonly invalid: readonly Invalid[];
+  readonly dialogs: readonly string[];
+  readonly notices: readonly string[];
+  /** A switch view action's view name. */
+  readonly view?: string;
+  readonly passes: number;
+  readonly loop?: readonly string[];
+}
+
+export class FillSession {
+  private readonly doc: RtNode;
+  private readonly index: FieldIndex;
+  private readonly evaluator: Evaluator;
+  private readonly secondary = new Map<string, unknown>();
+  private readonly packageSources = new Map<string, string>();
+  private readonly calcSteps: Step<RtNode>[];
+  private readonly ruleSteps: Step<RtNode>[];
+  private readonly calcTargets: ReadonlySet<string>;
+  private now: string;
+  private seq = 0;
+  private pending: TraceEntry[] = [];
+  private effects: RuleEffects = { dialogs: [], notices: [] };
+  private lastInvalid = new Map<string, string>();
+  readonly trace: TraceEntry[] = [];
+
+  private constructor(
+    private readonly template: ParsedTemplate,
+    private readonly ir: FormIR,
+    options: FillOptions,
+  ) {
+    this.now = options.now;
+    const file = packageFiles(template);
+    const name = template.manifest.fileNew?.attrs.href;
+    const bytes = options.record ?? (name === undefined ? undefined : file(name));
+    if (!bytes) throw new FillCommandError('/', 'none');
+    const ctx = xmlContext(resolveLimits());
+    this.doc = parseXmlDom(bytes, 'record.xml', ctx).doc as unknown as RtNode;
+    for (const c of ir.dataConnections) {
+      if (c.dataSource === undefined || this.packageSources.has(c.dataSource)) continue;
+      const f =
+        c.adapterKind === 'xmlFileAdapter'
+          ? c.endpoints.find((e) => e.liveness === 'package')?.value
+          : undefined;
+      this.packageSources.set(c.dataSource, f ?? '');
+    }
+    const main = ir.fields[0]?.dataSource ?? 'main';
+    this.index = fieldIndex(ir, main, template.schemas.main);
+    this.evaluator = new Evaluator(
+      template.manifest.namespaces,
+      (n) => this.source(n, file, ctx),
+      this.now,
+    );
+    this.calcTargets = new Set(ir.calculations.flatMap((c) => (c.targetId ? [c.targetId] : [])));
+    this.calcSteps = this.calculationSteps();
+    this.ruleSteps = this.fieldRuleSteps();
+    if (options.initial !== false) this.start();
+  }
+
+  static open(template: ParsedTemplate, ir: FormIR, options: FillOptions): FillSession {
+    return new FillSession(template, ir, options);
+  }
+
+  /** R1.2: onLoad rule sets, then every calculation, then validation; trace kept. */
+  private start(): FillAnswer {
+    return this.command(() => {
+      const root = this.doc.documentElement!;
+      const changes: Change<RtNode>[] = [];
+      for (const rules of this.ruleSets((r) => r.triggers.some((t) => t.kind === 'onLoad')))
+        changes.push(...runRuleSet(rules, root, undefined, this.ruleHost()));
+      return [...changes, ...this.calculateAll()];
+    });
+  }
+
+  /** R2.1: write `value` at `path` and run the cycle. */
+  edit(path: string, value: string, now = this.now): FillAnswer {
+    const node = this.resolve(path);
+    this.now = now;
+    this.evaluator.setNow(now);
+    return this.command(() => {
+      const c = this.write(node, value);
+      return c ? [c] : [];
+    });
+  }
+
+  /** R4.4: the rule sets bound to a button's `CtrlId`, with `path`'s node (or the root) as context. */
+  press(ctrlId: string, path?: string, now = this.now): FillAnswer {
+    const ctx = path === undefined ? this.doc.documentElement! : this.resolve(path, true);
+    this.now = now;
+    this.evaluator.setNow(now);
+    return this.command(() => {
+      const changes: Change<RtNode>[] = [];
+      for (const rules of this.ruleSets((r) =>
+        r.triggers.some((t) => t.kind === 'button' && t.button === ctrlId),
+      ))
+        changes.push(...runRuleSet(rules, ctx, undefined, this.ruleHost()));
+      return changes;
+    });
+  }
+
+  /** Every calculation once, then the cycle; P18 calls it twice. */
+  recalculate(): FillAnswer {
+    return this.command(() => this.calculateAll());
+  }
+
+  invalid(): readonly Invalid[] {
+    return this.validateNow(false);
+  }
+
+  /** Stored text of every node of a field, in document order. */
+  values(fieldId: string): string[] {
+    return (this.index.nodes(this.doc).get(fieldId) ?? []).map(textOf);
+  }
+
+  xml(): string {
+    return serialiseXml(this.doc as unknown as DomDocument);
+  }
+
+  // --- the cycle -----------------------------------------------------------------------------
+
+  private command(seedOf: () => Change<RtNode>[]): FillAnswer {
+    this.pending = [];
+    this.effects = { dialogs: [], notices: [] };
+    const seed = seedOf();
+    const dirty = new Map<string, RtNode[]>();
+    for (const c of seed) dirty.set(c.id, [...(dirty.get(c.id) ?? []), c.node]);
+    const r = runCycle([...this.ruleSteps, ...this.calcSteps], dirty);
+    if (r.loop)
+      this.add({
+        kind: 'loop',
+        caption: 'Possible rule loop',
+        note: `Still changing after ${r.passes} passes: ${r.loop.join(', ')}`,
+        changes: [],
+      });
+    const invalid = this.validateNow(true);
+    const changes = [...seed, ...r.changes].map(({ path, before, after }) => ({
+      path,
+      before,
+      after,
+    }));
+    return {
+      changes,
+      trace: this.pending,
+      invalid,
+      dialogs: this.effects.dialogs,
+      notices: this.effects.notices,
+      ...(this.effects.view === undefined ? {} : { view: this.effects.view }),
+      passes: r.passes,
+      ...(r.loop ? { loop: r.loop } : {}),
+    };
+  }
+
+  private calculateAll(): Change<RtNode>[] {
+    const all = new Map(
+      this.ir.calculations.flatMap((c) =>
+        c.targetId ? [[c.targetId, this.index.nodes(this.doc).get(c.targetId) ?? []] as const] : [],
+      ),
+    );
+    return this.calcSteps.flatMap((s) => s.run(all));
+  }
+
+  /** D9, D11: one step per calculation, in dependency order. */
+  private calculationSteps(): Step<RtNode>[] {
+    const reads = new Map<string, Set<string>>();
+    for (const r of this.ir.dependencies.references) {
+      const c = this.ir.calculations.find((x) => x.id === r.elementId);
+      if (!c || r.targetId === c.targetId) continue;
+      (reads.get(c.id) ?? reads.set(c.id, new Set()).get(c.id)!).add(r.targetId);
+    }
+    const ordered = topological(this.ir.calculations, (c) => reads.get(c.id) ?? new Set());
+    return ordered.map((c) => ({
+      id: c.id,
+      reads: reads.get(c.id) ?? new Set(),
+      run: () => {
+        if (!c.targetId) return [];
+        const out: Change<RtNode>[] = [];
+        for (const node of this.index.nodes(this.doc).get(c.targetId) ?? []) {
+          let value: string;
+          try {
+            value = this.evaluator.string(c.expression, node);
+          } catch (e) {
+            if (!(e instanceof NotEvaluated)) throw e;
+            this.add({ kind: 'notEvaluated', caption: c.target, note: e.message, changes: [] });
+            continue;
+          }
+          const ch = this.write(node, value);
+          if (ch) {
+            out.push(ch);
+            this.add({
+              kind: 'calc',
+              caption: this.pathOf(node),
+              note: c.expression,
+              changes: [{ path: ch.path, before: ch.before, after: ch.after }],
+            });
+          }
+        }
+        return out;
+      },
+    }));
+  }
+
+  /** D13: field-change rule sets, one step per (rule set, field). */
+  private fieldRuleSteps(): Step<RtNode>[] {
+    const out: Step<RtNode>[] = [];
+    const byKey = new Map<string, IrRule[]>();
+    for (const r of this.ir.rules)
+      for (const t of r.triggers)
+        if (t.kind === 'fieldChange' && t.targetId) {
+          const k = `${r.ruleSet}\u0000${t.targetId}`;
+          const list = byKey.get(k) ?? [];
+          if (!list.includes(r)) list.push(r);
+          byKey.set(k, list);
+        }
+    for (const [k, rules] of byKey) {
+      const field = k.split('\u0000')[1]!;
+      out.push({
+        id: k,
+        reads: new Set([field]),
+        run: (dirty: Dirty<RtNode>) =>
+          (dirty.get(field) ?? []).flatMap((n) =>
+            runRuleSet(rules, n, this.pathOf(n), this.ruleHost()),
+          ),
+      });
+    }
+    return out;
+  }
+
+  private ruleSets(pick: (r: IrRule) => boolean): IrRule[][] {
+    const sets = new Map<string, IrRule[]>();
+    for (const r of this.ir.rules)
+      if (pick(r)) sets.set(r.ruleSet, [...(sets.get(r.ruleSet) ?? []), r]);
+    return [...sets.values()];
+  }
+
+  private ruleHost(): RuleHost {
+    return {
+      evaluator: this.evaluator,
+      write: (n, v) => this.write(n, v),
+      trace: (e) => this.add(e),
+      pathOf: (n) => this.pathOf(n),
+      effects: this.effects,
+    };
+  }
+
+  // --- nodes --------------------------------------------------------------------------------
+
+  /** D14: text of an element or attribute; xsi:nil follows the value. */
+  private write(node: RtNode, value: string): Change<RtNode> | undefined {
+    const before = textOf(node);
+    if (before === value) return undefined;
+    const id = this.index.idOf(node) ?? `node:${this.pathOf(node)}`;
+    if (node.nodeType === 2) node.value = value;
+    else {
+      const el = node as RtNode & { setAttributeNS(ns: string, q: string, v: string): void };
+      while (el.firstChild) el.removeChild!(el.firstChild);
+      if (value !== '') el.appendChild!(el.ownerDocument!.createTextNode(value));
+      const schema = this.index.schema(id);
+      const typed = (this.index.field(id)?.xsdType?.builtin ?? 'xsd:string') !== 'xsd:string';
+      if (value !== '') el.removeAttributeNS?.(XSI, 'nil');
+      else if (schema?.effective.nillable && typed) el.setAttributeNS(XSI, 'xsi:nil', 'true');
+    }
+    return { id, node, path: this.pathOf(node), before, after: value };
+  }
+
+  private resolve(path: string, group = false): RtNode {
+    if (!PATH.test(path)) throw new FillCommandError(path, 'syntax');
+    let nodes: RtNode[];
+    try {
+      nodes = this.evaluator.nodes(path, this.doc);
+    } catch {
+      throw new FillCommandError(path, 'syntax');
+    }
+    if (nodes.length !== 1) throw new FillCommandError(path, 'none');
+    const id = this.index.idOf(nodes[0]!);
+    if (id === undefined || (!group && !this.index.field(id)))
+      throw new FillCommandError(path, 'notField');
+    if (!group && this.calcTargets.has(id)) throw new FillCommandError(path, 'calculated');
+    return nodes[0]!;
+  }
+
+  private pathOf(n: RtNode): string {
+    return dataPath(n, this.template.manifest.namespaces) ?? '';
+  }
+
+  /** D8, R3.4: a secondary source's document; a query source is empty, said once. */
+  private source(
+    name: string,
+    file: (n: string) => Uint8Array | undefined,
+    ctx: ReturnType<typeof xmlContext>,
+  ): unknown {
+    const hit = this.secondary.get(name);
+    if (hit !== undefined) return hit;
+    if (!this.packageSources.has(name)) return undefined;
+    const f = this.packageSources.get(name)!;
+    const bytes = f === '' ? undefined : file(f);
+    let doc: unknown;
+    if (bytes) doc = parseXmlDom(bytes, f, ctx).doc;
+    else {
+      doc = emptyDocument();
+      this.add({ kind: 'skipped', caption: `GetDOM("${name}")`, note: NO_QUERIES, changes: [] });
+    }
+    this.secondary.set(name, doc);
+    return doc;
+  }
+
+  private validateNow(traced: boolean): Invalid[] {
+    const invalid = validate({
+      ir: this.ir,
+      index: this.index,
+      evaluator: this.evaluator,
+      doc: this.doc,
+      pathOf: (n) => this.pathOf(n),
+      notEvaluated: (caption, note) =>
+        traced && this.add({ kind: 'notEvaluated', caption, note, changes: [] }),
+    });
+    if (traced) {
+      const now = new Map(invalid.map((i) => [i.path, i.short]));
+      for (const [p, s] of now)
+        if (this.lastInvalid.get(p) !== s)
+          this.add({ kind: 'validation', trigger: p, caption: s, condition: true, changes: [] });
+      for (const [p, s] of this.lastInvalid)
+        if (!now.has(p))
+          this.add({ kind: 'validation', trigger: p, caption: s, condition: false, changes: [] });
+      this.lastInvalid = now;
+    }
+    return invalid;
+  }
+
+  private add(e: Omit<TraceEntry, 'seq' | 'at'>): void {
+    const entry: TraceEntry = { seq: ++this.seq, at: this.now, ...e };
+    this.pending.push(entry);
+    this.trace.push(entry);
+    if (this.trace.length > TRACE_CAP) this.trace.splice(0, this.trace.length - TRACE_CAP);
+  }
+}
+
+/** Kahn's order over calculations; those on a cycle follow in manifest order (D9). */
+function topological(
+  calcs: readonly IrCalculation[],
+  reads: (c: IrCalculation) => ReadonlySet<string>,
+): IrCalculation[] {
+  const out: IrCalculation[] = [];
+  const left = new Set(calcs);
+  let progress = true;
+  while (left.size > 0 && progress) {
+    progress = false;
+    for (const c of left) {
+      const blocked = [...left].some(
+        (o) => o !== c && o.targetId !== undefined && reads(c).has(o.targetId),
+      );
+      if (!blocked) {
+        out.push(c);
+        left.delete(c);
+        progress = true;
+      }
+    }
+  }
+  return [...out, ...left];
+}

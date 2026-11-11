@@ -101,3 +101,16 @@ export type {
 } from './legacy/tables';
 export { ATTACHMENT_NOTE, exportRecords, sheetCsv } from './legacy/export';
 export type { ExportFormat, ExportOptions, RecordExport } from './legacy/export';
+
+// Spec 04: the Classic runtime (fill-in mode).
+export {
+  FillSession,
+  FillCommandError,
+  type FillAnswer,
+  type FillOptions,
+} from './runtime/session';
+export { runCycle, MAX_PASSES, type Change, type CycleResult, type Step } from './runtime/cycle';
+export { Evaluator, NotEvaluated, numberText } from './runtime/evaluate';
+export { implementedFunctions } from './runtime/functions';
+export { typeProblem, type Invalid } from './runtime/validate';
+export { TRACE_CAP, type TraceEntry } from './runtime/trace';

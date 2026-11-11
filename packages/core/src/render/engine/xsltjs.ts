@@ -65,6 +65,8 @@ interface XPathInternals {
   readonly XNumber: new (n: number) => XValue;
   readonly XBoolean: new (b: boolean) => XValue;
   readonly PathExpr: { applyStep: ApplyStep };
+  /** Spec 04 D5: an expression compiled on its own, outside a stylesheet. */
+  readonly parse: (expr: string) => { evaluate(options: object): XValue };
 }
 
 interface FunctionsLike {
@@ -723,4 +725,99 @@ function toAfterlifeError(e: unknown, view: string): AfterlifeError {
   }
   const err = e instanceof Error ? e : new Error(String(e));
   return new AfterlifeError('RENDER_FAILED', { view, xsltCode: err.name, message: err.message });
+}
+
+// --- Spec 04 D5: XPath outside a stylesheet, for the Classic runtime -----------------------------
+
+/** What an expression gave: nodes in document order, or an atomic value. */
+export type XPathOut =
+  | { readonly kind: 'nodes'; readonly nodes: readonly unknown[] }
+  | { readonly kind: 'string'; readonly value: string }
+  | { readonly kind: 'number'; readonly value: number }
+  | { readonly kind: 'boolean'; readonly value: boolean };
+
+export interface XPathEvalOptions {
+  /** The context node: an @xmldom/xmldom node of a document the caller owns. */
+  readonly node: unknown;
+  readonly namespaces: Readonly<Record<string, string>>;
+  readonly functions: FunctionTable;
+  /** GetDOM: a data source's document by name, or undefined. */
+  readonly document: (name: string) => unknown;
+  readonly report: (issue: Issue) => void;
+  /** Called for a prefixed function the table does not hold; must throw. */
+  readonly unknownFunction: (name: string) => never;
+}
+
+const COMPILED = new Map<string, { evaluate(options: object): XValue }>();
+
+/** Spec 04 R3.1: `expr` against `options.node`, with the InfoPath functions of `functions`. */
+export function evaluateXPath(expr: string, options: XPathEvalOptions): XPathOut {
+  let parsed = COMPILED.get(expr);
+  if (!parsed) {
+    parsed = XPath.parse(expr);
+    if (COMPILED.size >= 2000) COMPILED.clear();
+    COMPILED.set(expr, parsed);
+  }
+  const host: FnHost = {
+    report: options.report,
+    makeNodes: (values) => {
+      // In a document, so document order is defined (an orphan breaks the xpath package's sort).
+      const root = (scratchDocument() as unknown as ScratchDoc).documentElement;
+      const doc = root.ownerDocument;
+      return new NodeSetValue(
+        values.map((v) => {
+          const el = doc.createElement('value');
+          if (v !== '') el.appendChild(doc.createTextNode(v));
+          root.appendChild(el);
+          return el;
+        }),
+      );
+    },
+    document: (name) => {
+      const doc = options.document(name);
+      return doc === undefined ? undefined : new NodeSetValue([doc]);
+    },
+    emptyDocument: () => new NodeSetValue([emptyDocument()]),
+    evaluate: (inner, node) => {
+      if (!(node instanceof EngineNode)) return undefined;
+      const out = evaluateXPath(inner, { ...options, node: node.node });
+      return out.kind === 'nodes'
+        ? out.nodes.length > 0
+          ? stringValue(out.nodes[0] as DomNodeLike)
+          : ''
+        : String(out.value);
+    },
+    nested: (fn) => fn(),
+    chargeOutput: () => undefined,
+  };
+  const functions = {
+    getFunction: (local: string, ns: string | null) => {
+      if (ns === null || ns === '') return undefined;
+      const impl = options.functions.get(ns)?.get(local);
+      if (!impl) return () => options.unknownFunction(functionName(local, ns));
+      return (_c: unknown, ...values: XValue[]) => toXValue(impl(values.map(valueArg), host));
+    },
+  };
+  const v = parsed.evaluate({ node: options.node, namespaces: options.namespaces, functions });
+  const out: unknown = v;
+  if (out instanceof XPath.XNodeSet) return { kind: 'nodes', nodes: out.toArray() };
+  if (out instanceof XPath.XNumber) return { kind: 'number', value: v.numberValue() };
+  if (out instanceof XPath.XBoolean) return { kind: 'boolean', value: v.stringValue() === 'true' };
+  return { kind: 'string', value: v.stringValue() };
+}
+
+/** An argument the `xpath` package has already evaluated, as a binding sees it. */
+function valueArg(v: XValue): FnArg {
+  const nodes = () => (v instanceof XPath.XNodeSet ? (v.toArray() as DomNodeLike[]) : undefined);
+  return {
+    string: () => v.stringValue(),
+    number: () => v.numberValue(),
+    nodes: () => nodes()?.map((n) => new EngineNode(n)),
+    nodeSet: () => {
+      const n = nodes();
+      if (n) return new NodeSetValue(n);
+      const doc = scratchDocument() as unknown as ScratchDoc;
+      return new NodeSetValue([doc.documentElement.ownerDocument.createTextNode(v.stringValue())]);
+    },
+  };
 }

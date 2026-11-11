@@ -139,3 +139,8 @@ function at(locator: Located | undefined): { line: number; column: number } {
     column: Math.max(1, locator?.columnNumber ?? 1),
   };
 }
+
+/** Spec 04: a document the runtime edited, as XML text (processing instructions kept). */
+export function serialiseXml(doc: DomDocument): string {
+  return new XMLSerializer().serializeToString(doc as never);
+}

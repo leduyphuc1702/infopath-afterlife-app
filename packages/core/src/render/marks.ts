@@ -110,7 +110,11 @@ function isEmpty(node: SourceNode): boolean {
  * 1-based positions among same-name siblings; an attribute adds `/@name`. Undefined for any
  * other node kind.
  */
-function dataPath(node: SourceNode, ns: Readonly<Record<string, string>>): string | undefined {
+/** Spec 03 mark paths; spec 04 D3 addresses nodes with them too. */
+export function dataPath(
+  node: SourceNode,
+  ns: Readonly<Record<string, string>>,
+): string | undefined {
   if (node.nodeType === 2) {
     const owner = node.ownerElement;
     const base = owner && dataPath(owner, ns);

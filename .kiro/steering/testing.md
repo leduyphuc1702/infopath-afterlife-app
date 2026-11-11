@@ -27,7 +27,8 @@ fileMatchPattern: ["**/*.test.ts", "**/test/**", "packages/core/**"]
   - P15: zip round-trip: reading what the writer wrote gives the same names and bytes; a mutated or truncated archive gives entries or a typed error within 1 s, never a name that is absolute or has a `..` segment (spec 09 R12.14).
   - P16: a session holds each distinct file once: for any list of files with repeats, opened in any order and in any number of batches, every other copy is reported as a duplicate (spec 13 B3).
   - P17: for any sequence of screen changes followed by the same number of Back steps, the app is on the screen it started from; the same number of Forward steps replays the sequence (spec 13 B2).
-  - The next free number is P18. A spec that adds a property takes the next free number and adds its line here in the same task.
+  - P18: calculation idempotence: for any form and record, recalculating twice with no input change changes no node (spec 04 R11.2).
+  - The next free number is P19. A spec that adds a property takes the next free number and adds its line here in the same task.
 - **Reference images:** `samples/own/screenshots/` holds 22 screenshots from InfoPath Filler 2013:
   every view of forms 01–08, empty and filled, 100% zoom, cropped to the form canvas (1007x555).
   Forms 09–47 have none. The screenshots show the first record (`<slug>-001.xml`) filled and
