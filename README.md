@@ -1,60 +1,131 @@
 # InfoPath Afterlife
 
-InfoPath forms stopped working in SharePoint Online after **July 14, 2026**, when Microsoft
-removed InfoPath Forms Services. Teams that had run the same leave request, expense claim or inspection
-form for fifteen years were left with `.xsn` files nobody could open, and no record of the rules
-inside them.
+Afterlife opens Microsoft InfoPath forms (`.xsn`) and their filled-in records (`.xml`) in any
+browser, now that InfoPath Forms Services is gone from SharePoint Online (July 14, 2026). It is
+for the people left holding those files: the IT admin who has to move them, the form owner who
+built them, and the auditor who has to read a record from 2014.
 
-Afterlife reads a folder of `.xsn` files and answers three questions about each one: what does it
-contain, what killed it, and what carries over cleanly into a native Jira Service Management form.
-Then it converts the ones that convert.
+The web viewer in `apps/web` runs fully in the browser and sends no data anywhere. Today a
+person can do the seven tasks on its landing page. Each task's address opens it with a bundled
+sample; once the app is hosted, add the address to its URL.
 
-Built for Jira Cloud with [Forge](https://developer.atlassian.com/platform/forge/), spec-first in
-Kiro.
+| Task | Address |
+|---|---|
+| Read an old form and its records the way InfoPath showed them | `#read` |
+| See the rules and calculations behind a field | `#rules` |
+| Fill in a form and see why each value changed (Rule Trace), then download the XML | `#fill` |
+| Find one record among many, and total them | `#find` |
+| Keep old records readable without InfoPath: CSV, Excel, and an archive of web pages | `#keep` |
+| Print what a form does, for whoever takes it over | `#document` |
+| Decide which forms can move first: Triage, death certificates, waves | `#triage` |
+
+The converter to native Jira Service Management forms and the Forge app are not written yet.
+
+Built spec-first in Kiro. MIT licence.
+
+## Quality
+
+**Bugfix specs.** 10 of the 21 specs are bugfix specs. Together they hold 97 defect sections.
+Each one has a test that failed on the unfixed code before the fix, and a line in the spec's
+`verification.md` with the result before and after.
+
+| Spec | Defect sections | Found by |
+|---|---|---|
+| 13 | 11 | the reviewer, on the built web viewer |
+| 14 | 12 | the reviewer, filling in forms |
+| 16 | 17 | the reviewer, on the dossier and Fill |
+| 19 | 16 | the reviewer, on records and the archive |
+| 22 | 14 | the reviewer's "first five minutes" run |
+| 23 | 7 | the reviewer's accessibility pass |
+| 24 | 10 | the reviewer's script over the 47 own templates and axe-core, plus Kiro filling samples through the Playwright MCP server |
+| 25 | 5 | [MS-IPFF2] and the reviewer's checks of the built app |
+| 26 | 4 | the reviewer's checks, and notes left by earlier specs |
+| 27 | 1 | the reviewer's checks of the built app |
+
+**Properties** (fast-check, defined in `.kiro/steering/testing.md` and the specs):
+
+- P1: the CAB reader never hangs or throws an untyped error on random or mutated bytes.
+- P2: every FormIR field gets exactly one coverage state and a reason.
+- P3: inserting N repeating rows and removing them gives back the original XML.
+- P4: rendering is deterministic.
+- P5: sanitised output has no `<script`, `on*=` attribute or `javascript:` URL.
+- P6: a FormIR JSON round trip is the identity.
+- P7: the rule engine stops within 16 passes, cycles included.
+- P8: the Triage wave depends only on the four coverage counts, and adding a Manual or Unsupported element never moves a form earlier.
+- P9: every death-certificate cause has an evidence path that exists in the template.
+- P10: Triage gives the same rows in the same order for the same files in any order.
+- P11: a CSV export parsed again gives back every value and every repeating row count.
+- P12: every manifest node is accounted for exactly once.
+- P13: the dependency index lists every field an expression reads, and none it only quotes.
+- P14: record matching depends only on the processing instruction and the templates, and never throws.
+- P15: the zip reader reads back what the writer wrote, and never yields an absolute or `..` name.
+- P16: a session holds each distinct file once, however often and in whatever batches it is opened.
+- P17: n screen changes, then n Back steps, return to the start; n Forward steps replay them.
+- P18: recalculating twice with no input change changes nothing.
+- P19: every rule, calculation, validation and data connection appears in the form's dossier exactly once.
+- P20: the records list shows exactly the records that contain the Find text, in the sorted column's order.
+- P21: no page of a record archive can run script or load anything from outside the archive.
+- P22: the record summary's groups and totals add up to the records it counts (spec 20 R12).
+- P23: undo all and redo all give the first and last record, and the downloaded XML reads back the same (spec 24).
+
+**Accessibility:** `docs/accessibility.md`, WCAG 2.2 AA criterion by criterion, with the
+reviewer's axe-core 4.14 audit.
+
+**Suites**, measured by the reviewer on `0ec71b4`: Kiro hook tests 6, core 3,853 passed
+(3 skipped), browser 337, web 122, end-to-end 173. Bundle, measured on the same code (turn 80):
+page entry 91.3 of 100 KB, Worker 156.0 of 160 KB.
 
 ## Status
 
-Early development. Everything marked **verified** below has been run for real — in Microsoft
-InfoPath Filler 2013 on Windows 11, or against a live Jira Cloud site. Everything else is in
-progress; the specs in `docs/spec-briefs/` say what is meant to exist.
+One row per folder in `.kiro/specs/`. Criteria are the `SHALL` sentences in `requirements.md`
+or `bugfix.md`. Tasks are the checked boxes in `tasks.md`. Tests are the `test(` calls in test
+files that cite the spec by number, so a file that serves two specs counts for both.
 
-| Area | State |
-|---|---|
-| Sample set: 47 `.xsn`, 348 records, MIT | **verified** for forms 01–42 — 42 of 42 open in InfoPath Filler 2013, every view captured for the first 8. Forms 43–47 were generated later and never opened in InfoPath |
-| JSM Forms API via `requestJira('/forms/...')` | **verified** — read, create and delete templates on a real site |
-| Web viewer (`apps/web`) | **verified** locally (not yet published): spec 09 phase A, `.kiro/specs/09-web-viewer/verification.md` |
-| Triage + death certificate (web viewer) | **verified** locally (not yet published): spec 12 phase A, `.kiro/specs/12-triage-death-certificate/verification.md` |
-| `.xsn` parser, converter, Forge app | in progress |
+| Spec | Kind | State | Criteria | Tasks | Tests |
+|---|---|---|---|---|---|
+| 01 XSN parser | requirements | done | 129 | 34 | 77 |
+| 02 FormIR | requirements | done | 63 | 14 | 202 |
+| 03 View renderer | requirements | done | 55 | 14 | 228 |
+| 04 Classic runtime | requirements | done | 47 | 13 | 95 |
+| 09 Web viewer | requirements | done | 56 | 16 | 99 |
+| 12 Triage and death certificate | requirements | done | 29 | 10 | 66 |
+| 13 Web viewer bugfixes | bugfix | done | 16 | 8 | 58 |
+| 14 Fill mode bugfixes | bugfix | done | 16 | 10 | 36 |
+| 15 Form dossier | requirements | done | 16 | 5 | 19 |
+| 16 Dossier and Fill bugfixes | bugfix | done | 17 | 7 | 34 |
+| 17 Records list | requirements | done | 20 | 5 | 8 |
+| 18 Record archive | requirements | done | 14 | 4 | 10 |
+| 19 Records and archive bugfixes | bugfix | done | 30 | 6 | 72 |
+| 20 Record summary | requirements | done | 17 | 5 | 11 |
+| 21 Start from a task | requirements | done | 10 | 4 | 5 |
+| 22 First five minutes bugfixes | bugfix | done | 10 | 5 | 28 |
+| 23 Accessibility bugfixes | bugfix | done | 11 | 6 | 8 |
+| 24 Fill every sample bugfixes | bugfix | done | 14 | 10 | 25 |
+| 25 Number grouping and leaving | bugfix | done | 5 | 6 | 23 |
+| 26 Leftover bugfixes | bugfix | done; task 5 open: F7 (F10 fixed in spec 27) | 4 | 4 | 11 |
+| 27 Reopen shows record | bugfix | done | 2 | 1 | 7 |
 
-## What is in the repository
-
-```
-.kiro/steering/     product, tech, structure, domain, licensing, testing, UX rules for Kiro
-docs/spec-briefs/   the feature briefs each Kiro spec was generated from
-docs/kiro/          hook and MCP descriptions used while building
-docs/infopath-ux.md         how InfoPath 2013 actually looks and behaves, with evidence tags
-docs/feature-coverage.md    every InfoPath capability and where it lands in Afterlife
-docs/corpus-facts.md        what the sample corpus contains, counted from the files themselves
-samples/own/        47 MIT form templates, 348 filled records, screenshots
-samples/public/     third-party samples that carry a licence permitting redistribution
-```
-
-## Samples and licensing
-
-`samples/own/` is ours, MIT, and every person, company, host and file in it is fictional. The
-47 templates exist so the parser is tested against real shapes — multi-view forms, repeating
-tables, optional sections, filtered dropdowns, calculations, validation rules, a form with 209
-fields — instead of one toy example. Forms 43–47 add browser compatibility, an ActiveX control,
-digital signatures, code-behind and script; they were generated and never opened in InfoPath.
-
-Third-party samples that do **not** clearly permit redistribution are not in this repository and
-never will be. `docs/SAMPLE-LICENSES.md` records what was checked and why each source is in or
-out. If you add a sample, add a row there first.
+Specs 05–08, 10 and 11 (converter, Forge app, Rovo agent and others) have briefs in
+`docs/spec-briefs/` and no spec yet.
 
 ## Running it
 
-Not yet — the app code is being written. The commands will land here as each slice works:
-build, test, `forge deploy`, and the local viewer.
+Needs Node 22 and pnpm.
+
+```sh
+pnpm install
+pnpm --filter web dev        # the web viewer, on Vite's dev server
+pnpm --filter web build      # a static site in apps/web/dist
+pnpm --filter web preview    # serve the build
+```
+
+Tests:
+
+```sh
+pnpm check     # typecheck, lint, format check, hook tests, core, core in a browser, web
+pnpm e2e:web   # Playwright end-to-end tests of the built viewer (build first)
+pnpm test:perf # core's performance budgets
+```
 
 ### Bundling `@afterlife/core` for a browser or a Web Worker
 
@@ -62,8 +133,68 @@ The view renderer's XSLT engine, `xsltjs`, has `require('fs')` and `require('pat
 level. Core never lets it reach them: it always passes its own loaders, which read files from the
 `.xsn` package only. A browser or Worker bundle must still resolve the two names. Map them, for
 importers inside `xsltjs` only, to `packages/core/src/render/engine/stubs/fs.ts` and `path.ts`,
-whose functions all throw. `packages/core/test/helpers/xsltjs-stubs.ts` is the Vite plugin the
-tests use; the web viewer and the Forge Custom UI builds use the same mapping.
+whose functions all throw. `packages/core/host/vite.ts` is the Vite plugin that does this; core's
+tests and the web viewer both use it.
+
+## How this was built with Kiro
+
+**Specs** (`.kiro/specs/`). Eleven specs went requirements first: `requirements.md`, then
+`design.md`, then `tasks.md`, each phase approved by the reviewer before the next (01, 02, 03, 04,
+09, 12, 15, 17, 18, 20, 21). Ten are bugfix specs (13, 14, 16, 19, 22–27): `bugfix.md` with
+current, expected and unchanged behaviour in EARS, a design with each root cause, and a
+`verification.md` with the failing test before the fix and the result after. The briefs they
+started from are in `docs/spec-briefs/`. The spec skill that sets the format is
+`.kiro/skills/spec/SKILL.md`.
+
+**Steering** (`.kiro/steering/`). Eight files loaded into every session: product, tech,
+structure, testing, UX principles, InfoPath domain facts, Forge platform limits, and samples and
+licensing.
+
+**Agent file** (`.kiro/agents/afterlife.json`). The agent used for headless runs. Its guard
+rails: an allowed-tools list, denied shell commands, and write access kept away from `samples/`.
+
+**Hooks** (`tools/kiro-hooks/`, described in `docs/kiro/hooks.md`). Wired in the agent file:
+format each file on write, refuse writes under `samples/`, refuse secrets, and add a journal
+line when a session stops. `pnpm test:hooks` tests them.
+
+**MCP** (`docs/kiro/mcp.md`). The Playwright MCP server, used to fill in the samples on the
+built app by hand. It caught defects no suite had, and the document says which, call by call.
+
+**Journal** (`.kiro/JOURNAL.md`). Written by the stop hook.
+
+## What Kiro did not write
+
+Commit authors do not separate the two; the commit messages do. 66 of the 75 commits say
+"Written by Kiro". These are the reviewer's, whole:
+
+| Commit | What |
+|---|---|
+| `759994c` | The seed: steering drafts, spec briefs, docs, and the MIT sample set |
+| `288c7de` | The agent file for headless runs |
+| `13b8776` | Samples: the Wave column dropped, the corpus reference fixed |
+| `1917d34` | Samples: forms 43–47 added |
+| `9f29bdc` | Steering edit: the XSLT engine chosen by spec 03, sanitising without a DOM |
+| `08842fd` | Steering edit: `xsltjs` 1.0.0, no licence exception |
+| `84c1766` | The Playwright MCP server added to the agent file |
+| `64d0d3b` | `grouping:1` removed from 13 own samples |
+
+Inside Kiro's commits, these lines are the reviewer's: the upstream LICENSE file of the Weight
+keeper sample (in `4c13ec8`), one `.gitignore` line, and the P12 and P13 lines of
+`.kiro/steering/testing.md`.
+
+Everything under `samples/` is the reviewer's, made by a generator outside this repository.
+Kiro cannot write there.
+
+## Samples and licensing
+
+`samples/own/` is ours, MIT, and every person, company, host and file in it is fictional: 47
+templates and 348 filled records. Forms 01–42 opened in InfoPath Filler 2013. Forms 43–47 were
+generated later and never opened in InfoPath, nor were the 13 templates repacked in `64d0d3b`
+opened again. `samples/own/README.md` gives the per-form counts.
+
+Third-party samples that do **not** clearly permit redistribution are not in this repository and
+never will be. `docs/SAMPLE-LICENSES.md` records what was checked and why each source is in or
+out. `samples/public/` holds one: theill's Weight keeper (MIT).
 
 ## Third-party licences
 
@@ -93,7 +224,7 @@ Fonts, shipped unmodified:
 
 | Package | Version | Licence | Use |
 |---|---|---|---|
-| `@fontsource/carlito` | 5.3.0 | SIL Open Font License 1.1 | Carlito, metric-compatible with Calibri, declared as `@font-face` family `Calibri` by the page that shows a render (core's visual test today; the web viewer in spec 09), with `ascent-override: 93%; descent-override: 26%` so line heights match InfoPath's GDI layout. Core does not inline it. |
+| `@fontsource/carlito` | 5.3.0 | SIL Open Font License 1.1 | Carlito, metric-compatible with Calibri, declared as `@font-face` family `Calibri` by the page that shows a render, with `ascent-override: 93%; descent-override: 26%` so line heights match InfoPath's GDI layout. Core does not inline it. |
 
 ## Licence
 
