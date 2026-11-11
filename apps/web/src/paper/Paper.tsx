@@ -229,6 +229,9 @@ export function Paper({
     <section
       className={`afl-paper-frame${xray ? ' afl-xray' : ''}`}
       aria-label={label}
+      // Spec 23 B5: reading, nothing on the paper takes focus; the frame does, so the keyboard
+      // can scroll a paper wider than the screen.
+      tabIndex={filling ? undefined : 0}
       ref={frame}
       onPointerMove={onMove}
       onPointerLeave={() => xray && onPoint?.(undefined)}

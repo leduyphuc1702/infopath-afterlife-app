@@ -60,7 +60,7 @@ export function Documentation({ dossier: d, onBack, onDownload }: Props) {
       </section>
       <section aria-labelledby="afl-doc-fields">
         <h3 id="afl-doc-fields">Fields</h3>
-        <table className="afl-doc-fields">
+        <table className="afl-doc-fields" aria-labelledby="afl-doc-fields">
           <thead>
             <tr>
               <th scope="col">Label</th>

@@ -722,3 +722,22 @@ code {
   border-left: 3px solid var(--ds-border-information);
   background: var(--ds-background-information);
 }
+
+/* Spec 23 B6: with forced colours a background is the system's; a pressed toggle shows as
+   highlighted. */
+@media (forced-colors: active) {
+  .afl-toggle[aria-checked='true'],
+  .afl-toggle[aria-pressed='true'] {
+    forced-color-adjust: none;
+    border-color: Highlight;
+    background: Highlight;
+    color: HighlightText;
+  }
+  /* The tabs' transparent underline turns to text colour on every tab; only the selected keeps one. */
+  .afl-tab {
+    border-bottom-color: Canvas;
+  }
+  .afl-tab[aria-selected='true'] {
+    border-bottom: 3px solid Highlight;
+  }
+}

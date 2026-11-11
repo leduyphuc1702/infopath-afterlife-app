@@ -204,7 +204,10 @@ export function Records({
         <div
           ref={box}
           className="afl-records-box"
-          tabIndex={-1}
+          // Spec 23 B5: a named box the keyboard can scroll, sideways too.
+          role="region"
+          aria-label="Records found"
+          tabIndex={0}
           onScroll={(e) => {
             setScroll(e.currentTarget.scrollTop);
             latest.current = { ...latest.current, scroll: e.currentTarget.scrollTop };

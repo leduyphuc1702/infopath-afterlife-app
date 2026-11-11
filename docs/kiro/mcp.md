@@ -106,3 +106,15 @@ Defects that only showed up by looking:
 - **F8**, the bar vanishes on the chosen line in dark colours (equal computed colours).
 - **F9**, the Triage tip promises sorting; the table has none.
 - **F4**, an empty summary table after a Find with no match.
+
+## Turn 74: accessibility pass (spec 23)
+
+The built app on port 4331. 7 MCP calls, no screenshots: one navigation, one evaluate lost to
+that navigation, then five `browser_run_code_unsafe` runs. The first loaded an audit script with
+`addInitScript`. Each run walked several screens: names, headings, landmarks, tables, target
+sizes, text and border contrast in both schemes, then Tab walks and Escape on menus, 320 px reflow,
+text spacing, reduced motion, forced colours, live regions, the row menu and the dialog.
+
+Found only this way: the date box with no name and the dead calendar button in Fill (B4), the
+paper and records list a keyboard could not scroll at 320 px (B5), and forced colours hiding
+pressed, selected and chosen states (B6). The results table is `docs/accessibility.md`.

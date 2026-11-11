@@ -53,7 +53,7 @@ import './docs/docs.css';
 import './records/records.css';
 import { Records, type ListPlace } from './records/Records';
 import { ArchiveMenu } from './paper/ArchiveMenu';
-import { PRINT_CSS, READ_CSS } from './paper/fill';
+import { PRINT_CSS, READ_CSS, uncommitted } from './paper/fill';
 
 /** The latest render answer; the previous paper stays up while the next one is drawn. */
 /** `templateId`: the template it was made for; another template's render is never shown. */
@@ -407,24 +407,40 @@ export function App() {
       });
     }
   }, []);
+  // Spec 23 B2: edits sent and not yet answered, and the latest of them.
+  const sent = useRef(0);
+  const inFlight = useRef<Promise<ResBody | undefined>>(Promise.resolve(undefined));
   const fillCommand = useCallback(
     (c: FillCommand) => {
       const v = viewRef.current;
-      if (v !== undefined)
-        void client.fill(c, v, localNow()).then((r) => {
-          setPressNote(pressMessage(c, r));
-          // Spec 16 N2: a new command ends the last export's note.
-          dispatch({ type: 'notice', notice: undefined });
-          fillAnswer(r, undefined, c.kind === 'undo' || c.kind === 'redo' ? c.kind : undefined);
-        });
+      if (v === undefined) return;
+      sent.current++;
+      const p = client.fill(c, v, localNow()).then((r) => {
+        setPressNote(pressMessage(c, r));
+        // Spec 16 N2: a new command ends the last export's note.
+        dispatch({ type: 'notice', notice: undefined });
+        fillAnswer(r, undefined, c.kind === 'undo' || c.kind === 'redo' ? c.kind : undefined);
+        return r;
+      });
+      inFlight.current = p;
+      void p.finally(() => sent.current--);
     },
     [client, fillAnswer],
   );
   /** Leaves Fill; asks first when there are changes that were not downloaded (R6.4). */
   const leaveFill = useCallback(async (): Promise<boolean> => {
     if (!fill) return true;
+    // Spec 23 B2: typing not yet left is committed as leaving the field commits it, and an edit
+    // still on its way to the Worker counts: its answer says whether there are changes.
+    const open = uncommitted();
+    open?.blur();
+    let dirty = fill.res?.dirty;
+    if (sent.current > 0) {
+      const r = await inFlight.current.catch(() => undefined);
+      if (r?.type === 'filled') dirty = r.dirty;
+    }
     // Spec 14 B10: the changes may be on another form or record than the one shown; say where.
-    if (fill.res?.dirty) {
+    if (dirty) {
       let q: Question = DISCARD;
       if (!fillOn) {
         const name = s.templates.find((t) => t.templateId === fill.templateId)?.ir.meta.name;
@@ -437,7 +453,10 @@ export function App() {
           body: `You changed ${name ?? 'another form'} (${record}) and haven't downloaded the XML. Nothing is saved in the viewer, so the changes will be lost.`,
         };
       }
-      if (!(await ask(q))) return false;
+      if (!(await ask(q))) {
+        if (open?.isConnected) open.focus();
+        return false;
+      }
     }
     setFill(undefined);
     void client.fillClose();
@@ -476,12 +495,24 @@ export function App() {
   // sample's template is open), then shows one line on what to try first.
   const [pending, setPending] = useState<Task>();
   const landed = useRef<string>(undefined);
+  const taskRun = useRef(false);
   const [hint, setHint] = useState<string>();
   const [keepOpen, setKeepOpen] = useState(false);
   const runTask = useCallback(
     async (task: Task) => {
       setHint(undefined);
       setKeepOpen(false);
+      // Spec 23 B1: every screen the task passes through takes the task's own entry, whether the
+      // task starts from its link or comes back on Forward; the address keeps its hash.
+      taskRun.current = true;
+      landed.current =
+        task.id === 'find'
+          ? 'records'
+          : task.id === 'document'
+            ? 'documentation'
+            : task.id === 'triage'
+              ? 'triage'
+              : undefined;
       if (task.sample === 'all') await openAllSamples();
       else await openSample(task.sample);
       // A sample opened before says "already open"; the task's own line says enough.
@@ -494,12 +525,10 @@ export function App() {
     const t = pending;
     if (!t) return;
     if (t.sample === 'all' ? s.screen !== 'triage' : !template || !view) return;
-    if ((t.id === 'read' || t.id === 'fill') && s.recordIndex !== 1)
+    // Spec 23 B1: the form's tasks open on record 1 also when the sample was open already.
+    if (['read', 'fill', 'rules', 'keep'].includes(t.id) && s.recordIndex !== 1)
       return void dispatch({ type: 'record', index: 1 });
     setPending(undefined);
-    // R4: the task's screen takes the task's own history entry, so Back goes to the landing page.
-    landed.current =
-      t.id === 'find' ? 'records' : t.id === 'document' ? 'documentation' : undefined;
     void (async () => {
       if (t.id === 'rules') dispatch({ type: 'xray', on: true });
       if (t.id === 'fill') {
@@ -789,8 +818,11 @@ export function App() {
   useEffect(() => {
     if (placeKey === undefined) return;
     // Spec 21 R4: a task's screen replaces the entry its sample opened in.
-    const replace = landed.current === place.screen;
-    if (replace) landed.current = undefined;
+    const replace = taskRun.current;
+    if (replace && (landed.current === undefined || landed.current === place.screen)) {
+      taskRun.current = false;
+      landed.current = undefined;
+    }
     visit(
       replace
         ? {

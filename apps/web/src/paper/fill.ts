@@ -27,6 +27,29 @@ const rowOf = (el: Element) =>
   el.closest<HTMLElement>('[data-afl-structure="row"], [data-afl-structure="optional"]')?.dataset
     .aflNode;
 
+/**
+ * Spec 23 B2: the field being typed in whose text is not committed yet, inside the paper's shadow
+ * root; undefined when there is none.
+ */
+export function uncommitted(): HTMLElement | undefined {
+  let a = document.activeElement;
+  while (a?.shadowRoot?.activeElement) a = a.shadowRoot.activeElement;
+  const el = a?.closest?.<HTMLElement>('[data-afl-ctrl]');
+  if (!el || el.dataset.aflRaw === undefined) return undefined;
+  const text = el.textContent ?? '';
+  return text !== el.dataset.aflRaw && text !== el.dataset.aflSent ? el : undefined;
+}
+
+/** Spec 23 B4: "my:neededBy" → "Needed by", for a control InfoPath gave no title. */
+const nameOfBinding = (el: Element) => {
+  const last = (el.getAttribute('xd:binding') ?? '').split(/[/:@]/).pop() ?? '';
+  const words = last
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .replace(/[_-]+/g, ' ')
+    .trim();
+  return words ? words[0]!.toUpperCase() + words.slice(1).toLowerCase() : undefined;
+};
+
 /** Upgrades the controls of a fresh render (R6.1, R6.2, R5.2). */
 export function upgrade(root: ShadowRoot, res: FilledRes): void {
   root.querySelector('.afl-root')?.removeAttribute('inert');
@@ -35,11 +58,16 @@ export function upgrade(root: ShadowRoot, res: FilledRes): void {
     const ctrl = b.getAttribute('xd:ctrlid');
     if (ctrl !== null) b.dataset.aflButton = ctrl;
   }
+  // Spec 23 B4: the date picker's calendar button does nothing here; the date is typed.
+  for (const b of root.querySelectorAll<HTMLElement>('button.xdDTButton')) {
+    b.tabIndex = -1;
+    b.setAttribute('aria-hidden', 'true');
+  }
   const calculated = new Set(res.calculated);
   for (const el of root.querySelectorAll<HTMLElement>('[data-afl-ctrl]')) {
     const kind = xct(el);
     const path = pathOf(el);
-    const label = el.getAttribute('title') ?? undefined;
+    const label = el.getAttribute('title') ?? nameOfBinding(el);
     if (label !== undefined) el.setAttribute('aria-label', label);
     const readOnly =
       path === undefined ||

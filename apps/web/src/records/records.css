@@ -204,10 +204,23 @@
 }
 /* The bar is decoration behind the number; the number is the content. */
 .afl-summary-bar {
+  /* Spec 23 B3: a strip under the number in the bold colour, 3:1 against the line in both
+     schemes; the number is drawn on the line's own background. */
   position: absolute;
-  inset: 20% auto 20% 0;
-  background: var(--ds-background-information);
+  inset: auto auto 2px 0;
+  height: 4px;
+  background: var(--ds-background-information-bold);
   border-radius: 2px;
+}
+@media (forced-colors: active) {
+  .afl-summary-bar {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
+  /* Spec 23 B6: the chosen line keeps a mark when backgrounds are the system's. */
+  .afl-summary-picked th {
+    border-left: 4px solid Highlight;
+  }
 }
 .afl-summary-n {
   position: relative;
