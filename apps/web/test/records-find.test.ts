@@ -1,7 +1,7 @@
 import fc from 'fast-check';
 import { expect, test } from 'vitest';
 import type { ListKey } from '@afterlife/core';
-import { findRows, searchText, walkStep } from '../src/records/find';
+import { findRows, searchText, walkStep, whereFound } from '../src/records/find';
 
 // Spec 17 P20, restated by spec 28: the rows shown are exactly the records whose shown values,
 // or the stored values of their number and date columns, contain the Find text, in the sort
@@ -41,8 +41,13 @@ test('P20: find, sort and walk', () => {
           ),
         }));
         // Spec 19 R3: the column Find skips (Failed checks) is now named, here the last.
-        const kinds = rows[0]?.cells.map((_c, i) => (i === column && numeric ? 'number' : 'text'));
-        const text = searchText(rows, w, kinds);
+        // Spec 28: a number column's stored text; the key's text stands in for it here.
+        const withStored = rows.map((r) => ({
+          ...r,
+          stored:
+            numeric && column !== w && r.keys[column] !== null ? [String(r.keys[column])] : [],
+        }));
+        const text = searchText(withStored, w);
         const shown = findRows(rows, text, query, { column, descending });
         const q = query.trim().toLowerCase();
         const expected = rows
@@ -108,14 +113,14 @@ test('R2: a match in a repeating row is found, and its place is named', async ()
 
 // Spec 28 R1: a number or date column also matches on the value the record stores.
 test('spec 28 R1: Find matches a number or a date as stored, text as shown', () => {
-  const kinds = ['text', 'checks', 'number', 'date', 'text'] as const;
   const rows = [
     {
       cells: ['04-purchase-request-001.xml', 'None', '$1,423.94', '5/13/2026', 'Yes'],
       keys: ['04-purchase-request-001.xml', 0, 1423.94, '2026-05-13', 'true'] as ListKey[],
+      stored: ['1423.94', '2026-05-13'],
     },
   ];
-  const text = searchText(rows, 1, kinds);
+  const text = searchText(rows, 1);
   const count = (q: string) => findRows(rows, text, q).length;
   for (const [q, n] of [
     ['$1,423.94', 1],
@@ -127,4 +132,25 @@ test('spec 28 R1: Find matches a number or a date as stored, text as shown', () 
     ['true', 0],
   ] as const)
     expect(count(q), q).toBe(n);
+});
+
+// Spec 28 R2, R3: the stored text character for character, in columns and repeating rows.
+test('spec 28 R2, R3: 2978.30 as stored, and a line total in a repeating row', () => {
+  const row = {
+    cells: ['04-purchase-request-003.xml', 'None', '$2,978.30'],
+    keys: ['04-purchase-request-003.xml', 0, 2978.3] as ListKey[],
+    stored: ['2978.30'],
+    more: ['Description: Desk', 'Line total: $1,334.60'],
+    moreStored: ['', 'Line total: 1334.60'],
+  };
+  const text = searchText([row], 1);
+  for (const [q, n] of [
+    ['2978.30', 1],
+    ['2978.3', 1],
+    ['1334.60', 1],
+    ['1,334.60', 1],
+  ] as const)
+    expect(findRows([row], text, q).length, q).toBe(n);
+  expect(whereFound(row, '1334.60', 1)).toBe('Line total: $1,334.60');
+  expect(whereFound(row, '2978.30', 1)).toBeUndefined();
 });

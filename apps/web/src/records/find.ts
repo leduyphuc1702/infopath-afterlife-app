@@ -1,5 +1,5 @@
 // Spec 17 R5, R7, R10: which records the list shows, in what order, and the walk through them.
-import type { ListKey, ListKind } from '@afterlife/core';
+import type { ListKey } from '@afterlife/core';
 
 export interface Sort {
   readonly column: number;
@@ -11,40 +11,36 @@ export interface Findable {
   readonly keys: readonly ListKey[];
   /** Spec 19 R2: values in repeating rows, "Label: value". */
   readonly more?: readonly string[];
+  /** Spec 28 R2: number and date columns' text as the record holds it. */
+  readonly stored?: readonly string[];
+  /** Spec 28 R3: beside each `more` entry, its stored text for a number or date, else ''. */
+  readonly moreStored?: readonly string[];
 }
 
 /**
- * Spec 28 R1: the values a number or date column stores, as the record writes them (`1423.94`,
- * `2026-05-13`), so Find matches them as well as what the list shows. Text and check boxes
- * match on what is shown only, so `true` does not find every ticked box.
+ * Spec 28 R1–R3: Find also reads the text a number or date holds in the record, in columns and
+ * in repeating rows. Text and check boxes match on what is shown only, so `true` does not find
+ * every ticked box.
  */
-const stored = (r: Findable, kinds: readonly ListKind[] | undefined, skip: number) =>
-  (kinds ?? []).flatMap((k, i) => {
-    const key = r.keys[i];
-    return i !== skip && (k === 'number' || k === 'date') && key !== null && key !== undefined
-      ? [String(key)]
-      : [];
-  });
-
-/** Each row's searchable text, made once per list; the cell at `skip` (Failed checks) is not. */
-export const searchText = (rows: readonly Findable[], skip: number, kinds?: readonly ListKind[]) =>
+export const searchText = (rows: readonly Findable[], skip: number) =>
   rows.map((r) =>
-    [...r.cells.filter((_c, i) => i !== skip), ...stored(r, kinds, skip), ...(r.more ?? [])]
+    [
+      ...r.cells.filter((_c, i) => i !== skip),
+      ...(r.stored ?? []),
+      ...(r.more ?? []),
+      ...(r.moreStored ?? []).filter((m) => m !== ''),
+    ]
       .join('\u0000')
       .toLowerCase(),
   );
 
 /** Spec 19 R2: where a row matched, when no shown cell holds the text. */
-export function whereFound(
-  row: Findable,
-  query: string,
-  skip: number,
-  kinds?: readonly ListKind[],
-): string | undefined {
+export function whereFound(row: Findable, query: string, skip: number): string | undefined {
   const q = query.trim().toLowerCase();
-  const inRow = [...row.cells.filter((_c, i) => i !== skip), ...stored(row, kinds, skip)];
-  if (q === '' || inRow.some((c) => c.toLowerCase().includes(q))) return;
-  return row.more?.find((m) => m.toLowerCase().includes(q));
+  const has = (c: string | undefined) => c !== undefined && c.toLowerCase().includes(q);
+  if (q === '' || row.cells.some((c, i) => i !== skip && has(c)) || row.stored?.some(has)) return;
+  // R3: the line says the entry as shown, whichever of its two texts held the match.
+  return row.more?.find((m, j) => has(m) || has(row.moreStored?.[j]));
 }
 
 const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });

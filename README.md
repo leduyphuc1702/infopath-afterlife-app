@@ -25,7 +25,7 @@ Built spec-first in Kiro. MIT licence.
 
 ## Quality
 
-**Bugfix specs.** 11 of the 22 specs are bugfix specs. Together they hold 98 defect sections.
+**Bugfix specs.** 11 of the 22 specs are bugfix specs. Together they hold 100 defect sections.
 Each spec's `verification.md` gives every defect's test result before and after the fix. Every
 defect was run on the unfixed code first, with the gaps the files name: spec 27's F10 had no run
 before the fix in its round, and one spec 27 reducer test is a guard that passes on both.
@@ -42,7 +42,7 @@ before the fix in its round, and one spec 27 reducer test is a guard that passes
 | 25 | 5 | [MS-IPFF2] and the reviewer's checks of the built app |
 | 26 | 4 | the reviewer's checks, and notes left by earlier specs |
 | 27 | 1 | the reviewer's checks of the built app |
-| 28 | 1 | the reviewer's checks of the built app |
+| 28 | 3 | the reviewer's checks of the built app, in two rounds |
 
 **Properties** (fast-check, defined in `.kiro/steering/testing.md` and the specs):
 
@@ -73,9 +73,9 @@ before the fix in its round, and one spec 27 reducer test is a guard that passes
 **Accessibility:** `docs/accessibility.md`, WCAG 2.2 AA criterion by criterion, with the
 reviewer's axe-core 4.14 audit.
 
-**Suites**, measured by Kiro in this turn (spec 28, on `acd2394` plus the uncommitted spec 28
-changes): Kiro hook tests 6, core 3,853 passed (3 skipped), browser 337, web 123, end-to-end
-174. Bundle, same run: page entry 91.4 of 100 KB, Worker 156.0 of 160 KB.
+**Suites**, measured by Kiro on `cffc527` plus the uncommitted spec 28 round 2 changes: Kiro
+hook tests 6, core 3,854 passed (3 skipped), browser 337, web 124, end-to-end 174. Bundle, same
+run: page entry 91.4 of 100 KB, Worker 156.1 of 160 KB.
 
 ## Status
 
@@ -106,7 +106,7 @@ files that cite the spec by number, so a file that serves two specs counts for b
 | 25 Number grouping and leaving | bugfix | done | 5 | 6 | 23 |
 | 26 Leftover bugfixes | bugfix | done; task 5 open: F7 (F10 fixed in spec 27) | 4 | 4 | 11 |
 | 27 Reopen shows record | bugfix | done | 2 | 1 | 7 |
-| 28 Find stored value | bugfix | done | 1 | 1 | 4 |
+| 28 Find stored value | bugfix | done | 4 | 2 | 9 |
 
 Specs 05–08, 10 and 11 (converter, Forge app, Rovo agent and others) have briefs in
 `docs/spec-briefs/` and no spec yet.

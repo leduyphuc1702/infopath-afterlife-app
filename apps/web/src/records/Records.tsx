@@ -70,8 +70,7 @@ export function Records({
   const deferred = useDeferredValue(query);
   const rows = list?.rows ?? [];
   const skip = list?.columns.findIndex((c) => c.kind === 'checks') ?? -1;
-  const kinds = useMemo(() => list?.columns.map((c) => c.kind), [list]);
-  const text = useMemo(() => searchText(rows, skip, kinds), [rows, skip, kinds]);
+  const text = useMemo(() => searchText(rows, skip), [rows, skip]);
   const found = useMemo(() => findRows(rows, text, deferred, sort), [rows, text, deferred, sort]);
   const foundIds = useMemo(() => found.map((k) => rows[k]!.recordId), [found]);
   // Spec 20 R8: a chosen summary line narrows what Find found.
@@ -263,7 +262,7 @@ export function Records({
               {first > 0 && <tr aria-hidden="true" style={{ height: first * ROW_PX }} />}
               {shown.slice(first, last).map((i, k) => {
                 const r = rows[i]!;
-                const where = whereFound(r, deferred, skip, kinds);
+                const where = whereFound(r, deferred, skip);
                 return (
                   <tr key={r.recordId} aria-rowindex={first + k + 2} onClick={() => open(i)}>
                     {r.cells.map((c, j) =>

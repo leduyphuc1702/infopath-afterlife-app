@@ -44,6 +44,13 @@ export interface ListRow {
   readonly keys: readonly ListKey[];
   /** Spec 19 R2: the values in repeating rows, as "Label: value", for Find. */
   readonly more: readonly string[];
+  /**
+   * Spec 28 R2: the text the record holds in each number and date column, character for
+   * character (`2978.30`, not the key's `2978.3`), for Find.
+   */
+  readonly stored?: readonly string[];
+  /** Spec 28 R3: beside each `more` entry, "Label: stored text" for a number or date, else ''. */
+  readonly moreStored?: readonly string[];
 }
 
 export interface RecordList {
@@ -190,27 +197,38 @@ export function recordList(
   };
   // R2: the repeating sheets' values, per record file.
   const moreOf = new Map<string, string[]>();
+  const moreStoredOf = new Map<string, string[]>();
   for (const sheet of subs) {
     const fixed = sheet.columns.findIndex((c) => fields.has(c));
     for (const row of sheet.rows) {
       const file = cellText(row[0]);
       const list = moreOf.get(file) ?? [];
+      const raw = moreStoredOf.get(file) ?? [];
       for (let i = fixed < 0 ? sheet.columns.length : fixed; i < sheet.columns.length; i++) {
         const f = fields.get(sheet.columns[i]!);
-        const [cell] = shown(kindOf(f), f, cellText(row[i]));
-        if (cell !== '') list.push(`${f?.label || sheet.columns[i]}: ${cell}`);
+        const kind = kindOf(f);
+        const text = cellText(row[i]);
+        const [cell] = shown(kind, f, text);
+        if (cell === '') continue;
+        const label = f?.label || sheet.columns[i];
+        list.push(`${label}: ${cell}`);
+        raw.push(kind === 'number' || kind === 'date' ? `${label}: ${text}` : '');
       }
       moreOf.set(file, list);
+      moreStoredOf.set(file, raw);
     }
   }
 
   const rows = (main?.rows ?? []).map((row, n): ListRow => {
     const cells: string[] = [];
     const keys: ListKey[] = [];
+    const stored: string[] = [];
     for (const [i, c] of fieldColumns.entries()) {
-      const [cell, key] = shown(c.kind, c.field, cellText(row[i]));
+      const text = cellText(row[i]);
+      const [cell, key] = shown(c.kind, c.field, text);
       cells.push(cell);
       keys.push(key);
+      if ((c.kind === 'number' || c.kind === 'date') && text !== '') stored.push(text);
     }
     const fileName = cellText(row[0]);
     for (const c of counts) {
@@ -228,7 +246,14 @@ export function recordList(
     // Spec 19 R3: beside the file name; a clean record says so.
     cells.splice(1, 0, failed === null ? '' : failed === 0 ? 'None' : String(failed));
     keys.splice(1, 0, failed);
-    return { fileName, cells, keys, more: moreOf.get(fileName) ?? [] };
+    return {
+      fileName,
+      cells,
+      keys,
+      more: moreOf.get(fileName) ?? [],
+      stored,
+      moreStored: moreStoredOf.get(fileName) ?? [],
+    };
   });
 
   const rowOf = new Map(rows.map((r, i) => [r.fileName, i]));

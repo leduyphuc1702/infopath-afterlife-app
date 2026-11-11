@@ -67,3 +67,16 @@ test('R2, R12: every form with records gives one row per record, text cells, key
     }
   }
 });
+
+// Spec 28 R2, R3: the text the record holds, for Find; the keys stay numbers.
+test('spec 28 R2, R3: form 04 keeps 2978.30 and a line total as stored', async () => {
+  const { t, ir } = await open('04-purchase-request');
+  const list = recordList(t, ir, recordsOf('04-purchase-request'), NOW);
+  const r3 = list.rows.find((r) => r.fileName === '04-purchase-request-003.xml')!;
+  expect(r3.stored).toContain('2978.30');
+  expect(r3.keys).toContain(2978.3);
+  expect(list.rows.some((r) => (r.moreStored ?? []).some((m) => m.endsWith(': 1334.60')))).toBe(
+    true,
+  );
+  for (const r of list.rows) expect(r.moreStored).toHaveLength(r.more.length);
+});
