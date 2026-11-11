@@ -25,6 +25,8 @@ async function handle(req: Req): Promise<ResBody> {
       return { type: 'csv', text: session.csv() };
     case 'exportRecords':
       return session.exportRecords(req.templateId, req.format, progress);
+    case 'recordList':
+      return session.recordList(req.templateId, req.now);
     case 'documentation':
       return session.documentation(req.templateId);
     case 'documentationZip':

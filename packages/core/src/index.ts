@@ -92,6 +92,8 @@ export type { WriteZipOptions, ZipInput } from './zip/write';
 export { embedded, safeSegment } from './legacy/attachment';
 export type { Embedded } from './legacy/attachment';
 export { RECORD_COLUMNS, plainText, recordTables } from './legacy/tables';
+export { recordList, viewFormats } from './legacy/list';
+export type { ListColumn, ListKey, ListKind, ListRow, RecordList, ViewFormat } from './legacy/list';
 export type {
   Cell,
   ExtractedFile,

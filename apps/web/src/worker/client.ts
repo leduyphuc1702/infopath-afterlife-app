@@ -126,6 +126,11 @@ export class WorkerClient {
     return this.send({ type: 'documentation', templateId }, []);
   }
 
+  /** Spec 17: the open template's records as a list. */
+  recordList(templateId: string, now: string): Promise<ResBody> {
+    return this.send({ type: 'recordList', templateId, now }, []);
+  }
+
   /** Spec 15 R3.3: the Markdown of several forms, with an index, as a `.zip`. */
   documentationZip(templateIds: readonly string[]): Promise<ResBody> {
     return this.send({ type: 'documentationZip', templateIds }, []);

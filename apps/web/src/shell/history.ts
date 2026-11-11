@@ -20,7 +20,9 @@ export const keyOf = (p: Place) =>
       ? `certificate:${p.certificateId ?? ''}`
       : p.screen === 'documentation'
         ? `documentation:${p.openId ?? ''}`
-        : 'triage';
+        : p.screen === 'records'
+          ? `records:${p.openId ?? ''}`
+          : 'triage';
 
 export function placeIn(state: unknown): Place | undefined {
   const p = (state as Record<string, unknown> | null)?.[KEY] as Place | undefined;

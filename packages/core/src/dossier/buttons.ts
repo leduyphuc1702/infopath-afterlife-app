@@ -9,7 +9,7 @@ const ENTITIES: Readonly<Record<string, string>> = {
   quot: '"',
   apos: "'",
 };
-const decode = (s: string) =>
+export const buttonDecode = (s: string) =>
   s.replace(/&(#x[0-9a-f]+|#\d+|\w+);/gi, (m, e: string) =>
     e[0] === '#'
       ? String.fromCodePoint(
@@ -17,7 +17,7 @@ const decode = (s: string) =>
         )
       : (ENTITIES[e] ?? m),
   );
-const attr = (tag: string, name: string) =>
+export const xslAttr = (tag: string, name: string) =>
   new RegExp(`\\s${name}\\s*=\\s*("([^"]*)"|'([^']*)')`, 'i')
     .exec(tag)
     ?.slice(2)
@@ -31,11 +31,11 @@ export function buttonCaptions(t: ParsedTemplate): Map<string, string> {
     const text = new TextDecoder().decode(f.bytes);
     for (const m of text.matchAll(/<input\b[^>]*>/gi)) {
       const tag = m[0];
-      if (attr(tag, 'xd:xctname')?.toLowerCase() !== 'button') continue;
-      const id = attr(tag, 'xd:CtrlId');
-      const value = attr(tag, 'value');
+      if (xslAttr(tag, 'xd:xctname')?.toLowerCase() !== 'button') continue;
+      const id = xslAttr(tag, 'xd:CtrlId');
+      const value = xslAttr(tag, 'value');
       if (id !== undefined && value !== undefined && value.trim() !== '' && !out.has(id))
-        out.set(id, decode(value).trim());
+        out.set(id, buttonDecode(value).trim());
     }
   }
   return out;

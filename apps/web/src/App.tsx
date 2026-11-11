@@ -42,12 +42,15 @@ import type {
   Progress,
   RenderedRes,
   DocumentationRes,
+  RecordListRes,
   ResBody,
 } from './worker/protocol';
 import { DISCARD, useConfirm, type Question } from './shell/Confirm';
 import { Documentation } from './docs/Documentation';
 import { keepTrace, stepEntry } from './side/trace-keep';
 import './docs/docs.css';
+import './records/records.css';
+import { Records, type ListPlace } from './records/Records';
 
 /** The latest render answer; the previous paper stays up while the next one is drawn. */
 /** `templateId`: the template it was made for; another template's render is never shown. */
@@ -520,6 +523,36 @@ export function App() {
         ? cardForControl(template.ir, s.selection.controlId)
         : undefined);
 
+  // Spec 17: the open template's records list, read in the Worker when its screen is shown, and
+  // the place in it that Back restores (R9).
+  const [list, setList] = useState<RecordListRes>();
+  const listPlace = useRef<{ templateId?: string; place: ListPlace }>({
+    place: { query: '', scroll: 0 },
+  });
+  const listId = s.screen === 'records' ? template?.templateId : undefined;
+  const listCount = listId === undefined ? 0 : recordsOf(s, listId).length;
+  useEffect(() => {
+    if (listId === undefined || (list?.templateId === listId && list.rows.length === listCount))
+      return;
+    const t0 = performance.now();
+    void client.recordList(listId, now).then((res) => {
+      if (res.type === 'recordList') {
+        setList(res);
+        // R11: measured by the e2e tests (Worker time, then the whole round trip).
+        console.debug(
+          `R11 list: worker ${res.ms} ms, answer ${Math.round(performance.now() - t0)} ms`,
+        );
+      } else if (res.type === 'failed')
+        dispatch({
+          type: 'input',
+          ignored: [],
+          problems: [{ fileName: 'the records list', error: res.error }],
+        });
+    });
+  }, [listId, listCount, list, client, now]);
+  if (listId !== undefined && listPlace.current.templateId !== listId)
+    listPlace.current = { templateId: listId, place: { query: '', scroll: 0 } };
+
   // Spec 15: the open template's dossier, made in the Worker when its screen is shown.
   const [doc, setDoc] = useState<{ readonly templateId: string; readonly res: DocumentationRes }>();
   const docId = s.screen === 'documentation' ? template?.templateId : undefined;
@@ -597,7 +630,10 @@ export function App() {
           ? document.getElementById('afl-cert-h')
           : s.screen === 'documentation'
             ? document.getElementById('afl-doc-h')
-            : document.querySelector('.afl-form-name'),
+            : s.screen === 'records'
+              ? (document.querySelector('[data-afl-record-focus]') ??
+                document.getElementById('afl-records-h'))
+              : document.querySelector('.afl-form-name'),
       );
     }
   }, [placeKey]);
@@ -613,7 +649,9 @@ export function App() {
             ? { certificate: certificateRow.name }
             : s.screen === 'documentation'
               ? { documentation: template.ir.meta.name }
-              : { form: template.ir.meta.name },
+              : s.screen === 'records'
+                ? { records: template.ir.meta.name }
+                : { form: template.ir.meta.name },
     );
   }, [template, s.screen, s.triage, certificateRow]);
 
@@ -745,6 +783,27 @@ export function App() {
               })
             }
           />
+        ) : s.screen === 'records' ? (
+          <Records
+            key={template.templateId}
+            formName={template.ir.meta.name}
+            list={list?.templateId === template.templateId ? list : undefined}
+            place={listPlace.current.place}
+            onPlace={(p) => (listPlace.current = { templateId: template.templateId, place: p })}
+            onBack={() => history.back()}
+            onOpen={(id, order, found) => {
+              const index = records.findIndex((r) => r.recordId === id) + 1;
+              void (fillOn ? leaveFill() : Promise.resolve(true)).then(
+                (ok) =>
+                  ok &&
+                  dispatch({
+                    type: 'openListed',
+                    index,
+                    walk: { templateId: template.templateId, order, found },
+                  }),
+              );
+            }}
+          />
         ) : s.screen === 'documentation' ? (
           doc?.templateId === template.templateId ? (
             <Documentation
@@ -773,6 +832,17 @@ export function App() {
                   onView={(v) => dispatch({ type: 'view', view: v })}
                   records={records}
                   index={s.recordIndex}
+                  {...(s.walk?.templateId === template.templateId && {
+                    walk: {
+                      order: s.walk.order
+                        .map((id) => records.findIndex((r) => r.recordId === id) + 1)
+                        .filter((i) => i > 0),
+                      found: s.walk.found,
+                    },
+                  })}
+                  {...(records.length > 0 && {
+                    onRecords: () => dispatch({ type: 'screen', screen: 'records' }),
+                  })}
                   onIndex={(i) =>
                     void (fillOn ? leaveFill() : Promise.resolve(true)).then(
                       (ok) => ok && dispatch({ type: 'record', index: i }),

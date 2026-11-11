@@ -8,6 +8,8 @@ import type {
   Issue,
   TraceEntry,
   TriageResult,
+  ListColumn,
+  ListRow,
 } from '@afterlife/core';
 
 export type AppCode =
@@ -50,6 +52,13 @@ export type Req =
     }
   /** Spec 15 R3: one form's dossier, or a `.zip` of the Markdown of several. */
   | { readonly id: number; readonly type: 'documentation'; readonly templateId: string }
+  /** Spec 17 R2: the records of one template as a list, read in the Worker (R11). */
+  | {
+      readonly id: number;
+      readonly type: 'recordList';
+      readonly templateId: string;
+      readonly now: string;
+    }
   | {
       readonly id: number;
       readonly type: 'documentationZip';
@@ -204,6 +213,16 @@ export interface ExportedRes {
   readonly unread: number;
 }
 
+/** Spec 17: one template's records, a row per record in the session's (file-name) order. */
+export interface RecordListRes {
+  readonly type: 'recordList';
+  readonly templateId: string;
+  readonly columns: readonly ListColumn[];
+  readonly rows: readonly (ListRow & { readonly recordId: string })[];
+  /** Time spent in the Worker, for R11's measures. */
+  readonly ms: number;
+}
+
 /** Spec 15: one form's dossier, as data for the screen and as Markdown. */
 export interface DocumentationRes {
   readonly type: 'documentation';
@@ -267,7 +286,8 @@ export type ResBody =
   | ExportedRes
   | FilledRes
   | FilledXmlRes
-  | DocumentationRes;
+  | DocumentationRes
+  | RecordListRes;
 
 /**
  * Spec 12 R4.4: sent with an `open` or `openSample` request's id before its answer, once per

@@ -45,10 +45,19 @@ export interface State {
   readonly busy?: string;
   /** Spec 13 B3: a note on the last files opened, e.g. one already open. */
   readonly notice?: string;
+  /** Spec 17 R10: the records list's shown rows, walked by Previous and Next. */
+  readonly walk?: Walk;
+}
+
+export interface Walk {
+  readonly templateId: string;
+  readonly order: readonly string[];
+  /** Find filtered the list: the position line says "found". */
+  readonly found: boolean;
 }
 
 /** Spec 15: `documentation` is the open template's dossier. */
-export type Screen = 'form' | 'triage' | 'certificate' | 'documentation';
+export type Screen = 'form' | 'triage' | 'certificate' | 'documentation' | 'records';
 
 /** Spec 13 B2: what one history entry holds. */
 export interface Place {
@@ -93,6 +102,8 @@ export type Action =
   | { readonly type: 'restore'; readonly place: Place }
   | { readonly type: 'view'; readonly view: string }
   | { readonly type: 'record'; readonly index: number }
+  /** Spec 17 R8: a row of the records list opened; its list becomes the walk. */
+  | { readonly type: 'openListed'; readonly index: number; readonly walk: Walk }
   | { readonly type: 'xray'; readonly on: boolean }
   | { readonly type: 'select'; readonly selection: Selection }
   | { readonly type: 'tab'; readonly tab: SideTab; readonly connectionId?: string };
@@ -125,8 +136,10 @@ function showArrived(before: State, after: State): State {
 function openState(s: State, t: TemplateSummary | undefined): State {
   if (!t) return s;
   const view = defaultView(t);
+  const rest = withoutConnection(s);
+  delete (rest as { walk?: Walk }).walk;
   return {
-    ...withoutConnection(s),
+    ...rest,
     openId: t.templateId,
     ...(view !== undefined ? { view } : {}),
     recordIndex: 0,
@@ -165,7 +178,9 @@ export function reducer(s: State, a: Action): State {
       const { place } = a;
       const t = s.templates.find((x) => x.templateId === place.openId);
       const base =
-        (place.screen === 'form' || place.screen === 'documentation') &&
+        (place.screen === 'form' ||
+          place.screen === 'documentation' ||
+          place.screen === 'records') &&
         t &&
         t.templateId !== s.openId
           ? openState(s, t)
@@ -182,7 +197,11 @@ export function reducer(s: State, a: Action): State {
           ? undefined
           : s.templates.find((x) => x.templateId === a.templateId);
       // A certificate keeps the open form; "Open form" opens the certificate's template.
-      if ((a.screen === 'form' || a.screen === 'documentation') && t && t.templateId !== s.openId)
+      if (
+        (a.screen === 'form' || a.screen === 'documentation' || a.screen === 'records') &&
+        t &&
+        t.templateId !== s.openId
+      )
         return { ...openState(s, t), screen: a.screen };
       return {
         ...s,
@@ -207,6 +226,8 @@ export function reducer(s: State, a: Action): State {
       return { ...s, view: a.view };
     case 'record':
       return { ...s, recordIndex: a.index };
+    case 'openListed':
+      return { ...s, recordIndex: a.index, walk: a.walk, screen: 'form' };
     case 'xray':
       return { ...s, xray: a.on, selection: a.on ? s.selection : {} };
     case 'select':

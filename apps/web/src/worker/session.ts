@@ -14,6 +14,7 @@ import {
   FillSession,
   matchRecord,
   parseXsn,
+  recordList,
   prepareView,
   readZip,
   recordEvidence,
@@ -34,6 +35,7 @@ import {
 import type {
   Duplicate,
   DocumentationRes,
+  RecordListRes,
   ExportedRes,
   FillCommand,
   FilledRes,
@@ -244,6 +246,32 @@ export class Session {
       files: docs.length,
       unread: 0,
     };
+  }
+
+  /** Spec 17: the records of one template as a list; kept until the session's records change. */
+  private lists = new Map<string, { key: string; res: RecordListRes }>();
+  recordList(templateId: string, now: string): RecordListRes {
+    const t0 = performance.now();
+    const t = this.template(templateId);
+    const ids = new Set(
+      this.summary()
+        .records.filter((r) => r.match.kind !== 'unmatched' && r.match.templateId === templateId)
+        .map((r) => r.recordId),
+    );
+    const records = this.records.filter((r) => ids.has(r.recordId));
+    const key = records.map((r) => r.recordId).join(',');
+    const kept = this.lists.get(templateId);
+    if (kept?.key === key) return kept.res;
+    const list = recordList(t.parsed, t.summary.ir, records, now);
+    const res: RecordListRes = {
+      type: 'recordList',
+      templateId,
+      columns: list.columns,
+      rows: list.rows.map((r, i) => ({ ...r, recordId: records[i]!.recordId })),
+      ms: Math.round(performance.now() - t0),
+    };
+    this.lists.set(templateId, { key, res });
+    return res;
   }
 
   /** Spec 09 R12.1–R12.4: the records matched to one template, exported. */
