@@ -179,12 +179,15 @@ export function reducer(s: State, a: Action): State {
     case 'restore': {
       const { place } = a;
       const t = s.templates.find((x) => x.templateId === place.openId);
+      // Spec 26 M1: from the start page (no form open), Triage and a certificate open their
+      // entry's form too; the start page is what is drawn while none is open.
       const base =
-        (place.screen === 'form' ||
-          place.screen === 'documentation' ||
-          place.screen === 'records') &&
         t &&
-        t.templateId !== s.openId
+        ((s.openId === undefined && place.openId !== undefined) ||
+          ((place.screen === 'form' ||
+            place.screen === 'documentation' ||
+            place.screen === 'records') &&
+            t.templateId !== s.openId))
           ? openState(s, t)
           : s;
       return {

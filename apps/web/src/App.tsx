@@ -149,37 +149,47 @@ export function App() {
   );
 
   /** `triage`: files were opened by the user, so two or more templates show Triage (R4.1). */
-  const applySession = useCallback((res: ResBody, what: string, triage = false) => {
-    dispatch({ type: 'busy' });
-    setReading(undefined);
-    if (res.type !== 'session') {
-      if (res.type === 'failed')
-        dispatch({ type: 'input', ignored: [], problems: [{ fileName: what, error: res.error }] });
-      return;
-    }
-    const added = res.templates.find((t) => !known.current.has(t.templateId));
-    for (const t of res.templates) known.current.add(t.templateId);
-    // Spec 13 B3: files already open add nothing; the template they are is shown again.
-    const again = [
-      ...new Set(res.duplicates.flatMap((d) => (d.templateId === undefined ? [] : [d.templateId]))),
-    ];
-    const open = added?.templateId ?? (again.length === 1 ? again[0] : undefined);
-    const screen =
-      triage && (added ? res.templates.length >= 2 : again.length >= 2)
-        ? 'triage'
-        : open !== undefined
-          ? 'form'
-          : undefined;
-    const notice = alreadyOpen(res.duplicates.map((d) => d.fileName));
-    dispatch({
-      type: 'session',
-      session: res,
-      ...(open !== undefined && { open }),
-      ...(screen && { screen }),
-      ...(notice !== undefined && { notice }),
-    });
-    return res;
-  }, []);
+  // Spec 26 M2: `bundled`: a sample the app ships; loaded again, it just opens, with no notice.
+  const applySession = useCallback(
+    (res: ResBody, what: string, triage = false, bundled = false) => {
+      dispatch({ type: 'busy' });
+      setReading(undefined);
+      if (res.type !== 'session') {
+        if (res.type === 'failed')
+          dispatch({
+            type: 'input',
+            ignored: [],
+            problems: [{ fileName: what, error: res.error }],
+          });
+        return;
+      }
+      const added = res.templates.find((t) => !known.current.has(t.templateId));
+      for (const t of res.templates) known.current.add(t.templateId);
+      // Spec 13 B3: files already open add nothing; the template they are is shown again.
+      const again = [
+        ...new Set(
+          res.duplicates.flatMap((d) => (d.templateId === undefined ? [] : [d.templateId])),
+        ),
+      ];
+      const open = added?.templateId ?? (again.length === 1 ? again[0] : undefined);
+      const screen =
+        triage && (added ? res.templates.length >= 2 : again.length >= 2)
+          ? 'triage'
+          : open !== undefined
+            ? 'form'
+            : undefined;
+      const notice = bundled ? undefined : alreadyOpen(res.duplicates.map((d) => d.fileName));
+      dispatch({
+        type: 'session',
+        session: res,
+        ...(open !== undefined && { open }),
+        ...(screen && { screen }),
+        ...(notice !== undefined && { notice }),
+      });
+      return res;
+    },
+    [],
+  );
 
   const openFiles = useCallback(
     async (files: File[]) => {
@@ -225,7 +235,7 @@ export function App() {
     async (id: string) => {
       dispatch({ type: 'busy', what: sampleName(id) });
       const [res] = await Promise.all([client.openSample(id, progress), loadPaperFonts()]);
-      applySession(res, sampleName(id));
+      applySession(res, sampleName(id), false, true);
     },
     [client, applySession, progress],
   );
@@ -234,7 +244,7 @@ export function App() {
   const openAllSamples = useCallback(async () => {
     dispatch({ type: 'busy', what: 'all samples' });
     const [res] = await Promise.all([client.openAllSamples(progress), loadPaperFonts()]);
-    applySession(res, 'the samples', true);
+    applySession(res, 'the samples', true, true);
   }, [client, applySession, progress]);
 
   // Spec 09 R12.1–R12.4: the Worker exports, reporting each record; the page saves the bytes.

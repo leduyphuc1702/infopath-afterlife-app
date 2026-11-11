@@ -91,6 +91,23 @@ export class Evaluator {
     return String(v.value);
   }
 
+  /**
+   * Spec 26 N1: the value a calculation or a "Set a field's value" action writes into the record.
+   * A number keeps at most 15 significant digits, so `0.1 + 0.2` is stored as `0.3` and a sum of
+   * prices as `1472.13`, not `1472.1299999999999`. 15 is DBL_DIG, the decimal digits a double
+   * always holds exactly, and what MSXML's number-to-string gives for such sums: read, not seen
+   * in InfoPath (no record of ours holds a sum InfoPath wrote with this noise). Inside
+   * expressions, `string()` stays as the XPath engine writes it.
+   */
+  recordString(expr: string, node: unknown): string {
+    const v = this.value(expr, node);
+    if (v.kind === 'number' && Number.isFinite(v.value))
+      return numberText(Number(v.value.toPrecision(15)));
+    if (v.kind === 'nodes') return v.nodes.length ? textOf(v.nodes[0] as RtNode) : '';
+    if (v.kind === 'number') return numberText(v.value);
+    return String(v.value);
+  }
+
   boolean(expr: string, node: unknown): boolean {
     const v = this.value(expr, node);
     if (v.kind === 'nodes') return v.nodes.length > 0;

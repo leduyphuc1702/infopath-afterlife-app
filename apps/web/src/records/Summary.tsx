@@ -236,8 +236,9 @@ export function Summary({
           <table className="afl-summary-table">
             <caption>
               {res.counted}, grouped by {res.byLabel}
-              {totalled ? `, with the total of ${res.totalLabel}` : ''}. Choose a group to list its
-              records.
+              {totalled ? `, with the total of ${res.totalLabel}` : ''}.
+              {/* Spec 26 F12: the hint goes once a group is chosen. */}
+              {pick === undefined && ' Choose a group to list its records.'}
             </caption>
             <thead>
               <tr>

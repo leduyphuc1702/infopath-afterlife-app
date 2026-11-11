@@ -102,3 +102,21 @@ test('spec 25 L2: the first place is an entry after the start page', () => {
   expect(h.entries).toHaveLength(2);
   expect(h.entries[0]).toBeNull();
 });
+
+test('spec 26 M1: Forward from the start page to Triage or a certificate shows that screen', () => {
+  const loaded = reducer(initialState, {
+    type: 'session',
+    session: session(IDS.map(tpl)),
+    open: 't1',
+    screen: 'triage',
+  });
+  const home = reducer(loaded, { type: 'home' });
+  expect(home.openId).toBeUndefined();
+  for (const place of [
+    { screen: 'triage', openId: 't1' },
+    { screen: 'certificate', openId: 't1', certificateId: 't2' },
+  ] as const) {
+    const s = reducer(home, { type: 'restore', place });
+    expect(placeOf(s)).toEqual(place);
+  }
+});

@@ -395,7 +395,7 @@ export class FillSession {
         for (const node of this.index.nodes(this.doc).get(c.targetId) ?? []) {
           let value: string;
           try {
-            value = this.evaluator.string(c.expression, node);
+            value = this.evaluator.recordString(c.expression, node);
           } catch (e) {
             if (!(e instanceof NotEvaluated)) throw e;
             this.add({ kind: 'notEvaluated', caption: c.target, note: e.message, changes: [] });

@@ -105,7 +105,7 @@ function action(
     switch (a.kind) {
       case 'assignmentAction': {
         const target = host.evaluator.nodes(a.attrs.targetField ?? '', context)[0];
-        const value = host.evaluator.string(a.attrs.expression ?? '', context);
+        const value = host.evaluator.recordString(a.attrs.expression ?? '', context);
         if (!target) return skip(`${a.attrs.targetField ?? ''} selects no field`);
         const c = host.write(target, value);
         return { changes: c ? [c] : [] };
