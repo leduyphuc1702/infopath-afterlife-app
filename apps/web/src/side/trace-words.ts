@@ -65,10 +65,19 @@ export function traceSentence(ir: FormIR, e: TraceEntry): string {
         ? `${name(e.trigger ?? '')} is no longer marked: “${e.caption}” is fixed.`
         : `${name(e.trigger ?? '')} is marked: ${e.caption}.`;
     case 'skipped': {
+      // Spec 14 B8: no XPath in the sentence; the expression is behind "Show expression".
+      const source = /^GetDOM\("([^"]+)"\)$/.exec(e.caption)?.[1];
+      if (source !== undefined)
+        return `Data connection “${source}” was not loaded. ${e.note ?? ''}`.trim();
       const m = /^(.*): (\w+)$/.exec(e.caption);
       const what = m
         ? `Rule “${m[1]}” did not ${ACTIONS[m[2]!] ?? m[2]}`
         : `${e.caption} was skipped`;
+      const query = /\(([^)]+)\)$/.exec(e.note ?? '')?.[1];
+      if (e.note?.startsWith('Not run: it uses the result of a query') && query !== undefined)
+        return `${what}: it needs the result of query “${query}”, which the viewer cannot run.`;
+      if (e.note?.endsWith(' selects no field'))
+        return `${what}: the field it sets is not in this form.`;
       return `${what}. ${e.note ?? ''}`.trim();
     }
     case 'loop':
@@ -86,4 +95,8 @@ export const tracePaths = (e: TraceEntry): string[] => [
 
 /** The expression to show on demand: a calculation's formula. */
 export const traceExpression = (e: TraceEntry): string | undefined =>
-  e.kind === 'calc' ? e.note : undefined;
+  e.kind === 'calc'
+    ? e.note
+    : e.kind === 'skipped' && e.note?.endsWith(' selects no field')
+      ? e.note.slice(0, -' selects no field'.length)
+      : undefined;

@@ -654,3 +654,36 @@ code {
   overflow-wrap: anywhere;
   font-size: 12px;
 }
+
+/* Spec 14 B7: long names and expressions wrap inside the side panel. */
+.afl-side {
+  min-width: 0;
+}
+.afl-trace-entry {
+  overflow-wrap: anywhere;
+}
+
+/* Spec 14 B3: the status line, with the Fill toolbar at its end. */
+.afl-statusbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-100, 8px);
+  margin-bottom: var(--ds-space-100, 8px);
+}
+.afl-statusbar .afl-status {
+  flex: 1 1 320px;
+  margin-bottom: 0;
+}
+.afl-fill-tools {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--ds-space-100, 8px);
+}
+.afl-position {
+  overflow: hidden;
+  max-width: 22em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

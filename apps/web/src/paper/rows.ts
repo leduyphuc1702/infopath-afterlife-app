@@ -36,9 +36,34 @@ export function upgradeRows(root: ShadowRoot, res: FilledRes): void {
     button.textContent = '⋯';
     // A table row's button sits in its last cell, so the table keeps its columns.
     const host = el.tagName === 'TR' ? ((el.lastElementChild as HTMLElement | null) ?? el) : el;
-    host.classList.add('afl-row-host');
     host.append(button);
   }
+  placeRowButtons(root);
+}
+
+/**
+ * Spec 14 B1, B2: each row button sits just right of its row, outside the table cell, and its
+ * menu below it. Both are positioned from the paper root (their containing block), so a cell
+ * with `overflow: hidden` clips neither, and the button covers nothing in the row. The button
+ * stays inside its row in the DOM, so the Tab order is the row's.
+ */
+export function placeRowButtons(root: ShadowRoot): void {
+  for (const b of root.querySelectorAll<HTMLElement>('[data-afl-row-menu]')) {
+    const item = b.closest<HTMLElement>('[data-afl-structure]');
+    const base = b.offsetParent as HTMLElement | null;
+    if (!item || !base) continue;
+    const i = item.getBoundingClientRect();
+    const o = base.getBoundingClientRect();
+    b.style.left = `${Math.round(i.right - o.left + base.scrollLeft + 2)}px`;
+    b.style.top = `${Math.round(i.top - o.top + base.scrollTop + 1)}px`;
+    const menu = b.nextElementSibling as HTMLElement | null;
+    if (menu?.classList.contains('afl-row-menu')) placeMenu(b, menu);
+  }
+}
+
+function placeMenu(button: HTMLElement, menu: HTMLElement): void {
+  menu.style.top = `${button.offsetTop + button.offsetHeight + 2}px`;
+  menu.style.left = `${button.offsetLeft + button.offsetWidth - menu.offsetWidth}px`;
 }
 
 /** After an insert or remove: focus the first control of `res.focus`'s item, once per answer. */
@@ -132,6 +157,7 @@ export function listenRows(root: ShadowRoot, send: (c: FillCommand) => void): ()
       menu.append(b);
     }
     button.after(menu);
+    placeMenu(button, menu);
     button.setAttribute('aria-expanded', 'true');
     open = { menu, button };
     (menu.firstElementChild as HTMLElement).focus();
@@ -182,14 +208,14 @@ export function listenRows(root: ShadowRoot, send: (c: FillCommand) => void): ()
 
 /** The row button and menu, drawn inside the paper; hidden in print. */
 export const ROWS_CSS = `
-.afl-root .afl-row-host { position: relative; }
-.afl-root .afl-row-button { position: absolute; top: 1px; right: 1px; min-width: 20px; height: 18px;
+.afl-root { position: relative; }
+.afl-root .afl-row-button { position: absolute; top: 0; left: 0; min-width: 20px; height: 18px;
   padding: 0 3px; border: 1px solid #a5a5a5; border-radius: 3px; background: #fff; color: #172b4d;
   font: 12px/14px sans-serif; cursor: pointer; opacity: 0.55; }
-.afl-root .afl-row-host:hover > .afl-row-button, .afl-root .afl-row-button:focus,
+.afl-root [data-afl-structure]:hover .afl-row-button, .afl-root .afl-row-button:focus,
 .afl-root .afl-row-button[aria-expanded='true'] { opacity: 1; }
 .afl-root .afl-row-button:focus { outline: 2px solid #0c66e4; outline-offset: 1px; }
-.afl-root .afl-row-menu { position: absolute; z-index: 2; top: 20px; right: 1px; display: flex;
+.afl-root .afl-row-menu { position: absolute; z-index: 2; top: 0; left: 0; display: flex;
   flex-direction: column; min-width: 120px; padding: 4px 0; border: 1px solid #a5a5a5;
   border-radius: 3px; background: #fff; box-shadow: 0 2px 6px rgb(0 0 0 / 0.2); }
 .afl-root .afl-row-menu button { padding: 4px 10px; border: 0; background: none; color: #172b4d;

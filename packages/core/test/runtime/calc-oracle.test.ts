@@ -49,11 +49,12 @@ test('calculation oracle: every stored calculated value, recomputed', async () =
   );
   // (b) in form 04 it rounded VAT with Python's round(x, 2) on a decimal subtotal, where the
   // form says XPath round(x * 100) div 100 on doubles: 62912.5 rounds up in XPath (004),
-  // 151.095 is 151.09499… in binary (010), and the double sum of the line is 371.04999… (018).
+  // and 151.095 is 151.09499… in binary (010). Record 018 agrees since spec 14 B4: the double
+  // sum of its line, 371.04999…, equals the stored 371.05 but for float noise, so it stays.
   expect(mismatches.filter((m) => !empty.includes(m)).map((m) => m.split(' (')[0])).toEqual(
     ROUNDING,
   );
-  expect(compared - mismatches.length).toBe(133);
+  expect(compared - mismatches.length).toBe(135);
 });
 
 const ROUNDING = [
@@ -61,8 +62,6 @@ const ROUNDING = [
   '04-purchase-request-004.xml /my:purchaseRequest/my:grandTotal[1]: stored 6920.37, runtime 6920.38',
   '04-purchase-request-010.xml /my:purchaseRequest/my:vatAmount[1]: stored 151.09, runtime 151.1',
   '04-purchase-request-010.xml /my:purchaseRequest/my:grandTotal[1]: stored 1662.04, runtime 1662.05',
-  '04-purchase-request-018.xml /my:purchaseRequest/my:vatAmount[1]: stored 37.11, runtime 37.1',
-  '04-purchase-request-018.xml /my:purchaseRequest/my:grandTotal[1]: stored 408.16, runtime 408.15',
 ];
 
 function same(stored: string, runtime: string): boolean {

@@ -24,7 +24,10 @@ test('form 02: Insert item appends the fragment, Total follows the new row, remo
   const r = s.removeRow(a.focus!);
   expect(r.focus).toBe(rows[rows.length - 1]);
   expect(Number(s.values(TOTAL)[0])).toBeCloseTo(total, 6);
-  expect(s.xml()).toBe(start);
+  // Spec 14 B4: the record keeps its stored "350.30" at open; the edit and the remove wrote the
+  // Total again, as 350.3. Everything else is as it was.
+  const total2 = (x: string) => x.replace(/<my:totalAmount>[^<]*</, '<my:totalAmount><');
+  expect(total2(s.xml())).toBe(total2(start));
 });
 
 test('form 02: insert above and below a row; remove gives focus to the row that took its place', async () => {

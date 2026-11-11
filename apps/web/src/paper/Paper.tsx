@@ -14,7 +14,7 @@ import {
   upgrade,
   type FocusState,
 } from './fill';
-import { focusItem, listenRows, ROWS_CSS, upgradeRows } from './rows';
+import { focusItem, listenRows, placeRowButtons, ROWS_CSS, upgradeRows } from './rows';
 import { loadPaperFonts } from '../shell/fonts';
 import { fadeIn } from './fade';
 import { hitTest, measure, toFrame, type Box } from './geometry';
@@ -71,6 +71,7 @@ export function Paper({
     cancelAnimationFrame(pending.current);
     pending.current = requestAnimationFrame(() => {
       const root = host.current?.shadowRoot;
+      if (root && fillRef.current) placeRowButtons(root);
       if (frame.current && root) setBoxes(measure(frame.current, root));
     });
   }, []);
@@ -99,9 +100,18 @@ export function Paper({
       // After undo or redo, focus goes back where it was then, unless it is on the toolbar.
       const back = f.res.restore !== undefined && !restored.has(f.res);
       if (back) restored.add(f.res);
-      const outside = document.activeElement !== el && document.activeElement !== document.body;
-      if (back && !outside) restoreFocus(root, f.res.restore);
+      // Spec 14 B6: Undo and Redo give focus back to the field the step changed, even from the
+      // toolbar, whose button may just have disabled itself.
+      if (back && f.res.restore) restoreFocus(root, f.res.restore);
       else if (!moved && focus) restoreFocus(root, focus);
+      // Spec 14 B11: focus that was in the paper stays in it, e.g. after a view button, whose
+      // view is gone: the first control of the new view.
+      if (focus && !root.activeElement)
+        root
+          .querySelector<HTMLElement>(
+            '[data-afl-edit]:not([data-afl-readonly]), [data-afl-button], [data-afl-structure="insert"]',
+          )
+          ?.focus({ preventScroll: true });
       if (scroll && frame.current) {
         [frame.current.scrollTop, frame.current.scrollLeft] = [scroll[0]!, scroll[1]!];
         if (scrollX !== scroll[2] || scrollY !== scroll[3]) window.scrollTo(scroll[2]!, scroll[3]!);

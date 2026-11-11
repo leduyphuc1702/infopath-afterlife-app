@@ -177,7 +177,8 @@ test('form 02: undo and redo by toolbar and keys; a row insert is one step, focu
   await undo.click();
   await expect(at(page, TOTAL)).toHaveText('$30.00');
   await expect(redo).toBeEnabled();
-  await expect(undo).toBeFocused();
+  // Spec 14 B6: focus goes to the field the step changed, not the toolbar.
+  expect((await active(page)).path).toBe(AMOUNT);
   await undo.click();
   await expect(at(page, TOTAL)).toHaveText('$0.00');
   await expect(undo).toBeDisabled();

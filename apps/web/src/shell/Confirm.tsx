@@ -2,7 +2,7 @@
 // filling" keeps it; focus starts on the safe choice.
 import { useCallback, useRef, useState } from 'react';
 
-interface Question {
+export interface Question {
   readonly title: string;
   readonly body: string;
   readonly yes: string;

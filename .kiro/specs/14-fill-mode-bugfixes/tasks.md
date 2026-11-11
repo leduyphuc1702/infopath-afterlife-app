@@ -1,0 +1,32 @@
+# Spec 14 tasks
+
+- [x] 1. Row button and menu outside the cell's clip
+  - Bugfix: B1, B2
+  - Done when: e2e B1 and B2 pass; spec 04's row e2e still pass.
+- [x] 2. A Fill toolbar on the status line
+  - Bugfix: B3
+  - Done when: e2e B3 passes at 1280 and 390 px.
+- [x] 3. Stored calculated values survive opening
+  - Bugfix: B4
+  - Done when: `open-calculations.test.ts` and e2e B4 pass; P3, P18 and the calculation oracle
+    pass (the oracle with the change named in design.md).
+- [x] 4. Status line for a button that ran in part
+  - Bugfix: B5
+  - Done when: e2e B5 passes.
+- [x] 5. Focus after Undo, Redo and a view button
+  - Bugfix: B6, B11
+  - Done when: e2e B6 and B11 pass; spec 04's undo e2e still passes.
+- [x] 6. Rule Trace wording and wrapping
+  - Bugfix: B7, B8
+  - Done when: e2e B7 and unit B8 pass.
+- [x] 7. "Changes" means different from the download
+  - Bugfix: B9
+  - Done when: e2e B9 passes; spec 04's leave-Fill e2e still passes.
+- [x] 8. Opening files leaves Fill first
+  - Bugfix: B10
+  - Done when: e2e B10 passes.
+- [x] 9. Focus on the form heading after the landing page
+  - Bugfix: B12
+  - Done when: e2e B12 passes; spec 13 B6 still passes.
+- [x] 10. Verification
+  - Done when: `pnpm check` and `pnpm e2e:web` green; `verification.md` written.

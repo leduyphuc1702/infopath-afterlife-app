@@ -43,7 +43,7 @@ import type {
   RenderedRes,
   ResBody,
 } from './worker/protocol';
-import { DISCARD, useConfirm } from './shell/Confirm';
+import { DISCARD, useConfirm, type Question } from './shell/Confirm';
 
 /** The latest render answer; the previous paper stays up while the next one is drawn. */
 /** `templateId`: the template it was made for; another template's render is never shown. */
@@ -59,6 +59,26 @@ interface Fill {
   readonly message?: string;
   /** Spec 04 task 11: the Rule Trace so far, the last 500 entries. */
   readonly trace: readonly TraceEntry[];
+}
+
+/**
+ * Spec 14 B5: a button whose rules were skipped in part says so in the status line, since the
+ * Rule Trace may be closed.
+ */
+function pressMessage(c: FillCommand, r: ResBody): string | undefined {
+  if (c.kind !== 'press' || r.type !== 'filled' || r.dialogs.length > 0) return undefined;
+  const skipped = r.trace.filter((e) => e.kind === 'skipped');
+  if (skipped.length === 0) return undefined;
+  const button = document
+    .querySelector('[data-afl-paper]')
+    ?.shadowRoot?.querySelector<HTMLInputElement>(`[data-afl-button="${CSS.escape(c.ctrlId)}"]`);
+  const name = button?.value ? `“${button.value}”` : 'This button';
+  const query = skipped.some(
+    (e) => e.note === 'Query connections are not available in the viewer.',
+  );
+  return query
+    ? `${name} ran only in part: query connections are not available in the viewer. Rule Trace lists what was skipped.`
+    : `${name} ran only in part: some of its actions are not available in the viewer. Rule Trace lists what was skipped.`;
 }
 
 /** Spec 04 task 12: shortcut names as the person's keyboard shows them. */
@@ -285,6 +305,8 @@ export function App() {
   const [messages, setMessages] = useState<readonly string[]>([]);
   /** Spec 04 task 11: the field the hovered or focused Rule Trace entry is about. */
   const [traced, setTraced] = useState<string>();
+  /** Spec 14 B5: what the last button press could not do, until the next command. */
+  const [pressNote, setPressNote] = useState<string>();
   const fillAnswer = useCallback((r: ResBody, message?: string) => {
     if (r.type === 'filled') {
       setFill(
@@ -311,18 +333,37 @@ export function App() {
   const fillCommand = useCallback(
     (c: FillCommand) => {
       const v = viewRef.current;
-      if (v !== undefined) void client.fill(c, v, localNow()).then((r) => fillAnswer(r));
+      if (v !== undefined)
+        void client.fill(c, v, localNow()).then((r) => {
+          setPressNote(pressMessage(c, r));
+          fillAnswer(r);
+        });
     },
     [client, fillAnswer],
   );
   /** Leaves Fill; asks first when there are changes that were not downloaded (R6.4). */
   const leaveFill = useCallback(async (): Promise<boolean> => {
     if (!fill) return true;
-    if (fill.res?.dirty && !(await ask(DISCARD))) return false;
+    // Spec 14 B10: the changes may be on another form or record than the one shown; say where.
+    if (fill.res?.dirty) {
+      let q: Question = DISCARD;
+      if (!fillOn) {
+        const name = s.templates.find((t) => t.templateId === fill.templateId)?.ir.meta.name;
+        const record =
+          fill.recordIndex === 0
+            ? 'the empty form'
+            : (recordsOf(s, fill.templateId)[fill.recordIndex - 1]?.fileName ?? 'a record');
+        q = {
+          ...DISCARD,
+          body: `You changed ${name ?? 'another form'} (${record}) and haven't downloaded the XML. Nothing is saved in the viewer, so the changes will be lost.`,
+        };
+      }
+      if (!(await ask(q))) return false;
+    }
     setFill(undefined);
     void client.fillClose();
     return true;
-  }, [fill, ask, client]);
+  }, [fill, fillOn, s, ask, client]);
   const toggleFill = useCallback(async () => {
     if (!template || !view) return;
     if (fillOn) return void leaveFill();
@@ -491,7 +532,8 @@ export function App() {
   useLayoutEffect(() => {
     const before = lastKey.current;
     lastKey.current = placeKey;
-    if (before === undefined || placeKey === undefined || before === placeKey) return;
+    // Spec 14 B12: the first screen after the landing page takes focus too.
+    if (placeKey === undefined || before === placeKey) return;
     const focus = (el: Element | null | undefined) =>
       (el as HTMLElement | null | undefined)?.focus({ preventScroll: true });
     if (s.screen === 'triage') {
@@ -549,19 +591,53 @@ export function App() {
           })}
       />
       <main className="afl-main" data-screen={template ? s.screen : 'landing'}>
-        <div aria-live="polite" className="afl-status">
-          {s.busy !== undefined
-            ? (reading ?? `Opening ${s.busy}…`)
-            : exporting
-              ? reading
-              : fillOn
-                ? [
-                    'Filling in this form. Nothing is saved until you choose Download XML.',
-                    fill.message,
-                  ]
-                    .filter(Boolean)
-                    .join(' ')
-                : s.notice}
+        <div className="afl-statusbar">
+          <div aria-live="polite" className="afl-status">
+            {s.busy !== undefined
+              ? (reading ?? `Opening ${s.busy}…`)
+              : exporting
+                ? reading
+                : fillOn
+                  ? [
+                      'Filling in this form. Nothing is saved until you choose Download XML.',
+                      fill.message,
+                      pressNote,
+                    ]
+                      .filter(Boolean)
+                      .join(' ')
+                  : s.notice}
+          </div>
+          {fillOn && s.screen === 'form' && (
+            // Spec 14 B3: the Fill actions have their own toolbar, beside the status line, so the
+            // views and records toolbar keeps to one row.
+            <div className="afl-fill-tools" role="toolbar" aria-label="Fill">
+              <button
+                type="button"
+                className="afl-button"
+                aria-label={`Undo (${MOD}+Z)`}
+                aria-keyshortcuts={`${MOD === 'Cmd' ? 'Meta' : 'Control'}+Z`}
+                title={`Undo (${MOD}+Z)`}
+                disabled={!fill.res || fill.res.undo === 0}
+                onClick={() => fillCommand({ kind: 'undo' })}
+              >
+                Undo
+              </button>
+              <button
+                type="button"
+                className="afl-button"
+                aria-label={`Redo (Shift+${MOD}+Z)`}
+                aria-keyshortcuts={`Shift+${MOD === 'Cmd' ? 'Meta' : 'Control'}+Z`}
+                title={`Redo (Shift+${MOD}+Z)`}
+                disabled={!fill.res || fill.res.redo === 0}
+                onClick={() => fillCommand({ kind: 'redo' })}
+              >
+                Redo
+              </button>
+              <button type="button" className="afl-button" onClick={() => void downloadXml()}>
+                Download XML
+              </button>
+            </div>
+          )}
         </div>
         {confirm}
         <div aria-live="polite" className="afl-hidden" data-afl-announce="">
@@ -620,39 +696,6 @@ export function App() {
                           busy={exporting}
                           onExport={(f) => void exportRecords(template.templateId, f)}
                         />
-                      )}
-                      {fillOn && (
-                        <>
-                          <button
-                            type="button"
-                            className="afl-button"
-                            aria-label={`Undo (${MOD}+Z)`}
-                            aria-keyshortcuts={`${MOD === 'Cmd' ? 'Meta' : 'Control'}+Z`}
-                            title={`Undo (${MOD}+Z)`}
-                            disabled={!fill.res || fill.res.undo === 0}
-                            onClick={() => fillCommand({ kind: 'undo' })}
-                          >
-                            Undo
-                          </button>
-                          <button
-                            type="button"
-                            className="afl-button"
-                            aria-label={`Redo (Shift+${MOD}+Z)`}
-                            aria-keyshortcuts={`Shift+${MOD === 'Cmd' ? 'Meta' : 'Control'}+Z`}
-                            title={`Redo (Shift+${MOD}+Z)`}
-                            disabled={!fill.res || fill.res.redo === 0}
-                            onClick={() => fillCommand({ kind: 'redo' })}
-                          >
-                            Redo
-                          </button>
-                          <button
-                            type="button"
-                            className="afl-button"
-                            onClick={() => void downloadXml()}
-                          >
-                            Download XML
-                          </button>
-                        </>
                       )}
                     </>
                   }

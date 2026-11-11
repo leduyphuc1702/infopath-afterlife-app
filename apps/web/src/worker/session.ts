@@ -115,7 +115,8 @@ export class Session {
         readonly template: Template;
         readonly fileName: string;
         readonly session: FillSession;
-        dirty: boolean;
+        /** Spec 14 B9: the record as last downloaded, or as opened; dirty is any difference. */
+        saved: string;
         /** Spec 04 D26: snapshots, with the view and the focus they had. */
         readonly history: History<Step>;
       }
@@ -400,7 +401,7 @@ export class Session {
       template: t,
       fileName: record?.fileName ?? `${base}-new.xml`,
       session,
-      dirty: false,
+      saved: session.xml(),
       history: new History<Step>(),
     };
     const workedOut = record
@@ -429,8 +430,9 @@ export class Session {
       const here: Step = { snap: s.snapshot(), view, focus: command.focus };
       const to = command.kind === 'undo' ? f.history.undo(here) : f.history.redo(here);
       if (!to) return this.filled(view, now, undefined, 0, t0);
+      // Spec 14 B6: both directions of a step give focus to the field that step changed.
+      here.focus = to.focus;
       const r = s.restore(to.snap);
-      f.dirty = true;
       return this.filled(
         to.view,
         now,
@@ -458,7 +460,6 @@ export class Session {
     // A row or section change is a change even when no value moved.
     const structural = command.kind !== 'edit' && command.kind !== 'press';
     if (a && (a.changes.length > 0 || structural)) {
-      f.dirty = true;
       f.history.record(before);
     }
     return this.filled(view, now, a, 0, t0);
@@ -470,7 +471,7 @@ export class Session {
     if (!f) throw new AppError('FILL_STATE', { reason: 'closed' });
     const xml = f.session.xml().replace(/^<\?xml[^>]*\?>\s*/, '');
     const bytes = new TextEncoder().encode(`<?xml version="1.0" encoding="UTF-8"?>\n${xml}`);
-    f.dirty = false;
+    f.saved = f.session.xml();
     return {
       type: 'filledXml',
       fileName: f.fileName,
@@ -523,7 +524,7 @@ export class Session {
       dialogs: a?.dialogs ?? [],
       notices: a?.notices ?? [],
       ...(a?.view !== undefined && { view: a.view }),
-      dirty: f.dirty,
+      dirty: f.session.xml() !== f.saved,
       ...(a?.focus !== undefined && { focus: a.focus }),
       ...(restore !== undefined && { restore }),
       undo: f.history.undoable,
@@ -539,7 +540,7 @@ export class Session {
 interface Step {
   readonly snap: Snapshot;
   readonly view: string;
-  readonly focus: PaperFocus | undefined;
+  focus: PaperFocus | undefined;
 }
 
 /** Spec 04 task 9: rows are named by their parent ("Expenses"), a section by itself. */

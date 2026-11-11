@@ -44,3 +44,18 @@ test('form 03 rule, form 04 skipped query, and a validation, in words', async ()
     'Rule “Query budget service” did not query a data connection. Query connections are not available in the viewer.',
   );
 });
+
+test('B8: skipped entries read without XPath', async () => {
+  const { ir, s } = await open('04-purchase-request');
+  const words = s
+    .press('CTRL900')
+    .trace.filter((e) => e.kind === 'skipped')
+    .map((e) => traceSentence(ir, e));
+  expect(words).toEqual([
+    'Data connection “BudgetService” was not loaded. Query connections are not available in the viewer.',
+    'Rule “Query budget service” did not set a field: the field it sets is not in this form.',
+    'Rule “Query budget service” did not query a data connection. Query connections are not available in the viewer.',
+    'Rule “Query budget service” did not set a field: it needs the result of query “BudgetService”, which the viewer cannot run.',
+  ]);
+  for (const w of words) expect(w).not.toMatch(/GetDOM|xdXDocument|\/dfs:/);
+});

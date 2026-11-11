@@ -83,6 +83,8 @@ export class FillSession {
   private readonly structure: Structure;
   private now: string;
   private seq = 0;
+  /** Spec 14 B4: true while the record is being opened. */
+  private opening = false;
   private pending: TraceEntry[] = [];
   private effects: RuleEffects = { dialogs: [], notices: [] };
   private lastInvalid = new Map<string, string>();
@@ -133,6 +135,15 @@ export class FillSession {
 
   /** R1.2: onLoad rule sets, then every calculation, then validation; trace kept. */
   private start(): FillAnswer {
+    this.opening = true;
+    try {
+      return this.startCommand();
+    } finally {
+      this.opening = false;
+    }
+  }
+
+  private startCommand(): FillAnswer {
     return this.command(() => {
       const root = this.doc.documentElement!;
       const changes: Change<RtNode>[] = [];
@@ -380,6 +391,12 @@ export class FillSession {
             this.add({ kind: 'notEvaluated', caption: c.target, note: e.message, changes: [] });
             continue;
           }
+          // Spec 14 B4: at open, a stored number that equals the new one at the precision it
+          // was stored with stays as stored (InfoPath recalculates on change only).
+          // Later, a number equal to the stored one but for float noise is not a change either.
+          const stored = textOf(node);
+          if (this.opening ? sameAtStoredPrecision(stored, value) : sameNumber(stored, value))
+            continue;
           const ch = this.write(node, value);
           if (ch) {
             out.push(ch);
@@ -530,6 +547,25 @@ export class FillSession {
     this.trace.push(entry);
     if (this.trace.length > TRACE_CAP) this.trace.splice(0, this.trace.length - TRACE_CAP);
   }
+}
+
+/** Spec 14 B4: "1423.94" and "1423.9399999999998"; "350.30" and "350.3". */
+export function sameAtStoredPrecision(stored: string, value: string): boolean {
+  if (stored === value) return true;
+  const NUM = /^-?\d+(\.\d+)?$/;
+  if (!NUM.test(stored.trim()) || !NUM.test(value.trim())) return false;
+  const places = stored.trim().split('.')[1]?.length ?? 0;
+  return Number(stored).toFixed(places) === Number(value).toFixed(places);
+}
+
+/** Spec 14 B4: equal numbers, allowing for float noise ("1423.94", "1423.9399999999998"). */
+export function sameNumber(stored: string, value: string): boolean {
+  if (stored === value) return true;
+  const NUM = /^-?\d+(\.\d+)?$/;
+  if (!NUM.test(stored.trim()) || !NUM.test(value.trim())) return false;
+  const a = Number(stored);
+  const b = Number(value);
+  return Math.abs(a - b) <= 1e-12 * Math.max(1, Math.abs(a), Math.abs(b));
 }
 
 /** Kahn's order over calculations; those on a cycle follow in manifest order (D9). */
