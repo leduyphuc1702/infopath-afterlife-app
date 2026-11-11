@@ -699,3 +699,26 @@ code {
   align-items: center;
   padding: var(--ds-space-075) var(--ds-space-150);
 }
+
+/* Spec 21: tasks on the landing page, and the one line where a task lands. */
+.afl-tasks {
+  margin: 0 0 var(--ds-space-250, 20px);
+  padding-left: var(--ds-space-250, 20px);
+  line-height: 24px;
+}
+.afl-tasks a {
+  /* Block, not inline-block: a wrapped line keeps its bullet beside the first line (390 px). */
+  display: block;
+  padding: var(--ds-space-025, 2px) 0;
+  color: var(--ds-link);
+}
+.afl-hint {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-100);
+  align-items: baseline;
+  margin: 0 0 var(--ds-space-150);
+  padding: var(--ds-space-100) var(--ds-space-150);
+  border-left: 3px solid var(--ds-border-information);
+  background: var(--ds-background-information);
+}

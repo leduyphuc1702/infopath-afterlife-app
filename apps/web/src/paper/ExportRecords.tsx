@@ -1,5 +1,6 @@
 // Spec 09 R12.1–R12.4: "Export records", beside the pager when the open template has records.
 // The Worker builds the file; the page only saves the finished bytes through a `blob:` URL.
+import { useEffect } from 'react';
 import type { IrView } from '@afterlife/core';
 import { useMenu } from '../shell/menu';
 import { ArchiveViews, useViewChoice } from './ArchiveMenu';
@@ -12,10 +13,15 @@ interface Props {
   /** Spec 19 A2: "Archive as web pages" is the menu's third choice, with the views to archive. */
   readonly views: readonly IrView[];
   readonly onArchive: (views: readonly string[], opener: HTMLElement | null) => void;
+  /** Spec 21: the "keep" task lands with the choices showing. */
+  readonly startOpen?: boolean;
 }
 
-export function ExportRecords({ onExport, busy, views, onArchive }: Props) {
+export function ExportRecords({ onExport, busy, views, onArchive, startOpen }: Props) {
   const { ref, close } = useMenu();
+  useEffect(() => {
+    if (startOpen && ref.current) ref.current.open = true;
+  }, [startOpen]);
   const choice = useViewChoice(views);
   const pick = (format: RecordFormat) => {
     close();

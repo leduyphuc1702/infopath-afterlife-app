@@ -17,6 +17,7 @@ import { PaperToolbar, viewCaption } from './paper/PaperToolbar';
 import { ErrorBanner } from './shell/ErrorBanner';
 import { Header } from './shell/Header';
 import { Landing } from './shell/Landing';
+import { taskOf, type Task } from './shell/tasks';
 import { Notices } from './shell/Notices';
 import { alreadyOpen, exportedNotice, notOpened, screenTitle } from './shell/announce';
 import { keyOf, placeIn, placeOf, visit } from './shell/history';
@@ -465,6 +466,85 @@ export function App() {
       }),
     });
   }, [template, view, record, s.recordIndex, fillOn, leaveFill, client, fillAnswer]);
+  // Spec 21: a task opens its sample, then puts the screen in the task's state (once the
+  // sample's template is open), then shows one line on what to try first.
+  const [pending, setPending] = useState<Task>();
+  const landed = useRef<string>(undefined);
+  const [hint, setHint] = useState<string>();
+  const [keepOpen, setKeepOpen] = useState(false);
+  const runTask = useCallback(
+    async (task: Task) => {
+      setHint(undefined);
+      setKeepOpen(false);
+      if (task.sample === 'all') await openAllSamples();
+      else await openSample(task.sample);
+      // A sample opened before says "already open"; the task's own line says enough.
+      dispatch({ type: 'notice', notice: undefined });
+      setPending(task);
+    },
+    [openSample, openAllSamples],
+  );
+  useEffect(() => {
+    const t = pending;
+    if (!t) return;
+    if (t.sample === 'all' ? s.screen !== 'triage' : !template || !view) return;
+    if ((t.id === 'read' || t.id === 'fill') && s.recordIndex !== 1)
+      return void dispatch({ type: 'record', index: 1 });
+    setPending(undefined);
+    // R4: the task's screen takes the task's own history entry, so Back goes to the landing page.
+    landed.current =
+      t.id === 'find' ? 'records' : t.id === 'document' ? 'documentation' : undefined;
+    void (async () => {
+      if (t.id === 'rules') dispatch({ type: 'xray', on: true });
+      if (t.id === 'fill') {
+        await toggleFill();
+        dispatch({ type: 'tab', tab: 'trace' });
+      }
+      if (t.id === 'find') dispatch({ type: 'screen', screen: 'records' });
+      if (t.id === 'document') dispatch({ type: 'screen', screen: 'documentation' });
+      if (t.id === 'keep') setKeepOpen(true);
+      setHint(t.hint);
+      // R3: said once, after the screen's own focus move.
+      setTimeout(() => say(t.hint), 300);
+    })();
+  }, [pending, template, view, s.screen, s.recordIndex, toggleFill, say]);
+  // R3: the line goes when the person does something else on the page.
+  useEffect(() => {
+    if (hint === undefined) return;
+    const act = (e: Event) => {
+      if ((e.target as Element | null)?.closest?.('.afl-hint')) return;
+      setHint(undefined);
+      setKeepOpen(false);
+    };
+    const kinds = ['pointerdown', 'input', 'change'] as const;
+    for (const k of kinds) document.addEventListener(k, act, true);
+    return () => {
+      for (const k of kinds) document.removeEventListener(k, act, true);
+    };
+  }, [hint]);
+  // R4, R5: a task's address. Back from it comes to the landing page, which is the entry below.
+  const startTask = useCallback(
+    (task: Task) => {
+      history.pushState(null, '', `#${task.id}`);
+      void runTask(task);
+    },
+    [runTask],
+  );
+  const taskRef = useRef(runTask);
+  taskRef.current = runTask;
+  const leaveRef = useRef(leaveFill);
+  leaveRef.current = leaveFill;
+  const started = useRef(false);
+  useEffect(() => {
+    if (started.current) return;
+    started.current = true;
+    if (location.hash === '') return;
+    const t = taskOf(location.hash);
+    // R6: an address the app does not know opens the landing page and says nothing.
+    history.replaceState(null, '', location.pathname + location.search);
+    if (t) startTask(t);
+  }, [startTask]);
+
   const downloadXml = useCallback(async () => {
     const r = await client.fillDownload();
     if (r.type !== 'filledXml') return fillAnswer(r);
@@ -654,7 +734,19 @@ export function App() {
     history.scrollRestoration = 'manual';
     const pop = (e: PopStateEvent) => {
       const p = placeIn(e.state);
-      if (!p) return;
+      if (!p) {
+        // Spec 21: an address typed in the bar opens its task; the entry with none is the
+        // landing page.
+        const t = taskOf(location.hash);
+        if (t) return void taskRef.current(t);
+        void leaveRef.current().then((ok) => {
+          if (!ok) return history.forward();
+          dispatch({ type: 'home' });
+          setHint(undefined);
+          requestAnimationFrame(() => document.getElementById('afl-tasks-h')?.focus());
+        });
+        return;
+      }
       if (screenRef.current === 'triage') triageScroll.current = scrollY;
       dispatch({ type: 'restore', place: p });
     };
@@ -662,7 +754,20 @@ export function App() {
     return () => window.removeEventListener('popstate', pop);
   }, []);
   useEffect(() => {
-    if (placeKey !== undefined) visit(history, place);
+    if (placeKey === undefined) return;
+    // Spec 21 R4: a task's screen replaces the entry its sample opened in.
+    const replace = landed.current === place.screen;
+    if (replace) landed.current = undefined;
+    visit(
+      replace
+        ? {
+            state: history.state as unknown,
+            replaceState: (d, u) => history.replaceState(d, u),
+            pushState: (d, u) => history.replaceState(d, u),
+          }
+        : history,
+      place,
+    );
     // `placeKey` says when the place changed; `place` is a new object every render.
   }, [placeKey]);
 
@@ -800,11 +905,20 @@ export function App() {
           {announcement}
         </div>
         <ErrorBanner problems={failures} />
+        {hint !== undefined && (
+          <p className="afl-hint">
+            <span>{hint}</span>
+            <button type="button" className="afl-link" onClick={() => setHint(undefined)}>
+              Close tip
+            </button>
+          </p>
+        )}
         {!template ? (
           <>
             <Landing
               onSample={(id) => void openSample(id)}
               onTriageAll={() => void openAllSamples()}
+              onTask={startTask}
             />
             <Unmatched records={unmatched(s)} ignored={s.ignored} />
           </>
@@ -930,6 +1044,7 @@ export function App() {
                           busy={exporting}
                           onExport={(f) => void exportRecords(template.templateId, f)}
                           views={template.ir.views}
+                          startOpen={keepOpen}
                           onArchive={(v, opener) => void archive(template.templateId, v, opener)}
                         />
                       )}

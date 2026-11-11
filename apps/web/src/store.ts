@@ -105,6 +105,8 @@ export type Action =
   /** Spec 17 R8: a row of the records list opened; its list becomes the walk. */
   | { readonly type: 'openListed'; readonly index: number; readonly walk: Walk }
   | { readonly type: 'xray'; readonly on: boolean }
+  /** Spec 21 R4: Back to the landing page; the session stays. */
+  | { readonly type: 'home' }
   | { readonly type: 'select'; readonly selection: Selection }
   | { readonly type: 'tab'; readonly tab: SideTab; readonly connectionId?: string };
 
@@ -230,6 +232,12 @@ export function reducer(s: State, a: Action): State {
       return { ...s, recordIndex: a.index, walk: a.walk, screen: 'form' };
     case 'xray':
       return { ...s, xray: a.on, selection: a.on ? s.selection : {} };
+    case 'home': {
+      const rest: { -readonly [K in keyof State]: State[K] } = { ...s };
+      delete rest.openId;
+      delete rest.certificateId;
+      return { ...rest, screen: 'form', xray: false, selection: {}, recordIndex: 0 };
+    }
     case 'select':
       return { ...s, selection: a.selection };
     case 'tab':
