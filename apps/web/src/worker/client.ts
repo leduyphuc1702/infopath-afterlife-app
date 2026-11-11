@@ -121,6 +121,16 @@ export class WorkerClient {
     return this.send({ type: 'exportRecords', templateId, format }, [], progress);
   }
 
+  /** Spec 15 R3: one form's dossier. */
+  documentation(templateId: string): Promise<ResBody> {
+    return this.send({ type: 'documentation', templateId }, []);
+  }
+
+  /** Spec 15 R3.3: the Markdown of several forms, with an index, as a `.zip`. */
+  documentationZip(templateIds: readonly string[]): Promise<ResBody> {
+    return this.send({ type: 'documentationZip', templateIds }, []);
+  }
+
   /** Spec 04 R1.1: open a fill session (the empty form when `recordId` is absent). */
   fillOpen(
     templateId: string,

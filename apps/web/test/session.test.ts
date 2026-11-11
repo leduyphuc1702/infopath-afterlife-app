@@ -183,3 +183,28 @@ describe('spec 04 task 5: fill through the Worker session', () => {
     await expect(s.fillOpen(id, 'nope', view, NOW)).rejects.toMatchObject({ code: 'FILL_STATE' });
   });
 });
+
+describe('spec 15: documentation through the Worker session', () => {
+  test('one dossier, and a zip with index.md and one Markdown file per form', async () => {
+    const s = new Session();
+    const res = await s.open([
+      input('02-expense-report.xsn'),
+      input('03-travel-request.xsn'),
+      input('02-expense-report-001.xml'),
+    ]);
+    const [a, b] = res.templates.map((t) => t.templateId);
+    const d = s.documentation(a!);
+    expect(d.fileName).toBe('02-expense-report-documentation.md');
+    expect(d.markdown.split('\n')[0]).toBe('# Expense Report: form documentation');
+    expect(d.dossier.about.find((x) => x.label === 'Records loaded')?.value).toBe('1');
+    const zip = await s.documentationZip([a!, b!]);
+    const entries = readZip(new Uint8Array(zip.bytes));
+    expect(entries.map((e) => e.name)).toEqual([
+      'index.md',
+      '02-expense-report-documentation.md',
+      '03-travel-request-documentation.md',
+    ]);
+    const index = new TextDecoder().decode(await entries[0]!.read());
+    expect(index).toContain('- Expense Report: `02-expense-report-documentation.md`');
+  });
+});

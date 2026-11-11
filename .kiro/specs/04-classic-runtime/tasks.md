@@ -69,7 +69,7 @@ Every task ends with the app working and `pnpm check` green. Test first where a 
   - Snapshot stack (D26), keys and toolbar buttons.
   - Requirements: R10.1
   - Done when: unit (cap, redo cleared) and e2e (type, undo, redo on form 02).
-- [ ] 13. Verification and docs
+- [x] 13. Verification and docs (README left for a later turn, as asked)
   - `verification.md`; `docs/feature-coverage.md` rows for rules, calculations, validation,
     repeating, Rule Trace; README status row and section; budgets re-read.
   - Requirements: all

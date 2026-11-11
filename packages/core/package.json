@@ -7,7 +7,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./host/vite": "./host/vite.ts",
-    "./host/carlito": "./host/carlito.ts"
+    "./host/carlito": "./host/carlito.ts",
+    "./words": "./src/dossier/words.ts"
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json && tsc -p test/tsconfig.json",

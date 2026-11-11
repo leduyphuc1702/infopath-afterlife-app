@@ -29,6 +29,7 @@ export type TitleOf =
   | undefined
   | { readonly triage: number }
   | { readonly certificate: string }
+  | { readonly documentation: string }
   | { readonly form: string };
 
 /** B7: the screen first, then the app. */
@@ -39,7 +40,9 @@ export function screenTitle(t: TitleOf): string {
       ? `Triage: ${t.triage} ${t.triage === 1 ? 'form' : 'forms'}`
       : 'certificate' in t
         ? `Death certificate: ${t.certificate}`
-        : t.form;
+        : 'documentation' in t
+          ? `Documentation: ${t.documentation}`
+          : t.form;
   return `${first} · ${APP}`;
 }
 

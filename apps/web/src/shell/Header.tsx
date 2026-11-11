@@ -14,11 +14,13 @@ interface Props {
     readonly unavailable?: string;
     readonly toggle: () => void;
   };
+  /** Spec 15 R3.1: the open form's dossier. */
+  readonly onDocumentation?: () => void;
   /** Spec 12: back to Triage, when two or more templates are open. */
   readonly onTriage?: () => void;
 }
 
-export function Header({ onFiles, onSample, xray, fill, onTriage }: Props) {
+export function Header({ onFiles, onSample, xray, fill, onTriage, onDocumentation }: Props) {
   const input = useRef<HTMLInputElement>(null);
   const menu = useMenu();
   return (
@@ -70,6 +72,11 @@ export function Header({ onFiles, onSample, xray, fill, onTriage }: Props) {
               ))}
           </ul>
         </details>
+        {onDocumentation && (
+          <button type="button" className="afl-button" onClick={onDocumentation}>
+            Documentation
+          </button>
+        )}
         {xray && (
           <button
             type="button"

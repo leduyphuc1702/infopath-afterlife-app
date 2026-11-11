@@ -1,0 +1,25 @@
+/* Spec 15 R3.2: the dossier screen, and its print. */
+.afl-doc { max-width: 60rem; padding: var(--ds-space-200, 16px) var(--ds-space-300, 24px); }
+.afl-doc-tools { display: flex; gap: var(--ds-space-100, 8px); align-items: center; }
+.afl-doc-tools .afl-link { margin-right: auto; }
+.afl-doc h3 { margin-top: var(--ds-space-400, 32px); }
+.afl-doc-about div { display: flex; gap: var(--ds-space-100, 8px); }
+.afl-doc-about dt { font-weight: 600; min-width: 9em; }
+.afl-doc-about dd { margin: 0; }
+.afl-doc-fields { border-collapse: collapse; width: 100%; }
+.afl-doc-fields th, .afl-doc-fields td {
+  border: 1px solid var(--ds-border); padding: 2px 6px; text-align: left; vertical-align: top;
+}
+.afl-doc-fields code { overflow-wrap: anywhere; }
+.afl-doc-items li { margin-bottom: var(--ds-space-100, 8px); }
+.afl-doc-expr {
+  display: block; font-size: 0.8em; color: var(--ds-text-subtle); overflow-wrap: anywhere;
+}
+@media print {
+  body:has(.afl-doc) .afl-header,
+  body:has(.afl-doc) .afl-footer,
+  body:has(.afl-doc) .afl-statusbar { display: none !important; }
+  .afl-doc { max-width: none; padding: 0; }
+  .afl-doc section + section { break-before: page; }
+  .afl-doc-fields tr { break-inside: avoid; }
+}

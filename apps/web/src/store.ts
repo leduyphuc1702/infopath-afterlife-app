@@ -47,7 +47,8 @@ export interface State {
   readonly notice?: string;
 }
 
-export type Screen = 'form' | 'triage' | 'certificate';
+/** Spec 15: `documentation` is the open template's dossier. */
+export type Screen = 'form' | 'triage' | 'certificate' | 'documentation';
 
 /** Spec 13 B2: what one history entry holds. */
 export interface Place {
@@ -163,7 +164,12 @@ export function reducer(s: State, a: Action): State {
     case 'restore': {
       const { place } = a;
       const t = s.templates.find((x) => x.templateId === place.openId);
-      const base = place.screen === 'form' && t && t.templateId !== s.openId ? openState(s, t) : s;
+      const base =
+        (place.screen === 'form' || place.screen === 'documentation') &&
+        t &&
+        t.templateId !== s.openId
+          ? openState(s, t)
+          : s;
       return {
         ...base,
         screen: place.screen,
@@ -176,8 +182,8 @@ export function reducer(s: State, a: Action): State {
           ? undefined
           : s.templates.find((x) => x.templateId === a.templateId);
       // A certificate keeps the open form; "Open form" opens the certificate's template.
-      if (a.screen === 'form' && t && t.templateId !== s.openId)
-        return { ...openState(s, t), screen: 'form' };
+      if ((a.screen === 'form' || a.screen === 'documentation') && t && t.templateId !== s.openId)
+        return { ...openState(s, t), screen: a.screen };
       return {
         ...s,
         screen: a.screen,

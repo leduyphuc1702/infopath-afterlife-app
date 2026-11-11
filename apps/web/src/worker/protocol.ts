@@ -1,6 +1,7 @@
 // Spec 09 design §4: the messages between the page and the Worker. Core types only.
 import type {
   ControlMark,
+  Dossier,
   RowMark,
   ErrorCode,
   FormIR,
@@ -46,6 +47,13 @@ export type Req =
       readonly type: 'exportRecords';
       readonly templateId: string;
       readonly format: 'xlsx' | 'csv';
+    }
+  /** Spec 15 R3: one form's dossier, or a `.zip` of the Markdown of several. */
+  | { readonly id: number; readonly type: 'documentation'; readonly templateId: string }
+  | {
+      readonly id: number;
+      readonly type: 'documentationZip';
+      readonly templateIds: readonly string[];
     }
   /** Spec 04 R1.1: a fill session for the open template's empty form or one exact record. */
   | {
@@ -196,6 +204,14 @@ export interface ExportedRes {
   readonly unread: number;
 }
 
+/** Spec 15: one form's dossier, as data for the screen and as Markdown. */
+export interface DocumentationRes {
+  readonly type: 'documentation';
+  readonly dossier: Dossier;
+  readonly markdown: string;
+  readonly fileName: string;
+}
+
 /** Spec 04: a render of the fill session's record, with what the page needs to edit it. */
 export interface FilledRes extends Omit<RenderedRes, 'type'> {
   readonly type: 'filled';
@@ -241,7 +257,15 @@ export interface FilledXmlRes {
 }
 
 export type ResBody =
-  SessionRes | RenderedRes | FailedRes | ReadyRes | CsvRes | ExportedRes | FilledRes | FilledXmlRes;
+  | SessionRes
+  | RenderedRes
+  | FailedRes
+  | ReadyRes
+  | CsvRes
+  | ExportedRes
+  | FilledRes
+  | FilledXmlRes
+  | DocumentationRes;
 
 /**
  * Spec 12 R4.4: sent with an `open` or `openSample` request's id before its answer, once per

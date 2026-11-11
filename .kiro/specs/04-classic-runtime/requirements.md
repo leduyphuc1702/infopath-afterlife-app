@@ -88,6 +88,10 @@ and the views. The measuring script was temporary.
   it once per row with that row as context.
 - **R2.4** THE SYSTEM SHALL complete one cycle (command in, render out, in the Worker) in under
   30 ms p95 on form 04, and SHALL report the time on form 08 (200 fields, render-bound; E2).
+  Measured (task 13): Node, 50 cycles: form 04 p95 5.03 ms, form 08 p95 21.18 ms. Worker, spec
+  alone, 20 commits: form 04 p95 8.30 ms, form 08 p95 20.90 ms. Worker inside the full parallel
+  `pnpm e2e:web` (spec 14 run): form 04 p95 7.70 ms, form 08 p95 72.50 ms; form 08 is over 30 ms
+  only when the machine runs 80 tests at once, and is reported, not held to the budget (E2).
 
 ### R3. Expressions
 

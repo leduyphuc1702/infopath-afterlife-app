@@ -7,10 +7,12 @@ import './triage.css';
 interface Props {
   readonly row: TriageRow;
   readonly onOpenForm: () => void;
+  /** Spec 15 R3.1. */
+  readonly onDocumentation: () => void;
   readonly onBack: () => void;
 }
 
-export function Certificate({ row, onOpenForm, onBack }: Props) {
+export function Certificate({ row, onOpenForm, onDocumentation, onBack }: Props) {
   const c = row.coverage;
   return (
     <section className="afl-certificate" aria-labelledby="afl-cert-h">
@@ -39,6 +41,9 @@ export function Certificate({ row, onOpenForm, onBack }: Props) {
         </span>
         <button type="button" className="afl-button afl-no-print" onClick={onOpenForm}>
           Open form
+        </button>
+        <button type="button" className="afl-button afl-no-print" onClick={onDocumentation}>
+          Documentation
         </button>
       </div>
       <h3 className="afl-cert-causes">Causes of death ({row.causes.length})</h3>

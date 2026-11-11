@@ -41,9 +41,12 @@ import type {
   FilledRes,
   Progress,
   RenderedRes,
+  DocumentationRes,
   ResBody,
 } from './worker/protocol';
 import { DISCARD, useConfirm, type Question } from './shell/Confirm';
+import { Documentation } from './docs/Documentation';
+import './docs/docs.css';
 
 /** The latest render answer; the previous paper stays up while the next one is drawn. */
 /** `templateId`: the template it was made for; another template's render is never shown. */
@@ -500,6 +503,33 @@ export function App() {
         ? cardForControl(template.ir, s.selection.controlId)
         : undefined);
 
+  // Spec 15: the open template's dossier, made in the Worker when its screen is shown.
+  const [doc, setDoc] = useState<{ readonly templateId: string; readonly res: DocumentationRes }>();
+  const docId = s.screen === 'documentation' ? template?.templateId : undefined;
+  useEffect(() => {
+    if (docId === undefined || doc?.templateId === docId) return;
+    void client.documentation(docId).then((res) => {
+      if (res.type === 'documentation') setDoc({ templateId: docId, res });
+      else if (res.type === 'failed')
+        dispatch({
+          type: 'input',
+          ignored: [],
+          problems: [{ fileName: 'the documentation', error: res.error }],
+        });
+    });
+  }, [docId, doc, client]);
+  const documentationZip = useCallback(async () => {
+    const ids = (s.triage?.rows ?? []).flatMap((r) => (r.kind === 'form' ? [r.templateId] : []));
+    const res = await client.documentationZip(ids);
+    if (res.type === 'exported') {
+      save(res.bytes, res.fileName, 'application/zip');
+      dispatch({
+        type: 'notice',
+        notice: `Saved ${res.fileName}: the documentation of ${res.files} ${res.files === 1 ? 'form' : 'forms'}, with an index.`,
+      });
+    }
+  }, [client, s.triage]);
+
   const certificateRow = s.triage?.rows.find(
     (r): r is TriageRow => r.kind === 'form' && r.templateId === s.certificateId,
   );
@@ -548,7 +578,9 @@ export function App() {
       focus(
         s.screen === 'certificate'
           ? document.getElementById('afl-cert-h')
-          : document.querySelector('.afl-form-name'),
+          : s.screen === 'documentation'
+            ? document.getElementById('afl-doc-h')
+            : document.querySelector('.afl-form-name'),
       );
     }
   }, [placeKey]);
@@ -562,7 +594,9 @@ export function App() {
           ? { triage: s.triage?.totals.forms ?? 0 }
           : s.screen === 'certificate' && certificateRow
             ? { certificate: certificateRow.name }
-            : { form: template.ir.meta.name },
+            : s.screen === 'documentation'
+              ? { documentation: template.ir.meta.name }
+              : { form: template.ir.meta.name },
     );
   }, [template, s.screen, s.triage, certificateRow]);
 
@@ -579,6 +613,7 @@ export function App() {
         {...(template &&
           s.screen === 'form' && {
             xray: { on: s.xray, toggle: () => dispatch({ type: 'xray', on: !s.xray }) },
+            onDocumentation: () => dispatch({ type: 'screen', screen: 'documentation' }),
             fill: {
               on: fillOn,
               toggle: () => void toggleFill(),
@@ -656,7 +691,7 @@ export function App() {
           <>
             <TriageTable
               result={s.triage}
-              actions={<ExportMenu onCsv={csv} />}
+              actions={<ExportMenu onCsv={csv} onDocumentation={() => void documentationZip()} />}
               onCertificate={(templateId) => {
                 triageScroll.current = scrollY;
                 dispatch({ type: 'screen', screen: 'certificate', templateId });
@@ -672,7 +707,30 @@ export function App() {
             onOpenForm={() =>
               dispatch({ type: 'screen', screen: 'form', templateId: certificateRow.templateId })
             }
+            onDocumentation={() =>
+              dispatch({
+                type: 'screen',
+                screen: 'documentation',
+                templateId: certificateRow.templateId,
+              })
+            }
           />
+        ) : s.screen === 'documentation' ? (
+          doc?.templateId === template.templateId ? (
+            <Documentation
+              dossier={doc.res.dossier}
+              onBack={() => history.back()}
+              onDownload={() =>
+                save(
+                  new TextEncoder().encode(doc.res.markdown).buffer,
+                  doc.res.fileName,
+                  'text/markdown;charset=utf-8',
+                )
+              }
+            />
+          ) : (
+            <p className="afl-doc">Writing the documentation…</p>
+          )
         ) : (
           <div className="afl-workspace">
             <div className="afl-work">

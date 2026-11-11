@@ -33,7 +33,9 @@ endpoint liveness built from it, and a spec 02 test proves it
 data lineage and dead-connection check; the screens themselves belong to their specs.
 `render: spec 03` means the view renderer draws it from the view XSL and a record, read-only, in
 Node and a Web Worker, and a spec 03 test proves it (`.kiro/specs/03-view-renderer/verification.md`).
-Editing, rules and live calculation are still spec 04's.
+`viewer: spec 04` means the web viewer's Fill mode does it on the page, with live rules,
+calculation and validation in a Web Worker, and a spec 04 test proves it
+(`.kiro/specs/04-classic-runtime/verification.md`).
 
 ---
 
@@ -49,7 +51,7 @@ Editing, rules and live calculation are still spec 04's.
 | Option buttons (`OptionButton`) | 104 | one of N, inline | Native (`cs`) | spec 05; ir: spec 02 (choice labels); render: spec 03 |
 | Checkbox (`CheckBox`) | 72 | boolean | Native (`cm` single choice) | spec 05; ir: spec 02 (`checkboxText` label); render: spec 03 |
 | Section (`Section`) | 59 | bordered group with title | Native (section) | spec 05; render: spec 03 |
-| Repeating table (`RepeatingTable`) | 48 | N rows of fields, aggregate rows | App (repeating) | spec 03/04; ir: spec 02 (`inRepeat`, `columnHeader` label); render: spec 03 (rows of the record, each control marked with its row position) |
+| Repeating table (`RepeatingTable`) | 48 | N rows of fields, aggregate rows | App (repeating) | spec 03/04; viewer: spec 04 (Insert item, row menu, undo); ir: spec 02 (`inRepeat`, `columnHeader` label); render: spec 03 (rows of the record, each control marked with its row position) |
 | Rich text (`RichText`) | 45 | HTML-lite with inline toolbar | Native (`rt`) | spec 05; render: spec 03 (sanitised, P5) |
 | Button (`Button`) | 42 | runs rules, switches view, submits | App (action) | spec 04; ir: spec 02 (button triggers resolve from the row) |
 | Expression box (`ExpressionBox`) | 30 | computed text, no border | App (read-only field) | spec 03; ir: spec 02 (read-only references; synthetic fixture only); render: spec 03 (the value the XSL computes; live recalculation is spec 04) |
@@ -75,7 +77,7 @@ control is the cheapest way to close this.
 | Text, number, date, time, boolean, base64 in XSD | `myschema.xsd` in all 42 samples **[format]** | Native | spec 02; parsed: spec 01; ir: spec 02 |
 | Currency / integer / decimal formatting via `xdFormatting:formatString` | 556 uses | Native (JSM field formatting) or App | spec 04; render: spec 03 (every corpus pattern, en-US) |
 | Default values, including `xdDate:Today()` and `xdDate:Now()` | 30 + 2 uses | App (value on create) | spec 04 |
-| Read-only and calculated fields | 52 `calculatedField` | App | spec 04; parsed: spec 01; ir: spec 02 |
+| Read-only and calculated fields | 52 `calculatedField` | App | spec 04; viewer: spec 04 (live, stored values kept when they agree); parsed: spec 01; ir: spec 02 |
 | Repeating fields, optional fields | 59 / 4 declarations | App | spec 02; parsed: spec 01; ir: spec 02 |
 | Promoted fields (`listProperties`) → Jira custom fields | format | Native (link by name) | spec 05 AC 9; parsed: spec 01 |
 | Field-level help text and tooltips | format | Native (description) | spec 05; ir: spec 02 (ScreenTip is label step 1) |
@@ -87,13 +89,13 @@ action (see the `containmentAction` note below the table).
 
 | Action | Count | What it does | Coverage | Status |
 |---|---|---|---|---|
-| `ruleSetAction` | 37 | run another rule set | App (rule graph) | spec 04; parsed: spec 01; ir: spec 02 (triggers) |
-| `assignmentAction` | 20 | set a field's value | App | spec 04; parsed: spec 01; ir: spec 02 |
+| `ruleSetAction` | 37 | run another rule set | App (rule graph) | spec 04; parsed: spec 01; ir: spec 02 (triggers); viewer: spec 04 (rules on change, on load and on buttons, in manifest order) |
+| `assignmentAction` | 20 | set a field's value | App | spec 04; parsed: spec 01; ir: spec 02; viewer: spec 04 |
 | `closeDocumentAction` | 16 | close the form | App (redirect to request) | spec 04; parsed: spec 01 (synthetic fixture only) |
 | `submitAction` | 12 | submit to a connection | Native (JSM submit) | spec 05; parsed: spec 01 (synthetic fixture only) |
-| `switchViewAction` | 7 | change view | App (view switcher) | spec 03; parsed: spec 01; ir: spec 02 |
-| `queryAction` | 1 | query a data connection | Manual → Automation/AQL | spec 05; parsed: spec 01; ir: spec 02 |
-| `dialogBoxExpressionAction` | 1 | modal message built from fields | App (inline notice) | spec 04; parsed: spec 01; ir: spec 02 |
+| `switchViewAction` | 7 | change view | App (view switcher) | spec 03; parsed: spec 01; ir: spec 02; viewer: spec 04 (form 05's buttons) |
+| `queryAction` | 1 | query a data connection | Manual → Automation/AQL | spec 05; parsed: spec 01; ir: spec 02; viewer: spec 04 skips it and says so in the Rule Trace and the status line |
+| `dialogBoxExpressionAction` | 1 | modal message built from fields | App (inline notice) | spec 04; parsed: spec 01; ir: spec 02; viewer: spec 04 (a modal dialog, form 04) |
 | `changeAdapterProperty`, `openNewDocumentAction`, `dialogBoxMessageAction`, `webPartConnectionAction`, `signSignatureLineAction` | 0 in corpus | defined in MS-IPFF2 2.2.1.2.114 | per action | spec 04/05 — **untested, no fixture**; parsed: spec 01 (synthetic fixture only) |
 | Conditional formatting (show/hide, colour, disable) | 38 rule sets | visual changes driven by conditions | App (live binding) | spec 03/04 |
 | Submit-only / "stop processing rules" (`xsf:exitRuleSet`) | format | short-circuits the rule chain | App | spec 04; parsed: spec 01 (synthetic fixture only) |
@@ -141,9 +143,9 @@ The 51 counted conditions are all `xsf:errorCondition` (MS-IPFF2 2.2.1.2.44).
 | `xsf:errorCondition` | 51 | Native (`rq`) + App (message text) | spec 05; parsed: spec 01; ir: spec 02 |
 | `xsf3:errorBlank` ("cannot be blank", InfoPath 2010+; MS-IPFF2 2.2.3.2.18) | 0 in corpus | Native (`rq`) | spec 05 — **untested, no fixture**; parsed: spec 01 (synthetic fixture only); ir: spec 02 (synthetic fixture only) |
 | Schema type and facet checks (length, range, pattern) | format | Native (`mnc/mxc`, `mnn/mxn`, `rgx`) | spec 05; parsed: spec 01 |
-| Custom XPath validation with author message | 51 conditions, 13 distinct messages | App (validator) | spec 04; parsed: spec 01 — 25 conditions fall back to InfoPath's English `This field is required.`, so fallback text needs translating and authored text must not be; ir: spec 02 |
+| Custom XPath validation with author message | 51 conditions, 13 distinct messages | App (validator) | spec 04; viewer: spec 04 (dashed border, message, "N fields need attention"); parsed: spec 01 — 25 conditions fall back to InfoPath's English `This field is required.`, so fallback text needs translating and authored text must not be; ir: spec 02 |
 | Submit blocked by validation | format | Native (JSM form blocks submit) | spec 05 |
-| Cross-field validation ("end after start") | format | App | spec 04 |
+| Cross-field validation ("end after start") | format | App | spec 04; viewer: spec 04 (forms 16 and 17, `validate-oracle.test.ts`) |
 
 ## F. Views and layout
 
@@ -201,7 +203,7 @@ Each line answers a defect recorded in `docs/infopath-ux.md`. None of these exis
 |---|---|---|
 | Triage table for a whole folder, with a death certificate per form | nobody knows which of their 40 forms still matters | 12; viewer: spec 12 phase A (Triage, certificates with dated sources, waves, CSV and one-page print; verified locally, not yet published, `.kiro/specs/12-triage-death-certificate/verification.md`) |
 | Coverage Report before publishing: Native / App / Manual / Unsupported per element | the original silently did less than the author thought | 05; classification: spec 12 (`packages/core/src/coverage/`, each entry citing a row of this file; spec 05 reuses it) |
-| Rule trace: which rule fired, in order, what it changed | rules were invisible | 04 |
+| Rule trace: which rule fired, in order, what it changed | rules were invisible | 04; viewer: spec 04 (Rule Trace tab, newest first, filter, outline on the paper) |
 | Validation list that names the mechanism and links cause to field | three mechanisms looked identical | 04 |
 | Always-visible view switcher | Filler had none | 03 |
 | Import and search across years of records | records were files on a share | 11 |

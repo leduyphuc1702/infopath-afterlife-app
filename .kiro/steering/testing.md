@@ -28,6 +28,7 @@ fileMatchPattern: ["**/*.test.ts", "**/test/**", "packages/core/**"]
   - P16: a session holds each distinct file once: for any list of files with repeats, opened in any order and in any number of batches, every other copy is reported as a duplicate (spec 13 B3).
   - P17: for any sequence of screen changes followed by the same number of Back steps, the app is on the screen it started from; the same number of Forward steps replays the sequence (spec 13 B2).
   - P18: calculation idempotence: for any form and record, recalculating twice with no input change changes no node (spec 04 R11.2).
+  - P19: dossier completeness: for every own form, every rule, calculation, validation and data connection in FormIR appears in the form dossier exactly once (spec 15 R2.2).
   - The next free number is P19. A spec that adds a property takes the next free number and adds its line here in the same task.
 - **Reference images:** `samples/own/screenshots/` holds 22 screenshots from InfoPath Filler 2013:
   every view of forms 01–08, empty and filled, 100% zoom, cropped to the form canvas (1007x555).

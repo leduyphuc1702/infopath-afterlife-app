@@ -4,7 +4,11 @@ import {
   AfterlifeError,
   buildFormIR,
   DEFAULT_LIMITS,
+  buildDossier,
+  dossierIndex,
+  dossierMarkdown,
   exportRecords,
+  writeZip,
   FillCommandError,
   FillSession,
   matchRecord,
@@ -28,6 +32,7 @@ import {
 } from '@afterlife/core';
 import type {
   Duplicate,
+  DocumentationRes,
   ExportedRes,
   FillCommand,
   FilledRes,
@@ -117,6 +122,11 @@ export class Session {
         readonly session: FillSession;
         /** Spec 14 B9: the record as last downloaded, or as opened; dirty is any difference. */
         saved: string;
+        /**
+         * Spec 04 task 13: the record's bytes as opened, when opening changed nothing. A download
+         * whose XML is still the opened XML gives these bytes back, final newline and all.
+         */
+        readonly original?: { readonly xml: string; readonly bytes: Uint8Array };
         /** Spec 04 D26: snapshots, with the view and the focus they had. */
         readonly history: History<Step>;
       }
@@ -188,6 +198,47 @@ export class Session {
       if (!this.seen.has(hash)) this.seen.set(hash, {});
     }
     return { ...this.summary(), duplicates, ignored };
+  }
+
+  /** Spec 15 R1–R3: one form's dossier and its Markdown. */
+  documentation(templateId: string): DocumentationRes {
+    const t = this.template(templateId);
+    const records = this.summary().records.filter(
+      (r) => r.match.kind !== 'unmatched' && r.match.templateId === templateId,
+    ).length;
+    const dossier = buildDossier(t.summary.ir, { fileName: t.summary.fileName, records });
+    return {
+      type: 'documentation',
+      dossier,
+      markdown: dossierMarkdown(dossier),
+      fileName: `${t.summary.fileName.replace(/\.xsn$/i, '')}-documentation.md`,
+    };
+  }
+
+  /** Spec 15 R3.3: one Markdown file per form and `index.md`, in a `.zip`. */
+  async documentationZip(templateIds: readonly string[]): Promise<ExportedRes> {
+    const utf8 = new TextEncoder();
+    const docs = templateIds.map((id) => this.documentation(id));
+    const bytes = await writeZip(
+      [
+        {
+          name: 'index.md',
+          bytes: utf8.encode(
+            dossierIndex(docs.map((d) => ({ name: d.dossier.name, file: d.fileName }))),
+          ),
+        },
+        ...docs.map((d) => ({ name: d.fileName, bytes: utf8.encode(d.markdown) })),
+      ],
+      { date: new Date() },
+    );
+    return {
+      type: 'exported',
+      fileName: 'form-documentation.zip',
+      bytes: bytes.buffer,
+      records: 0,
+      files: docs.length,
+      unread: 0,
+    };
   }
 
   /** Spec 09 R12.1–R12.4: the records matched to one template, exported. */
@@ -402,6 +453,10 @@ export class Session {
       fileName: record?.fileName ?? `${base}-new.xml`,
       session,
       saved: session.xml(),
+      ...(record &&
+        session.opened.changes.length === 0 && {
+          original: { xml: session.xml(), bytes: record.bytes },
+        }),
       history: new History<Step>(),
     };
     const workedOut = record
@@ -469,9 +524,14 @@ export class Session {
   fillDownload(): FilledXmlRes {
     const f = this.fillState;
     if (!f) throw new AppError('FILL_STATE', { reason: 'closed' });
-    const xml = f.session.xml().replace(/^<\?xml[^>]*\?>\s*/, '');
-    const bytes = new TextEncoder().encode(`<?xml version="1.0" encoding="UTF-8"?>\n${xml}`);
-    f.saved = f.session.xml();
+    const now = f.session.xml();
+    const bytes =
+      f.original?.xml === now
+        ? f.original.bytes.slice()
+        : new TextEncoder().encode(
+            `<?xml version="1.0" encoding="UTF-8"?>\n${now.replace(/^<\?xml[^>]*\?>\s*/, '')}`,
+          );
+    f.saved = now;
     return {
       type: 'filledXml',
       fileName: f.fileName,

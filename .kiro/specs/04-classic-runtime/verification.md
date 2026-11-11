@@ -134,3 +134,57 @@ Bundle (gzip): entry 76.3 → 78.0 KB of 100, Worker 139.7 → 142.0 KB of 160; 
 Bundle (gzip): entry 78.0 → 80.4 KB of 100, Worker 142.0 → 142.6 KB of 160; no new chunk.
 `pnpm check`: exit 0; hooks 6, core 3,792 passed (3 skipped), browser 337, web 107.
 `pnpm e2e:web`: 70 passed; R2.4 form 04 p95 6.7 ms.
+
+## Task 13: verification and docs (2026-11-11)
+
+### The untouched download (review fix)
+
+Opening a record, turning Fill on and downloading without a change now gives the opened bytes.
+The Worker keeps the record's bytes when opening changed nothing, and gives them back while the
+XML is still the opened XML (so also after an edit and its undo). Before: 0 of 348 identical
+(form 04 record 001: 1,413 bytes in, 1,412 out; the serialiser drops the final newline).
+`apps/web/test/untouched-download.test.ts`, over all 348 own records:
+
+- **301 identical.**
+- **45 differ because opening fills calculated fields stored empty** (every record of forms 10,
+  17, 18, 24, 29, 30, 31, 35 and 40, D13). The new values are real changes; the status line says
+  so ("… worked out"), and the download is then serialised: UTF-8 declaration, the record's
+  processing instructions, no final newline.
+- **2 differ because opening corrects a stored value**: form 04 records 004 and 010, VAT and
+  total, the generator's rounding (table above).
+
+### Criteria
+
+| Criterion | Proof | State |
+|---|---|---|
+| R1.1, R1.2, R1.4 | `test/runtime/cycle.test.ts` | proven |
+| R1.3, R1.5 | `apps/web/test/session.test.ts` › spec 04 task 5; `fill.spec.ts` › "another version" | proven |
+| R2.1–R2.3 | `cycle.test.ts`; `trace-words.test.ts` (form 04 chain in order) | proven |
+| R2.4 | `test/perf/fill.perf.test.ts` and `fill.spec.ts` › "R2.4"; numbers in the requirement | proven: form 04 p95 5.03 ms (Node), 8.30 ms (Worker) |
+| R3.1–R3.4 | `test/runtime/evaluate.test.ts` | proven |
+| R4.1, R4.2, R4.4 | `rules.test.ts` (6); `rules.spec.ts` (dialog, view switches) | proven |
+| R4.3 query skipped | `rules.test.ts`; `rules.spec.ts` › "Check budget" | proven |
+| R4.3 submit and close | only the message constant is tested (`rules.test.ts`): no own form binds a submit or close action to a button, and no test presses one | **open** |
+| R5.1 | `validate.test.ts` (24); `validate-oracle.test.ts` | proven |
+| R5.2 | `fill.spec.ts`: border class, `aria-invalid`, "Cannot be blank", form 10's `aria-description` | proven |
+| R5.3 | the line "N fields need attention" (`fill.spec.ts`); its next and previous buttons were only checked by hand through MCP (spec 14) | **open**: no test presses them |
+| R5.4 | Download stays enabled while invalid (`fill.spec.ts`); the count in the status line after a download has no test | **open** |
+| R6.1 | text boxes, dropdown and date text in `fill.spec.ts` | **open** for CheckBox, OptionButton, RichText and Ctrl+Enter in a multi-line box: no test edits one |
+| R6.2 | `fill.spec.ts`: Total and Receipt say why they are read-only | proven |
+| R6.3 | `fill.spec.ts` (Tab, Enter, caret); `fill-bugfixes.spec.ts` B6, B11 | proven |
+| R6.4 | `fill.spec.ts` › "leaving Fill"; `fill-bugfixes.spec.ts` B9, B10 | proven |
+| R7.1–R7.3 | `structure.test.ts` (5); `fill.spec.ts` rows and Relocation | proven |
+| R7.4 P3 | `p3.property.test.ts`, 200 runs | proven |
+| R8.1 | `session.test.ts` (declaration and PIs); `untouched-download.test.ts` (301 byte-identical) | proven |
+| R8.2, R8.3 | `fill.spec.ts` › "Download XML, drop it back" | proven |
+| R9.1 | `trace-words.test.ts`; `rules.spec.ts` › Rule Trace | proven |
+| R9.2 outline and filter | `rules.spec.ts` › Rule Trace | proven |
+| R9.2 last 500 entries | `App.tsx` keeps `slice(-500)`; no test fills more than 500 | **open** |
+| R10.1 | `history.test.ts` (cap 100, redo cleared); `rules.spec.ts` › undo and redo | proven |
+| R11.1 P7, R11.2 P18 | property tests | proven |
+| R11.3 | `calc-oracle.test.ts`: 135 of 139 match, 4 rounding cases (records 004 and 010) | proven |
+| R11.4 | `validate-oracle.test.ts`: 330 of 348 valid, 18 listed | proven |
+| R11.5 | `fill.spec.ts` (form 02 journey) | proven |
+
+`docs/feature-coverage.md` rows for rules, calculations, validation, repeating and Rule Trace
+now name what the viewer does (spec 04). The README status row is left for a later turn.

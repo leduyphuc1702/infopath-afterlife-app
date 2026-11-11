@@ -18,7 +18,9 @@ export const keyOf = (p: Place) =>
     ? `form:${p.openId ?? ''}`
     : p.screen === 'certificate'
       ? `certificate:${p.certificateId ?? ''}`
-      : 'triage';
+      : p.screen === 'documentation'
+        ? `documentation:${p.openId ?? ''}`
+        : 'triage';
 
 export function placeIn(state: unknown): Place | undefined {
   const p = (state as Record<string, unknown> | null)?.[KEY] as Place | undefined;
