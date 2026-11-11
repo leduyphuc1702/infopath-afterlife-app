@@ -13,5 +13,6 @@ Each test run on the unfixed build (`ded0897` sources) first, then on the fixed 
 | B5 | region "Records found" / paper frame: focus timed out | pass |
 | B6 | pressed toggle's text `rgb(0, 0, 0)` like the unpressed one | pass |
 | B7 | table "Fields": element not found | pass |
+| B8 (round 2, `bugfixes23-b8.spec.ts`) | scrollWidth 343 > clientWidth 308 (1280 px) and 278 (320 px) | pass at both widths |
 
 Final runs: see `docs/accessibility.md` and the turn report.

@@ -26,7 +26,7 @@ This is a record of checks, not a claim of conformance.
 | 1.4.3 Contrast (minimum) | every text node's colour against its composited background, light and dark | Passes; disabled Undo and Redo are 1.95:1 and exempt |
 | 1.4.10 Reflow | 320 px wide (as 1280 px at 400%) on every screen: page width, elements past the edge | Passes; the paper and the records table scroll in their own box. Keyboard scrolling fixed in spec 23 (B5) |
 | 1.4.11 Non-text contrast | control borders, the focus ring (3.50:1 both schemes), the summary bars | Fixed in spec 23 (B3: bars were 1.1:1 in dark) |
-| 1.4.12 Text spacing | the 1.4.12 values injected; clipped or overflowing text | Fails in one place: the position line is cut with an ellipsis (B8, not fixed: spec 19's narrow layout; the full name is in the paper's region name) |
+| 1.4.12 Text spacing | the 1.4.12 values injected; clipped or overflowing text | Passes: the position line wraps inside its 22em instead of being cut (B8, fixed in spec 23 round 2), at 1280 and 320 px, with no horizontal scroll |
 | 1.4.13 Content on hover or focus | the Wave tip | Passes (opens on its button, closes with Escape) |
 | 2.1.1 Keyboard | every control reached by Tab; menus, tabs (arrow keys), row menu, dialog | Fixed in spec 23 (B5: a read paper wider than the screen could not be scrolled) |
 | 2.1.2 No keyboard trap | Tab through the modal dialog and the menus | Passes |

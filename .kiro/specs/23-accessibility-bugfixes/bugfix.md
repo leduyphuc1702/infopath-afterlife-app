@@ -56,10 +56,14 @@ screen against WCAG 2.2 AA through the Playwright MCP server (turn 74, `docs/acc
 ## B7. The Documentation's fields table has no name
 - **Expected behaviour:** the table SHALL be named by its heading, "Fields".
 
+## Round 2 (`94ef2fc`): B8. With 1.4.12 text spacing the position line is cut
+- **Current behaviour:** WHEN the 1.4.12 text spacing is applied, THE SYSTEM cuts the position
+  line ("Record 1 of 30, 02-expense-…") with an ellipsis (`.afl-position` in `shell/app.css`:
+  `nowrap`, `overflow: hidden`, `text-overflow: ellipsis`).
+- **Expected behaviour:** the line SHALL wrap inside its 22em, with no text lost.
+- **Unchanged behaviour:** with normal spacing and a name that fits, one line as before.
+
 ## Not fixed in this round
-- **B8.** With text spacing raised (1.4.12), the position line ("Record 1 of 30, 02-expense-…")
-  is cut with an ellipsis. The cut is spec 19 R6's design for narrow screens; the full file name is
-  in the paper region's name. Fixing it means a second line in the toolbar; left for a layout spec.
 - Undo and Redo, when disabled, are 1.95:1. Disabled controls are exempt from 1.4.3.
 - "Close tip", "Back" and the table's link buttons are 20 px high; each has 24 px clear around it,
   so 2.5.8 passes by its spacing exception. Nothing to fix.

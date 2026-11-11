@@ -25,7 +25,7 @@ Built spec-first in Kiro. MIT licence.
 
 ## Quality
 
-**Bugfix specs.** 11 of the 22 specs are bugfix specs. Together they hold 100 defect sections.
+**Bugfix specs.** 11 of the 22 specs are bugfix specs. Together they hold 101 defect sections.
 Each spec's `verification.md` gives every defect's test result before and after the fix. Every
 defect was run on the unfixed code first, with the gaps the files name: spec 27's F10 had no run
 before the fix in its round, and one spec 27 reducer test is a guard that passes on both.
@@ -37,7 +37,7 @@ before the fix in its round, and one spec 27 reducer test is a guard that passes
 | 16 | 17 | the reviewer, on the dossier and Fill |
 | 19 | 16 | the reviewer, on records and the archive |
 | 22 | 14 | the reviewer's "first five minutes" run |
-| 23 | 7 | the reviewer's accessibility pass |
+| 23 | 8 | the reviewer's accessibility pass, and its round 2 (B8) |
 | 24 | 10 | the reviewer's script over the 47 own templates and axe-core, plus Kiro filling samples through the Playwright MCP server |
 | 25 | 5 | [MS-IPFF2] and the reviewer's checks of the built app |
 | 26 | 4 | the reviewer's checks, and notes left by earlier specs |
@@ -73,9 +73,10 @@ before the fix in its round, and one spec 27 reducer test is a guard that passes
 **Accessibility:** `docs/accessibility.md`, WCAG 2.2 AA criterion by criterion, with the
 reviewer's axe-core 4.14 audit.
 
-**Suites**, measured by Kiro on `cffc527` plus the uncommitted spec 28 round 2 changes: Kiro
-hook tests 6, core 3,854 passed (3 skipped), browser 337, web 124, end-to-end 174. Bundle, same
-run: page entry 91.4 of 100 KB, Worker 156.1 of 160 KB.
+**Suites**: end-to-end 176, measured by Kiro on `94ef2fc` plus the spec 23 B8 change. The
+others were measured by Kiro on `cffc527` plus the spec 28 round 2 changes (committed as
+`94ef2fc`), and were not run again for B8: Kiro hook tests 6, core 3,854 passed (3 skipped),
+browser 337, web 124. Bundle, from that run: page entry 91.4 of 100 KB, Worker 156.1 of 160 KB.
 
 ## Status
 
@@ -101,7 +102,7 @@ files that cite the spec by number, so a file that serves two specs counts for b
 | 20 Record summary | requirements | done | 17 | 5 | 11 |
 | 21 Start from a task | requirements | done | 10 | 4 | 5 |
 | 22 First five minutes bugfixes | bugfix | done | 10 | 5 | 28 |
-| 23 Accessibility bugfixes | bugfix | done | 11 | 6 | 8 |
+| 23 Accessibility bugfixes | bugfix | done | 12 | 6 | 10 |
 | 24 Fill every sample bugfixes | bugfix | done | 14 | 10 | 25 |
 | 25 Number grouping and leaving | bugfix | done | 5 | 6 | 23 |
 | 26 Leftover bugfixes | bugfix | done; task 5 open: F7 (F10 fixed in spec 27) | 4 | 4 | 11 |
