@@ -99,7 +99,8 @@ h2 {
   position: absolute;
   z-index: 10;
   right: 0;
-  min-width: 240px;
+  min-width: min(240px, calc(100vw - 16px));
+  max-width: calc(100vw - 16px);
   margin: var(--ds-space-050) 0 0;
   padding: var(--ds-space-050) 0;
   border-radius: 4px;

@@ -276,3 +276,77 @@ Traces: Added: human decision 2 (core `matchRecord`), testing.md (core logic get
 6. **Host helpers in core.** `packages/core/host/` with package exports, approved; structure.md
    updated.
 7. **Locale.** `en-US`.
+
+---
+
+# Phase B: Keep (export records, `.zip` input)
+
+Brief AC 4 and AC 10, testing.md P11; pains N4 (records trapped) and N9 (no reporting). Decisions
+from the human, 2026-11-11 (turn prompt): the export formats, the Worker, the zip writer and
+reader in core with no new dependency, and `.zip` input. Fill-in mode, Triage changes and the
+Jira call to action are not in this phase.
+
+### R12. Export records and open `.zip` files
+
+As Mai or the auditor, I want every filled-in record of a form in a spreadsheet, with its
+attachments beside it, and I want to drop the `.zip` a SharePoint library download gives me.
+
+- **R12.1** WHEN the open template has at least one matched record, THE SYSTEM SHALL show an
+  "Export records" menu after the pager, with "Excel workbook (.xlsx)" and "CSV files and
+  attachments (.zip)"; WHEN it has none, THE SYSTEM SHALL NOT show it. Oracle: e2e.
+- **R12.2** THE workbook's sheet `Records` SHALL have one row per matched record, in pager order:
+  `Record file`, `Template version` (the record's `solutionVersion`), then one column per
+  non-repeating field of the main data source, headed with its InfoPath field path. Oracle: unit.
+- **R12.3** THE SYSTEM SHALL add one sheet per repeating group (and per repeating field), one row
+  per item: `Record file`, `Row` (1-based within the record), `Parent row` when the group sits in
+  another repeating group, then its fields' paths. Oracle: unit (forms 02 and 06).
+- **R12.4** Cell values: a numeric field whose text is a decimal number SHALL be a number cell
+  with the text as written; `xsd:boolean` SHALL be the text `TRUE` or `FALSE`; rich text SHALL be
+  its plain text; dates, times and every other value SHALL be the text InfoPath wrote; `xsi:nil`
+  and missing nodes SHALL be empty. Oracle: unit, P11.
+- **R12.5** THE CSV export SHALL be a `.zip` with one CSV per sheet (`Records.csv`,
+  `<sheet>.csv`), UTF-8 with BOM, CRLF, each text cell written by core's `csvCell` (quotes and
+  the formula guard); number cells SHALL be written as their text. Oracle: unit, P11.
+- **R12.6** WHEN a base64 field holds a file attachment (the InfoPath header), THE SYSTEM SHALL
+  put the file in the `.zip` as `attachments/<record>/<field>/<file name>` and the path in the
+  cell; a picture (no header) SHALL be `picture-<n>.<ext>` by magic number, other bytes
+  `file-<n>.bin`. Each segment SHALL be made safe (no separators, `..`, control characters or
+  reserved device names; at most 100 characters); a repeated path SHALL get ` (2)`, ` (3)`. THE
+  workbook SHALL carry the same path text and an `About` sheet saying the files are in the CSV
+  export. Oracle: unit.
+- **R12.7** IF a record cannot be read, THEN THE SYSTEM SHALL keep its row with the file name
+  and version, and add a last `Read error` column with the reason. Oracle: unit.
+- **R12.8** THE export SHALL run in the Worker, which reports progress per record (as opening
+  files does) and transfers the finished bytes; the page SHALL save them through a `blob:` URL
+  and say in the status line what it wrote. No request is made. Oracle: e2e (guards).
+- **R12.9** WHEN 1,000 records of one template are exported, THE export SHALL finish in under
+  5 s in the Worker, from the click to the saved file. Measured 2026-11-11 (MacBook, Chromium,
+  form 02, 1,000 records made from its 30, 2,700 attachments): `.xlsx` 266 ms and CSV `.zip`
+  509 ms with the spec alone; 587 ms and 876 ms in the full parallel e2e run. The brief's placeholder was 30 s. Oracle: e2e (`records-export.spec.ts`).
+- **R12.10** Core's zip writer SHALL write local headers, a central directory and its end
+  record, CRC-32 and UTF-8 names, deflating each entry through `CompressionStream('deflate-raw')`
+  and storing it when that is not smaller. Oracle: P15, `unzip -t` when present.
+- **R12.11** Core's zip reader SHALL check the central directory before inflating anything
+  (entry count, declared total, input size, and `zipRatio` for entries of 1 MiB or more, all from
+  `Limits`), inflate through `DecompressionStream('deflate-raw')` never past the declared size,
+  check each CRC, refuse ZIP64, encryption, multi-disk and other methods with `UNSUPPORTED_ZIP`,
+  and raise `CORRUPT_ZIP` for bad structure or a name that could leave its folder. Oracle: unit,
+  P15.
+- **R12.12** WHEN the user drops or picks a `.zip`, THE SYSTEM SHALL open the `.xsn` and `.xml`
+  files in it (folders walked, nested zips not opened) exactly as if they had been dropped, and
+  list other entries as not opened (`<zip> › <entry>`). Oracle: unit, e2e.
+- **R12.13** Property P11 (testing.md). For any of our own forms with records and any subset of
+  its records in any order, parsing the exported CSVs SHALL give back every non-repeating field
+  value of every record, and each repeating sheet SHALL have as many rows per record as the
+  record has items. Oracle: xmldom + XPath, not core's tables. 100 runs.
+- **R12.14** Property P15 (new; P14 is taken by R11.1). For any list of entries,
+  `readZip(writeZip(x))` SHALL give the same names and bytes; for any mutated or truncated
+  archive, the reader SHALL return entries or a typed error within 1 s and never a name that is
+  absolute or has a `..` segment. 200 and 500 runs.
+
+| Brief item | Requirements |
+|---|---|
+| AC4 export records | R12.1–R12.8 |
+| AC10 budget | R12.9 |
+| Zip writer, reader, `.zip` input (human decisions) | R12.10–R12.12 |
+| P11, P15 | R12.13, R12.14 |

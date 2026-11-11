@@ -90,6 +90,23 @@ export const MESSAGES: {
     why: 'The template has no empty form to start from.',
     action: 'Drop a filled-in record of this form to see it.',
   }),
+  CORRUPT_ZIP: (_d, f) => ({
+    what: `We couldn't open ${f}.`,
+    why: 'The .zip file is damaged, or one of its file names points outside the archive.',
+    action: 'Download or zip the files again, then drop the new copy here.',
+  }),
+  UNSUPPORTED_ZIP: (d, f) => ({
+    what: `We couldn't open ${f}.`,
+    why:
+      d.feature === 'encryption'
+        ? 'The .zip file is protected with a password.'
+        : d.feature === 'zip64'
+          ? 'The .zip file is larger than 4 GB, or holds more than 65,535 files.'
+          : d.feature === 'multiDisk'
+            ? 'The .zip file is one part of an archive split across several files.'
+            : `It is compressed with a method this viewer does not read (${str(d.method)}).`,
+    action: 'Make a plain .zip of the .xsn and .xml files, or drop the files themselves.',
+  }),
   FILE_TOO_LARGE: (d, f) => ({
     what: `We didn't open ${f}.`,
     why: `It is ${size(d.observed)}; the most this viewer opens is ${size(d.max)}.`,

@@ -4,9 +4,11 @@ import {
   AfterlifeError,
   buildFormIR,
   DEFAULT_LIMITS,
+  exportRecords,
   matchRecord,
   parseXsn,
   prepareView,
+  readZip,
   recordEvidence,
   renderView,
   toCsv,
@@ -21,6 +23,7 @@ import {
 } from '@afterlife/core';
 import type {
   Duplicate,
+  ExportedRes,
   FileFailure,
   InputFile,
   Progress,
@@ -65,6 +68,23 @@ async function sha256(bytes: Uint8Array<ArrayBuffer>): Promise<string> {
   return Array.from(d, (b) => b.toString(16).padStart(2, '0')).join('');
 }
 
+const MiB = 1024 * 1024;
+/**
+ * Spec 09 R12.8: a `.zip` (a SharePoint library download) may hold many forms. Its own limits,
+ * through core's `Limits`; each entry still meets its file type's limit (`collect.ts`).
+ */
+export const ZIP_LIMITS = { inputBytes: 200 * MiB, uncompressedBytes: 500 * MiB, entries: 10_000 };
+const ENTRY_MAX = { xsn: DEFAULT_LIMITS.inputBytes, xml: DEFAULT_LIMITS.xmlBytes };
+
+interface Item {
+  readonly name: string;
+  readonly sample?: string;
+  readonly bytes: () => Promise<Uint8Array<ArrayBuffer>>;
+}
+
+const extOf = (name: string) => name.slice(name.lastIndexOf('.') + 1).toLowerCase();
+const baseOf = (name: string) => name.slice(name.lastIndexOf('/') + 1);
+
 const byName = <T extends { readonly fileName: string }>(a: T, b: T) =>
   a.fileName < b.fileName ? -1 : a.fileName > b.fileName ? 1 : 0;
 
@@ -78,13 +98,54 @@ export class Session {
 
   private last: TriageResult | undefined;
 
+  /** The files to read: `.zip` files opened (folders walked, nested zips not), in order. */
+  private items(files: readonly InputFile[], ignored: string[]): Item[] {
+    const out: Item[] = [];
+    for (const f of files) {
+      const bytes = new Uint8Array(f.bytes);
+      if (extOf(f.name) !== 'zip') {
+        out.push({
+          name: f.name,
+          bytes: () => Promise.resolve(bytes),
+          ...(f.sample !== undefined && { sample: f.sample }),
+        });
+        continue;
+      }
+      try {
+        for (const e of readZip(bytes, { limits: ZIP_LIMITS })) {
+          if (e.directory) continue;
+          const ext = extOf(e.name);
+          const name = baseOf(e.name);
+          if (ext !== 'xsn' && ext !== 'xml') ignored.push(`${f.name} › ${e.name}`);
+          else if (e.size > ENTRY_MAX[ext])
+            this.failures.push({
+              fileName: name,
+              error: { code: 'FILE_TOO_LARGE', details: { max: ENTRY_MAX[ext], observed: e.size } },
+            });
+          else out.push({ name, bytes: () => e.read() });
+        }
+      } catch (e) {
+        this.failures.push({ fileName: f.name, error: toWireError(e) });
+      }
+    }
+    return out;
+  }
+
   async open(files: readonly InputFile[], progress?: Progress): Promise<SessionRes> {
     const duplicates: Duplicate[] = [];
-    for (const [i, f] of files.entries()) {
-      progress?.({ type: 'progress', index: i + 1, total: files.length, fileName: f.name });
-      const bytes = new Uint8Array(f.bytes);
-      const ext = f.name.slice(f.name.lastIndexOf('.') + 1).toLowerCase();
+    const ignored: string[] = [];
+    const items = this.items(files, ignored);
+    for (const [i, f] of items.entries()) {
+      progress?.({ type: 'progress', index: i + 1, total: items.length, fileName: f.name });
+      const ext = extOf(f.name);
       if (ext !== 'xsn' && ext !== 'xml') continue;
+      let bytes: Uint8Array<ArrayBuffer>;
+      try {
+        bytes = await f.bytes();
+      } catch (e) {
+        this.failures.push({ fileName: f.name, error: toWireError(e) });
+        continue;
+      }
       const hash = await sha256(bytes);
       const seen = this.seen.get(hash);
       if (seen) {
@@ -102,7 +163,42 @@ export class Session {
       // A failed file is kept once too, as its failure.
       if (!this.seen.has(hash)) this.seen.set(hash, {});
     }
-    return { ...this.summary(), duplicates };
+    return { ...this.summary(), duplicates, ignored };
+  }
+
+  /** Spec 09 R12.1–R12.4: the records matched to one template, exported. */
+  async exportRecords(
+    templateId: string,
+    format: 'xlsx' | 'csv',
+    progress?: Progress,
+  ): Promise<ExportedRes> {
+    const t = this.templates.find((x) => x.summary.templateId === templateId);
+    if (!t)
+      throw new AfterlifeError('INTERNAL', {
+        path: 'session.export',
+        reason: `no template ${templateId}`,
+      });
+    const ids = new Set(
+      this.summary()
+        .records.filter((r) => r.match.kind !== 'unmatched' && r.match.templateId === templateId)
+        .map((r) => r.recordId),
+    );
+    const records = this.records.filter((r) => ids.has(r.recordId));
+    const fileName = `${t.summary.fileName.replace(/\.xsn$/i, '')}-records.${format === 'xlsx' ? 'xlsx' : 'zip'}`;
+    const out = await exportRecords(t.summary.ir, records, {
+      format,
+      date: new Date(),
+      progress: (index, total, name) =>
+        progress?.({ type: 'progress', index, total, fileName: name }),
+    });
+    return {
+      type: 'exported',
+      fileName,
+      bytes: out.bytes.buffer,
+      records: out.records,
+      files: out.files,
+      unread: out.unread.length,
+    };
   }
 
   private async addTemplate(fileName: string, bytes: Uint8Array, sample?: string): Promise<string> {
@@ -159,6 +255,7 @@ export class Session {
       records,
       failures: [...this.failures],
       duplicates: [],
+      ignored: [],
       triage: this.last,
     };
   }

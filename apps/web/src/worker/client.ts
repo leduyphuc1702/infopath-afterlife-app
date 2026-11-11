@@ -116,6 +116,11 @@ export class WorkerClient {
     return this.send({ type: 'openAllSamples' }, [], progress);
   }
 
+  /** Spec 09 R12.1: one template's records as a workbook or a zip of CSVs. */
+  exportRecords(templateId: string, format: 'xlsx' | 'csv', progress?: Progress): Promise<ResBody> {
+    return this.send({ type: 'exportRecords', templateId, format }, [], progress);
+  }
+
   /** Spec 12 R5.1: the open session's Triage as CSV text. */
   csv(): Promise<ResBody> {
     return this.send({ type: 'csv' });

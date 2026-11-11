@@ -334,3 +334,40 @@ event (init script), and a page error.
    Measured at task 3, while the design is still cheap to change; warm-up waits for `load`.
 3. **CSP in practice.** Vite chunks and the Worker must raise no violation, and
    hosts differ (open question 1). The guards run from task 1.
+
+---
+
+# Phase B design: Keep
+
+## 11. Record export
+
+| # | Decision | Why |
+|---|---|---|
+| D12 | **Core owns the tables**: `recordTables(ir, records)` in `packages/core/src/legacy/tables.ts` walks each record against the IR tree of the main data source (groups and fields by `groupId`, matched by local name and namespace); `exportRecords` (`legacy/export.ts`) turns them into a workbook or a zip of CSVs. Pure bytes in, bytes out. | Spec 11 and the Forge legacy import need the same flattening. The Worker only calls it. |
+| D13 | **Columns from the IR, not from the records.** A record of another version fills the columns it shares and leaves the rest empty. | Same header for every record; the paths are what an import keys on. |
+| D14 | **Number cells keep their text** (`{ number: '107.12' }`). In CSV a number is written as is, without the formula guard: the strict number pattern cannot hold a formula, and `-5` would otherwise become `'-5`. Every text cell goes through `csvCell`. | No digit lost; negative numbers stay numbers. |
+| D15 | **Minimal SpreadsheetML**: content types, rels, workbook, one worksheet per sheet, shared strings, a one-font stylesheet. Every cell is written, empty ones as `<c r=".."/>`; text is cut at 32,767 characters (Excel's cell limit) in the workbook only; characters XML 1.0 forbids are dropped. | Opens in Excel, LibreOffice and Numbers; the test can count cells. |
+| D16 | **Attachments reuse spec 03's `attachmentHeader`** ([MS-IPFFX] §2.1.3.1, `render/attachment.ts`), which checks signature, header fields, name and size. Signature or length missing: a picture by magic (PNG, JPEG, GIF, BMP, TIFF), else data. | One parser of the header. |
+| D17 | **Export in the Worker, statically linked.** Measured: the Worker chunk grows from 127.9 to 133.8 KB gzip (budget 160), so no lazy chunk; the export works offline after warm-up like the rest. | AC10 and offline (R8.1) with no extra chunk. |
+| D18 | **Protocol**: `exportRecords {templateId, format}` answers `exported {fileName, bytes, records, files, unread}`, with `bytes` in the transfer list; progress per record re-arms the 15 s watchdog. File name `<template>-records.xlsx` or `.zip`. | Large exports neither copy nor time out. |
+
+Sheet names: `Records`, then the group's local name (`expense`, `person`, `followUp`), made
+unique and Excel-safe. Rich text is the descendants' text with a line break after block
+elements (`p`, `div`, `br`, `li`, `tr`, headings).
+
+## 12. Zip
+
+| # | Decision | Why |
+|---|---|---|
+| D19 | **Writer** (`packages/core/src/zip/write.ts`): sizes in the local header (no data descriptor), flag bit 11 (UTF-8), version 2.0, DOS time from `date` (default 1980-01-01, deterministic). Refuses more than 65,535 entries or 4 GiB with `UNSUPPORTED_ZIP zip64`. | Enough for `.xlsx` and a zip of CSVs; byte-stable output for tests. |
+| D20 | **Reader** (`zip/read.ts`): end record found from the back (comment ≤ 64 KB), central directory read whole and checked first; `read()` per entry inflates lazily through the cabinet's `inflateBlock`, which stops at the declared size, then checks CRC-32. Names: `\` becomes `/`, `.` and empty segments dropped; absolute, drive, `..` or control characters make the archive `CORRUPT_ZIP`. Names without the UTF-8 flag are tried as UTF-8, then CP437 (Windows Explorer). | The cabinet reader's stance: limits before work, typed errors, no hang. |
+| D21 | **New `Limits.zipRatio`** (default 200), checked for entries of 1 MiB or more; new error codes `CORRUPT_ZIP {offset, reason}` and `UNSUPPORTED_ZIP {feature, method?}` with messages in `apps/web/src/messages.ts`. | Deflate reaches about 1,032:1; XML records compress 5–30:1. |
+| D22 | **`.zip` input in the Worker** with `ZIP_LIMITS` (200 MiB archive, 500 MiB total, 10,000 entries); each `.xsn` or `.xml` entry still meets its file limit before it is inflated (20 MiB, 4 MiB, else `FILE_TOO_LARGE`), then follows the same path as a dropped file (dedupe by SHA-256, matching). Other entries and nested zips come back in `SessionRes.ignored`. | A SharePoint library download is one zip of many forms. |
+
+Public API added to `@afterlife/core`: `readZip`, `writeZip`, `recordTables`, `exportRecords`,
+`sheetCsv`, `embedded`, `safeSegment`, `plainText`, `RECORD_COLUMNS`, `ATTACHMENT_NOTE` and their
+types; `Limits.zipRatio`; two error codes.
+
+Tests: `packages/core/test/zip/zip.test.ts`, `test/legacy/tables.test.ts`,
+`test/property/p11-csv-export.property.test.ts`, `test/property/p15.property.test.ts`;
+`apps/web/test/session.test.ts`; `apps/web/e2e/records-export.spec.ts`.

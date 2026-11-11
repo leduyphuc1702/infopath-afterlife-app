@@ -184,3 +184,26 @@ test('B10: files not opened are announced politely, once per drop', async ({ pag
   await pick(page, recordPaths('01-leave-request', 1));
   await expect(live).toHaveText('Records not matched: 01-leave-request-001.xml.');
 });
+
+for (const width of [390, 1280])
+  test(`B11: at ${width} px every open menu is wholly inside the viewport`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 844 });
+    const inside = async (menu: string) => {
+      await page.locator(`${menu} summary`).click();
+      const edges = async () => {
+        const b = (await page.locator(`${menu} ul`).boundingBox())!;
+        return [Math.round(b.x) >= 0, Math.round(b.x + b.width) <= width];
+      };
+      await expect.poll(edges, { message: menu }).toEqual([true, true]);
+      await page.keyboard.press('Escape');
+    };
+    // One sample: the form screen, as in the report.
+    await page.getByRole('button', { name: /^Expense report/ }).click();
+    await expect(page.locator('.afl-root')).toBeVisible();
+    await inside('.afl-header .afl-menu');
+    // Two templates: Triage's "Export plan", then the header menu beside "Triage".
+    await pick(page, [xsnPath('01-leave-request')]);
+    await expect(triage(page)).toBeVisible();
+    await inside('.afl-export');
+    await inside('.afl-header .afl-menu');
+  });

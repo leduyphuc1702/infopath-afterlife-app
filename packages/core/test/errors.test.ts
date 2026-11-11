@@ -7,6 +7,8 @@ const samples: { [C in keyof ErrorDetailsByCode]: ErrorDetailsByCode[C] } = {
   UNSUPPORTED_COMPRESSION: { method: 'LZX', folder: 0 },
   UNSUPPORTED_CAB: { feature: 'nextCabinet' },
   CORRUPT_CAB: { offset: 36, reason: 'u32 at offset 36 lies outside the 37-byte input' },
+  CORRUPT_ZIP: { offset: 0, reason: 'no end of central directory record' },
+  UNSUPPORTED_ZIP: { feature: 'method', method: 14 },
   LIMIT_EXCEEDED: { limit: 'entries', max: 2000, observed: 2001 },
   MISSING_MANIFEST: { names: 'a.xsf,b.xsf' },
   UNSAFE_XML: { file: 'manifest.xsf', line: 2, column: 1 },

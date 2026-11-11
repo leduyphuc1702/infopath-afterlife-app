@@ -21,8 +21,13 @@ fileMatchPattern: ["**/*.test.ts", "**/test/**", "packages/core/**"]
   - P9: every death-certificate cause has a non-empty evidence path and source, and the path exists in the parsed template.
   - P10: Triage output is deterministic; the same files in any order give the same rows in the same order.
   - P11: CSV export round-trip: parsing the exported CSV gives back every non-repeating field value of every record, and the flattened repeating rows add up to the original row counts.
-  - P12: a session holds each distinct file once: for any list of files with repeats, opened in any order and in any number of batches, every other copy is reported as a duplicate (spec 13 B3).
-  - P13: for any sequence of screen changes followed by the same number of Back steps, the app is on the screen it started from; the same number of Forward steps replays the sequence (spec 13 B2).
+  - P12: every manifest node is accounted for exactly once: an inserted node that is not modelled gives exactly one unknown entry whose path selects it (spec 01 R20).
+  - P13: the dependency index is complete: every field an expression reads is in that field's `readBy`, and no field that only appears inside a string literal is (spec 02 R12).
+  - P14: record matching is a function of the processing instruction and the template set; `matchRecord` never throws (spec 09 R11).
+  - P15: zip round-trip: reading what the writer wrote gives the same names and bytes; a mutated or truncated archive gives entries or a typed error within 1 s, never a name that is absolute or has a `..` segment (spec 09 R12.14).
+  - P16: a session holds each distinct file once: for any list of files with repeats, opened in any order and in any number of batches, every other copy is reported as a duplicate (spec 13 B3).
+  - P17: for any sequence of screen changes followed by the same number of Back steps, the app is on the screen it started from; the same number of Forward steps replays the sequence (spec 13 B2).
+  - The next free number is P18. A spec that adds a property takes the next free number and adds its line here in the same task.
 - **Reference images:** `samples/own/screenshots/` holds 22 screenshots from InfoPath Filler 2013:
   every view of forms 01–08, empty and filled, 100% zoom, cropped to the form canvas (1007x555).
   Forms 09–47 have none. The screenshots show the first record (`<slug>-001.xml`) filled and

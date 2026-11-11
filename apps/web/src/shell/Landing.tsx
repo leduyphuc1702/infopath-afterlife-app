@@ -23,7 +23,8 @@ export function Landing({ onSample, onTriageAll }: Props) {
       </p>
       <p className="afl-note">Nothing is uploaded. Your files never leave this computer.</p>
       <p className="afl-drop">
-        Drop .xsn templates and .xml records anywhere on this page, or a whole folder.
+        Drop .xsn templates and .xml records anywhere on this page, a whole folder, or a .zip of
+        them.
       </p>
       <div className="afl-triage-all">
         <button type="button" className="afl-button afl-primary" onClick={onTriageAll}>

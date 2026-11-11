@@ -84,3 +84,20 @@ export { prepareView } from './render/prepare';
 export type { PrepareOptions, PreparedView } from './render/prepare';
 export { renderView } from './render/render';
 export type { ControlMark, RenderInput, RenderResult } from './render/render';
+export { readZip } from './zip/read';
+export type { ReadZipOptions, ZipEntry } from './zip/read';
+export { writeZip } from './zip/write';
+export type { WriteZipOptions, ZipInput } from './zip/write';
+export { embedded, safeSegment } from './legacy/attachment';
+export type { Embedded } from './legacy/attachment';
+export { RECORD_COLUMNS, plainText, recordTables } from './legacy/tables';
+export type {
+  Cell,
+  ExtractedFile,
+  NumberCell,
+  RecordFile,
+  RecordTables,
+  Sheet,
+} from './legacy/tables';
+export { ATTACHMENT_NOTE, exportRecords, sheetCsv } from './legacy/export';
+export type { ExportFormat, ExportOptions, RecordExport } from './legacy/export';

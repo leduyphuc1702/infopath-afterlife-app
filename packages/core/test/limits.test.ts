@@ -10,7 +10,7 @@ import { catchError, catchRejection } from './helpers/catch-error';
 const MiB = 1024 * 1024;
 
 describe('defaults and overrides (R4.6)', () => {
-  test('defaults are 20 MiB, 50 MiB, 2,000 entries, 4,096 blocks, depth 256 and 4 MiB', () => {
+  test('defaults are 20 MiB, 50 MiB, 2,000 entries, 4,096 blocks, depth 256, 4 MiB and ratio 200', () => {
     expect(DEFAULT_LIMITS).toEqual({
       inputBytes: 20 * MiB,
       uncompressedBytes: 50 * MiB,
@@ -18,6 +18,8 @@ describe('defaults and overrides (R4.6)', () => {
       blocks: 4_096,
       xmlDepth: 256,
       xmlBytes: 4 * MiB,
+      // Spec 09 R12.11: the zip reader's ratio cap.
+      zipRatio: 200,
     });
     expect(Object.isFrozen(DEFAULT_LIMITS)).toBe(true);
   });

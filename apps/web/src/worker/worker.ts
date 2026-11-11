@@ -5,7 +5,7 @@ import { Session, toWireError } from './session';
 
 const scope = self as unknown as {
   onmessage: ((e: MessageEvent<Req>) => void) | null;
-  postMessage(message: Res): void;
+  postMessage(message: Res, transfer?: Transferable[]): void;
 };
 const session = new Session();
 
@@ -23,6 +23,8 @@ async function handle(req: Req): Promise<ResBody> {
       return session.open(await allSamples(), progress);
     case 'csv':
       return { type: 'csv', text: session.csv() };
+    case 'exportRecords':
+      return session.exportRecords(req.templateId, req.format, progress);
     case 'render':
       return session.render(req.templateId, req.view, req.recordId, req.now);
   }
@@ -38,6 +40,7 @@ scope.onmessage = (e) => {
     } catch (err) {
       body = { type: 'failed', error: toWireError(err) };
     }
-    scope.postMessage({ ...body, id: req.id });
+    // An export's bytes are transferred, not copied (R12.4).
+    scope.postMessage({ ...body, id: req.id }, body.type === 'exported' ? [body.bytes] : []);
   });
 };

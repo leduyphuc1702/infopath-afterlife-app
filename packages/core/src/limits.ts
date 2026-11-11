@@ -16,6 +16,11 @@ export interface Limits {
   readonly xmlDepth: number;
   /** Total XML bytes parsed across the package (D7). */
   readonly xmlBytes: number;
+  /**
+   * Spec 09 R12.6: most a `.zip` entry of 1 MiB or more may expand, as uncompressed / compressed
+   * size. Deflate tops out near 1,032; XML records compress about 5 to 30 times.
+   */
+  readonly zipRatio: number;
 }
 
 export const DEFAULT_LIMITS: Limits = Object.freeze({
@@ -25,6 +30,7 @@ export const DEFAULT_LIMITS: Limits = Object.freeze({
   blocks: 4_096,
   xmlDepth: 256,
   xmlBytes: 4 * MiB,
+  zipRatio: 200,
 });
 
 export interface ParseOptions {

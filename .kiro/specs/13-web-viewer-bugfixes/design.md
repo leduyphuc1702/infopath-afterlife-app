@@ -104,3 +104,11 @@ B4 changes where a form opens, so e2e tests that clicked Next to reach record 1,
 empty form first, are updated (`open`, `paper`, `xray`, `offline`, `keyboard`, `hostile`,
 `worker-csp`). B3 makes `triage.spec.ts` "40 templates" (five copies of forms 01–08 under other
 names) eight forms, so it takes forms 01–40 instead.
+
+## B11. Menu inside the viewport
+
+- **Root cause.** `src/shell/app.css:95`, `.afl-menu ul` is `right: 0; min-width: 240px`. When
+  B9 wrapped the header, "Try a sample" sits 229 px from the left, so its list starts at −11 px.
+- **Fix.** `useMenu()` (`src/shell/menu.ts`) on `toggle` measures the list and shifts it with
+  `translateX` to 8 px from whichever edge it crosses; the list is capped at `100vw − 16px`.
+- **Test.** e2e `bugfixes.spec.ts` "B11 …" at 390 and 1280 px, both menus.

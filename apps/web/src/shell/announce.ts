@@ -42,3 +42,27 @@ export function screenTitle(t: TitleOf): string {
         : t.form;
   return `${first} · ${APP}`;
 }
+
+/** Spec 09 R12.4: what an export wrote, for the status line. */
+export function exportedNotice(
+  r: {
+    readonly fileName: string;
+    readonly records: number;
+    readonly files: number;
+    readonly unread: number;
+  },
+  format: 'xlsx' | 'csv',
+): string {
+  const n = (k: number, one: string, many: string) => `${k} ${k === 1 ? one : many}`;
+  return [
+    `Exported ${n(r.records, 'record', 'records')} to ${r.fileName}.`,
+    r.files > 0 &&
+      (format === 'xlsx'
+        ? `${n(r.files, 'attachment or picture is', 'attachments and pictures are')} listed by path; the files themselves are in the CSV export (.zip).`
+        : `${n(r.files, 'attachment or picture is', 'attachments and pictures are')} in its attachments folder.`),
+    r.unread > 0 &&
+      `${n(r.unread, 'record', 'records')} could not be read; see the Read error column.`,
+  ]
+    .filter(Boolean)
+    .join(' ');
+}

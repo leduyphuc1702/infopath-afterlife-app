@@ -100,6 +100,17 @@ must give, and the behaviour that must keep working. Root causes and tests are i
 - **Unchanged behaviour.** The visible lists "Files not opened (n)" and "Records not matched (n)"
   are as before.
 
+## B11. An open menu runs off the left edge at 390 px
+
+Found in the review of B1–B10 (`d7f4a7b`).
+
+- **Current behaviour.** WHEN "Try a sample" is opened on the form screen at 390×844, THE SYSTEM
+  draws its list from x = −11 px (240 px wide), so the names are cut at the left edge.
+- **Expected behaviour.** WHEN any menu ("Try a sample", "Export plan") is open, at 390 px or at
+  1280 px, THE SYSTEM SHALL draw its list wholly inside the viewport.
+- **Unchanged behaviour.** At 1280 px the lists hang from their button's right edge, as before;
+  Escape and a click outside close them (B5).
+
 ## Properties
 
 - **P12 (B3).** For any list of files with repeats, opened in any order and in any number of

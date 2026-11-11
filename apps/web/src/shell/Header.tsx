@@ -31,7 +31,7 @@ export function Header({ onFiles, onSample, xray, onTriage }: Props) {
           ref={input}
           type="file"
           multiple
-          accept=".xsn,.xml"
+          accept=".xsn,.xml,.zip"
           hidden
           aria-label="Open files"
           data-afl-picker=""

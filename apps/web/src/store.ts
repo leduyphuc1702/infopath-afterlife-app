@@ -86,6 +86,8 @@ export type Action =
     }
   | { readonly type: 'open'; readonly templateId: string }
   | { readonly type: 'screen'; readonly screen: Screen; readonly templateId?: string }
+  /** Spec 09 R12.4: a note for the status line, e.g. what an export wrote. */
+  | { readonly type: 'notice'; readonly notice: string }
   /** Spec 13 B2: Back or Forward reached a history entry; show its place. */
   | { readonly type: 'restore'; readonly place: Place }
   | { readonly type: 'view'; readonly view: string }
@@ -193,6 +195,8 @@ export function reducer(s: State, a: Action): State {
         s,
         s.templates.find((t) => t.templateId === a.templateId),
       );
+    case 'notice':
+      return { ...s, notice: a.notice };
     case 'view':
       return { ...s, view: a.view };
     case 'record':

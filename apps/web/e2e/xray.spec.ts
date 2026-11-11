@@ -66,8 +66,10 @@ test('forms 01–08 fit the paper at 1280×800', async ({ page }) => {
     'Leave request v2',
     'Big form',
   ]) {
-    await page.locator('.afl-menu summary').click();
-    await page.locator('.afl-menu li button', { hasText: new RegExp(`^${name}\\d`) }).click();
+    await page.locator('.afl-header .afl-menu summary').click();
+    await page
+      .locator('.afl-header .afl-menu li button', { hasText: new RegExp(`^${name}\\d`) })
+      .click();
     await expect(page.locator('.afl-form-name')).not.toHaveText(last);
     last = (await page.locator('.afl-form-name').textContent()) ?? '';
     await expect(page.getByRole('toolbar', { name: 'Views and records' })).toBeVisible();

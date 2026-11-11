@@ -22,6 +22,7 @@ const session = (templates: TemplateSummary[], records: RecordSummary[]): Sessio
   records,
   failures: [],
   duplicates: [],
+  ignored: [],
   triage: {} as TriageResult,
 });
 

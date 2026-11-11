@@ -68,3 +68,26 @@ record.
 
 `/tmp/afl-web/`: `landing.png`, `landing-dark.png`, `notices.png`, `fade.png` (sample 05, about
 300 ms into its first render), `connections.png`, `xray.png`, `xray-dark.png`, `open.png`.
+
+## Phase B: Keep (2026-11-11)
+
+| Criterion | Oracle | Result |
+|---|---|---|
+| R12.1 menu shown only with records | e2e `records-export.spec.ts` (sample 02; form 04 alone) | pass |
+| R12.2–R12.4 sheets, keys, values | `packages/core/test/legacy/tables.test.ts` (forms 02, 06) | pass, 8 tests |
+| R12.5 CSV zip (BOM, CRLF, `csvCell`) | same file; P11 | pass |
+| R12.6 attachments, pictures, safe names, About note | same file; e2e reads `attachments/02-expense-report-003/receipt/receipt-03-1.txt` | pass |
+| R12.7 unreadable record keeps its row | same file | pass |
+| R12.8 Worker, transfer, `blob:` save, no request | e2e (guards, `requested` empty) | pass |
+| R12.9 1,000 records under 5 s | e2e, logged | `.xlsx` 266 ms, CSV 509 ms alone; 587 / 876 ms in the full run |
+| R12.10 writer | P15; `unzip -t` (zip, both exports) | pass |
+| R12.11 reader limits and refusals | `test/zip/zip.test.ts`, P15 mutation (500 runs) | pass |
+| R12.12 `.zip` input | `apps/web/test/session.test.ts` (3 tests); e2e: forms 01 and 02 in folders → Triage, 2 forms, 4 and 3 records; readme and nested zip listed | pass |
+| R12.13 P11 | `test/property/p11-csv-export.property.test.ts`, 100 runs: 47 forms, 3,721 values, 210 repeating rows | pass |
+| R12.14 P15 | `test/property/p15.property.test.ts`, 200 + 500 runs | pass |
+
+Budgets (`test/budget.test.ts`, gzip): entry 71.7 → 72.8 KB / 100, Worker 127.9 → 133.7 KB / 160;
+no new chunk. Our records: 81 attachments in 29 records of form 02, 10 pictures in 10 records of
+form 06.
+
+`pnpm check`: core 3,717 passed (3 skipped), browser 337, web 101. `pnpm e2e:web`: 56 passed.

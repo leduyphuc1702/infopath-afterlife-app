@@ -112,3 +112,47 @@ Every task from 3 on leaves `pnpm --filter web build` producing a working, shipp
 | R10.1 | 1, 9 |
 | R10.2 | 9 |
 | R11.1 | 2 |
+
+---
+
+# Phase B tasks: Keep
+
+- [x] 11. Zip writer and reader in core
+  - `src/zip/{crc32,write,read}.ts`, `Limits.zipRatio`, `CORRUPT_ZIP`, `UNSUPPORTED_ZIP`; tests
+    `test/zip/zip.test.ts` (refusals, traversal, bomb, lying sizes, `unzip -t`), P15.
+  - Requirements: R12.10, R12.11, R12.14
+  - Done when: `pnpm --filter @afterlife/core test` green.
+- [x] 12. Record tables and attachments
+  - `src/legacy/{tables,attachment}.ts`; tests on forms 02 and 06 (keys, nested parent rows,
+    rich text, receipts, picture, safe names, damaged header).
+  - Requirements: R12.2, R12.3, R12.4, R12.6, R12.7
+  - Done when: `test/legacy/tables.test.ts` green.
+- [x] 13. Workbook, CSV zip, P11
+  - `src/legacy/export.ts`; the workbook checked by unzipping with our reader and parsing each
+    part; P11 with an xmldom + XPath oracle.
+  - Requirements: R12.2, R12.5, R12.6, R12.13
+  - Done when: `test/legacy` and P11 green.
+- [x] 14. Worker: `.zip` input and the export request
+  - `session.ts` (`items`, `exportRecords`, `ZIP_LIMITS`), `protocol.ts`, `worker.ts` (transfer),
+    `client.ts`, `collect.ts` (`.zip` accepted), `messages.ts`.
+  - Requirements: R12.8, R12.12
+  - Done when: `apps/web/test/session.test.ts` green.
+- [x] 15. "Export records" on the form screen; e2e
+  - `paper/ExportRecords.tsx`, `PaperToolbar.tsx` (`actions`), `App.tsx`, `announce.ts`
+    (`exportedNotice`), Landing and "Files not opened" copy; `e2e/records-export.spec.ts`.
+  - Requirements: R12.1, R12.8, R12.9, R12.12
+  - Done when: the e2e spec green, with the 1,000-record time logged.
+- [x] 16. Verification
+  - `verification.md` phase B section; budgets re-read.
+  - Requirements: all of R12
+  - Done when: `pnpm check` and `pnpm e2e:web` green.
+
+| Requirement | Tasks |
+|---|---|
+| R12.1 | 15 |
+| R12.2, R12.3, R12.4, R12.6, R12.7 | 12, 13 |
+| R12.5, R12.13 | 13 |
+| R12.8 | 14, 15 |
+| R12.9 | 15 |
+| R12.10, R12.11, R12.14 | 11 |
+| R12.12 | 14, 15 |

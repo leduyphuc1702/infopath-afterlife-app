@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import fc from 'fast-check';
 import { describe, expect, test } from 'vitest';
 import type { InputFile } from '../src/worker/protocol';
+import { readZip, writeZip } from '@afterlife/core';
 import { Session } from '../src/worker/session';
 
 // Spec 13 B3, P12: a file whose bytes are already open is not added again, templates and
@@ -71,4 +72,64 @@ test('P12: any files with repeats, in any order and batches: each distinct file 
     ),
     { numRuns: 25 },
   );
+});
+
+describe('spec 09 R12.8: a .zip opens as if its .xsn and .xml files were dropped', () => {
+  const zipOf = async (entries: { name: string; bytes: Uint8Array }[], name = 'lib.zip') => {
+    const z = await writeZip(entries);
+    return { name, bytes: z.buffer };
+  };
+  const b = (n: Name) => new Uint8Array(FILES[n]);
+
+  test('folders walked; other entries and nested zips listed; copies inside are duplicates', async () => {
+    const s = new Session();
+    const res = await s.open([
+      await zipOf([
+        { name: 'Forms/02-expense-report.xsn', bytes: b('02-expense-report.xsn') },
+        { name: 'Claims/2025/02-expense-report-001.xml', bytes: b('02-expense-report-001.xml') },
+        { name: 'Claims/again.xml', bytes: b('02-expense-report-001.xml') },
+        { name: 'notes.txt', bytes: new Uint8Array([1]) },
+        { name: 'inner.zip', bytes: new Uint8Array([1]) },
+      ]),
+    ]);
+    expect(res.templates.map((t) => t.fileName)).toEqual(['02-expense-report.xsn']);
+    expect(res.records.map((r) => [r.fileName, r.match.kind])).toEqual([
+      ['02-expense-report-001.xml', 'exact'],
+    ]);
+    expect(res.duplicates.map((d) => d.fileName)).toEqual(['again.xml']);
+    expect(res.ignored).toEqual(['lib.zip › notes.txt', 'lib.zip › inner.zip']);
+  });
+
+  test('a damaged zip is one failure under its name; the other files still open', async () => {
+    const s = new Session();
+    const res = await s.open([
+      { name: 'broken.zip', bytes: new TextEncoder().encode('PK no').buffer },
+      input('03-travel-request.xsn'),
+    ]);
+    expect(res.templates).toHaveLength(1);
+    expect(res.failures.map((f) => [f.fileName, f.error.code])).toEqual([
+      ['broken.zip', 'CORRUPT_ZIP'],
+    ]);
+  });
+
+  test('exportRecords: the open template matched records, named after the template', async () => {
+    const s = new Session();
+    const res = await s.open([
+      input('02-expense-report.xsn'),
+      input('02-expense-report-001.xml'),
+      input('02-expense-report-002.xml'),
+    ]);
+    const steps: number[] = [];
+    const out = await s.exportRecords(res.templates[0]!.templateId, 'csv', (p) =>
+      steps.push(p.index),
+    );
+    expect([out.fileName, out.records, out.unread]).toEqual([
+      '02-expense-report-records.zip',
+      2,
+      0,
+    ]);
+    expect(steps).toEqual([1, 2]);
+    const records = readZip(new Uint8Array(out.bytes)).find((e) => e.name === 'Records.csv')!;
+    expect(new TextDecoder().decode(await records.read()).split('\r\n')).toHaveLength(4);
+  });
 });

@@ -34,3 +34,7 @@ Each task: write the regression test, run it on the unfixed code and record the 
   - Done when: the three tests pass.
 - [x] 7. Whole suite
   - Done when: `pnpm check` and `pnpm e2e:web` are green.
+- [x] 8. Menus inside the viewport
+  - Bugfix: B11
+  - Test e2e "B11" (two widths); fix `src/shell/menu.ts`, `app.css`.
+  - Done when: both B11 tests pass, with the other B tests.

@@ -22,6 +22,11 @@ tests only); "after" is the same test with the fix.
 | B8 | e2e "B8: at 390 px the Triage table scrolls…" | `tabindex`: expected "0", received null | pass |
 | B9 | e2e "B9: at 390 px no header button label wraps…" | lines per label: "Open files: 2", "Try a sample: 2", "X-ray: 2" | pass |
 | B10 | e2e "B10: files not opened are announced…" | `[data-afl-announce]`: element(s) not found | pass |
+| B11 | e2e "B11: at 390 px every open menu…" | "Try a sample": left edge expected 0, received −11 | pass (1280 px passed before and after) |
+
+The first B11 test opened two templates, whose header has a "Triage" button that moves "Try a
+sample" right; it passed on the unfixed code. It was rewritten to follow the report (one sample,
+form screen) before the fix.
 
 The first B9 test compared button heights and passed on the unfixed code (every label wrapped, so
 all heights matched). It was rewritten to count the text lines of each label before any fix.
@@ -30,3 +35,5 @@ all heights matched). It was rewritten to count the text lines of each label bef
 
 - `pnpm check`: green. Core 3,697 passed (3 skipped), browser 337, web 96 (89 + 7 new).
 - `pnpm e2e:web`: 49 passed (38 + 11 new).
+
+B11 after the fix, in the full suites of spec 09 phase B: `pnpm e2e:web` 56 passed.

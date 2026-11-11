@@ -1,4 +1,5 @@
 import type { IrView } from '@afterlife/core';
+import type { ReactNode } from 'react';
 import type { RecordSummary } from '../worker/protocol';
 
 interface Props {
@@ -9,12 +10,23 @@ interface Props {
   readonly records: readonly RecordSummary[];
   readonly index: number;
   readonly onIndex: (index: number) => void;
+  /** Spec 09 R12.1: the "Export records" menu, after the pager. */
+  readonly actions?: ReactNode;
 }
 
 export const viewCaption = (v: IrView) => v.caption ?? v.name;
 
 /** R3.1, R3.2: the view selector and the record pager (the empty form first). */
-export function PaperToolbar({ formName, views, view, onView, records, index, onIndex }: Props) {
+export function PaperToolbar({
+  formName,
+  views,
+  view,
+  onView,
+  records,
+  index,
+  onIndex,
+  actions,
+}: Props) {
   const record = index === 0 ? undefined : records[index - 1];
   const other = record?.match.kind === 'otherVersion' ? record.match.recordVersion : undefined;
   return (
@@ -53,6 +65,7 @@ export function PaperToolbar({ formName, views, view, onView, records, index, on
         Next
       </button>
       {other !== undefined && <span className="afl-badge">Made with version {other}</span>}
+      {actions}
     </div>
   );
 }

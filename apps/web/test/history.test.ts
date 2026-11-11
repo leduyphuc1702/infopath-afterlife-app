@@ -20,6 +20,7 @@ const session = (templates: TemplateSummary[]): SessionRes => ({
   records: [],
   failures: [],
   duplicates: [],
+  ignored: [],
   triage: {} as TriageResult,
 });
 

@@ -24,6 +24,13 @@ export type Req =
   | { readonly id: number; readonly type: 'openAllSamples' }
   /** Spec 12 R5.1: the session's Triage as CSV. */
   | { readonly id: number; readonly type: 'csv' }
+  /** Spec 09 R12.1: the records of one template, as a workbook or a zip of CSVs. */
+  | {
+      readonly id: number;
+      readonly type: 'exportRecords';
+      readonly templateId: string;
+      readonly format: 'xlsx' | 'csv';
+    }
   | {
       readonly id: number;
       readonly type: 'render';
@@ -76,6 +83,8 @@ export interface SessionRes {
   readonly failures: readonly FileFailure[];
   /** This request's files that were already open (B3); empty on other answers. */
   readonly duplicates: readonly Duplicate[];
+  /** Spec 09 R12.8: entries of this request's `.zip` files that are not opened, as `a.zip › b`. */
+  readonly ignored: readonly string[];
   /** Spec 12: every open template triaged, with the open records (design §6). */
   readonly triage: TriageResult;
 }
@@ -99,7 +108,18 @@ export interface CsvRes {
   readonly text: string;
 }
 
-export type ResBody = SessionRes | RenderedRes | FailedRes | ReadyRes | CsvRes;
+/** Spec 09 R12.4: the finished export; `bytes` is transferred. */
+export interface ExportedRes {
+  readonly type: 'exported';
+  readonly fileName: string;
+  readonly bytes: ArrayBuffer;
+  readonly records: number;
+  /** Attachments and pictures found (in the `.zip` export, the files themselves). */
+  readonly files: number;
+  readonly unread: number;
+}
+
+export type ResBody = SessionRes | RenderedRes | FailedRes | ReadyRes | CsvRes | ExportedRes;
 
 /**
  * Spec 12 R4.4: sent with an `open` or `openSample` request's id before its answer, once per

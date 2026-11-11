@@ -1,5 +1,5 @@
-// Spec 09 R1.1, R1.2: what the user dropped or picked. Folders are walked; `.xsn` and `.xml`
-// (any case) go to the Worker, anything else is listed as not opened. Sizes are checked before a
+// Spec 09 R1.1, R1.2: what the user dropped or picked. Folders are walked; `.xsn`, `.xml` and
+// `.zip` (any case, R12.8) go to the Worker, anything else is listed as not opened. Sizes are checked before a
 // byte is read: core's `inputBytes` (20 MiB) for a template, `xmlBytes` (4 MiB) for a record.
 import type { WireError } from '../worker/protocol';
 
@@ -8,6 +8,8 @@ const MiB = 1024 * 1024;
 export const XSN_MAX_BYTES = 20 * MiB;
 export const XML_MAX_BYTES = 4 * MiB;
 export const MAX_FILES = 1_000;
+/** Spec 09 R12.8: the session's ZIP_LIMITS.inputBytes; its entries are checked in the Worker. */
+export const ZIP_MAX_BYTES = 200 * MiB;
 
 export interface Collected {
   readonly files: readonly File[];
@@ -32,11 +34,11 @@ export function sortInput(input: readonly File[]): Collected {
   const rejected: { fileName: string; error: WireError }[] = [];
   for (const f of input) {
     const ext = extOf(f.name);
-    if (ext !== 'xsn' && ext !== 'xml') {
+    if (ext !== 'xsn' && ext !== 'xml' && ext !== 'zip') {
       ignored.push(f.name);
       continue;
     }
-    const max = ext === 'xsn' ? XSN_MAX_BYTES : XML_MAX_BYTES;
+    const max = ext === 'xsn' ? XSN_MAX_BYTES : ext === 'zip' ? ZIP_MAX_BYTES : XML_MAX_BYTES;
     if (f.size > max)
       rejected.push({
         fileName: f.name,

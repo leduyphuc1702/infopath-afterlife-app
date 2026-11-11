@@ -34,7 +34,11 @@ export function Unmatched({
             {ignored.map((f, i) => (
               <li key={`${f}-${i}`}>
                 <span>{f}</span>
-                <span className="afl-sub">Not a .xsn template or an .xml record.</span>
+                <span className="afl-sub">
+                  {/ › .*\.zip$/i.test(f)
+                    ? 'A .zip inside a .zip is not opened. Drop it on its own.'
+                    : 'Not a .xsn template, an .xml record or a .zip of them.'}
+                </span>
               </li>
             ))}
           </ul>

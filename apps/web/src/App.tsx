@@ -9,13 +9,14 @@ import {
   useState,
 } from 'react';
 import { fromDataTransfer, sortInput } from './files/collect';
+import { ExportRecords, save, type RecordFormat } from './paper/ExportRecords';
 import { Paper } from './paper/Paper';
 import { PaperToolbar, viewCaption } from './paper/PaperToolbar';
 import { ErrorBanner } from './shell/ErrorBanner';
 import { Header } from './shell/Header';
 import { Landing } from './shell/Landing';
 import { Notices } from './shell/Notices';
-import { alreadyOpen, notOpened, screenTitle } from './shell/announce';
+import { alreadyOpen, exportedNotice, notOpened, screenTitle } from './shell/announce';
 import { keyOf, placeIn, placeOf, visit } from './shell/history';
 import { loadPaperFonts, onDemandFacesFailed } from './shell/fonts';
 import { sampleName } from './shell/sample-names';
@@ -43,6 +44,7 @@ export function App() {
   const [s, dispatch] = useReducer(reducer, initialState);
   const [latestRender, setRender] = useState<Render>();
   const known = useRef(new Set<string>());
+  const seenRecords = useRef(new Set<string>());
   const latest = useRef(0);
   const faded = useRef(new Set<string>());
 
@@ -140,15 +142,21 @@ export function App() {
       });
       const [res] = await Promise.all([client.open(c.files, progress), loadPaperFonts()]);
       applySession(res, 'the files', true);
-      // Spec 13 B10: this drop's files not opened, and its records no open template made.
-      const names = new Set(c.files.map((f) => f.name));
+      // Spec 09 R12.8: entries of a .zip that are not opened join the list.
+      const inZip = res.type === 'session' ? res.ignored : [];
+      if (inZip.length > 0) dispatch({ type: 'input', ignored: inZip, problems: [] });
+      // Spec 13 B10: this drop's files not opened, and the records it added that no open template
+      // made (inside a .zip too).
       const orphans =
         res.type === 'session'
-          ? res.records.filter((r) => r.match.kind === 'unmatched' && names.has(r.fileName))
+          ? res.records.filter(
+              (r) => r.match.kind === 'unmatched' && !seenRecords.current.has(r.recordId),
+            )
           : [];
+      if (res.type === 'session') for (const r of res.records) seenRecords.current.add(r.recordId);
       say(
         notOpened(
-          c.ignored,
+          [...c.ignored, ...inZip],
           orphans.map((r) => r.fileName),
         ),
       );
@@ -171,6 +179,35 @@ export function App() {
     const [res] = await Promise.all([client.openAllSamples(progress), loadPaperFonts()]);
     applySession(res, 'the samples', true);
   }, [client, applySession, progress]);
+
+  // Spec 09 R12.1–R12.4: the Worker exports, reporting each record; the page saves the bytes.
+  const [exporting, setExporting] = useState(false);
+  const exportRecords = useCallback(
+    async (templateId: string, format: RecordFormat) => {
+      setExporting(true);
+      const res = await client.exportRecords(templateId, format, (p) =>
+        setReading(`Exporting record ${p.index} of ${p.total}: ${p.fileName}`),
+      );
+      setExporting(false);
+      setReading(undefined);
+      if (res.type === 'exported') {
+        save(
+          res.bytes,
+          res.fileName,
+          format === 'xlsx'
+            ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            : 'application/zip',
+        );
+        dispatch({ type: 'notice', notice: exportedNotice(res, format) });
+      } else if (res.type === 'failed')
+        dispatch({
+          type: 'input',
+          ignored: [],
+          problems: [{ fileName: 'the export', error: res.error }],
+        });
+    },
+    [client],
+  );
 
   const csv = useCallback(async () => {
     const r = await client.csv();
@@ -360,7 +397,11 @@ export function App() {
       />
       <main className="afl-main" data-screen={template ? s.screen : 'landing'}>
         <div aria-live="polite" className="afl-status">
-          {s.busy !== undefined ? (reading ?? `Opening ${s.busy}…`) : s.notice}
+          {s.busy !== undefined
+            ? (reading ?? `Opening ${s.busy}…`)
+            : exporting
+              ? reading
+              : s.notice}
         </div>
         <div aria-live="polite" className="afl-hidden" data-afl-announce="">
           {announcement}
@@ -407,6 +448,14 @@ export function App() {
                   records={records}
                   index={s.recordIndex}
                   onIndex={(i) => dispatch({ type: 'record', index: i })}
+                  {...(records.length > 0 && {
+                    actions: (
+                      <ExportRecords
+                        busy={exporting}
+                        onExport={(f) => void exportRecords(template.templateId, f)}
+                      />
+                    ),
+                  })}
                 />
               )}
               {render?.type === 'failed' && (

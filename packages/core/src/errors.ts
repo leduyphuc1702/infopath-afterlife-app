@@ -37,6 +37,10 @@ export interface ErrorDetailsByCode {
   VIEW_NOT_RENDERABLE: { view: string; reason: 'unknown' | 'missing' | 'unparsed' };
   /** Spec 03 R1.4: an input that is not what `renderView` accepts. */
   INVALID_RENDER_INPUT: { field: 'now' | 'locale' | 'record'; value: string };
+  /** Spec 09 R12: a `.zip` whose structure does not add up; `offset` is where it broke. */
+  CORRUPT_ZIP: { offset: number; reason: string };
+  /** Spec 09 R12.6: a `.zip` feature the reader refuses; `method` for a compression method. */
+  UNSUPPORTED_ZIP: { feature: 'zip64' | 'encryption' | 'multiDisk' | 'method'; method?: number };
 }
 
 export type ErrorCode = keyof ErrorDetailsByCode;
@@ -55,6 +59,8 @@ export const ERROR_CODES: readonly ErrorCode[] = [
   'RENDER_FAILED',
   'VIEW_NOT_RENDERABLE',
   'INVALID_RENDER_INPUT',
+  'CORRUPT_ZIP',
+  'UNSUPPORTED_ZIP',
 ];
 
 export class AfterlifeError<C extends ErrorCode = ErrorCode> extends Error {
@@ -99,6 +105,9 @@ const MESSAGES: { [C in ErrorCode]: (d: ErrorDetailsByCode[C]) => string } = {
       d.reason
     ],
   INVALID_RENDER_INPUT: (d) => `Render input ${d.field} is not valid: ${ascii(d.value)}`,
+  CORRUPT_ZIP: (d) => `Corrupt zip at offset ${d.offset}: ${ascii(d.reason)}`,
+  UNSUPPORTED_ZIP: (d) =>
+    `Zip feature not supported: ${d.feature}` + (d.method === undefined ? '' : ` ${d.method}`),
 };
 
 /** Messages are printable ASCII; engine text may quote the view, so other characters become '?'. */
