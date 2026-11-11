@@ -65,6 +65,12 @@ export interface FillAnswer {
   readonly focus?: string;
 }
 
+/** D26: one undo step's state. */
+export interface Snapshot {
+  readonly main: string;
+  readonly secondary: readonly (readonly [string, string])[];
+}
+
 export class FillSession {
   private readonly doc: RtNode;
   private readonly index: FieldIndex;
@@ -270,6 +276,40 @@ export class FillSession {
     return serialiseXml(this.doc as unknown as DomDocument);
   }
 
+  /** D26: the main record and every loaded secondary source, as text. */
+  snapshot(): Snapshot {
+    const secondary: [string, string][] = [];
+    for (const [name, d] of this.secondary)
+      if ((d as RtNode | undefined)?.documentElement)
+        secondary.push([name, serialiseXml(d as DomDocument)]);
+    return { main: this.xml(), secondary };
+  }
+
+  /**
+   * D26: puts a snapshot back in place (the same document objects, new root elements), then
+   * validates again. No rule or calculation runs.
+   */
+  restore(s: Snapshot): FillAnswer {
+    const ctx = xmlContext(resolveLimits());
+    const put = (into: RtNode, text: string, name: string) => {
+      const from = parseXmlDom(new TextEncoder().encode(text), name, ctx).doc as unknown as RtNode;
+      const d = into as RtNode & {
+        importNode(n: RtNode, deep: boolean): RtNode;
+        replaceChild(a: RtNode, b: RtNode): void;
+      };
+      d.replaceChild(d.importNode(from.documentElement!, true), into.documentElement!);
+    };
+    put(this.doc, s.main, 'record.xml');
+    for (const [name, text] of s.secondary) {
+      const d = this.secondary.get(name) as RtNode | undefined;
+      if (d?.documentElement) put(d, text, name);
+    }
+    this.pending = [];
+    const invalid = this.validateNow(false);
+    this.lastInvalid = new Map(invalid.map((i) => [i.path, i.short]));
+    return { changes: [], trace: [], invalid, dialogs: [], notices: [], passes: 0 };
+  }
+
   // --- the cycle -----------------------------------------------------------------------------
 
   private command(seedOf: () => Change<RtNode>[]): FillAnswer {
@@ -325,9 +365,12 @@ export class FillSession {
     return ordered.map((c) => ({
       id: c.id,
       reads: reads.get(c.id) ?? new Set(),
-      run: () => {
+      run: (dirty: Dirty<RtNode>) => {
         if (!c.targetId) return [];
         const out: Change<RtNode>[] = [];
+        // Spec 04 task 11: the first changed input this calculation reads, for "because …".
+        const cause = [...(reads.get(c.id) ?? [])].map((id) => dirty.get(id)?.[0]).find(Boolean);
+        const trigger = cause && this.pathOf(cause);
         for (const node of this.index.nodes(this.doc).get(c.targetId) ?? []) {
           let value: string;
           try {
@@ -342,6 +385,7 @@ export class FillSession {
             out.push(ch);
             this.add({
               kind: 'calc',
+              trigger,
               caption: this.pathOf(node),
               note: c.expression,
               changes: [{ path: ch.path, before: ch.before, after: ch.after }],

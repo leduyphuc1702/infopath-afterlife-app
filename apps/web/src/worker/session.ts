@@ -20,6 +20,8 @@ import {
   type ParsedTemplate,
   type PreparedView,
   type RowMark,
+  type Snapshot,
+  History,
   type RecordEvidence,
   type TriageRecord,
   type TriageResult,
@@ -29,6 +31,7 @@ import type {
   ExportedRes,
   FillCommand,
   FilledRes,
+  PaperFocus,
   FilledXmlRes,
   FileFailure,
   InputFile,
@@ -113,6 +116,8 @@ export class Session {
         readonly fileName: string;
         readonly session: FillSession;
         dirty: boolean;
+        /** Spec 04 D26: snapshots, with the view and the focus they had. */
+        readonly history: History<Step>;
       }
     | undefined;
 
@@ -396,6 +401,7 @@ export class Session {
       fileName: record?.fileName ?? `${base}-new.xml`,
       session,
       dirty: false,
+      history: new History<Step>(),
     };
     const workedOut = record
       ? new Set(
@@ -419,6 +425,22 @@ export class Session {
     const f = this.fillState;
     if (!f) throw new AppError('FILL_STATE', { reason: 'closed' });
     const s = f.session;
+    if (command.kind === 'undo' || command.kind === 'redo') {
+      const here: Step = { snap: s.snapshot(), view, focus: command.focus };
+      const to = command.kind === 'undo' ? f.history.undo(here) : f.history.redo(here);
+      if (!to) return this.filled(view, now, undefined, 0, t0);
+      const r = s.restore(to.snap);
+      f.dirty = true;
+      return this.filled(
+        to.view,
+        now,
+        { ...r, ...(to.view !== view && { view: to.view }) },
+        0,
+        t0,
+        to.focus,
+      );
+    }
+    const before: Step = { snap: s.snapshot(), view, focus: command.focus };
     const a =
       command.kind === 'edit'
         ? s.edit(command.path, command.value, now)
@@ -435,7 +457,10 @@ export class Session {
                   : undefined;
     // A row or section change is a change even when no value moved.
     const structural = command.kind !== 'edit' && command.kind !== 'press';
-    if (a && (a.changes.length > 0 || structural)) f.dirty = true;
+    if (a && (a.changes.length > 0 || structural)) {
+      f.dirty = true;
+      f.history.record(before);
+    }
     return this.filled(view, now, a, 0, t0);
   }
 
@@ -464,6 +489,7 @@ export class Session {
     a: ReturnType<FillSession['edit']> | undefined,
     workedOut: number,
     t0: number,
+    restore?: PaperFocus,
   ): Promise<FilledRes> {
     const f = this.fillState!;
     const r = renderView(await this.prepared(f.template, view), {
@@ -499,11 +525,21 @@ export class Session {
       ...(a?.view !== undefined && { view: a.view }),
       dirty: f.dirty,
       ...(a?.focus !== undefined && { focus: a.focus }),
+      ...(restore !== undefined && { restore }),
+      undo: f.history.undoable,
+      redo: f.history.redoable,
       groups: groupNames(f.template.summary.ir, r.rows ?? []),
       workedOut,
       ms: performance.now() - t0,
     };
   }
+}
+
+/** Spec 04 D26: one undo step. */
+interface Step {
+  readonly snap: Snapshot;
+  readonly view: string;
+  readonly focus: PaperFocus | undefined;
 }
 
 /** Spec 04 task 9: rows are named by their parent ("Expenses"), a section by itself. */

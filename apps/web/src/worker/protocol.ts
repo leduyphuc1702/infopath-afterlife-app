@@ -76,7 +76,27 @@ export type Req =
       readonly now: string;
     };
 
-export type FillCommand =
+/**
+ * Spec 04 task 12: where focus was in the paper, kept with an undo step and given back on undo
+ * (the page's `FocusState` without typed text).
+ */
+export interface PaperFocus {
+  readonly ctrl: string;
+  readonly path: string | undefined;
+  readonly text?: string;
+  readonly caret?: number;
+  /** A row menu button or insert placeholder, by its item's node and kind. */
+  readonly structure?: { readonly node: string; readonly kind: string };
+  /** A button in the view, by its `xd:CtrlId`, in its row when it has one. */
+  readonly button?: { readonly ctrl: string; readonly row?: string };
+}
+
+export type FillCommand = FillAction & {
+  /** Spec 04 task 12: focus in the paper when the command was given. */
+  readonly focus?: PaperFocus;
+};
+
+export type FillAction =
   | { readonly kind: 'edit'; readonly path: string; readonly value: string }
   | { readonly kind: 'press'; readonly ctrlId: string; readonly path?: string }
   /** Render again with no change, e.g. for another view. */
@@ -90,7 +110,10 @@ export type FillCommand =
     }
   | { readonly kind: 'removeRow'; readonly path: string }
   | { readonly kind: 'insertOptional'; readonly groupId: string; readonly in: string }
-  | { readonly kind: 'removeOptional'; readonly path: string };
+  | { readonly kind: 'removeOptional'; readonly path: string }
+  /** Spec 04 task 12 (R10.1): whole commands, as snapshots. */
+  | { readonly kind: 'undo' }
+  | { readonly kind: 'redo' };
 
 /** A request without its id, as the page writes it. */
 export type ReqBody = Req extends infer R ? (R extends Req ? Omit<R, 'id'> : never) : never;
@@ -194,6 +217,11 @@ export interface FilledRes extends Omit<RenderedRes, 'type'> {
   readonly view?: string;
   /** A change since the session opened that was not downloaded (R6.4). */
   readonly dirty: boolean;
+  /** Spec 04 task 12: how many steps can be undone and redone. */
+  readonly undo: number;
+  readonly redo: number;
+  /** Spec 04 task 12: after an undo or redo, where focus was then. */
+  readonly restore?: PaperFocus;
   /** Spec 04 task 9: the item to focus after an insert or remove (its `data-afl-node`). */
   readonly focus?: string;
   /** Spec 04 task 9: a name for each group with rows on the page, for row menus ("Expenses"). */

@@ -117,3 +117,20 @@ so "the last row cannot be removed" (`FILL_PATH lastRow`) never applies to them.
 Bundle (gzip): entry 76.3 → 78.0 KB of 100, Worker 139.7 → 142.0 KB of 160; no new chunk.
 `pnpm check` (after task 9): exit 0; hooks 6, core 3,784 passed (3 skipped), browser 337, web 105.
 `pnpm e2e:web`: 65 passed.
+
+## Tasks 10–12: rules and buttons, Rule Trace, undo and redo (2026-11-11)
+
+| Criterion | Oracle | Result |
+|---|---|---|
+| R4.1–R4.4, D15 | `packages/core/test/runtime/rules.test.ts` (6): form 03 clears the city on a country change; form 04 "Check budget" skips the query and the assignment that reads its result (the stored budget stays); "Check approval" in manifest order, dialog text over 1000; form 05's three buttons switch views and change no data; forms 01 and 07 onLoad date on the empty form only; a button with no rules does nothing | pass |
+| R4.2 on the page | `apps/web/e2e/rules.spec.ts` › form 04: buttons faded and inert outside Fill; "Check approval" by Enter opens a modal `<dialog>` "Message from the form" with "Total 1566.33 is over 1000: accounting must approve.", focus on OK, Escape closes, focus back on the button | pass |
+| R4.3 on the page | same test: "Check budget" adds "Rule “Query budget service” did not query a data connection…" to the Rule Trace, no dialog, Budget remaining unchanged | pass |
+| R4.4 view switches | same file › form 05: HR → IT → HR → Manager by the view's buttons | pass |
+| R9.1, D25 | `apps/web/test/trace-words.test.ts` (2): form 04 quantity edit gives "Line total in row 1 changed from 0 to 300 because Qty in row 1 changed." then Subtotal, VAT, Total incl. VAT, in order; form 03 rule and form 04 skipped query in words | pass |
+| R9.1, R9.2 on the page | `rules.spec.ts` › form 04 Rule Trace: tab only in Fill; the chain newest first; "Show expression" gives the formula; hover and focus outline Subtotal on the paper; the "Show" filter keeps Subtotal's entries only. Empty state on form 05 | pass |
+| R10.1, D26 | `packages/core/test/runtime/history.test.ts` (2): cap 100 drops the oldest, a new command clears redo; snapshot and restore of an edit and a row insert are exact, and the restored document takes new commands | pass |
+| R10.1 on the page, D19 | `rules.spec.ts` › form 02: Undo and Redo disabled with nothing to do, by toolbar ($45.00 → $30.00 → $0.00 → $30.00), a new edit clears redo; a row insert is one step, Ctrl/Cmd+Z puts focus back on "Insert item", Shift+Ctrl/Cmd+Z redoes it; typing not yet committed is left to the browser's undo | pass |
+
+Bundle (gzip): entry 78.0 → 80.4 KB of 100, Worker 142.0 → 142.6 KB of 160; no new chunk.
+`pnpm check`: exit 0; hooks 6, core 3,792 passed (3 skipped), browser 337, web 107.
+`pnpm e2e:web`: 70 passed; R2.4 form 04 p95 6.7 ms.

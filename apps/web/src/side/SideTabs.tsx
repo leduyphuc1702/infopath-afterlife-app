@@ -2,20 +2,25 @@
 // activation: Left and Right move and select, Home and End go to the ends).
 import type { KeyboardEvent, ReactNode } from 'react';
 
-export type SideTab = 'fields' | 'connections';
+export type SideTab = 'fields' | 'connections' | 'trace';
 
-const TABS: readonly { readonly id: SideTab; readonly label: string }[] = [
+const ALL: readonly { readonly id: SideTab; readonly label: string }[] = [
   { id: 'fields', label: 'Fields' },
   { id: 'connections', label: 'Data connections' },
+  // Spec 04 R9.1: only while Fill is on.
+  { id: 'trace', label: 'Rule Trace' },
 ];
 
 interface Props {
   readonly tab: SideTab;
   readonly onTab: (tab: SideTab) => void;
   readonly panels: Readonly<Record<SideTab, ReactNode>>;
+  /** Spec 04: show the Rule Trace tab. */
+  readonly trace?: boolean;
 }
 
-export function SideTabs({ tab, onTab, panels }: Props) {
+export function SideTabs({ tab, onTab, panels, trace = false }: Props) {
+  const TABS = trace ? ALL : ALL.filter((t) => t.id !== 'trace');
   const onKey = (e: KeyboardEvent) => {
     const i = TABS.findIndex((t) => t.id === tab);
     const next =

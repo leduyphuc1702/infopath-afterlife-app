@@ -612,3 +612,45 @@ code {
     display: none;
   }
 }
+
+/* Spec 04 task 11: the Rule Trace tab. */
+.afl-trace-empty,
+.afl-trace-count {
+  margin: var(--ds-space-100, 8px) 0;
+  color: var(--ds-text-subtle);
+}
+.afl-trace-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.afl-trace-entry {
+  padding: var(--ds-space-075, 6px) var(--ds-space-100, 8px);
+  border-bottom: 1px solid var(--ds-border);
+  line-height: 1.4;
+}
+.afl-trace-entry:hover,
+.afl-trace-entry:focus {
+  background: var(--ds-background-neutral-subtle-hovered);
+  outline: none;
+}
+.afl-trace-entry:focus-visible {
+  outline: 2px solid var(--ds-border-focused);
+  outline-offset: -2px;
+}
+.afl-trace-entry time {
+  color: var(--ds-text-subtlest);
+  font-variant-numeric: tabular-nums;
+}
+.afl-trace-entry details {
+  margin-top: var(--ds-space-050, 4px);
+}
+.afl-trace-entry summary {
+  color: var(--ds-link);
+  cursor: pointer;
+}
+.afl-trace-entry code {
+  display: block;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}

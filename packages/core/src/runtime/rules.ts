@@ -7,6 +7,7 @@ import type { TraceEntry } from './trace';
 
 export const NOT_IN_VIEWER = 'Not available in the viewer. Download the XML instead.';
 export const NO_QUERIES = 'Query connections are not available in the viewer.';
+export const NEEDS_QUERY = 'Not run: it uses the result of a query the viewer cannot run.';
 
 export interface RuleEffects {
   readonly dialogs: string[];
@@ -47,7 +48,27 @@ export function runRuleSet(
     const changes: Change<RtNode>[] = [];
     let stop = false;
     if (condition) {
+      // Sources whose query this rule skipped: a later action that reads one would write what
+      // the query was meant to fetch (an empty value), so it is skipped too.
+      const unqueried: string[] = [];
       for (const a of rule.actions) {
+        const uses = unqueried.find((src) =>
+          [a.attrs.expression, a.attrs.targetField, a.text].some((x) =>
+            x?.includes(`GetDOM("${src}")`),
+          ),
+        );
+        if (uses !== undefined) {
+          host.trace({
+            kind: 'skipped',
+            trigger,
+            caption: `${caption}: ${a.kind}`,
+            note: `${NEEDS_QUERY} (${uses})`,
+            changes: [],
+          });
+          continue;
+        }
+        if (a.kind === 'queryAction' && a.attrs.adapter !== undefined)
+          unqueried.push(a.attrs.adapter);
         const r = action(a, context, caption, trigger, host);
         changes.push(...r.changes);
         if (r.stop) {

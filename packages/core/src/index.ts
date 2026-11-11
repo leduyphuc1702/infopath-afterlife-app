@@ -109,7 +109,9 @@ export {
   FillCommandError,
   type FillAnswer,
   type FillOptions,
+  type Snapshot,
 } from './runtime/session';
+export { History, UNDO_CAP } from './runtime/history';
 export { runCycle, MAX_PASSES, type Change, type CycleResult, type Step } from './runtime/cycle';
 export { Evaluator, NotEvaluated, numberText } from './runtime/evaluate';
 export { implementedFunctions } from './runtime/functions';

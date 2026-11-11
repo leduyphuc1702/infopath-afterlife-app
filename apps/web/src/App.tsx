@@ -1,4 +1,4 @@
-import type { TriageRow } from '@afterlife/core';
+import type { TraceEntry, TriageRow } from '@afterlife/core';
 import {
   useCallback,
   useEffect,
@@ -12,6 +12,7 @@ import { fromDataTransfer, sortInput } from './files/collect';
 import { Attention } from './paper/Attention';
 import { ExportRecords, save, type RecordFormat } from './paper/ExportRecords';
 import { Paper } from './paper/Paper';
+import { RuleDialog } from './paper/RuleDialog';
 import { PaperToolbar, viewCaption } from './paper/PaperToolbar';
 import { ErrorBanner } from './shell/ErrorBanner';
 import { Header } from './shell/Header';
@@ -25,6 +26,7 @@ import { cardFor, cardForControl } from './side/card';
 import { DataConnections } from './side/DataConnections';
 import { DetailsCard } from './side/DetailsCard';
 import { FieldTree } from './side/FieldTree';
+import { RuleTrace } from './side/RuleTrace';
 import { SideTabs } from './side/SideTabs';
 import { Unmatched } from './side/Unmatched';
 import { Certificate } from './triage/Certificate';
@@ -55,7 +57,12 @@ interface Fill {
   readonly res?: FilledRes;
   /** One status-line sentence after the fill sentence (worked-out fields, a download). */
   readonly message?: string;
+  /** Spec 04 task 11: the Rule Trace so far, the last 500 entries. */
+  readonly trace: readonly TraceEntry[];
 }
+
+/** Spec 04 task 12: shortcut names as the person's keyboard shows them. */
+const MOD = /Mac|iPhone|iPad/.test(navigator.platform) ? 'Cmd' : 'Ctrl';
 
 export function App() {
   const client = useMemo(() => new WorkerClient(), []);
@@ -274,6 +281,10 @@ export function App() {
   const viewRef = useRef(view?.name);
   viewRef.current = view?.name;
 
+  /** Spec 04 task 10: messages from rules (and "Not available in the viewer") to show. */
+  const [messages, setMessages] = useState<readonly string[]>([]);
+  /** Spec 04 task 11: the field the hovered or focused Rule Trace entry is about. */
+  const [traced, setTraced] = useState<string>();
   const fillAnswer = useCallback((r: ResBody, message?: string) => {
     if (r.type === 'filled') {
       setFill(
@@ -282,9 +293,11 @@ export function App() {
             ...f,
             res: r,
             view: viewRef.current ?? f.view,
+            trace: [...f.trace, ...r.trace].slice(-500),
             ...(message !== undefined && { message }),
           },
       );
+      if (r.dialogs.length + r.notices.length > 0) setMessages([...r.dialogs, ...r.notices]);
       if (r.view !== undefined) dispatch({ type: 'view', view: r.view });
     } else if (r.type === 'failed') {
       if (r.error.code === 'FILL_STATE') setFill(undefined);
@@ -321,6 +334,8 @@ export function App() {
       recordIndex: s.recordIndex,
       view: view.name,
       res: r,
+      // The marks opening draws are on the paper already; the trace starts with what ran.
+      trace: r.trace.filter((e) => e.kind !== 'validation').slice(-500),
       ...(r.workedOut > 0 && {
         message: `${r.workedOut} calculated ${r.workedOut === 1 ? 'field was' : 'fields were'} empty in this record and ${r.workedOut === 1 ? 'has' : 'have'} been worked out.`,
       }),
@@ -349,6 +364,21 @@ export function App() {
   }, [fillOn, view, fill?.view, fillCommand]);
   // Closing the tab with unsaved changes asks the browser's own question.
   const dirty = fill?.res?.dirty === true;
+  // R10.1: Ctrl/Cmd+Z and Shift+Ctrl/Cmd+Z anywhere on the form screen but in a text entry
+  // outside the paper (the paper handles its own keys).
+  useEffect(() => {
+    if (!fillOn) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.defaultPrevented || !(e.ctrlKey || e.metaKey) || e.altKey) return;
+      if (e.key.toLowerCase() !== 'z') return;
+      const t = e.target as HTMLElement;
+      if (t.closest('input, textarea, select, [contenteditable="true"], dialog')) return;
+      e.preventDefault();
+      fillCommand({ kind: e.shiftKey ? 'redo' : 'undo' });
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [fillOn, fillCommand]);
   useEffect(() => {
     if (!dirty) return;
     const warn = (e: BeforeUnloadEvent) => e.preventDefault();
@@ -592,13 +622,37 @@ export function App() {
                         />
                       )}
                       {fillOn && (
-                        <button
-                          type="button"
-                          className="afl-button"
-                          onClick={() => void downloadXml()}
-                        >
-                          Download XML
-                        </button>
+                        <>
+                          <button
+                            type="button"
+                            className="afl-button"
+                            aria-label={`Undo (${MOD}+Z)`}
+                            aria-keyshortcuts={`${MOD === 'Cmd' ? 'Meta' : 'Control'}+Z`}
+                            title={`Undo (${MOD}+Z)`}
+                            disabled={!fill.res || fill.res.undo === 0}
+                            onClick={() => fillCommand({ kind: 'undo' })}
+                          >
+                            Undo
+                          </button>
+                          <button
+                            type="button"
+                            className="afl-button"
+                            aria-label={`Redo (Shift+${MOD}+Z)`}
+                            aria-keyshortcuts={`Shift+${MOD === 'Cmd' ? 'Meta' : 'Control'}+Z`}
+                            title={`Redo (Shift+${MOD}+Z)`}
+                            disabled={!fill.res || fill.res.redo === 0}
+                            onClick={() => fillCommand({ kind: 'redo' })}
+                          >
+                            Redo
+                          </button>
+                          <button
+                            type="button"
+                            className="afl-button"
+                            onClick={() => void downloadXml()}
+                          >
+                            Download XML
+                          </button>
+                        </>
                       )}
                     </>
                   }
@@ -616,6 +670,7 @@ export function App() {
                   <Paper
                     result={rendered}
                     {...(fillOn && fill.res && { fill: { res: fill.res, onCommand: fillCommand } })}
+                    {...(fillOn && traced !== undefined && { traced })}
                     label={label}
                     xray={s.xray}
                     outlined={outlined}
@@ -653,9 +708,13 @@ export function App() {
                 />
               )}
               <SideTabs
-                tab={s.tab}
+                tab={s.tab === 'trace' && !fillOn ? 'fields' : s.tab}
                 onTab={(tab) => dispatch({ type: 'tab', tab })}
+                trace={fillOn}
                 panels={{
+                  trace: fillOn && (
+                    <RuleTrace ir={template.ir} entries={fill.trace} onOutline={setTraced} />
+                  ),
                   fields: (
                     <FieldTree
                       ir={template.ir}
@@ -680,6 +739,7 @@ export function App() {
           </div>
         )}
       </main>
+      <RuleDialog messages={messages} onDone={() => setMessages([])} />
       <Notices />
     </>
   );

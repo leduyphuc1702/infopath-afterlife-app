@@ -4,7 +4,16 @@
 // X-ray (R5): outlines over the controls, from their measured boxes.
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { FillCommand, FilledRes, RenderedRes } from '../worker/protocol';
-import { FILL_CSS, focusState, listen, restoreFocus, upgrade } from './fill';
+import {
+  FILL_CSS,
+  focusState,
+  listen,
+  READ_CSS,
+  restoreFocus,
+  traceOutline,
+  upgrade,
+  type FocusState,
+} from './fill';
 import { focusItem, listenRows, ROWS_CSS, upgradeRows } from './rows';
 import { loadPaperFonts } from '../shell/fonts';
 import { fadeIn } from './fade';
@@ -30,7 +39,12 @@ interface Props {
   readonly fade?: boolean;
   /** The paper's text after each render, field values included (design D7's font note). */
   readonly onText?: (text: string) => void;
+  /** Spec 04 task 11: the field a Rule Trace entry is about, outlined. */
+  readonly traced?: string;
 }
+
+/** Answers whose `restore` focus has been applied (spec 04 task 12). */
+const restored = new WeakSet<FilledRes>();
 
 export function Paper({
   result,
@@ -42,6 +56,7 @@ export function Paper({
   onText,
   fade = false,
   fill,
+  traced,
 }: Props) {
   const fillRef = useRef(fill);
   fillRef.current = fill;
@@ -72,7 +87,7 @@ export function Paper({
       scrollX,
       scrollY,
     ];
-    root.innerHTML = `<style>${result.css}${f ? FILL_CSS + ROWS_CSS : ''}</style>${result.html}`;
+    root.innerHTML = `<style>${result.css}${f ? FILL_CSS + ROWS_CSS : READ_CSS}</style>${result.html}`;
     if (f) {
       // e2e and R2.4: how many fill renders this paper has drawn.
       el.dataset.aflRenders = String(Number(el.dataset.aflRenders ?? 0) + 1);
@@ -81,7 +96,12 @@ export function Paper({
       // After an insert or remove, focus goes to the new row or the one that took its place.
       const moved = focusItem(root, f.res, rowGroup.current);
       rowGroup.current = undefined;
-      if (!moved && focus) restoreFocus(root, focus);
+      // After undo or redo, focus goes back where it was then, unless it is on the toolbar.
+      const back = f.res.restore !== undefined && !restored.has(f.res);
+      if (back) restored.add(f.res);
+      const outside = document.activeElement !== el && document.activeElement !== document.body;
+      if (back && !outside) restoreFocus(root, f.res.restore);
+      else if (!moved && focus) restoreFocus(root, focus);
       if (scroll && frame.current) {
         [frame.current.scrollTop, frame.current.scrollLeft] = [scroll[0]!, scroll[1]!];
         if (scrollX !== scroll[2] || scrollY !== scroll[3]) window.scrollTo(scroll[2]!, scroll[3]!);
@@ -102,7 +122,24 @@ export function Paper({
   useEffect(() => {
     const root = host.current?.shadowRoot;
     if (!filling || !root) return;
+    // Spec 04 task 12: focus goes with each command, for undo; typed text does not.
+    let last: FocusState | undefined;
+    const onIn = () => {
+      last = focusState(root) ?? last;
+    };
+    root.addEventListener('focusin', onIn);
     const send = (c: FillCommand) => {
+      const now = focusState(root) ?? last;
+      if (now && c.kind !== 'render')
+        c = {
+          ...c,
+          focus: {
+            ctrl: now.ctrl,
+            path: now.path,
+            ...(now.structure && { structure: now.structure }),
+            ...(now.button && { button: now.button }),
+          },
+        };
       if (c.kind === 'removeRow' || c.kind === 'removeOptional')
         rowGroup.current = root.querySelector<HTMLElement>(
           `[data-afl-node="${CSS.escape(c.path)}"]`,
@@ -112,10 +149,16 @@ export function Paper({
     const stop = listen(root, () => fillRef.current?.res, send);
     const stopRows = listenRows(root, send);
     return () => {
+      root.removeEventListener('focusin', onIn);
       stop();
       stopRows();
     };
   }, [filling]);
+
+  useEffect(() => {
+    const root = host.current?.shadowRoot;
+    if (root) traceOutline(root, filling ? traced : undefined);
+  }, [traced, filling, result]);
 
   useEffect(() => {
     void loadPaperFonts();

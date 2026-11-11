@@ -54,18 +54,18 @@ Every task ends with the app working and `pnpm check` green. Test first where a 
   - Requirements: R7.1, R7.2, R7.3, R7.4
   - Done when: P3 200 runs; e2e on form 02 inserts and removes an expense row and the Total
     follows; form 05's optional section inserts and removes.
-- [ ] 10. Rules, buttons and dialogs
+- [x] 10. Rules, buttons and dialogs
   - `runtime/rules.ts` (D15), `press`, `switchView`, `<dialog>` for messages, notices for
     submit and close.
   - Requirements: R4.1, R4.2, R4.3, R4.4
   - Done when: `rules.test.ts` (form 03 clear city, form 04 buttons and skipped query, form 05
     view switches); e2e clicks form 04 "Check approval" and sees the dialog.
-- [ ] 11. Rule Trace tab
+- [x] 11. Rule Trace tab
   - Side tab, entry list (D25), field filter, hover outline, 500-entry cap.
   - Requirements: R9.1, R9.2
   - Done when: e2e on form 04: an edit shows the calculation chain in order with before and
     after values; hovering outlines the field; the filter keeps one field.
-- [ ] 12. Undo and redo
+- [x] 12. Undo and redo
   - Snapshot stack (D26), keys and toolbar buttons.
   - Requirements: R10.1
   - Done when: unit (cap, redo cleared) and e2e (type, undo, redo on form 02).

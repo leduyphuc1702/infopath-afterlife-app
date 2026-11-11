@@ -1,7 +1,7 @@
 // Spec 04 R6, design D21–D23: editing on the paper. Core's render stays as it is; after each
 // render the page removes `inert`, makes the controls it can edit editable, marks the ones it
 // cannot, draws invalid fields, and puts focus and caret back. It never inserts HTML.
-import type { FillCommand, FilledRes } from '../worker/protocol';
+import type { FillCommand, FilledRes, PaperFocus } from '../worker/protocol';
 
 /** `xd:xctname` values edited in place (R6.1). Everything else is read-only (R6.2). */
 const TEXT = new Set(['PlainText', 'DTPicker_DTText', 'RichText']);
@@ -22,9 +22,19 @@ const pathOf = (el: Element) => (el as HTMLElement).dataset.aflPath;
 const isText = (el: Element) =>
   TEXT.has(xct(el)) && (el as HTMLElement).dataset.aflEdit !== undefined;
 
+/** The item node of the repeating row an element is in, if any (R4.4: a button's context). */
+const rowOf = (el: Element) =>
+  el.closest<HTMLElement>('[data-afl-structure="row"], [data-afl-structure="optional"]')?.dataset
+    .aflNode;
+
 /** Upgrades the controls of a fresh render (R6.1, R6.2, R5.2). */
 export function upgrade(root: ShadowRoot, res: FilledRes): void {
   root.querySelector('.afl-root')?.removeAttribute('inert');
+  // R4.4: buttons in the view run their rules in Fill mode.
+  for (const b of root.querySelectorAll<HTMLInputElement>('input[type="button"]')) {
+    const ctrl = b.getAttribute('xd:ctrlid');
+    if (ctrl !== null) b.dataset.aflButton = ctrl;
+  }
   const calculated = new Set(res.calculated);
   for (const el of root.querySelectorAll<HTMLElement>('[data-afl-ctrl]')) {
     const kind = xct(el);
@@ -69,18 +79,18 @@ export function upgrade(root: ShadowRoot, res: FilledRes): void {
 }
 
 /** What has focus in the paper, to put back after the next render (R6.3). */
-export interface FocusState {
-  readonly ctrl: string;
-  readonly path: string | undefined;
-  /** Uncommitted text typed into a text box. */
-  readonly text?: string;
-  readonly caret?: number;
-  /** Spec 04 task 9: a row menu button or insert placeholder, by its item's node and kind. */
-  readonly structure?: { readonly node: string; readonly kind: string };
-}
+export type FocusState = PaperFocus;
 
 export function focusState(root: ShadowRoot): FocusState | undefined {
   const active = root.activeElement as HTMLElement | null;
+  if (active?.dataset.aflButton !== undefined) {
+    const row = rowOf(active);
+    return {
+      ctrl: '',
+      path: undefined,
+      button: { ctrl: active.dataset.aflButton, ...(row !== undefined && { row }) },
+    };
+  }
   if (active?.dataset.aflRowMenu !== undefined || active?.dataset.aflStructure === 'insert') {
     const item = active.closest<HTMLElement>('[data-afl-structure]')!;
     return {
@@ -114,6 +124,13 @@ const selection = (root: ShadowRoot): Selection | null =>
   document.getSelection();
 
 export function restoreFocus(root: ShadowRoot, f: FocusState): void {
+  if (f.button) {
+    const all = root.querySelectorAll<HTMLElement>(
+      `[data-afl-button="${CSS.escape(f.button.ctrl)}"]`,
+    );
+    [...all].find((b) => rowOf(b) === f.button!.row)?.focus({ preventScroll: true });
+    return;
+  }
   if (f.structure) {
     const item = root.querySelector<HTMLElement>(
       `[data-afl-structure="${CSS.escape(f.structure.kind)}"][data-afl-node="${CSS.escape(f.structure.node)}"]`,
@@ -182,6 +199,21 @@ export function listen(
   };
   const onKey = (e: KeyboardEvent) => {
     const el = control(e.target);
+    // R10.1: Ctrl/Cmd+Z and Shift+Ctrl/Cmd+Z undo and redo whole commands. While a text box
+    // holds typing that is not committed yet, the browser's own undo works on that typing.
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 'z') {
+      e.stopPropagation();
+      if (
+        el &&
+        isText(el) &&
+        el.dataset.aflRaw !== undefined &&
+        el.textContent !== el.dataset.aflRaw
+      )
+        return;
+      e.preventDefault();
+      send({ kind: e.shiftKey ? 'redo' : 'undo' });
+      return;
+    }
     if (!el || !isText(el)) return;
     const multi = xct(el) === 'RichText';
     if (e.key === 'Enter' && (!multi || e.ctrlKey || e.metaKey)) {
@@ -210,6 +242,16 @@ export function listen(
   };
   // Read-only inputs keep their look but refuse changes (R6.2).
   const onClick = (e: Event) => {
+    const button = (e.target as Element | null)?.closest?.<HTMLElement>('[data-afl-button]');
+    if (button) {
+      const path = rowOf(button);
+      send({
+        kind: 'press',
+        ctrlId: button.dataset.aflButton!,
+        ...(path !== undefined && { path }),
+      });
+      return;
+    }
     const el = control(e.target);
     if (el?.dataset.aflReadonly !== undefined && el instanceof HTMLInputElement) e.preventDefault();
   };
@@ -240,8 +282,25 @@ export function listen(
   };
 }
 
+/** Spec 04 task 11: outlines the field a Rule Trace entry is about, or none. */
+export function traceOutline(root: ShadowRoot, path: string | undefined): void {
+  for (const el of root.querySelectorAll('.afl-traced')) el.classList.remove('afl-traced');
+  if (path === undefined) return;
+  const els = root.querySelectorAll<HTMLElement>(`[data-afl-path="${CSS.escape(path)}"]`);
+  for (const el of els) el.classList.add('afl-traced');
+  els[0]?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+}
+
+/** Outside Fill mode the paper is inert; its buttons look it (spec 04 task 10). */
+export const READ_CSS = `
+.afl-root[inert] input[type='button'] { opacity: 0.5; filter: grayscale(1); cursor: default; }
+`;
+
 /** Drawn inside the paper's shadow root in Fill mode: InfoPath's invalid border, focus rings. */
 export const FILL_CSS = `
+.afl-root .afl-traced { outline: 3px solid #6e5dc6 !important; outline-offset: 2px; }
+.afl-root [data-afl-button] { cursor: pointer; }
+.afl-root [data-afl-button]:focus { outline: 2px solid #0c66e4; outline-offset: 1px; }
 .afl-root [data-afl-edit]:focus { outline: 2px solid #0c66e4; outline-offset: 1px; }
 .afl-root [data-afl-edit][contenteditable] { cursor: text; }
 .afl-root .afl-invalid { outline: 1px dashed #c9372c !important; outline-offset: 1px; }
