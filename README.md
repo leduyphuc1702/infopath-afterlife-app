@@ -189,6 +189,9 @@ Inside Kiro's commits, these lines are the reviewer's: the upstream LICENSE file
 keeper sample (in `4c13ec8`), one `.gitignore` line, and the P12 and P13 lines of
 `.kiro/steering/testing.md`.
 
+After `abd9299`, Kiro's last commit, one more commit is the reviewer's: it puts the copyright
+holder's name in `LICENSE` and adds this paragraph.
+
 Everything under `samples/` is the reviewer's, made by a generator outside this repository.
 Kiro cannot write there.
 
