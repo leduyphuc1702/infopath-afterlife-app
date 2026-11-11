@@ -29,6 +29,17 @@ time, form cache cleared before each (`verify42.ps1`). Two of them failed the ru
 Not verified: printing, submitting by e-mail, the SQL and web-service data connections
 (their hosts are deliberately fake), and signature workflows.
 
+**Changed after that run, 2026-11-11: the `grouping:1;` item was removed from 13 templates**
+(01, 04, 07, 10, 13, 14, 17, 18, 24, 29, 35, 40, 41), in `xd:datafmt` and in the `formatString`
+calls of their views. It was a mistake in the generator: it was meant as "use a digit
+separator", but `grouping` is a group size, so InfoPath showed 43 as `4,3`. A number format
+without `grouping` is what the real-world templates we looked at carry. Nothing else in those
+views changed, and each `.xsn` was repacked by script so that it still equals its `forms/`
+folder byte for byte (`bsdtar` and `7zz` both read them). These 13 repacked packages were not
+opened in InfoPath again; the trial had ended. `08-big-form` keeps `grouping:1` on purpose: its
+filled screenshot is the evidence for how InfoPath reads the item. The screenshots of 01, 04
+and 07 still match, because the numbers in them have one digit before the decimal point.
+
 **Forms 43–47 were never opened in InfoPath.** They were generated on 2026-11-10, after the
 InfoPath trial in the VM had expired (2026-11-07), to cover file-format features that forms
 01–42 do not have. Each one is a generated base form with one feature patched in, written to
