@@ -9,6 +9,7 @@ import {
   useState,
 } from 'react';
 import { fromDataTransfer, sortInput } from './files/collect';
+import { Attention } from './paper/Attention';
 import { ExportRecords, save, type RecordFormat } from './paper/ExportRecords';
 import { Paper } from './paper/Paper';
 import { PaperToolbar, viewCaption } from './paper/PaperToolbar';
@@ -32,11 +33,29 @@ import { PrintPlan } from './triage/PrintPlan';
 import { TriageTable } from './triage/TriageTable';
 import { initialState, openTemplate, recordsOf, reducer, unmatched, type Problem } from './store';
 import { localNow, WorkerClient } from './worker/client';
-import type { FailedRes, Progress, RenderedRes, ResBody } from './worker/protocol';
+import type {
+  FailedRes,
+  FillCommand,
+  FilledRes,
+  Progress,
+  RenderedRes,
+  ResBody,
+} from './worker/protocol';
+import { DISCARD, useConfirm } from './shell/Confirm';
 
 /** The latest render answer; the previous paper stays up while the next one is drawn. */
 /** `templateId`: the template it was made for; another template's render is never shown. */
 type Render = (RenderedRes | FailedRes) & { readonly first?: boolean; readonly templateId: string };
+
+/** Spec 04: the fill session the page knows of: its template, record and latest answer. */
+interface Fill {
+  readonly templateId: string;
+  readonly recordIndex: number;
+  readonly view: string;
+  readonly res?: FilledRes;
+  /** One status-line sentence after the fill sentence (worked-out fields, a download). */
+  readonly message?: string;
+}
 
 export function App() {
   const client = useMemo(() => new WorkerClient(), []);
@@ -238,8 +257,107 @@ export function App() {
     [s.failures, s.problems],
   );
 
+  // Spec 04: one fill session, for one template's empty form or one record. Leaving the form
+  // screen (Back, Forward, Triage) keeps it: it comes back with the same template and record.
+  const [fill, setFill] = useState<Fill>();
+  const [confirm, ask] = useConfirm();
+  const fillOn =
+    fill !== undefined &&
+    template !== undefined &&
+    s.screen === 'form' &&
+    fill.templateId === template.templateId &&
+    fill.recordIndex === s.recordIndex;
+  const fillUnavailable =
+    record && record.match.kind !== 'exact'
+      ? 'Fill works on the empty form and on records made with this version of the form.'
+      : undefined;
+  const viewRef = useRef(view?.name);
+  viewRef.current = view?.name;
+
+  const fillAnswer = useCallback((r: ResBody, message?: string) => {
+    if (r.type === 'filled') {
+      setFill(
+        (f) =>
+          f && {
+            ...f,
+            res: r,
+            view: viewRef.current ?? f.view,
+            ...(message !== undefined && { message }),
+          },
+      );
+      if (r.view !== undefined) dispatch({ type: 'view', view: r.view });
+    } else if (r.type === 'failed') {
+      if (r.error.code === 'FILL_STATE') setFill(undefined);
+      dispatch({
+        type: 'input',
+        ignored: [],
+        problems: [{ fileName: 'the change', error: r.error }],
+      });
+    }
+  }, []);
+  const fillCommand = useCallback(
+    (c: FillCommand) => {
+      const v = viewRef.current;
+      if (v !== undefined) void client.fill(c, v, localNow()).then((r) => fillAnswer(r));
+    },
+    [client, fillAnswer],
+  );
+  /** Leaves Fill; asks first when there are changes that were not downloaded (R6.4). */
+  const leaveFill = useCallback(async (): Promise<boolean> => {
+    if (!fill) return true;
+    if (fill.res?.dirty && !(await ask(DISCARD))) return false;
+    setFill(undefined);
+    void client.fillClose();
+    return true;
+  }, [fill, ask, client]);
+  const toggleFill = useCallback(async () => {
+    if (!template || !view) return;
+    if (fillOn) return void leaveFill();
+    if (!(await leaveFill())) return;
+    const r = await client.fillOpen(template.templateId, record?.recordId, view.name, localNow());
+    if (r.type !== 'filled') return fillAnswer(r);
+    setFill({
+      templateId: template.templateId,
+      recordIndex: s.recordIndex,
+      view: view.name,
+      res: r,
+      ...(r.workedOut > 0 && {
+        message: `${r.workedOut} calculated ${r.workedOut === 1 ? 'field was' : 'fields were'} empty in this record and ${r.workedOut === 1 ? 'has' : 'have'} been worked out.`,
+      }),
+    });
+  }, [template, view, record, s.recordIndex, fillOn, leaveFill, client, fillAnswer]);
+  const downloadXml = useCallback(async () => {
+    const r = await client.fillDownload();
+    if (r.type !== 'filledXml') return fillAnswer(r);
+    save(r.bytes, r.fileName, 'application/xml');
+    const left =
+      r.invalid > 0
+        ? ` ${r.invalid} ${r.invalid === 1 ? 'field still needs' : 'fields still need'} attention.`
+        : '';
+    setFill(
+      (f) =>
+        f && {
+          ...f,
+          ...(f.res && { res: { ...f.res, dirty: false } }),
+          message: `Downloaded ${r.fileName}.${left}`,
+        },
+    );
+  }, [client, fillAnswer]);
+  // Another view while filling: the session renders it.
   useEffect(() => {
-    if (!template || !view || s.screen !== 'form') return;
+    if (fillOn && view && fill.view !== view.name) fillCommand({ kind: 'render' });
+  }, [fillOn, view, fill?.view, fillCommand]);
+  // Closing the tab with unsaved changes asks the browser's own question.
+  const dirty = fill?.res?.dirty === true;
+  useEffect(() => {
+    if (!dirty) return;
+    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [dirty]);
+
+  useEffect(() => {
+    if (!template || !view || s.screen !== 'form' || fillOn) return;
     const ticket = ++latest.current;
     void client.render(template.templateId, view.name, record?.recordId, now).then((r) => {
       if (ticket !== latest.current) return; // a newer request is on its way
@@ -249,14 +367,14 @@ export function App() {
       if (first) faded.current.add(template.templateId);
       setRender({ ...r, first, templateId: template.templateId });
     });
-  }, [client, now, template, view, record, s.screen]);
+  }, [client, now, template, view, record, s.screen, fillOn]);
 
   // The previous paper stays up while the next render of the same template is drawn; a render
   // of another template (opened from Triage, or a stale failure) is not shown under this one.
   const render = latestRender?.templateId === template?.templateId ? latestRender : undefined;
 
   // X-ray (R5): marks[i] is the i-th `[data-afl-ctrl]` element (design §5).
-  const rendered = render?.type === 'rendered' ? render : undefined;
+  const rendered = fillOn && fill.res ? fill.res : render?.type === 'rendered' ? render : undefined;
   const targetOf = useMemo(
     () =>
       new Map(template?.ir.views.flatMap((v) => v.controls.map((c) => [c.id, c.targetId])) ?? []),
@@ -389,6 +507,11 @@ export function App() {
         {...(template &&
           s.screen === 'form' && {
             xray: { on: s.xray, toggle: () => dispatch({ type: 'xray', on: !s.xray }) },
+            fill: {
+              on: fillOn,
+              toggle: () => void toggleFill(),
+              ...(fillUnavailable !== undefined && !fillOn && { unavailable: fillUnavailable }),
+            },
           })}
         {...(s.templates.length >= 2 &&
           s.screen !== 'triage' && {
@@ -401,8 +524,16 @@ export function App() {
             ? (reading ?? `Opening ${s.busy}…`)
             : exporting
               ? reading
-              : s.notice}
+              : fillOn
+                ? [
+                    'Filling in this form. Nothing is saved until you choose Download XML.',
+                    fill.message,
+                  ]
+                    .filter(Boolean)
+                    .join(' ')
+                : s.notice}
         </div>
+        {confirm}
         <div aria-live="polite" className="afl-hidden" data-afl-announce="">
           {announcement}
         </div>
@@ -447,36 +578,55 @@ export function App() {
                   onView={(v) => dispatch({ type: 'view', view: v })}
                   records={records}
                   index={s.recordIndex}
-                  onIndex={(i) => dispatch({ type: 'record', index: i })}
-                  {...(records.length > 0 && {
-                    actions: (
-                      <ExportRecords
-                        busy={exporting}
-                        onExport={(f) => void exportRecords(template.templateId, f)}
-                      />
-                    ),
-                  })}
+                  onIndex={(i) =>
+                    void (fillOn ? leaveFill() : Promise.resolve(true)).then(
+                      (ok) => ok && dispatch({ type: 'record', index: i }),
+                    )
+                  }
+                  actions={
+                    <>
+                      {records.length > 0 && (
+                        <ExportRecords
+                          busy={exporting}
+                          onExport={(f) => void exportRecords(template.templateId, f)}
+                        />
+                      )}
+                      {fillOn && (
+                        <button
+                          type="button"
+                          className="afl-button"
+                          onClick={() => void downloadXml()}
+                        >
+                          Download XML
+                        </button>
+                      )}
+                    </>
+                  }
                 />
               )}
               {render?.type === 'failed' && (
                 <ErrorBanner problems={[{ fileName: template.fileName, error: render.error }]} />
               )}
-              {render?.type === 'rendered' && (
+              {fillOn && fill.res && fill.res.invalid.length > 0 && (
+                <Attention count={fill.res.invalid.length} />
+              )}
+              {rendered && (
                 <>
                   <p className="afl-print-caption">{label}</p>
                   <Paper
-                    result={render}
+                    result={rendered}
+                    {...(fillOn && fill.res && { fill: { res: fill.res, onCommand: fillCommand } })}
                     label={label}
                     xray={s.xray}
                     outlined={outlined}
                     {...(reveal !== undefined && { reveal })}
                     onPoint={onPoint}
                     onText={onPaperText}
-                    fade={render.first === true}
+                    fade={render?.type === 'rendered' && render.first === true && !fillOn}
                   />
-                  {(render.issues.length > 0 || fontNote) && (
+                  {(rendered.issues.length > 0 || fontNote) && (
                     <details className="afl-notes" open={fontNote || undefined}>
-                      <summary>Notes ({render.issues.length + (fontNote ? 1 : 0)})</summary>
+                      <summary>Notes ({rendered.issues.length + (fontNote ? 1 : 0)})</summary>
                       <ul>
                         {fontNote && (
                           <li>
@@ -484,7 +634,7 @@ export function App() {
                             load while offline.
                           </li>
                         )}
-                        {render.issues.map((i, n) => (
+                        {rendered.issues.map((i, n) => (
                           <li key={n}>{i.message}</li>
                         ))}
                       </ul>

@@ -8,11 +8,17 @@ interface Props {
   readonly onSample: (id: string) => void;
   /** Absent while no template is open: X-ray has nothing to show. */
   readonly xray?: { readonly on: boolean; readonly toggle: () => void };
+  /** Spec 04 R6: the Fill switch, by X-ray. `unavailable` says why it is off-limits. */
+  readonly fill?: {
+    readonly on: boolean;
+    readonly unavailable?: string;
+    readonly toggle: () => void;
+  };
   /** Spec 12: back to Triage, when two or more templates are open. */
   readonly onTriage?: () => void;
 }
 
-export function Header({ onFiles, onSample, xray, onTriage }: Props) {
+export function Header({ onFiles, onSample, xray, fill, onTriage }: Props) {
   const input = useRef<HTMLInputElement>(null);
   const menu = useMenu();
   return (
@@ -72,6 +78,22 @@ export function Header({ onFiles, onSample, xray, onTriage }: Props) {
             onClick={xray.toggle}
           >
             X-ray
+          </button>
+        )}
+        {fill && (
+          <button
+            type="button"
+            role="switch"
+            className="afl-button afl-toggle afl-fill-switch"
+            aria-checked={fill.on}
+            aria-disabled={fill.unavailable !== undefined || undefined}
+            {...(fill.unavailable !== undefined && {
+              title: fill.unavailable,
+              'aria-description': fill.unavailable,
+            })}
+            onClick={() => fill.unavailable === undefined && fill.toggle()}
+          >
+            Fill
           </button>
         )}
       </div>

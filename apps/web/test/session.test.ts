@@ -3,7 +3,7 @@ import fc from 'fast-check';
 import { describe, expect, test } from 'vitest';
 import type { InputFile } from '../src/worker/protocol';
 import { readZip, writeZip } from '@afterlife/core';
-import { Session } from '../src/worker/session';
+import { Session, toWireError } from '../src/worker/session';
 
 // Spec 13 B3, P16: a file whose bytes are already open is not added again, templates and
 // records alike; the answer names it, with the template it already is.
@@ -131,5 +131,55 @@ describe('spec 09 R12.8: a .zip opens as if its .xsn and .xml files were dropped
     expect(steps).toEqual([1, 2]);
     const records = readZip(new Uint8Array(out.bytes)).find((e) => e.name === 'Records.csv')!;
     expect(new TextDecoder().decode(await records.read()).split('\r\n')).toHaveLength(4);
+  });
+});
+
+describe('spec 04 task 5: fill through the Worker session', () => {
+  const NOW = '2026-11-11T09:00:00+07:00';
+  const AMOUNT = '/my:expenseClaim[1]/my:expenses[1]/my:expense[1]/my:amount[1]';
+  const TOTAL = '/my:expenseClaim[1]/my:totalAmount[1]';
+
+  test('empty form: edit, the total and the render follow; download matches the template', async () => {
+    const s = new Session();
+    const res = await s.open([input('02-expense-report.xsn')]);
+    const id = res.templates[0]!.templateId;
+    const view = res.templates[0]!.ir.views[0]!.name;
+    const opened = await s.fillOpen(id, undefined, view, NOW);
+    expect([opened.dirty, opened.workedOut]).toEqual([false, 0]);
+    expect(opened.calculated).toEqual([TOTAL]);
+    expect(opened.invalid.map((i) => i.short)).toContain('Cannot be blank');
+    const a = await s.fill({ kind: 'edit', path: AMOUNT, value: '12.5' }, view, NOW);
+    expect([a.values[AMOUNT], a.values[TOTAL], a.dirty]).toEqual(['12.5', '12.5', true]);
+    expect(a.html).toContain('$12.50');
+    expect(a.ms).toBeGreaterThan(0);
+    const d = s.fillDownload();
+    expect(d.fileName).toBe('02-expense-report-new.xml');
+    const xml = new TextDecoder().decode(d.bytes);
+    expect(xml).toMatch(/^<\?xml version="1.0" encoding="UTF-8"\?>\n<\?mso-infoPathSolution /);
+    const back = await s.open([{ name: d.fileName, bytes: d.bytes }]);
+    expect(back.records.find((r) => r.fileName === d.fileName)?.match).toEqual({
+      kind: 'exact',
+      templateId: id,
+    });
+    expect((await s.fill({ kind: 'render' }, view, NOW)).dirty).toBe(false);
+  });
+
+  test('a bad path is FILL_PATH; no session or another version is FILL_STATE', async () => {
+    const s = new Session();
+    const res = await s.open([input('02-expense-report.xsn'), input('02-expense-report-001.xml')]);
+    const id = res.templates[0]!.templateId;
+    const view = res.templates[0]!.ir.views[0]!.name;
+    await expect(s.fill({ kind: 'render' }, view, NOW)).rejects.toMatchObject({
+      code: 'FILL_STATE',
+    });
+    await s.fillOpen(id, res.records[0]!.recordId, view, NOW);
+    const err = await s
+      .fill({ kind: 'edit', path: TOTAL, value: '1' }, view, NOW)
+      .catch((e: unknown) => e);
+    expect(toWireError(err)).toEqual({
+      code: 'FILL_PATH',
+      details: { path: TOTAL, reason: 'calculated' },
+    });
+    await expect(s.fillOpen(id, 'nope', view, NOW)).rejects.toMatchObject({ code: 'FILL_STATE' });
   });
 });

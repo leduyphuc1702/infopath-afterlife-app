@@ -5,6 +5,8 @@ import {
   buildFormIR,
   DEFAULT_LIMITS,
   exportRecords,
+  FillCommandError,
+  FillSession,
   matchRecord,
   parseXsn,
   prepareView,
@@ -24,6 +26,9 @@ import {
 import type {
   Duplicate,
   ExportedRes,
+  FillCommand,
+  FilledRes,
+  FilledXmlRes,
   FileFailure,
   InputFile,
   Progress,
@@ -55,6 +60,9 @@ interface StoredRecord {
 const isAfterlifeError = (e: unknown): e is AfterlifeError => e instanceof AfterlifeError;
 
 export function toWireError(e: unknown): WireError {
+  if (e instanceof AppError) return { code: e.code, details: { ...e.details } };
+  if (e instanceof FillCommandError)
+    return { code: 'FILL_PATH', details: { path: e.path, reason: e.reason } };
   if (isAfterlifeError(e)) return { code: e.code, details: { ...e.details } };
   return {
     code: 'WORKER_FAILED',
@@ -97,6 +105,15 @@ export class Session {
   private readonly seen = new Map<string, { readonly templateId?: string }>();
 
   private last: TriageResult | undefined;
+  /** Spec 04 D1: at most one fill session, for one template's empty form or one record. */
+  private fillState:
+    | {
+        readonly template: Template;
+        readonly fileName: string;
+        readonly session: FillSession;
+        dirty: boolean;
+      }
+    | undefined;
 
   /** The files to read: `.zip` files opened (folders walked, nested zips not), in order. */
   private items(files: readonly InputFile[], ignored: string[]): Item[] {
@@ -321,5 +338,158 @@ export class Session {
       ...(record && { record: record.bytes }),
     });
     return { type: 'rendered', html: r.html, css: r.css, issues: r.issues, marks: r.marks };
+  }
+
+  // --- Spec 04: fill-in mode ------------------------------------------------------------------
+
+  private template(templateId: string): Template {
+    const t = this.templates.find((x) => x.summary.templateId === templateId);
+    if (!t)
+      throw new AfterlifeError('INTERNAL', {
+        path: 'session.fill',
+        reason: `no template ${templateId}`,
+      });
+    return t;
+  }
+
+  private prepared(t: Template, view: string): Promise<PreparedView> {
+    let prepared = t.views.get(view);
+    if (!prepared) {
+      prepared = prepareView(t.parsed, t.summary.ir, { view });
+      t.views.set(view, prepared);
+      prepared.catch(() => t.views.delete(view));
+    }
+    return prepared;
+  }
+
+  /** R1.1, R1.5: a session on the empty form, or on a record of exactly this version. */
+  async fillOpen(
+    templateId: string,
+    recordId: string | undefined,
+    view: string,
+    now: string,
+  ): Promise<FilledRes> {
+    const t0 = performance.now();
+    const t = this.template(templateId);
+    const record =
+      recordId === undefined ? undefined : this.records.find((r) => r.recordId === recordId);
+    if (recordId !== undefined) {
+      const m = record && this.summary().records.find((r) => r.recordId === recordId)?.match;
+      if (!record || m?.kind !== 'exact' || m.templateId !== templateId)
+        throw new AppError('FILL_STATE', { reason: 'version', recordId });
+    }
+    const session = FillSession.open(t.parsed, t.summary.ir, {
+      now,
+      ...(record && { record: record.bytes }),
+    });
+    const base = t.summary.fileName.replace(/\.xsn$/i, '');
+    this.fillState = {
+      template: t,
+      fileName: record?.fileName ?? `${base}-new.xml`,
+      session,
+      dirty: false,
+    };
+    const workedOut = record
+      ? new Set(
+          session.opened.changes
+            .filter(
+              (c) =>
+                c.before === '' &&
+                session.opened.trace.some(
+                  (e) => e.kind === 'calc' && e.changes.some((x) => x.path === c.path),
+                ),
+            )
+            .map((c) => c.path),
+        ).size
+      : 0;
+    return this.filled(view, now, session.opened, workedOut, t0);
+  }
+
+  /** R1.3, R2.1: one command, then a render of `view`. */
+  async fill(command: FillCommand, view: string, now: string): Promise<FilledRes> {
+    const t0 = performance.now();
+    const f = this.fillState;
+    if (!f) throw new AppError('FILL_STATE', { reason: 'closed' });
+    const a =
+      command.kind === 'edit'
+        ? f.session.edit(command.path, command.value, now)
+        : command.kind === 'press'
+          ? f.session.press(command.ctrlId, command.path, now)
+          : undefined;
+    if (a && a.changes.length > 0) f.dirty = true;
+    return this.filled(view, now, a, 0, t0);
+  }
+
+  /** R8.1: the record with its processing instructions, as UTF-8. Downloaded is not dirty. */
+  fillDownload(): FilledXmlRes {
+    const f = this.fillState;
+    if (!f) throw new AppError('FILL_STATE', { reason: 'closed' });
+    const xml = f.session.xml().replace(/^<\?xml[^>]*\?>\s*/, '');
+    const bytes = new TextEncoder().encode(`<?xml version="1.0" encoding="UTF-8"?>\n${xml}`);
+    f.dirty = false;
+    return {
+      type: 'filledXml',
+      fileName: f.fileName,
+      bytes: bytes.buffer,
+      invalid: f.session.invalid().length,
+    };
+  }
+
+  fillClose(): void {
+    this.fillState = undefined;
+  }
+
+  private async filled(
+    view: string,
+    now: string,
+    a: ReturnType<FillSession['edit']> | undefined,
+    workedOut: number,
+    t0: number,
+  ): Promise<FilledRes> {
+    const f = this.fillState!;
+    const r = renderView(await this.prepared(f.template, view), {
+      now,
+      locale: 'en-US',
+      record: new TextEncoder().encode(f.session.xml()),
+    });
+    const values: Record<string, string> = {};
+    const calculated: string[] = [];
+    for (const m of r.marks) {
+      if (m.path === undefined || m.path in values) continue;
+      values[m.path] = f.session.text(m.path) ?? '';
+      if (m.fieldId !== undefined && f.session.calculated(m.fieldId)) calculated.push(m.path);
+    }
+    const invalid = (a?.invalid ?? f.session.invalid()).map(({ path, short, message }) => ({
+      path,
+      short,
+      message,
+    }));
+    return {
+      type: 'filled',
+      html: r.html,
+      css: r.css,
+      issues: r.issues,
+      marks: r.marks,
+      values,
+      calculated,
+      invalid,
+      trace: a?.trace ?? [],
+      dialogs: a?.dialogs ?? [],
+      notices: a?.notices ?? [],
+      ...(a?.view !== undefined && { view: a.view }),
+      dirty: f.dirty,
+      workedOut,
+      ms: performance.now() - t0,
+    };
+  }
+}
+
+/** An app-level error with its code (`FILL_PATH`, `FILL_STATE`), carried as a WireError. */
+export class AppError extends Error {
+  constructor(
+    readonly code: 'FILL_PATH' | 'FILL_STATE',
+    readonly details: Readonly<Record<string, unknown>>,
+  ) {
+    super(code);
   }
 }

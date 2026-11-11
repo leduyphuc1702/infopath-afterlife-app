@@ -117,6 +117,22 @@ export const MESSAGES: {
     why: `The most this viewer opens at once is ${str(d.max)}.`,
     action: 'Drop the templates first, then the records in smaller folders.',
   }),
+  FILL_PATH: () => ({
+    what: "That change wasn't made.",
+    why: 'The field it was for is no longer on the form, or it is worked out from other fields.',
+    action: 'Check the field and type the value again.',
+  }),
+  FILL_STATE: (d) => ({
+    what: "This record can't be filled in.",
+    why:
+      d.reason === 'version'
+        ? 'It was made with another version of the form, so its fields may not match.'
+        : 'The fill session ended, for example after the background worker restarted.',
+    action:
+      d.reason === 'version'
+        ? 'Open the matching version of the template, or fill in the empty form.'
+        : 'Turn Fill on again. Download the XML first next time to keep your changes.',
+  }),
   WORKER_TIMEOUT: (_d, f) => ({
     what: `${f || 'The last request'} took too long.`,
     why: 'The background worker gave no answer in 15 seconds, so we restarted it.',

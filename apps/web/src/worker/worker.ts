@@ -25,6 +25,15 @@ async function handle(req: Req): Promise<ResBody> {
       return { type: 'csv', text: session.csv() };
     case 'exportRecords':
       return session.exportRecords(req.templateId, req.format, progress);
+    case 'fillOpen':
+      return session.fillOpen(req.templateId, req.recordId, req.view, req.now);
+    case 'fill':
+      return session.fill(req.command, req.view, req.now);
+    case 'fillDownload':
+      return session.fillDownload();
+    case 'fillClose':
+      session.fillClose();
+      return { type: 'ready' };
     case 'render':
       return session.render(req.templateId, req.view, req.recordId, req.now);
   }
@@ -40,7 +49,8 @@ scope.onmessage = (e) => {
     } catch (err) {
       body = { type: 'failed', error: toWireError(err) };
     }
-    // An export's bytes are transferred, not copied (R12.4).
-    scope.postMessage({ ...body, id: req.id }, body.type === 'exported' ? [body.bytes] : []);
+    // An export's or a download's bytes are transferred, not copied (R12.4, spec 04 R8.1).
+    const transfer = body.type === 'exported' || body.type === 'filledXml' ? [body.bytes] : [];
+    scope.postMessage({ ...body, id: req.id }, transfer);
   });
 };

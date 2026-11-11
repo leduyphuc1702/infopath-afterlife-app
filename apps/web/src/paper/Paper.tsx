@@ -3,7 +3,8 @@
 // Core has sanitised the HTML in the Worker (spec 03 P5); the root it returns is `inert`.
 // X-ray (R5): outlines over the controls, from their measured boxes.
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import type { RenderedRes } from '../worker/protocol';
+import type { FillCommand, FilledRes, RenderedRes } from '../worker/protocol';
+import { FILL_CSS, focusState, listen, restoreFocus, upgrade } from './fill';
 import { loadPaperFonts } from '../shell/fonts';
 import { fadeIn } from './fade';
 import { hitTest, measure, toFrame, type Box } from './geometry';
@@ -13,7 +14,9 @@ import './paper.css';
 const PRINT_WIDTH = (180 / 25.4) * 96;
 
 interface Props {
-  readonly result: RenderedRes;
+  readonly result: Pick<RenderedRes, 'html' | 'css'>;
+  /** Spec 04: Fill mode. `result` is then this answer; edits go to `onCommand`. */
+  readonly fill?: { readonly res: FilledRes; readonly onCommand: (c: FillCommand) => void };
   /** Accessible name of the paper region, e.g. "Expense Report, Claim view, empty form". */
   readonly label: string;
   readonly xray?: boolean;
@@ -37,7 +40,10 @@ export function Paper({
   onPoint,
   onText,
   fade = false,
+  fill,
 }: Props) {
+  const fillRef = useRef(fill);
+  fillRef.current = fill;
   const frame = useRef<HTMLElement>(null);
   const host = useRef<HTMLDivElement>(null);
   const [boxes, setBoxes] = useState<readonly Box[]>([]);
@@ -54,7 +60,26 @@ export function Paper({
   useLayoutEffect(() => {
     const el = host.current!;
     const root = el.shadowRoot ?? el.attachShadow({ mode: 'open' });
-    root.innerHTML = `<style>${result.css}</style>${result.html}`;
+    // Spec 04 R6.3: focus, caret and scroll survive the render that follows a commit.
+    const f = fillRef.current;
+    const focus = f ? focusState(root) : undefined;
+    const scroll = frame.current && [
+      frame.current.scrollTop,
+      frame.current.scrollLeft,
+      scrollX,
+      scrollY,
+    ];
+    root.innerHTML = `<style>${result.css}${f ? FILL_CSS : ''}</style>${result.html}`;
+    if (f) {
+      // e2e and R2.4: how many fill renders this paper has drawn.
+      el.dataset.aflRenders = String(Number(el.dataset.aflRenders ?? 0) + 1);
+      upgrade(root, f.res);
+      if (focus) restoreFocus(root, focus);
+      if (scroll && frame.current) {
+        [frame.current.scrollTop, frame.current.scrollLeft] = [scroll[0]!, scroll[1]!];
+        if (scrollX !== scroll[2] || scrollY !== scroll[3]) window.scrollTo(scroll[2]!, scroll[3]!);
+      }
+    }
     if (fade) fadeIn(el);
     remeasure();
     if (onText) {
@@ -65,6 +90,17 @@ export function Paper({
     }
     // `fade` comes with the result it belongs to; it is not a dependency on its own.
   }, [result, remeasure, onText]);
+
+  const filling = fill !== undefined;
+  useEffect(() => {
+    const root = host.current?.shadowRoot;
+    if (!filling || !root) return;
+    return listen(
+      root,
+      () => fillRef.current?.res,
+      (c) => fillRef.current?.onCommand(c),
+    );
+  }, [filling]);
 
   useEffect(() => {
     void loadPaperFonts();
@@ -128,7 +164,12 @@ export function Paper({
       onPointerMove={onMove}
       onPointerLeave={() => xray && onPoint?.(undefined)}
     >
-      <div className="afl-paper-host" ref={host} data-afl-paper="" />
+      <div
+        className="afl-paper-host"
+        ref={host}
+        data-afl-paper=""
+        {...(fill && { 'data-afl-filling': '', 'data-afl-cycle-ms': fill.res.ms.toFixed(2) })}
+      />
       <div className="afl-outlines" aria-hidden="true">
         {shown.map((b) => (
           <div

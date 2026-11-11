@@ -23,20 +23,20 @@ Every task ends with the app working and `pnpm check` green. Test first where a 
   - Requirements: R5.1, R11.4
   - Done when: `validate.test.ts` (one case per kind) and `validate-oracle.test.ts` over every
     own record green; invalid records listed.
-- [ ] 5. Worker protocol
+- [x] 5. Worker protocol
   - `fillOpen`, `fill`, `fillClose`, `download` in `protocol.ts`, `session.ts`, `worker.ts`,
     `client.ts`; codes `FILL_PATH`, `FILL_STATE` (§9).
   - Requirements: R1.3, R1.5, R8.1
   - Done when: `apps/web/test/session.test.ts` fills form 02 through the Worker session and
     downloads bytes that `matchRecord` matches to the template.
-- [ ] 6. Fill toggle and editing on the paper
+- [x] 6. Fill toggle and editing on the paper
   - `paper/fill.ts`, toolbar toggle, not-`inert` root, text, dropdown, check box, option button,
     date (D21), read-only controls (D23), focus restore (D22), invalid styling and summary line
     (D17).
   - Requirements: R5.2, R5.3, R6.1, R6.2, R6.3, R6.4
   - Done when: e2e on form 02: type an amount, Total updates, focus stays; a blank name shows
     the dashed border and its message; X-ray still works.
-- [ ] 7. Download XML and reopen
+- [x] 7. Download XML and reopen
   - "Download XML" with processing instructions, file name, count of invalid fields; leave-Fill
     prompt (D24).
   - Requirements: R5.4, R8.1, R8.2, R8.3, R11.5

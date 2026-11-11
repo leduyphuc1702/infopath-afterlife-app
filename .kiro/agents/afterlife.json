@@ -22,6 +22,17 @@
       ]
     }
   },
+  "hooks": {
+    "preToolUse": [
+      { "matcher": "write", "command": "node tools/kiro-hooks/no-secrets.mjs", "timeout_ms": 5000 },
+      { "matcher": "write", "command": "node tools/kiro-hooks/sample-guard.mjs", "timeout_ms": 5000 },
+      { "matcher": "shell", "command": "node tools/kiro-hooks/sample-guard.mjs", "timeout_ms": 5000 }
+    ],
+    "postToolUse": [
+      { "matcher": "write", "command": "node tools/kiro-hooks/format-on-write.mjs", "timeout_ms": 8000 }
+    ],
+    "stop": [{ "command": "node tools/kiro-hooks/journal-on-stop.mjs", "timeout_ms": 5000 }]
+  },
   "resources": [
     "file://.kiro/steering/**/*.md",
     "skill://.kiro/skills/**/SKILL.md"

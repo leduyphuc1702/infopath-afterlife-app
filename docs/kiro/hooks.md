@@ -1,26 +1,69 @@
-# Hooks to create in Kiro
+# Kiro hooks
 
-Format checked 2026-11-02 at kiro.dev/docs/hooks:
-- files go in `.kiro/hooks/*.json`, with `"version": "v1"`;
-- triggers include `PostFileSave`, `PreToolUse`, `PostToolUse` and `Stop`;
-- actions are `command` (shell) or `agent` (prompt).
+Created 2026-11-11. The CLI reads hooks from the agent file `.kiro/agents/afterlife.json`, field
+`hooks` (object format: trigger → list of `{matcher, command, timeout_ms}`). Format checked with
+the CLI's own documentation (`introspect`, "Hooks System" and "Agent Configuration"), and the file
+passes `kiro-cli agent validate --path .kiro/agents/afterlife.json` (exit 0). The CLI reads the
+agent file when a turn starts, so the hooks run from the turn after the one that wrote them.
 
-Ask Kiro to create these hooks from the descriptions below, so the history shows Kiro authored them. Check the full trigger list at kiro.dev/docs/hooks/types on day 1.
+## What exists
 
-**kiro-cli does not load `.kiro/hooks/`.** That folder is read by the Kiro IDE. CLI hooks live in
-the agent JSON (`.kiro/agents/afterlife.json`, field `hooks`), and the CLI documentation lists
-only these triggers: `agentSpawn`, `userPromptSubmit`, `preToolUse`, `postToolUse` and `stop`. Its
-only action type is `command`; exit code 2 from a `preToolUse` hook blocks the tool. There is no
-`PostFileSave` trigger and no `agent` (prompt) action in the CLI, so the file-save and agent rows
-below apply to the IDE only, or must be rewritten as `postToolUse` on `write` with a command. No
-hooks exist yet in either place.
+The scripts are in `tools/kiro-hooks/`: plain Node, no dependencies. Each one reads the hook event
+as JSON from STDIN. Their tests are in `tools/kiro-hooks/test/hooks.test.mjs`, run by
+`pnpm test:hooks` (`node --test`), which is part of `pnpm check`.
 
-| Name | Trigger and matcher | Action | Purpose |
-|---|---|---|---|
-| test-core-on-save | `PostFileSave`, `^packages/core/.*\.ts$` | command: `pnpm --filter core vitest related --run "$FILE"`. Read the file path from the STDIN JSON; let Kiro write the small wrapper script. | Fast feedback on core changes |
-| golden-on-sample | `PostFileSave`, `^samples/(own\|public)/.*\.(xsn\|xml)$` | agent: "A sample changed. Regenerate golden snapshots for it, show me the diff and explain any coverage change before accepting." | Keep golden tests honest |
-| forge-lint-on-manifest | `PostFileSave`, `^apps/forge/manifest\.yml$` | command: `cd apps/forge && forge lint` | Catch manifest errors early |
-| license-guard | `PreToolUse` on file-write tools whose path matches `^samples/` | command: a script that blocks the write unless `docs/SAMPLE-LICENSES.md` lists the file's source as "in repo", and always blocks copying a file from under `$AFTERLIFE_PRIVATE_SAMPLES` into the repo | Licence safety for the public repo |
-| no-secrets | `PreToolUse` on file-write tools | command: scan the content for tokens such as `ATATT`, `ghp_`, `AKIA` and private keys; block if found | Public repo safety |
-| journal-on-stop | `Stop` | agent: "Append 3–5 lines to .kiro/JOURNAL.md: what you did, what Kiro feature helped (spec, hook, steering, MCP, PBT), and anything that went wrong." | Raw material for the write-up and blog |
-| spec-sync-check | `PostFileSave`, `^\.kiro/specs/.*/requirements\.md$` | agent: "Requirements changed. List tasks in tasks.md that are now stale or missing." | Keep specs and tasks aligned |
+A hook never breaks a turn. Every script exits 0 on any error, bad input, or after its own time
+limit (4 s; 7 s for the formatter); only the two guards exit 2, and only when they block.
+
+| Hook | Trigger, matcher | What it does |
+|---|---|---|
+| `no-secrets.mjs` | `preToolUse`, `write` | Blocks content holding an Atlassian API token (`ATATT…`), a GitHub token (`ghp_…`, `gho_…`), a fine-grained GitHub token (`github_pat_…`), an AWS key id (`AKIA…`, `ASIA…`), a `-----BEGIN … PRIVATE KEY-----` block, or a Forge web trigger URL with its token. The message names the pattern, never the matched text. |
+| `sample-guard.mjs` | `preToolUse`, `write` and `shell` | Blocks a write to a path under `samples/`, and a shell command that writes, moves, copies or deletes there (`rm`, `mv`, `cp`, `>`, `sed -i`, `git checkout`, `tar`, a script calling `writeFile`, …). Reading `samples/` stays allowed. The agent file's `deniedPaths` already covers the write tool; this adds the shell. |
+| `format-on-write.mjs` | `postToolUse`, `write` | Runs `prettier --check --ignore-unknown` from the repo root on the written file when it is `.ts`, `.tsx`, `.css` or `.json` and inside the repo; prints one line when it fails. Never rewrites, never blocks. Files `.prettierignore` excludes pass silently. |
+| `journal-on-stop.mjs` | `stop` | Appends one line to `.kiro/JOURNAL.md`: UTC time, files changed since the last commit by area (counts from `git status --porcelain`), and ticked over all task boxes per spec. It ignores the event's `assistant_response`: no prose, no prompt text. |
+
+## Differences from what we assumed
+
+- The `write` matcher is a group: it selects the `write` **and** `code` tools. The guards handle
+  `code`: only a `pattern_rewrite` with `dry_run: false` on a `samples/` path is blocked.
+- The write tool's input has its own `command` field (`create`, `strReplace`, `insert`), so the
+  sample guard tells the shell apart by `tool_name`, not by the field.
+- The `stop` event carries the full `assistant_response`. The journal reads none of it.
+- Object-format timeouts are `timeout_ms` (milliseconds); the array format uses `timeout` in
+  seconds. We use the object format.
+- `node --test <folder>` does not run a folder on Node 22, so the script names the file glob.
+
+## Kiro IDE hooks: not created
+
+The CLI documentation available to the agent does not describe the IDE's `.kiro/hooks/*.json`
+format. The earlier note here (checked 2026-11-02 on kiro.dev) said `"version": "v1"` with
+`PostFileSave`, `PreToolUse`, `PostToolUse` and `Stop`, but not the fields of a hook file, so no
+IDE file was written. The four scripts take a JSON event on STDIN and can be called from an IDE
+hook once its format is confirmed.
+
+## Rows of the old table that were dropped
+
+| Old row | Why |
+|---|---|
+| test-core-on-save | No `PostFileSave` in the CLI. As a `postToolUse` on every write it would run vitest dozens of times per turn; the workflow already runs each task's tests. |
+| golden-on-sample | The agent cannot write under `samples/`, and the action was an agent prompt, which the CLI does not have. |
+| forge-lint-on-manifest | `apps/forge` does not exist yet. Add it as a `postToolUse` on `write` when the manifest lands. |
+| license-guard | Replaced by `sample-guard`: no write under `samples/` is allowed at all, so checking `SAMPLE-LICENSES.md` per write is not needed. Copying from `$AFTERLIFE_PRIVATE_SAMPLES` into the repo is still covered by the steering rules, not by a hook. |
+| journal-on-stop (agent prose) | Kept, as counts only: a command cannot write prose, and a prompt-free journal cannot leak text. |
+| spec-sync-check | An agent prompt on file save; neither exists in the CLI. |
+
+## Proof runs (2026-11-11, by hand, Node 22)
+
+Run from the repo root, `R=$(pwd)`:
+
+| Command | Exit | Output |
+|---|---|---|
+| `echo '{"tool_name":"write","tool_input":{"content":"const k = \"AKIA…EXAMPLE\""}}' \| node tools/kiro-hooks/no-secrets.mjs` (a 20-character AKIA key) | 2 | `Blocked by the no-secrets hook: the content holds an AWS access key id (AKIA…). Put secrets in Forge environment variables …` |
+| same, content `const k = 1` | 0 | (none) |
+| `{"cwd":"$R","tool_name":"shell","tool_input":{"command":"mv x.xml samples/own/records/"}}` → `sample-guard.mjs` | 2 | `Blocked by the sample-guard hook: the agent never changes files under samples/ …` |
+| same, command `grep -r amount samples/own/records` | 0 | (none) |
+| `{"cwd":"$R","tool_name":"write","tool_input":{"command":"create","path":"samples/own/x.xml"}}` → `sample-guard.mjs` | 2 | same block message |
+| `{"cwd":"$R","tool_name":"write","tool_input":{"path":"package.json"}}` → `format-on-write.mjs` | 0 | (none: formatted) |
+| same, path to a badly formatted `tools/kiro-hooks/bad.json` (made and deleted for the run) | 0 | `format-on-write: tools/kiro-hooks/bad.json is not formatted; run \`pnpm exec prettier --write …\`` |
+| `{"hook_event_name":"stop","cwd":"$R","assistant_response":"SECRET PROSE"}` → `journal-on-stop.mjs` | 0 | `.kiro/JOURNAL.md` gained `- 2026-11-11 04:33 UTC. Changed since last commit: (root) 2, .kiro/agents 1, tools/kiro-hooks 6. Tasks ticked: … 04-classic-runtime 4/13 …`; "SECRET" appears 0 times |
+| `pnpm test:hooks` | 0 | 5 tests, 5 pass (each pattern, shell write and read cases, bad JSON exits 0) |

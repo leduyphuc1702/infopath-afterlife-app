@@ -65,8 +65,15 @@ export default defineConfig(
     },
   },
   {
-    files: ['**/*.js'],
+    files: ['**/*.js', '**/*.mjs'],
     ...tseslint.configs.disableTypeChecked,
+  },
+  {
+    // The Kiro CLI hooks (docs/kiro/hooks.md): plain Node scripts.
+    files: ['tools/**/*.mjs'],
+    languageOptions: {
+      globals: { process: 'readonly', setTimeout: 'readonly', clearTimeout: 'readonly' },
+    },
   },
   {
     files: ['packages/core/src/**/*.ts'],

@@ -1,7 +1,7 @@
 // Spec 09 design §4: the page's side of the Worker. Each request gets an id and a promise; an
 // answer that takes more than 15 s ends the Worker, which is started again and given the files
 // it held (the watchdog; core's own budgets should make it unnecessary).
-import type { InputFile, Progress, ReqBody, Res, ResBody } from './protocol';
+import type { FillCommand, InputFile, Progress, ReqBody, Res, ResBody } from './protocol';
 
 export const WATCHDOG_MS = 15_000;
 
@@ -119,6 +119,35 @@ export class WorkerClient {
   /** Spec 09 R12.1: one template's records as a workbook or a zip of CSVs. */
   exportRecords(templateId: string, format: 'xlsx' | 'csv', progress?: Progress): Promise<ResBody> {
     return this.send({ type: 'exportRecords', templateId, format }, [], progress);
+  }
+
+  /** Spec 04 R1.1: open a fill session (the empty form when `recordId` is absent). */
+  fillOpen(
+    templateId: string,
+    recordId: string | undefined,
+    view: string,
+    now: string,
+  ): Promise<ResBody> {
+    return this.send({
+      type: 'fillOpen',
+      templateId,
+      view,
+      now,
+      ...(recordId !== undefined && { recordId }),
+    });
+  }
+
+  /** Spec 04 R1.3: one command; the answer renders `view`. */
+  fill(command: FillCommand, view: string, now: string): Promise<ResBody> {
+    return this.send({ type: 'fill', command, view, now });
+  }
+
+  fillDownload(): Promise<ResBody> {
+    return this.send({ type: 'fillDownload' });
+  }
+
+  fillClose(): Promise<ResBody> {
+    return this.send({ type: 'fillClose' });
   }
 
   /** Spec 12 R5.1: the open session's Triage as CSV text. */

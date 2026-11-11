@@ -72,6 +72,7 @@ h2 {
   cursor: not-allowed;
 }
 
+.afl-toggle[aria-checked='true'],
 .afl-toggle[aria-pressed='true'] {
   border-color: var(--ds-border-selected);
   background: var(--ds-background-selected);
@@ -573,5 +574,41 @@ code {
     min-width: 0;
     box-shadow: none;
     zoom: var(--afl-print-zoom, 1);
+  }
+}
+
+/* Spec 04: Fill mode. */
+.afl-toggle[aria-disabled='true'] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.afl-attention {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-100, 8px);
+  margin: 0 0 var(--ds-space-100, 8px);
+  color: var(--ds-text-danger);
+}
+.afl-dialog {
+  max-width: min(440px, calc(100vw - 32px));
+  border: 1px solid var(--ds-border);
+  border-radius: 6px;
+  padding: var(--ds-space-300, 24px);
+  background: var(--ds-surface-overlay);
+  color: var(--ds-text);
+}
+.afl-dialog::backdrop {
+  background: var(--ds-blanket);
+}
+.afl-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ds-space-100, 8px);
+  margin-top: var(--ds-space-200, 16px);
+}
+@media print {
+  .afl-attention,
+  .afl-dialog {
+    display: none;
   }
 }

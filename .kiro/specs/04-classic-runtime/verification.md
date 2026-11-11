@@ -68,3 +68,31 @@ No required, type or facet error appears in any record.
 
 `pnpm check` (2026-11-11, after task 4): exit 0; core 3,778 passed (3 skipped), browser 337,
 web 101. The perf test runs in the `perf` project (`pnpm --filter @afterlife/core test:perf`).
+
+## Tasks 5–7: fill-in mode on the page (2026-11-11)
+
+| Criterion | Oracle | Result |
+|---|---|---|
+| R1.3, R1.4, R1.5, R8.1 (Worker) | `apps/web/test/session.test.ts` › "spec 04 task 5" (2): fill form 02's empty form, total and render follow, download matches the template exactly; `FILL_PATH` for a calculated field, `FILL_STATE` without a session or for an unknown record | pass |
+| R5.2, R5.3, R6.1–R6.3 | `apps/web/e2e/fill.spec.ts` › "form 02: type amounts…": the blank name is marked at once ("Cannot be blank", `aria-invalid`); Tab commits, Total shows `$12.50`, focus moved on, page did not scroll; Enter commits and keeps focus and caret ("Taxi" + " ride"); "Must be > 0" fires and clears; read-only Total and Receipt say why; X-ray outlines on hover | pass |
+| R5.4, R8.1–R8.3, R11.5 | same file › "Download XML, drop it back": `02-expense-report-new.xml`, UTF-8 declaration then `mso-infoPathSolution`; dropped back it is record 31, matched, same values; local storage, session storage and IndexedDB empty; request guards on | pass |
+| R6.4, D24 | same file › "leaving Fill with changes asks": `<dialog>` "Discard your changes?" on the switch and on the pager; Escape and "Keep filling" keep it; Back and Forward keep the session; print media shows the filled paper | pass |
+| R1.5 | same file › "another version": the switch is `aria-disabled` and says why | pass |
+| Review note: old records that break their rules | same file › "form 10": "Max 24" marked at once; "1 calculated field was empty in this record and has been worked out." in the status line; not an unsaved change | pass |
+| R2.4 (Worker) | same file › "R2.4", 20 commits each, `ms` measured in the Worker from command in to render out; the 30 ms budget is asserted on form 04, form 08 is reported (E2) | spec alone: form 04 p50 2.80 ms, p95 8.30 ms; form 08 p50 17.20 ms, p95 20.90 ms. Full parallel `pnpm e2e:web`: form 04 p95 6.40 ms; form 08 p50 30.20 ms, p95 50.30 ms |
+
+**Back and Forward:** the fill session is kept, not discarded. It belongs to one template and
+record; leaving the form screen (Back, Forward, opening another form) keeps it in the Worker, and
+coming back to that template and record shows Fill on with the values. The page asks before a
+change would discard it: the Fill switch, the pager, turning Fill on for another form, and closing
+the tab (the browser's own question).
+
+**Number text** (decision taken in review): a calculation writes the `xpath` package's text
+(`630.1800000000001`); the view's formatting draws it (`$630.18`). InfoPath's text for such sums
+is unverified.
+
+Bundle (`apps/web/test/budget.test.ts`, gzip): entry 72.8 → 76.3 KB of 100, Worker 133.7 → 139.7
+KB of 160; no new chunk.
+
+`pnpm check` (after task 7): exit 0; hooks 5, core 3,778 passed (3 skipped), browser 337, web 105.
+`pnpm e2e:web`: 63 passed.

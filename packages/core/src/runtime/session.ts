@@ -74,6 +74,8 @@ export class FillSession {
   private effects: RuleEffects = { dialogs: [], notices: [] };
   private lastInvalid = new Map<string, string>();
   readonly trace: TraceEntry[] = [];
+  /** R1.2: what opening did (onLoad rules, the first recalculation); empty with `initial: false`. */
+  readonly opened: FillAnswer;
 
   private constructor(
     private readonly template: ParsedTemplate,
@@ -105,7 +107,10 @@ export class FillSession {
     this.calcTargets = new Set(ir.calculations.flatMap((c) => (c.targetId ? [c.targetId] : [])));
     this.calcSteps = this.calculationSteps();
     this.ruleSteps = this.fieldRuleSteps();
-    if (options.initial !== false) this.start();
+    this.opened =
+      options.initial !== false
+        ? this.start()
+        : { changes: [], trace: [], invalid: [], dialogs: [], notices: [], passes: 0 };
   }
 
   static open(template: ParsedTemplate, ir: FormIR, options: FillOptions): FillSession {
@@ -161,6 +166,22 @@ export class FillSession {
   /** Stored text of every node of a field, in document order. */
   values(fieldId: string): string[] {
     return (this.index.nodes(this.doc).get(fieldId) ?? []).map(textOf);
+  }
+
+  /** The text at a mark path, or undefined when it selects no node (spec 04 task 5). */
+  text(path: string): string | undefined {
+    if (!PATH.test(path)) return undefined;
+    try {
+      const n = this.evaluator.nodes(path, this.doc);
+      return n.length === 1 ? textOf(n[0]!) : undefined;
+    } catch {
+      return undefined;
+    }
+  }
+
+  /** A calculated field's target: shown, never edited (R6.2). */
+  calculated(fieldId: string): boolean {
+    return this.calcTargets.has(fieldId);
   }
 
   xml(): string {

@@ -4,7 +4,15 @@ import { ERROR_CODES } from '../../../packages/core/src/errors';
 import { MESSAGES, messageOf } from '../src/messages';
 
 // R1.2, ux-principles.md 5: every core error code and every app code has a three-part message.
-const APP = ['FILE_TOO_LARGE', 'TOO_MANY_FILES', 'WORKER_TIMEOUT', 'WORKER_FAILED'];
+const APP = [
+  'FILE_TOO_LARGE',
+  'TOO_MANY_FILES',
+  'WORKER_TIMEOUT',
+  'WORKER_FAILED',
+  // Spec 04 R1.4, R1.5.
+  'FILL_PATH',
+  'FILL_STATE',
+];
 
 test('the messages cover exactly the core codes and the app codes', () => {
   expect(Object.keys(MESSAGES).sort()).toEqual([...ERROR_CODES, ...APP].sort());
