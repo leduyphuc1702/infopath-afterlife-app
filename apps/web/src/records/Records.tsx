@@ -10,7 +10,7 @@ import {
 } from 'react';
 import type { SummaryQuery } from '@afterlife/core';
 import type { RecordListRes, ResBody } from '../worker/protocol';
-import { Summary, type SummaryPick } from './Summary';
+import { Summary, type SummaryPick, type SummaryState } from './Summary';
 import { findRows, searchText, whereFound, type Sort } from './find';
 
 /** What Back to the list restores (R9). */
@@ -19,6 +19,14 @@ export interface ListPlace {
   readonly sort?: Sort;
   readonly scroll: number;
   readonly focusId?: string;
+  /** Spec 22 S1: the summary as it was left: open, its choices and the chosen group. */
+  readonly summary?: SummaryPlace;
+}
+
+export interface SummaryPlace {
+  readonly open: boolean;
+  readonly state?: SummaryState;
+  readonly pick?: SummaryPick;
 }
 
 interface Props {
@@ -33,6 +41,8 @@ interface Props {
   readonly actions?: (order: readonly string[]) => ReactNode;
   /** Spec 20: asks the Worker for a summary of the found records. */
   readonly summarize?: (query: SummaryQuery, recordIds: readonly string[]) => Promise<ResBody>;
+  /** Spec 22 S2: a line for the status bar ("Saved …"). */
+  readonly onNotice?: (notice: string) => void;
 }
 
 export const ROW_PX = 36;
@@ -46,9 +56,11 @@ export function Records({
   onOpen,
   actions,
   summarize,
+  onNotice,
 }: Props) {
-  const [summing, setSumming] = useState(false);
-  const [pick, setPick] = useState<SummaryPick>();
+  const [summing, setSumming] = useState(place.summary?.open ?? false);
+  const [pick, setPick] = useState<SummaryPick | undefined>(place.summary?.pick);
+  const summaryState = useRef<SummaryState | undefined>(place.summary?.state);
   const [query, setQuery] = useState(place.query);
   const [sort, setSort] = useState(place.sort);
   const [scroll, setScroll] = useState(place.scroll);
@@ -73,6 +85,11 @@ export function Records({
     ...(sort && { sort }),
     scroll,
     ...(place.focusId !== undefined && { focusId: place.focusId }),
+    summary: {
+      open: summing,
+      ...(summaryState.current && { state: summaryState.current }),
+      ...(pick && { pick }),
+    },
   };
   const report = () => onPlace(latest.current);
 
@@ -86,11 +103,13 @@ export function Records({
 
   const first = Math.max(0, Math.floor(scroll / ROW_PX) - Math.ceil(height / ROW_PX));
   const last = Math.min(shown.length, Math.ceil((scroll + 2 * height) / ROW_PX));
+  // Spec 22 S3: numbers a person reads carry thousands separators.
+  const n = (x: number) => x.toLocaleString('en-US');
   const count = pick
-    ? `${shown.length} of ${rows.length} ${rows.length === 1 ? 'record matches' : 'records match'} ${filtered ? 'Find and ' : ''}${pick.by}: ${pick.label}.`
+    ? `${n(shown.length)} of ${n(rows.length)} ${rows.length === 1 ? 'record matches' : 'records match'} ${filtered ? 'Find and ' : ''}${pick.by}: ${pick.label}.`
     : !filtered
-      ? `${rows.length} ${rows.length === 1 ? 'record' : 'records'}.`
-      : `${shown.length} of ${rows.length} ${rows.length === 1 ? 'record matches' : 'records match'}.`;
+      ? `${n(rows.length)} ${rows.length === 1 ? 'record' : 'records'}.`
+      : `${n(shown.length)} of ${n(rows.length)} ${rows.length === 1 ? 'record matches' : 'records match'}.`;
 
   const sortBy = (column: number) => {
     const next = { column, descending: sort?.column === column && !sort.descending };
@@ -171,6 +190,13 @@ export function Records({
             pick={pick}
             onPick={setPick}
             ask={summarize}
+            initial={summaryState.current}
+            onState={(st) => (summaryState.current = st)}
+            onSaved={(file, groups) =>
+              onNotice?.(
+                `Saved ${file}: the summary, ${groups.toLocaleString('en-US')} ${groups === 1 ? 'group' : 'groups'} and the line for all.`,
+              )
+            }
           />
         </div>
       )}

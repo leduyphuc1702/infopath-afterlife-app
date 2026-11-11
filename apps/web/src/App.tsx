@@ -255,6 +255,12 @@ export function App() {
             : 'application/zip',
         );
         dispatch({ type: 'notice', notice: exportedNotice(res, format) });
+        // Spec 22 F6: the menu closed with focus inside it; focus goes back to its summary.
+        requestAnimationFrame(() => {
+          const a = document.activeElement;
+          if (!a || a === document.body)
+            document.querySelector<HTMLElement>('.afl-export-records summary')?.focus();
+        });
       } else if (res.type === 'failed')
         dispatch({
           type: 'input',
@@ -516,7 +522,9 @@ export function App() {
       setHint(undefined);
       setKeepOpen(false);
     };
-    const kinds = ['pointerdown', 'input', 'change'] as const;
+    // Spec 22 F1: after the click, not on pointerdown: removing the line moves the screen up, and
+    // a click whose press and release land on different things does nothing.
+    const kinds = ['click', 'input', 'change'] as const;
     for (const k of kinds) document.addEventListener(k, act, true);
     return () => {
       for (const k of kinds) document.removeEventListener(k, act, true);
@@ -530,6 +538,14 @@ export function App() {
     },
     [runTask],
   );
+  const homeRef = useRef(true);
+  homeRef.current = !template;
+  const homeFocus = useRef(false);
+  useEffect(() => {
+    if (template || !homeFocus.current) return;
+    homeFocus.current = false;
+    document.getElementById('afl-tasks-h')?.focus();
+  }, [template]);
   const taskRef = useRef(runTask);
   taskRef.current = runTask;
   const leaveRef = useRef(leaveFill);
@@ -734,6 +750,10 @@ export function App() {
     history.scrollRestoration = 'manual';
     const pop = (e: PopStateEvent) => {
       const p = placeIn(e.state);
+      // Spec 22 S4: Forward from the landing page to a task's entry runs the task again, so the
+      // screen is what Back left (record 1, Fill, X-ray, the open menu, the first-step line).
+      const task = taskOf(location.hash);
+      if (task && homeRef.current) return void taskRef.current(task);
       if (!p) {
         // Spec 21: an address typed in the bar opens its task; the entry with none is the
         // landing page.
@@ -741,9 +761,13 @@ export function App() {
         if (t) return void taskRef.current(t);
         void leaveRef.current().then((ok) => {
           if (!ok) return history.forward();
+          // Spec 22 S5: an address the app does not know ends as on a cold load: removed, and
+          // focus on the task list's heading once the landing page is drawn.
+          if (location.hash !== '')
+            history.replaceState(null, '', location.pathname + location.search);
+          homeFocus.current = true;
           dispatch({ type: 'home' });
           setHint(undefined);
-          requestAnimationFrame(() => document.getElementById('afl-tasks-h')?.focus());
         });
         return;
       }
@@ -753,6 +777,15 @@ export function App() {
     window.addEventListener('popstate', pop);
     return () => window.removeEventListener('popstate', pop);
   }, []);
+  // Spec 22 F7: a notice belongs to the screen it was given on; the next screen drops it.
+  const noticeAt = useRef<string>(undefined);
+  useEffect(() => {
+    noticeAt.current = placeKey;
+  }, [s.notice]);
+  useEffect(() => {
+    if (s.notice !== undefined && noticeAt.current !== placeKey)
+      dispatch({ type: 'notice', notice: undefined });
+  }, [placeKey]);
   useEffect(() => {
     if (placeKey === undefined) return;
     // Spec 21 R4: a task's screen replaces the entry its sample opened in.
@@ -765,7 +798,12 @@ export function App() {
             replaceState: (d, u) => history.replaceState(d, u),
             pushState: (d, u) => history.replaceState(d, u),
           }
-        : history,
+        : {
+            state: history.state as unknown,
+            replaceState: (d, u) => history.replaceState(d, u),
+            // Spec 22 F5: a screen after a task's own is not that task; its address has no hash.
+            pushState: (d) => history.pushState(d, '', location.pathname + location.search),
+          },
       place,
     );
     // `placeKey` says when the place changed; `place` is a new object every render.
@@ -908,19 +946,34 @@ export function App() {
         {hint !== undefined && (
           <p className="afl-hint">
             <span>{hint}</span>
-            <button type="button" className="afl-link" onClick={() => setHint(undefined)}>
+            <button
+              type="button"
+              className="afl-link"
+              onClick={() => {
+                setHint(undefined);
+                // Spec 22 S6: the button goes; focus goes to the screen's heading.
+                requestAnimationFrame(() =>
+                  document
+                    .querySelector<HTMLElement>(
+                      '#afl-records-h, #afl-doc-h, #afl-triage-h, #afl-cert-h, .afl-form-name, #afl-tasks-h',
+                    )
+                    ?.focus({ preventScroll: true }),
+                );
+              }}
+            >
               Close tip
             </button>
           </p>
         )}
         {!template ? (
           <>
+            {/* Spec 22 F2: above the landing page, where the person is looking. */}
+            <Unmatched records={unmatched(s)} ignored={s.ignored} focus />
             <Landing
               onSample={(id) => void openSample(id)}
               onTriageAll={() => void openAllSamples()}
               onTask={startTask}
             />
-            <Unmatched records={unmatched(s)} ignored={s.ignored} />
           </>
         ) : s.screen === 'triage' && s.triage ? (
           <>
@@ -968,6 +1021,7 @@ export function App() {
             formName={template.ir.meta.name}
             list={list?.templateId === template.templateId ? list : undefined}
             summarize={(q, ids) => client.summary(template.templateId, q, ids, now)}
+            onNotice={(notice) => dispatch({ type: 'notice', notice })}
             place={listPlace.current.place}
             onPlace={(p) => (listPlace.current = { templateId: template.templateId, place: p })}
             onBack={() => history.back()}

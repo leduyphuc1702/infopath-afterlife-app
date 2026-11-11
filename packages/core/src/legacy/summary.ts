@@ -195,9 +195,11 @@ export function summarize(
 
   const word = part ? `${part.label} rows` : 'records';
   const one = part ? `${part.label} row` : 'record';
+  // Spec 22 S3: written as the rest of the app writes numbers ("5,000"); the CSV keeps raw ones.
+  const n = (x: number) => x.toLocaleString('en-US');
   const counted = part
-    ? `${units.length} ${units.length === 1 ? one : word} in ${all.records.size} ${all.records.size === 1 ? 'record' : 'records'}`
-    : `${units.length} ${units.length === 1 ? one : word}`;
+    ? `${n(units.length)} ${units.length === 1 ? one : word} in ${n(all.records.size)} ${all.records.size === 1 ? 'record' : 'records'}`
+    : `${n(units.length)} ${units.length === 1 ? one : word}`;
   const head = {
     counted,
     unitWord: word,

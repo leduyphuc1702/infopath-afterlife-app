@@ -27,10 +27,11 @@ async function measure(page: Page, total: number, query: string, label: string) 
     await page.getByRole('button', { name: 'Records', exact: true }).click();
     await expect(bodyRows(page).first()).toBeVisible({ timeout: 30_000 });
   });
-  await expect(status(page)).toHaveText(`${total} records.`);
+  // Spec 22 S3: written with thousands separators.
+  await expect(status(page)).toHaveText(`${total.toLocaleString('en-US')} records.`);
   const find = await ms(async () => {
     await page.getByRole('searchbox', { name: 'Find' }).fill(query);
-    await expect(status(page)).toHaveText(/of \d+ records match\./);
+    await expect(status(page)).toHaveText(/of [\d,]+ records match\./);
   });
   const sort = await ms(async () => {
     await page.getByRole('button', { name: 'Total', exact: true }).click();
@@ -161,13 +162,13 @@ test('R11, R12: 30 records and 5,000 generated ones; few rows drawn; values stay
   const big = await measure(page, 5000, 'person 42', '5,000 generated records');
   expect(await bodyRows(page).count()).toBeLessThan(5000);
   await page.getByRole('searchbox', { name: 'Find' }).fill('');
-  await expect(status(page)).toHaveText('5000 records.');
+  await expect(status(page)).toHaveText('5,000 records.');
   const drawn = await bodyRows(page).count();
   console.log(`R11: ${drawn} of 5000 rows drawn`);
   expect(drawn).toBeLessThan(200);
   // R12: a value that looks like markup is text.
   await page.getByRole('searchbox', { name: 'Find' }).fill('<b>');
-  await expect(status(page)).toHaveText('1 of 5000 records match.');
+  await expect(status(page)).toHaveText('1 of 5,000 records match.');
   await expect(bodyRows(page).first()).toContainText('<b>Bold</b>');
   expect(await page.locator('.afl-records-table b').count()).toBe(0);
   // Typing never waits for the table: each key reaches the box at once.

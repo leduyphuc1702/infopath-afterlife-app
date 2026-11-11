@@ -198,8 +198,9 @@
   font-weight: 600;
   border-bottom: 0;
 }
+/* Spec 22 F8: neutral, so the bar (information colour) still shows on the chosen line in dark. */
 .afl-summary-picked {
-  background: var(--ds-background-selected);
+  background: var(--ds-background-neutral);
 }
 /* The bar is decoration behind the number; the number is the content. */
 .afl-summary-bar {

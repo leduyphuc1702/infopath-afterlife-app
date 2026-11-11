@@ -5,6 +5,15 @@ import type { SummaryQuery, SummarySortColumn } from '@afterlife/core';
 import type { RecordListRes, ResBody, SummaryRes } from '../worker/protocol';
 import { save } from '../paper/ExportRecords';
 
+/** Spec 22 S1: the choices, kept by the Records screen across opening a record. */
+export interface SummaryState {
+  readonly unit: number;
+  readonly by: number;
+  readonly dates: 'year' | 'month';
+  readonly total?: number;
+  readonly sort: { readonly column: SummarySortColumn; readonly descending: boolean };
+}
+
 /** A group line chosen: the list shows its records. */
 export interface SummaryPick {
   readonly by: string;
@@ -20,7 +29,12 @@ interface Props {
   readonly pick: SummaryPick | undefined;
   readonly onPick: (p: SummaryPick | undefined) => void;
   readonly ask: (query: SummaryQuery, recordIds: readonly string[]) => Promise<ResBody>;
+  readonly initial?: SummaryState | undefined;
+  readonly onState?: (s: SummaryState) => void;
+  readonly onSaved?: (fileName: string, groups: number) => void;
 }
+
+const num = (n: number) => n.toLocaleString('en-US');
 
 const columnsOf = (list: RecordListRes, unit: number) => [
   ...list.columns,
@@ -39,15 +53,27 @@ function firstBy(list: RecordListRes): number {
   return best < 0 ? Math.min(2, list.columns.length - 1) : best;
 }
 
-export function Summary({ formName, list, found, pick, onPick, ask }: Props) {
-  const [unit, setUnit] = useState(-1);
-  const [by, setBy] = useState(() => firstBy(list));
-  const [dates, setDates] = useState<'year' | 'month'>('year');
-  const [total, setTotal] = useState<number | undefined>(undefined);
-  const [sort, setSort] = useState<{ column: SummarySortColumn; descending: boolean }>({
-    column: 'group',
-    descending: false,
-  });
+export function Summary({
+  formName,
+  list,
+  found,
+  pick,
+  onPick,
+  ask,
+  initial,
+  onState,
+  onSaved,
+}: Props) {
+  const [unit, setUnit] = useState(initial?.unit ?? -1);
+  const [by, setBy] = useState(() => initial?.by ?? firstBy(list));
+  const [dates, setDates] = useState<'year' | 'month'>(initial?.dates ?? 'year');
+  const [total, setTotal] = useState<number | undefined>(initial?.total);
+  const [sort, setSort] = useState<{ column: SummarySortColumn; descending: boolean }>(
+    initial?.sort ?? { column: 'group', descending: false },
+  );
+  useEffect(() => {
+    onState?.({ unit, by, dates, ...(total !== undefined && { total }), sort });
+  }, [unit, by, dates, total, sort]);
   const [res, setRes] = useState<SummaryRes>();
   const asked = useRef(0);
   const columns = useMemo(() => columnsOf(list, unit), [list, unit]);
@@ -179,20 +205,27 @@ export function Summary({ formName, list, found, pick, onPick, ask }: Props) {
           type="button"
           className="afl-button"
           disabled={!res || res.tooMany !== undefined || res.lines.length === 0}
-          onClick={() =>
-            res &&
+          onClick={() => {
+            if (!res) return;
             save(
               new TextEncoder().encode(res.csv).buffer,
               `${slug}-summary.csv`,
               'text/csv;charset=utf-8',
-            )
-          }
+            );
+            // Spec 22 S2: say what was saved; focus stays on this button.
+            onSaved?.(`${slug}-summary.csv`, res.lines.length);
+          }}
         >
           Download CSV
         </button>
       </div>
       {!res ? (
         <p>Summarizing…</p>
+      ) : res.all.count === 0 && found.length === 0 ? (
+        // Spec 22 F4: nothing found, nothing to group.
+        <p className="afl-summary-many">
+          Find matches no record, so there is nothing to summarize.
+        </p>
       ) : res.tooMany !== undefined ? (
         <p className="afl-summary-many">
           {res.byLabel} has {res.tooMany} different values, too many to group by. Choose a column
@@ -237,7 +270,7 @@ export function Summary({ formName, list, found, pick, onPick, ask }: Props) {
                       {l.label}
                     </button>
                   </th>
-                  <td>{totalled ? l.count : withBar(l.count, l.bar)}</td>
+                  <td>{totalled ? num(l.count) : withBar(num(l.count), l.bar)}</td>
                   {totalled && <td>{withBar(l.sum ?? '', l.bar)}</td>}
                   {totalled && <td>{l.average}</td>}
                 </tr>
@@ -246,7 +279,7 @@ export function Summary({ formName, list, found, pick, onPick, ask }: Props) {
             <tfoot>
               <tr>
                 <th scope="row">All</th>
-                <td>{res.all.count}</td>
+                <td>{num(res.all.count)}</td>
                 {totalled && <td>{res.all.sum}</td>}
                 {totalled && <td>{res.all.average}</td>}
               </tr>

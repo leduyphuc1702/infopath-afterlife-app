@@ -13,10 +13,15 @@ export function useConfirm(): [JSX.Element, (q: Question) => Promise<boolean>] {
   const ref = useRef<HTMLDialogElement>(null);
   const [q, setQ] = useState<Question>();
   const answer = useRef<(yes: boolean) => void>(undefined);
+  // Spec 22 S6: what had focus before the question, inside the paper's shadow root too.
+  const before = useRef<HTMLElement | null>(null);
   const ask = useCallback(
     (question: Question) =>
       new Promise<boolean>((resolve) => {
         answer.current = resolve;
+        let a = document.activeElement;
+        while (a?.shadowRoot?.activeElement) a = a.shadowRoot.activeElement;
+        before.current = a instanceof HTMLElement ? a : null;
         setQ(question);
         requestAnimationFrame(() => ref.current?.showModal());
       }),
@@ -24,6 +29,9 @@ export function useConfirm(): [JSX.Element, (q: Question) => Promise<boolean>] {
   );
   const close = (yes: boolean) => {
     ref.current?.close();
+    // "Keep filling": back to the field or control the person was on.
+    if (!yes && before.current?.isConnected) before.current.focus();
+    before.current = null;
     answer.current?.(yes);
     answer.current = undefined;
   };

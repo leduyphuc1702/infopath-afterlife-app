@@ -121,3 +121,27 @@ test('R9: a group label that looks like a formula is guarded in the CSV', () => 
   const s = summarize(list, { unit: -1, by: 1 }, [0]);
   expect(s.csv.split('\r\n')[1]).toBe(`"'=HYPERLINK(""x"")",1`);
 });
+
+test('spec 22 S3: what is counted carries thousands separators; the CSV keeps raw numbers', () => {
+  const rows = Array.from({ length: 1234 }, (_, i) => ({
+    fileName: `${i}`,
+    cells: [`${i}`, 'A'],
+    keys: [`${i}`, 'A'],
+    more: [],
+  }));
+  const list = {
+    columns: [
+      { label: 'File name', kind: 'text' as const },
+      { label: 'Kind', kind: 'text' as const },
+    ],
+    rows,
+    parts: [],
+  };
+  const s = summarize(
+    list,
+    { unit: -1, by: 1 },
+    rows.map((_, i) => i),
+  );
+  expect(s.counted).toBe('1,234 records');
+  expect(s.csv.split('\r\n')[1]).toBe('A,1234');
+});

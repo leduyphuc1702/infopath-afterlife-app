@@ -126,10 +126,12 @@ test('R10, R11: 5,000 generated records summarize in the Worker; values stay tex
   }
   await expect(page.locator('.afl-position')).toContainText('of 5000,', { timeout: 60_000 });
   await page.getByRole('button', { name: 'Records', exact: true }).click();
-  await expect(status(page)).toHaveText('5000 records.', { timeout: 60_000 });
+  await expect(status(page)).toHaveText('5,000 records.', { timeout: 60_000 });
   await page.getByRole('button', { name: 'Summarize' }).click();
   await choose(page, 'Group by', 'Department');
-  await expect(summary(page).locator('caption')).toContainText('5000 records', { timeout: 30_000 });
+  await expect(summary(page).locator('caption')).toContainText('5,000 records', {
+    timeout: 30_000,
+  });
   const worker: string[] = [];
   page.on('console', (m) => m.text().startsWith('R10 summary') && worker.push(m.text()));
   const t0 = Date.now();
@@ -138,7 +140,7 @@ test('R10, R11: 5,000 generated records summarize in the Worker; values stay tex
   await page.getByRole('searchbox', { name: 'Find' }).fill('visit');
   const typed = Date.now() - t0;
   await expect(summary(page).locator('caption')).toHaveText(
-    /^2500 records, grouped by Department, with the total of Total\./,
+    /^2,500 records, grouped by Department, with the total of Total\./,
     { timeout: 30_000 },
   );
   const ms = Date.now() - t0;

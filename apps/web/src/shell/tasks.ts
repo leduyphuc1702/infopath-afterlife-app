@@ -51,7 +51,8 @@ export const TASKS: readonly Task[] = [
     id: 'triage',
     sample: 'all',
     label: 'Decide which forms can move first',
-    hint: 'One row per form. Sort by any column, then open a form’s death certificate to see what stops it.',
+    // Spec 22 F9: the Triage table does not sort; the line promised it did.
+    hint: 'One row per form, with its wave. Open a form’s death certificate to see what stops it.',
   },
 ];
 

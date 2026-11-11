@@ -81,3 +81,28 @@ Defects that only showed up by looking:
 
 One thing that looked wrong was not: form 08 shows 43 as "4,3". Spec 03 records that InfoPath
 does the same for `grouping:1` (seen in form 08's screenshot).
+
+## Turn 73: the first five minutes, as a newcomer (spec 22)
+
+The built app on port 4331, at 1280×800 and 390×844: the landing page and each task's first
+action; a person's own files (a template alone, records without their template, a template with
+another form's records, a `.pdf`, a `.docx`, a broken `.xsn`, a `.zip` of two forms); the summary
+on sample 02 with every Count, Group by and Total of a person would try; one long session from
+Fill to the archive; dark colours on the landing page and the summary. Offline was skipped (the
+reviewer verified it); journey 2 was left to S4 and S5.
+
+17 MCP calls, 2 screenshots. Four calls were lost: one to a `beforeunload` question left by the
+fill journey (a new tab cleared it), three to waits on elements a journey had not reached.
+
+Defects that only showed up by looking:
+- **F1**, the first click after a task lands does nothing. Every e2e test checked the landing
+  state; none clicked anything after it. It hit Next, Summarize, "Web pages to keep" and
+  "Download Markdown" alike.
+- **F2**, dropping files that open nothing leaves the screen as it was: the explanation is below
+  the fold. The tests read the lists by role, wherever they were.
+- **F5**, **F7**, the task's address and an archive's status line outlive their screens; seen
+  only in one long session.
+- **F6**, focus to the page body after an Excel export.
+- **F8**, the bar vanishes on the chosen line in dark colours (equal computed colours).
+- **F9**, the Triage tip promises sorting; the table has none.
+- **F4**, an empty summary table after a Find with no match.
