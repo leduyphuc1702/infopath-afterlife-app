@@ -704,6 +704,25 @@
       },
       "groupId": "g:main:/my:meetingMinutes/my:attendees",
       "id": "g:main:/my:meetingMinutes/my:attendees/my:attendee",
+      "insert": {
+        "caption": "attendee",
+        "component": "xCollection",
+        "container": "/my:meetingMinutes",
+        "fragments": [
+          {
+            "innerFragment": "my:attendees/my:attendee",
+            "xml": "<my:attendees xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:26:00\"><my:attendee>\n\t<my:attendeeName/>\n\t<my:attendeeOrg/>\n\t<my:attendeePresent>false</my:attendeePresent>\n</my:attendee></my:attendees>"
+          }
+        ],
+        "source": {
+          "column": 5,
+          "file": "manifest.xsf",
+          "line": 36,
+          "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[4]"
+        },
+        "view": "Main",
+        "xmlToEdit": "attendee_4"
+      },
       "kind": "group",
       "label": "Attendee",
       "labelEvidence": {
@@ -770,6 +789,25 @@
       },
       "groupId": "g:main:/my:meetingMinutes/my:actions",
       "id": "g:main:/my:meetingMinutes/my:actions/my:action",
+      "insert": {
+        "caption": "action",
+        "component": "xCollection",
+        "container": "/my:meetingMinutes",
+        "fragments": [
+          {
+            "innerFragment": "my:actions/my:action",
+            "xml": "<my:actions xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:26:00\"><my:action>\n\t<my:actionText/>\n\t<my:actionOwner/>\n\t<my:actionDue xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n</my:action></my:actions>"
+          }
+        ],
+        "source": {
+          "column": 5,
+          "file": "manifest.xsf",
+          "line": 45,
+          "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[9]"
+        },
+        "view": "Main",
+        "xmlToEdit": "action_9"
+      },
       "kind": "group",
       "label": "Action",
       "labelEvidence": {

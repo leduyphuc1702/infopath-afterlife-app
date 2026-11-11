@@ -7,10 +7,10 @@
 // its field is required or blank-checked, the asterisk.
 
 import { dataStep } from '../ir/ids';
-import type { BoundControl, FormIR, IrView } from '../ir/types';
+import type { BoundControl, FormIR, IrGroup, IrView } from '../ir/types';
 import { attachmentHeader, sizeText, typeText, type Attachment } from './attachment';
-import type { MarkedElement } from './engine/xsltjs';
-import type { ControlMark } from './render';
+import type { MarkedElement, StructureElement } from './engine/xsltjs';
+import type { ControlMark, RowMark } from './render';
 import type { HElement, HNode } from './html/serialise';
 
 /** The xmldom members of a record node read here. */
@@ -53,6 +53,50 @@ export function activeXIndex(
     if (!byPos.has(k)) byPos.set(k, c.id);
   }
   return (file, line, column) => byPos.get(key(file, line, column));
+}
+
+/** Spec 04 task 8 (D20): the groups a person can add to or remove from, for row marks. */
+export interface StructureIndex {
+  /** Whether a record node is an item of an `xCollection` or `xOptional` group. */
+  readonly isItem: ((node: unknown) => boolean) | undefined;
+  /** The row mark of a structure element, or undefined. */
+  readonly mark: (s: StructureElement) => RowMark | undefined;
+}
+
+export function structureIndex(ir: FormIR, ns: Readonly<Record<string, string>>): StructureIndex {
+  const byPath = new Map<string, IrGroup>();
+  const byName = new Map<string, IrGroup>();
+  for (const g of ir.groups) {
+    const c = g.insert?.component;
+    if (c !== 'xCollection' && c !== 'xOptional') continue;
+    byPath.set(g.path, g);
+    byName.set(g.insert!.xmlToEdit, g);
+  }
+  const locals = new Set([...byPath.values()].map((g) => g.name));
+  const groupOf = (node: SourceNode) => {
+    if (node.nodeType !== 1 || !locals.has(localOf(node))) return undefined;
+    const path = dataPath(node, ns);
+    return path === undefined ? undefined : byPath.get(path.replace(/\[\d+\]/g, ''));
+  };
+  return {
+    isItem: byPath.size === 0 ? undefined : (n) => groupOf(n as SourceNode) !== undefined,
+    mark: (s) => {
+      const node = s.node as SourceNode | undefined;
+      const path = node && dataPath(node, ns);
+      if (path === undefined) return undefined;
+      if (s.insert !== undefined) {
+        const g = byName.get(s.insert);
+        return g && { kind: 'insert', groupId: g.id, path };
+      }
+      const g = groupOf(node!);
+      if (!g) return undefined;
+      return {
+        kind: g.insert!.component === 'xOptional' ? 'optional' : 'row',
+        groupId: g.id,
+        path,
+      };
+    },
+  };
 }
 
 /** Design §9.2: the field ids an asterisk may be drawn for. */
@@ -148,8 +192,10 @@ const REPLACED = new Set(['input', 'select', 'textarea']);
 export function applyMarks(
   root: HElement,
   markOf: (origin: object) => Rendered | undefined,
-): { marks: ControlMark[]; unreadable: Map<string, number> } {
+  rowOf: (origin: object) => RowMark | undefined = () => undefined,
+): { marks: ControlMark[]; rows: RowMark[]; unreadable: Map<string, number> } {
   const marks: ControlMark[] = [];
+  const rows: RowMark[] = [];
   const unreadable = new Map<string, number>();
   const walk = (children: HNode[]) => {
     for (let i = 0; i < children.length; i++) {
@@ -157,6 +203,16 @@ export function applyMarks(
       if (el.kind !== 'element') continue;
       const rendered = el.origin && markOf(el.origin);
       const mark = rendered?.mark;
+      // Spec 04 task 8: rows, optional sections and insert placeholders (D20).
+      const row = el.origin && rowOf(el.origin);
+      if (row) {
+        rows.push(row);
+        el.attrs.push(
+          ['data-afl-structure', row.kind],
+          ['data-afl-group', row.groupId],
+          ['data-afl-node', row.path],
+        );
+      }
       if (rendered?.attachment) {
         const a = rendered.attachment;
         if ('problem' in a) unreadable.set(a.problem, (unreadable.get(a.problem) ?? 0) + 1);
@@ -188,7 +244,7 @@ export function applyMarks(
     }
   };
   walk(root.children);
-  return { marks, unreadable };
+  return { marks, rows, unreadable };
 }
 
 /**

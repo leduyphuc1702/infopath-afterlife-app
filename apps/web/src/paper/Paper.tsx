@@ -5,6 +5,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { FillCommand, FilledRes, RenderedRes } from '../worker/protocol';
 import { FILL_CSS, focusState, listen, restoreFocus, upgrade } from './fill';
+import { focusItem, listenRows, ROWS_CSS, upgradeRows } from './rows';
 import { loadPaperFonts } from '../shell/fonts';
 import { fadeIn } from './fade';
 import { hitTest, measure, toFrame, type Box } from './geometry';
@@ -44,6 +45,8 @@ export function Paper({
 }: Props) {
   const fillRef = useRef(fill);
   fillRef.current = fill;
+  /** The group of the last row command sent, for focus when its last row is removed. */
+  const rowGroup = useRef<string>();
   const frame = useRef<HTMLElement>(null);
   const host = useRef<HTMLDivElement>(null);
   const [boxes, setBoxes] = useState<readonly Box[]>([]);
@@ -69,12 +72,16 @@ export function Paper({
       scrollX,
       scrollY,
     ];
-    root.innerHTML = `<style>${result.css}${f ? FILL_CSS : ''}</style>${result.html}`;
+    root.innerHTML = `<style>${result.css}${f ? FILL_CSS + ROWS_CSS : ''}</style>${result.html}`;
     if (f) {
       // e2e and R2.4: how many fill renders this paper has drawn.
       el.dataset.aflRenders = String(Number(el.dataset.aflRenders ?? 0) + 1);
       upgrade(root, f.res);
-      if (focus) restoreFocus(root, focus);
+      upgradeRows(root, f.res);
+      // After an insert or remove, focus goes to the new row or the one that took its place.
+      const moved = focusItem(root, f.res, rowGroup.current);
+      rowGroup.current = undefined;
+      if (!moved && focus) restoreFocus(root, focus);
       if (scroll && frame.current) {
         [frame.current.scrollTop, frame.current.scrollLeft] = [scroll[0]!, scroll[1]!];
         if (scrollX !== scroll[2] || scrollY !== scroll[3]) window.scrollTo(scroll[2]!, scroll[3]!);
@@ -95,11 +102,19 @@ export function Paper({
   useEffect(() => {
     const root = host.current?.shadowRoot;
     if (!filling || !root) return;
-    return listen(
-      root,
-      () => fillRef.current?.res,
-      (c) => fillRef.current?.onCommand(c),
-    );
+    const send = (c: FillCommand) => {
+      if (c.kind === 'removeRow' || c.kind === 'removeOptional')
+        rowGroup.current = root.querySelector<HTMLElement>(
+          `[data-afl-node="${CSS.escape(c.path)}"]`,
+        )?.dataset.aflGroup;
+      fillRef.current?.onCommand(c);
+    };
+    const stop = listen(root, () => fillRef.current?.res, send);
+    const stopRows = listenRows(root, send);
+    return () => {
+      stop();
+      stopRows();
+    };
   }, [filling]);
 
   useEffect(() => {

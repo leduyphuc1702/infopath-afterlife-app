@@ -616,6 +616,25 @@
       },
       "groupId": "g:main:/my:pettyCash/my:items",
       "id": "g:main:/my:pettyCash/my:items/my:item",
+      "insert": {
+        "caption": "item",
+        "component": "xCollection",
+        "container": "/my:pettyCash",
+        "fragments": [
+          {
+            "innerFragment": "my:items/my:item",
+            "xml": "<my:items xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:30:00\"><my:item>\n\t<my:itemDate xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:itemText/>\n\t<my:itemAmount xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:itemReceipt xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n</my:item></my:items>"
+          }
+        ],
+        "source": {
+          "column": 5,
+          "file": "manifest.xsf",
+          "line": 35,
+          "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[3]"
+        },
+        "view": "Main",
+        "xmlToEdit": "item_3"
+      },
       "kind": "group",
       "label": "Item",
       "labelEvidence": {

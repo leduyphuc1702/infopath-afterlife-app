@@ -9,7 +9,13 @@ import { parseXmlDom, xmlContext } from '../xml/parse';
 import type { ParsedTemplate } from '../xsn/parse';
 import type { BoundControl } from '../ir/types';
 import { compileView, type CompiledView } from './engine/xsltjs';
-import { activeXIndex, controlIndex, requiredTargets } from './marks';
+import {
+  activeXIndex,
+  controlIndex,
+  requiredTargets,
+  structureIndex,
+  type StructureIndex,
+} from './marks';
 
 const MiB = 1024 * 1024;
 
@@ -40,6 +46,8 @@ export interface PreparedInternals {
   readonly required: ReadonlySet<string>;
   /** R6.2: the FormIR ActiveX control id at an XSL element position. */
   readonly activeXAt: (file: string, line: number, column: number) => string | undefined;
+  /** Spec 04 task 8: groups with `IrGroup.insert`, by item path and by `xmlToEdit` name. */
+  readonly structure: StructureIndex;
 }
 
 const internals = new WeakMap<PreparedView, PreparedInternals>();
@@ -101,6 +109,7 @@ export async function prepareView(
     controlAt: controlIndex(view),
     required: requiredTargets(ir),
     activeXAt: activeXIndex(ir),
+    structure: structureIndex(ir, template.manifest.namespaces),
   });
   return prepared;
 }

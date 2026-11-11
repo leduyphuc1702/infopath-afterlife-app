@@ -16,6 +16,7 @@ import type { ParsedTemplate } from '../xsn/parse';
 import { runCycle, type Change, type Dirty, type Step } from './cycle';
 import { Evaluator, NotEvaluated, textOf, type RtNode } from './evaluate';
 import { fieldIndex, type FieldIndex } from './model';
+import { Structure } from './structure';
 import { NO_QUERIES, runRuleSet, type RuleEffects, type RuleHost } from './rules';
 import { TRACE_CAP, type TraceEntry } from './trace';
 import { validate, type Invalid } from './validate';
@@ -29,7 +30,7 @@ const PATH =
 export class FillCommandError extends Error {
   constructor(
     readonly path: string,
-    readonly reason: 'syntax' | 'none' | 'notField' | 'calculated',
+    readonly reason: 'syntax' | 'none' | 'notField' | 'calculated' | 'notGroup' | 'lastRow',
   ) {
     super(`${path}: ${reason}`);
   }
@@ -57,6 +58,11 @@ export interface FillAnswer {
   readonly view?: string;
   readonly passes: number;
   readonly loop?: readonly string[];
+  /**
+   * Spec 04 task 9: after an insert, the new item's path; after a remove, the path of the item
+   * that took its place (the next one, else the one before), absent when none is left.
+   */
+  readonly focus?: string;
 }
 
 export class FillSession {
@@ -68,6 +74,7 @@ export class FillSession {
   private readonly calcSteps: Step<RtNode>[];
   private readonly ruleSteps: Step<RtNode>[];
   private readonly calcTargets: ReadonlySet<string>;
+  private readonly structure: Structure;
   private now: string;
   private seq = 0;
   private pending: TraceEntry[] = [];
@@ -105,6 +112,7 @@ export class FillSession {
       this.now,
     );
     this.calcTargets = new Set(ir.calculations.flatMap((c) => (c.targetId ? [c.targetId] : [])));
+    this.structure = new Structure(ir, this.doc, (n) => this.index.idOf(n));
     this.calcSteps = this.calculationSteps();
     this.ruleSteps = this.fieldRuleSteps();
     this.opened =
@@ -154,6 +162,75 @@ export class FillSession {
     });
   }
 
+  // --- rows and optional sections (spec 04 task 9, D19) ---------------------------------------
+
+  /**
+   * R7.1, R7.2: a new item of `groupId`. `at.in` is the context node of an "Insert item"
+   * placeholder (after the last item); `at.row` with `where` inserts beside an existing item.
+   */
+  insertRow(
+    groupId: string,
+    at: { readonly in: string } | { readonly row: string; readonly where: 'before' | 'after' },
+    now = this.now,
+  ): FillAnswer {
+    const g = this.insertable(groupId, 'xCollection');
+    const ref = 'in' in at ? this.resolve(at.in, true) : this.item(g, at.row);
+    return this.structural(now, () =>
+      'in' in at ? this.structure.append(g, ref) : this.structure.beside(g, ref, at.where),
+    );
+  }
+
+  /** R7.2: removes the item at `path`; `FILL_PATH lastRow` when the schema needs one. */
+  removeRow(path: string, now = this.now): FillAnswer {
+    return this.removeItem(path, 'xCollection', now);
+  }
+
+  /** R7.3: inserts the absent `xOptional` section `groupId` under the node at `inPath`. */
+  insertOptional(groupId: string, inPath: string, now = this.now): FillAnswer {
+    const g = this.insertable(groupId, 'xOptional');
+    const ctx = this.resolve(inPath, true);
+    return this.structural(now, () => this.structure.append(g, ctx));
+  }
+
+  /** R7.3: removes the optional section at `path`. */
+  removeOptional(path: string, now = this.now): FillAnswer {
+    return this.removeItem(path, 'xOptional', now);
+  }
+
+  private removeItem(path: string, kind: 'xCollection' | 'xOptional', now: string): FillAnswer {
+    const node = this.resolve(path, true);
+    const id = this.index.idOf(node);
+    const g = id === undefined ? undefined : this.index.group(id);
+    if (!g || g.insert?.component !== kind) throw new FillCommandError(path, 'notGroup');
+    const r = this.structure.remove(g, node);
+    if (!r.ok) throw new FillCommandError(path, 'lastRow');
+    return this.structural(now, () => r.next);
+  }
+
+  private insertable(groupId: string, kind: 'xCollection' | 'xOptional') {
+    const g = this.index.group(groupId);
+    if (!g || g.insert?.component !== kind) throw new FillCommandError(groupId, 'notGroup');
+    return g;
+  }
+
+  private item(g: { readonly id: string }, path: string): RtNode {
+    const n = this.resolve(path, true);
+    if (this.index.idOf(n) !== g.id) throw new FillCommandError(path, 'notGroup');
+    return n;
+  }
+
+  /** D19: the change, then every calculation and the cycle, as one command. */
+  private structural(now: string, change: () => RtNode | undefined): FillAnswer {
+    this.now = now;
+    this.evaluator.setNow(now);
+    let focus: RtNode | undefined;
+    const answer = this.command(() => {
+      focus = change();
+      return this.calculateAll();
+    });
+    return focus ? { ...answer, focus: this.pathOf(focus) } : answer;
+  }
+
   /** Every calculation once, then the cycle; P18 calls it twice. */
   recalculate(): FillAnswer {
     return this.command(() => this.calculateAll());
@@ -166,6 +243,11 @@ export class FillSession {
   /** Stored text of every node of a field, in document order. */
   values(fieldId: string): string[] {
     return (this.index.nodes(this.doc).get(fieldId) ?? []).map(textOf);
+  }
+
+  /** Mark paths of every node of a field or group, in document order (spec 04 task 9). */
+  paths(id: string): string[] {
+    return (this.index.nodes(this.doc).get(id) ?? []).map((n) => this.pathOf(n));
   }
 
   /** The text at a mark path, or undefined when it selects no node (spec 04 task 5). */

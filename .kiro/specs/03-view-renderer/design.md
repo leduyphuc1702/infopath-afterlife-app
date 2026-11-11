@@ -134,6 +134,9 @@ interface ControlMark {
 }
 ```
 
+Changed in spec 04 task 8: `RenderResult.rows?: RowMark[]` (`kind` `row` | `optional` | `insert`, `groupId`, `path`), absent when empty. A row is the outermost result element created with an item of an `xCollection` or `xOptional` group as current node; an insert is an element with `xd:action` `xCollection::insert` or `xOptional::insert`, its path the current node. Each such element gains `data-afl-structure`, `data-afl-group` and `data-afl-node`; nothing else in the HTML changes. 34 render goldens (17 forms × empty and first record) gain them.
+
+
 `Limits` is spec 01's. `LIMIT_EXCEEDED.details.limit` widens to `keyof Limits | keyof RenderLimits`.
 
 ### 4.1 Errors and issues

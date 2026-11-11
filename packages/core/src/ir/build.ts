@@ -6,6 +6,7 @@ import { buildDataTree } from './data-tree';
 import { buildDependencies } from './dependencies';
 import { buildElements } from './elements';
 import { IdRegistry } from './ids';
+import { withInserts } from './inserts';
 import { FORMIR_VERSION } from './json';
 import { buildMeta } from './meta';
 import type { FormIR } from './types';
@@ -52,7 +53,7 @@ export function buildFormIR(t: ParsedTemplate, options: FormIROptions = {}): For
       ? { ...meta, publishEndpoint: connections.publishEndpoint }
       : meta,
     fields: deps.fields,
-    groups: deps.groups,
+    groups: withInserts(t, deps.groups),
     views: scan.views,
     rules: deps.elements.rules,
     calculations: deps.elements.calculations,

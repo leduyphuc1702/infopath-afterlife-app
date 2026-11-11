@@ -117,11 +117,24 @@ export const MESSAGES: {
     why: `The most this viewer opens at once is ${str(d.max)}.`,
     action: 'Drop the templates first, then the records in smaller folders.',
   }),
-  FILL_PATH: () => ({
-    what: "That change wasn't made.",
-    why: 'The field it was for is no longer on the form, or it is worked out from other fields.',
-    action: 'Check the field and type the value again.',
-  }),
+  FILL_PATH: (d) =>
+    d.reason === 'lastRow'
+      ? {
+          what: "That row wasn't removed.",
+          why: 'The form needs at least one row in this table.',
+          action: 'Clear the values in the row instead.',
+        }
+      : d.reason === 'notGroup'
+        ? {
+            what: "That row or section wasn't changed.",
+            why: "It is no longer on the form, or the form doesn't allow adding or removing it.",
+            action: 'Check the table or section and try again.',
+          }
+        : {
+            what: "That change wasn't made.",
+            why: 'The field it was for is no longer on the form, or it is worked out from other fields.',
+            action: 'Check the field and type the value again.',
+          },
   FILL_STATE: (d) => ({
     what: "This record can't be filled in.",
     why:

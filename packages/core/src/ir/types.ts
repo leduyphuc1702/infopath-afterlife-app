@@ -84,6 +84,30 @@ export interface IrField extends IrNodeBase {
 
 export interface IrGroup extends IrNodeBase {
   readonly kind: 'group';
+  /**
+   * Spec 04 task 8 (D18): how InfoPath inserts this group, from the first view's
+   * `xsf:xmlToEdit` whose `item` is this group and whose component is `xCollection`, `xOptional`
+   * or `xReplace`. Absent when no view edits the group that way.
+   */
+  readonly insert?: IrInsert;
+}
+
+/** `xsf:xmlToEdit` with its `editWith/fragmentToInsert/chooseFragment`s (spec 04 D18). */
+export interface IrInsert {
+  readonly component: 'xCollection' | 'xOptional' | 'xReplace';
+  /** `xsf:xmlToEdit/@name`; buttons and menus point at it with `xmlToEdit`. */
+  readonly xmlToEdit: string;
+  /** Name of the view the `xmlToEdit` belongs to. */
+  readonly view: string;
+  /** `@container`, an absolute XPath, as written. */
+  readonly container?: string;
+  readonly caption?: string;
+  /**
+   * Each `chooseFragment`: `innerFragment` (the path from the container to the item, as written)
+   * and its content as inner XML, with the manifest's prefixes and no namespace declarations.
+   */
+  readonly fragments: readonly { readonly innerFragment?: string; readonly xml: string }[];
+  readonly source: Located;
 }
 
 export const LABEL_SOURCES = [

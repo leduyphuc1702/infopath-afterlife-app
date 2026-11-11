@@ -580,6 +580,25 @@
       },
       "groupId": "g:main:/my:supplierScorecard/my:scores",
       "id": "g:main:/my:supplierScorecard/my:scores/my:score",
+      "insert": {
+        "caption": "score",
+        "component": "xCollection",
+        "container": "/my:supplierScorecard",
+        "fragments": [
+          {
+            "innerFragment": "my:scores/my:score",
+            "xml": "<my:scores xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:40:00\"><my:score>\n\t<my:scoreArea/>\n\t<my:scoreValue xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:scoreNote/>\n</my:score></my:scores>"
+          }
+        ],
+        "source": {
+          "column": 5,
+          "file": "manifest.xsf",
+          "line": 35,
+          "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[3]"
+        },
+        "view": "Main",
+        "xmlToEdit": "score_3"
+      },
       "kind": "group",
       "label": "Score",
       "labelEvidence": {

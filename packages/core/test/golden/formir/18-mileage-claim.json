@@ -660,6 +660,25 @@
       },
       "groupId": "g:main:/my:mileageClaim/my:trips",
       "id": "g:main:/my:mileageClaim/my:trips/my:trip",
+      "insert": {
+        "caption": "trip",
+        "component": "xCollection",
+        "container": "/my:mileageClaim",
+        "fragments": [
+          {
+            "innerFragment": "my:trips/my:trip",
+            "xml": "<my:trips xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:18:00\"><my:trip>\n\t<my:tripDate xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:tripFrom/>\n\t<my:tripTo/>\n\t<my:tripKm xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:tripRate xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:tripAmount xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n</my:trip></my:trips>"
+          }
+        ],
+        "source": {
+          "column": 5,
+          "file": "manifest.xsf",
+          "line": 34,
+          "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[2]"
+        },
+        "view": "Main",
+        "xmlToEdit": "trip_2"
+      },
       "kind": "group",
       "label": "Trip",
       "labelEvidence": {

@@ -96,6 +96,8 @@ interface ResultNodeLike {
 
 interface LiteralCtx {
   readonly out?: { readonly lastChild: object | null } | null;
+  /** The current node. */
+  readonly node?: unknown;
 }
 
 interface ProcessorLike {
@@ -267,7 +269,18 @@ export interface RunOptions {
   /** Base URI of the source document, for relative `document()` calls. */
   readonly sourceFile?: string;
   /** Design §9.1: the FormIR control at an XSL element position (package file, line, column). */
+  /** Spec 04 task 8: whether a record node is an item of a group with `IrGroup.insert`. */
+  readonly isItem?: (node: unknown) => boolean;
   readonly controlAt?: (file: string, line: number, column: number) => BoundControl | undefined;
+}
+
+/**
+ * Spec 04 task 8 (D20): a result element that draws a group item (the outermost element created
+ * with the item as current node) or an `xd:action` insert placeholder (with its `xd:xmlToEdit`).
+ */
+export interface StructureElement {
+  readonly node: unknown;
+  readonly insert?: string;
 }
 
 /** A rendered control: its FormIR control, and the source node its binding selected. */
@@ -285,6 +298,8 @@ export interface RunResult {
   readonly marked: ReadonlyMap<object, MarkedElement>;
   /** Literal elements with an `xd:binding` at a position FormIR did not record. */
   readonly unmarked: number;
+  /** Spec 04 task 8: result element → the item or insert placeholder it draws. */
+  readonly structure: ReadonlyMap<object, StructureElement>;
 }
 
 export function runView(view: CompiledView, source: DomDocument, options: RunOptions): RunResult {
@@ -333,13 +348,29 @@ export function runView(view: CompiledView, source: DomDocument, options: RunOpt
   installBudget(p, options.budget);
   installFunctions(p.functions, options, unknown);
   const marked = new Map<object, MarkedElement>();
+  const structure = new Map<object, StructureElement>();
+  const itemElement = new Map<unknown, object>();
   let unmarked = 0;
   if (options.controlAt) {
     const controlAt = options.controlAt;
+    const isItem = options.isItem;
     const proto = Object.getPrototypeOf(p) as ProcessorLike;
     p.literalResultElement = (element, ctx) => {
       proto.literalResultElement.call(p, element, ctx);
       const created = ctx.out?.lastChild;
+      if (created && isItem) {
+        // Children finish first, so the last element seen for an item is its outermost one.
+        const action = element.getAttributeNS(XD, 'action');
+        const name = element.getAttributeNS(XD, 'xmlToEdit');
+        if ((action === 'xCollection::insert' || action === 'xOptional::insert') && name) {
+          structure.set(created, { node: ctx.node, insert: name });
+        } else if (ctx.node !== undefined && isItem(ctx.node)) {
+          const before = itemElement.get(ctx.node);
+          if (before) structure.delete(before);
+          itemElement.set(ctx.node, created);
+          structure.set(created, { node: ctx.node });
+        }
+      }
       const file = packageName(element.ownerDocument?.xsltBaseURI ?? '');
       const control =
         file === undefined
@@ -409,7 +440,7 @@ export function runView(view: CompiledView, source: DomDocument, options: RunOpt
       details: { count: messages },
     });
   }
-  return { fragment, issues, marked, unmarked };
+  return { fragment, issues, marked, unmarked, structure };
 }
 
 /**
@@ -536,7 +567,7 @@ function installFunctions(
       if (!x || !(node instanceof EngineNode)) return undefined;
       const ctx = { ...x.ctx, node: node.node, position: 1, size: 1 };
       try {
-        return (x.processor.evaluate(expr, ctx as LiteralCtx, x.styleNode) as XValue).stringValue();
+        return (x.processor.evaluate(expr, ctx, x.styleNode) as XValue).stringValue();
       } catch (e) {
         if (budget.abort) throw budget.abort;
         if (e instanceof AfterlifeError) throw e;

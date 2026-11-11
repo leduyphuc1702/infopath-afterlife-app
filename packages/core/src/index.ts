@@ -36,6 +36,7 @@ export type {
   IrConnection,
   IrField,
   IrGroup,
+  IrInsert,
   IrRule,
   IrValidation,
   IrView,
@@ -83,7 +84,7 @@ export type { RecordEvidence } from './triage/record';
 export { prepareView } from './render/prepare';
 export type { PrepareOptions, PreparedView } from './render/prepare';
 export { renderView } from './render/render';
-export type { ControlMark, RenderInput, RenderResult } from './render/render';
+export type { ControlMark, RenderInput, RenderResult, RowMark } from './render/render';
 export { readZip } from './zip/read';
 export type { ReadZipOptions, ZipEntry } from './zip/read';
 export { writeZip } from './zip/write';

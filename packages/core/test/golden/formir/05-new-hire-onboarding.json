@@ -1530,6 +1530,24 @@
       },
       "groupId": "g:main:/my:onboarding/my:employment",
       "id": "g:main:/my:onboarding/my:employment/my:fullTime",
+      "insert": {
+        "caption": "fullTime",
+        "component": "xReplace",
+        "container": "/my:onboarding/my:employment",
+        "fragments": [
+          {
+            "xml": "<my:fullTime xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00\">\n\t<my:annualSalary xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:benefitsPlan/>\n</my:fullTime>"
+          }
+        ],
+        "source": {
+          "column": 5,
+          "file": "manifest.xsf",
+          "line": 40,
+          "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[6]"
+        },
+        "view": "HR",
+        "xmlToEdit": "fullTime_6"
+      },
       "kind": "group",
       "label": "Full Time",
       "labelEvidence": {
@@ -1564,6 +1582,24 @@
       },
       "groupId": "g:main:/my:onboarding/my:employment",
       "id": "g:main:/my:onboarding/my:employment/my:contractor",
+      "insert": {
+        "caption": "contractor",
+        "component": "xReplace",
+        "container": "/my:onboarding/my:employment",
+        "fragments": [
+          {
+            "xml": "<my:contractor xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00\">\n\t<my:agencyName/>\n\t<my:hourlyRate xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:contractEnd xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n</my:contractor>"
+          }
+        ],
+        "source": {
+          "column": 5,
+          "file": "manifest.xsf",
+          "line": 46,
+          "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[9]"
+        },
+        "view": "HR",
+        "xmlToEdit": "contractor_9"
+      },
       "kind": "group",
       "label": "Contractor",
       "labelEvidence": {
@@ -1630,6 +1666,24 @@
       },
       "groupId": "g:main:/my:onboarding",
       "id": "g:main:/my:onboarding/my:relocation",
+      "insert": {
+        "caption": "relocation",
+        "component": "xOptional",
+        "container": "/my:onboarding",
+        "fragments": [
+          {
+            "xml": "<my:relocation xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:40:00\">\n\t<my:relocateFrom/>\n\t<my:relocationAllowance xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:movingDate xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n</my:relocation>"
+          }
+        ],
+        "source": {
+          "column": 5,
+          "file": "manifest.xsf",
+          "line": 95,
+          "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[3]/xsf:editing[1]/xsf:xmlToEdit[10]"
+        },
+        "view": "Manager",
+        "xmlToEdit": "relocation_10"
+      },
       "kind": "group",
       "label": "Relocation",
       "labelEvidence": {

@@ -580,6 +580,25 @@
       },
       "groupId": "g:main:/my:nonConformance/my:containment",
       "id": "g:main:/my:nonConformance/my:containment/my:containmentAction",
+      "insert": {
+        "caption": "containmentAction",
+        "component": "xCollection",
+        "container": "/my:nonConformance",
+        "fragments": [
+          {
+            "innerFragment": "my:containment/my:containmentAction",
+            "xml": "<my:containment xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:23:00\"><my:containmentAction>\n\t<my:containmentDate xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:containmentText/>\n</my:containmentAction></my:containment>"
+          }
+        ],
+        "source": {
+          "column": 5,
+          "file": "manifest.xsf",
+          "line": 38,
+          "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[6]"
+        },
+        "view": "Main",
+        "xmlToEdit": "containmentAction_6"
+      },
       "kind": "group",
       "label": "Containment Action",
       "labelEvidence": {

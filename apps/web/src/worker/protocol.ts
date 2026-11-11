@@ -1,6 +1,7 @@
 // Spec 09 design §4: the messages between the page and the Worker. Core types only.
 import type {
   ControlMark,
+  RowMark,
   ErrorCode,
   FormIR,
   Issue,
@@ -79,7 +80,17 @@ export type FillCommand =
   | { readonly kind: 'edit'; readonly path: string; readonly value: string }
   | { readonly kind: 'press'; readonly ctrlId: string; readonly path?: string }
   /** Render again with no change, e.g. for another view. */
-  | { readonly kind: 'render' };
+  | { readonly kind: 'render' }
+  /** Spec 04 task 9: "Insert item" (`in`, its context node) or the row menu (`row`, `where`). */
+  | {
+      readonly kind: 'insertRow';
+      readonly groupId: string;
+      readonly at:
+        { readonly in: string } | { readonly row: string; readonly where: 'before' | 'after' };
+    }
+  | { readonly kind: 'removeRow'; readonly path: string }
+  | { readonly kind: 'insertOptional'; readonly groupId: string; readonly in: string }
+  | { readonly kind: 'removeOptional'; readonly path: string };
 
 /** A request without its id, as the page writes it. */
 export type ReqBody = Req extends infer R ? (R extends Req ? Omit<R, 'id'> : never) : never;
@@ -135,6 +146,8 @@ export interface RenderedRes {
   readonly css: string;
   readonly issues: readonly Issue[];
   readonly marks: readonly ControlMark[];
+  /** Spec 04 task 8: core's row marks, as core gives them (absent when none). */
+  readonly rows?: readonly RowMark[];
 }
 export interface FailedRes {
   readonly type: 'failed';
@@ -181,6 +194,10 @@ export interface FilledRes extends Omit<RenderedRes, 'type'> {
   readonly view?: string;
   /** A change since the session opened that was not downloaded (R6.4). */
   readonly dirty: boolean;
+  /** Spec 04 task 9: the item to focus after an insert or remove (its `data-afl-node`). */
+  readonly focus?: string;
+  /** Spec 04 task 9: a name for each group with rows on the page, for row menus ("Expenses"). */
+  readonly groups: Readonly<Record<string, string>>;
   /** Opening only: calculated fields the record stored empty and the runtime worked out. */
   readonly workedOut: number;
   /** R2.4: command in to render out, in the Worker. */

@@ -42,6 +42,18 @@ export interface ControlMark {
   readonly required: boolean;
 }
 
+/**
+ * Spec 04 task 8 (D20), changed in spec 04 for spec 03's marks: an element that draws an item of
+ * a repeating group (`row`), a present `xOptional` section (`optional`), or an "Insert item" /
+ * "Click here to insert" placeholder (`insert`, `path` is its context node). The element carries
+ * `data-afl-structure`, `data-afl-group` and `data-afl-node`.
+ */
+export interface RowMark {
+  readonly kind: 'row' | 'optional' | 'insert';
+  readonly groupId: string;
+  readonly path: string;
+}
+
 export interface RenderResult {
   /** `<div class="afl-root" data-afl-scope="s…" inert>…</div>`. */
   readonly html: string;
@@ -50,6 +62,8 @@ export interface RenderResult {
   readonly issues: readonly Issue[];
   /** One per rendered bound control, in result document order (task 4). */
   readonly marks: readonly ControlMark[];
+  /** Spec 04 task 8: rows, optional sections and insert placeholders; absent when none. */
+  readonly rows?: readonly RowMark[];
 }
 
 /** ISO 8601 date-time with seconds optional, fraction optional, and a required offset. */
@@ -59,7 +73,7 @@ const NOW =
 const LOCALE = /^[A-Za-z]{2,3}(?:-[A-Za-z0-9]{1,8})*$/;
 
 export function renderView(prepared: PreparedView, input: RenderInput): RenderResult {
-  const { template, ir, compiled, file, controlAt, required, activeXAt } =
+  const { template, ir, compiled, file, controlAt, required, activeXAt, structure } =
     preparedInternals(prepared);
   checkNow(input.now);
   const locale = input.locale ?? 'en-US';
@@ -101,6 +115,7 @@ export function renderView(prepared: PreparedView, input: RenderInput): RenderRe
     budget,
     sourceFile: name,
     controlAt,
+    ...(structure.isItem && { isItem: structure.isItem }),
   });
   issues.push(...run.issues);
   if (run.unmarked > 0) {
@@ -129,6 +144,10 @@ export function renderView(prepared: PreparedView, input: RenderInput): RenderRe
     run.marked,
     (m) => controlMark(m, namespaces, required),
     resources,
+    (origin) => {
+      const s = run.structure.get(origin);
+      return s && structure.mark(s);
+    },
   );
   issues.push(...post.issues);
 
@@ -137,6 +156,7 @@ export function renderView(prepared: PreparedView, input: RenderInput): RenderRe
     css: post.css,
     issues: Object.freeze(issues),
     marks: Object.freeze(post.marks.map((m) => Object.freeze(m))),
+    ...(post.rows.length > 0 && { rows: Object.freeze(post.rows.map((r) => Object.freeze(r))) }),
   });
 }
 
@@ -150,12 +170,17 @@ export function postProcess(
     throw new AfterlifeError('INTERNAL', { path: 'postProcess', reason: 'no mark function' });
   },
   resources: Resources = NO_RESOURCES,
-): { html: string; css: string; issues: Issue[]; marks: ControlMark[] } {
+  rowOf: (origin: object) => RowMark | undefined = () => undefined,
+): { html: string; css: string; issues: Issue[]; marks: ControlMark[]; rows: RowMark[] } {
   const page = sanitiseResult(fragment as DomFragment & ResultNode, scope, resources);
-  const { marks, unreadable } = applyMarks(page.root, (origin) => {
-    const m = marked.get(origin);
-    return m && markOf(m);
-  });
+  const { marks, rows, unreadable } = applyMarks(
+    page.root,
+    (origin) => {
+      const m = marked.get(origin);
+      return m && markOf(m);
+    },
+    rowOf,
+  );
   const removed = new Map(page.removed);
   const css = [...page.styles.map((s) => scopeCss(s, scope, removed.get('css')!)), OWN_CSS];
   return {
@@ -172,6 +197,7 @@ export function postProcess(
       })),
     ],
     marks,
+    rows,
   };
 }
 

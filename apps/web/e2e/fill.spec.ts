@@ -65,7 +65,14 @@ test('form 02: type amounts, Total follows, focus stays, a blank name is marked'
   await type(page, at(page, AMOUNT), '12.5', 'Tab');
   await expect(at(page, TOTAL)).toHaveText('$12.50');
   expect(await activePath(page)).not.toBe(AMOUNT);
-  expect(await activePath(page)).toBeDefined();
+  // Tab order: the row's controls, then its menu button (spec 04 task 9), then the next control.
+  expect(
+    await page.evaluate(() =>
+      document
+        .querySelector('[data-afl-paper]')
+        ?.shadowRoot?.activeElement?.getAttribute('aria-label'),
+    ),
+  ).toBe('Actions for row 1 of Expenses');
   expect(await page.evaluate(() => scrollY)).toBe(y);
 
   // Commit with Enter: focus and caret stay in the box, so typing goes on where it was.
@@ -238,3 +245,87 @@ for (const [sample, label] of [
     // R2.4: the 30 ms budget is for forms under 200 fields (form 04); form 08 is reported (E2).
     if (label === 'form 04') expect(p95).toBeLessThan(30);
   });
+
+// Spec 04 task 9 (R7.1–R7.3): rows and optional sections, by mouse and by keyboard.
+const ROW = (n: number) => `${E}/my:expenses[1]/my:expense[${n}]`;
+const activeNode = (page: Page) =>
+  page.evaluate(() => {
+    const a = document.querySelector('[data-afl-paper]')?.shadowRoot?.activeElement;
+    return a?.closest<HTMLElement>('[data-afl-structure]')?.dataset.aflNode;
+  });
+
+test('form 02: Insert item, the row menu by keyboard, Total follows, focus moves with the rows', async ({
+  page,
+}) => {
+  await openFill(page, /^Expense report/);
+  // The empty form has one empty expense row.
+  const rows = page.locator('[data-afl-paper] [data-afl-structure="row"]');
+  await expect(rows).toHaveCount(1);
+  const before = await renders(page);
+  await page.getByRole('button', { name: 'Insert a row at the end of Expenses' }).click();
+  await expect.poll(() => renders(page)).toBeGreaterThan(before);
+  await expect(rows).toHaveCount(2);
+  // Focus is in the new row's first control.
+  expect(await activePath(page)).toBe(`${ROW(2)}/my:expenseDate[1]`);
+  await type(page, at(page, `${ROW(2)}/my:amount[1]`), '30');
+  await expect(at(page, TOTAL)).toHaveText('$30.00');
+
+  // Keyboard: the row's menu button, Enter, ArrowDown to "Insert below", Enter.
+  await page.getByRole('button', { name: 'Actions for row 2 of Expenses' }).focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('menu', { name: 'Actions for row 2 of Expenses' })).toBeVisible();
+  await page.keyboard.press('ArrowDown');
+  await expect(
+    page.getByRole('menuitem', { name: 'Insert a row below row 2 of Expenses' }),
+  ).toBeFocused();
+  let n = await renders(page);
+  await page.keyboard.press('Enter');
+  await expect.poll(() => renders(page)).toBeGreaterThan(n);
+  await expect(rows).toHaveCount(3);
+  expect(await activeNode(page)).toBe(ROW(3));
+  await type(page, at(page, `${ROW(3)}/my:amount[1]`), '12');
+  await expect(at(page, TOTAL)).toHaveText('$42.00');
+
+  // Remove row 2: row 3 takes its place and gets the focus; Total follows.
+  await page.getByRole('button', { name: 'Actions for row 2 of Expenses' }).click();
+  n = await renders(page);
+  await page.getByRole('menuitem', { name: 'Remove row 2 of Expenses' }).click();
+  await expect.poll(() => renders(page)).toBeGreaterThan(n);
+  await expect(rows).toHaveCount(2);
+  expect(await activeNode(page)).toBe(ROW(2));
+  await expect(at(page, TOTAL)).toHaveText('$12.00');
+  await expect(at(page, `${ROW(2)}/my:amount[1]`)).toHaveText('$12.00');
+
+  // Removing the last rows puts focus on "Insert item".
+  for (const k of [2, 1]) {
+    await page.getByRole('button', { name: `Actions for row ${k} of Expenses` }).click();
+    n = await renders(page);
+    await page.getByRole('menuitem', { name: `Remove row ${k} of Expenses` }).click();
+    await expect.poll(() => renders(page)).toBeGreaterThan(n);
+  }
+  await expect(rows).toHaveCount(0);
+  await expect(
+    page.getByRole('button', { name: 'Insert a row at the end of Expenses' }),
+  ).toBeFocused();
+  await expect(at(page, TOTAL)).toHaveText('$0.00');
+  // A row change is an unsaved change.
+  await fillSwitch(page).click();
+  await expect(page.getByRole('dialog', { name: 'Discard your changes?' })).toBeVisible();
+  await page.getByRole('button', { name: 'Discard changes' }).click();
+});
+
+test('form 05: the optional Relocation section inserts and removes', async ({ page }) => {
+  await openFill(page, /^New hire onboarding/);
+  await page.getByRole('combobox', { name: 'View' }).selectOption({ label: 'Manager' });
+  const insert = page.getByRole('button', { name: 'Insert Relocation' });
+  await expect(insert).toBeVisible();
+  await insert.focus();
+  await page.keyboard.press('Enter');
+  const section = page.locator('[data-afl-paper] [data-afl-structure="optional"]');
+  await expect(section).toHaveCount(1);
+  expect(await activeNode(page)).toBe('/my:onboarding[1]/my:relocation[1]');
+  await page.getByRole('button', { name: 'Actions for Relocation' }).click();
+  await page.getByRole('menuitem', { name: 'Remove Relocation' }).click();
+  await expect(section).toHaveCount(0);
+  await expect(insert).toBeFocused();
+});

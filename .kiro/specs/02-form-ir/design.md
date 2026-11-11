@@ -246,6 +246,9 @@ export interface UnresolvedRef {
 }
 ```
 
+Changed in spec 04 task 8: `IrGroup.insert?: IrInsert` (`component` `xCollection` | `xOptional` | `xReplace`, `xmlToEdit`, `view`, `container?`, `caption?`, `fragments[] {innerFragment?, xml}`, `source`) from the first view's `xsf:xmlToEdit` whose `item` is the group (`ir/inserts.ts`, the builder's last step). Nothing else in FormIR reads it, so Triage, death certificates, X-ray and the converter inputs do not change; 17 FormIR goldens gain the field (21 groups).
+
+
 Rules the types do not show:
 - `writtenBy` holds `assignmentTarget`, `calcTarget`, `binding` (a control reads and writes) and
   `signatureLocation` (where a signature is written; `DepRole` gained it at task 10);

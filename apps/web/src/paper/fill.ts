@@ -75,10 +75,21 @@ export interface FocusState {
   /** Uncommitted text typed into a text box. */
   readonly text?: string;
   readonly caret?: number;
+  /** Spec 04 task 9: a row menu button or insert placeholder, by its item's node and kind. */
+  readonly structure?: { readonly node: string; readonly kind: string };
 }
 
 export function focusState(root: ShadowRoot): FocusState | undefined {
-  const el = root.activeElement?.closest<HTMLElement>('[data-afl-ctrl]');
+  const active = root.activeElement as HTMLElement | null;
+  if (active?.dataset.aflRowMenu !== undefined || active?.dataset.aflStructure === 'insert') {
+    const item = active.closest<HTMLElement>('[data-afl-structure]')!;
+    return {
+      ctrl: '',
+      path: undefined,
+      structure: { node: item.dataset.aflNode ?? '', kind: item.dataset.aflStructure ?? '' },
+    };
+  }
+  const el = active?.closest<HTMLElement>('[data-afl-ctrl]');
   if (!el) return undefined;
   const ctrl = el.dataset.aflCtrl!;
   const path = pathOf(el);
@@ -103,6 +114,17 @@ const selection = (root: ShadowRoot): Selection | null =>
   document.getSelection();
 
 export function restoreFocus(root: ShadowRoot, f: FocusState): void {
+  if (f.structure) {
+    const item = root.querySelector<HTMLElement>(
+      `[data-afl-structure="${CSS.escape(f.structure.kind)}"][data-afl-node="${CSS.escape(f.structure.node)}"]`,
+    );
+    const target =
+      f.structure.kind === 'insert'
+        ? item
+        : item?.querySelector<HTMLElement>('[data-afl-row-menu]');
+    target?.focus({ preventScroll: true });
+    return;
+  }
   const sel = `[data-afl-ctrl="${CSS.escape(f.ctrl)}"]${f.path === undefined ? '' : `[data-afl-path="${CSS.escape(f.path)}"]`}`;
   const el = root.querySelector<HTMLElement>(sel);
   if (!el) return;

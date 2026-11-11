@@ -751,6 +751,25 @@
       },
       "groupId": "g:main:/my:timesheet/my:lines",
       "id": "g:main:/my:timesheet/my:lines/my:day",
+      "insert": {
+        "caption": "day",
+        "component": "xCollection",
+        "container": "/my:timesheet",
+        "fragments": [
+          {
+            "innerFragment": "my:lines/my:day",
+            "xml": "<my:lines xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:10:00\"><my:day>\n\t<my:workDate xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:hoursWorked xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:projectCode/>\n\t<my:note/>\n</my:day></my:lines>"
+          }
+        ],
+        "source": {
+          "column": 5,
+          "file": "manifest.xsf",
+          "line": 36,
+          "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[4]"
+        },
+        "view": "Main",
+        "xmlToEdit": "day_4"
+      },
       "kind": "group",
       "label": "Day",
       "labelEvidence": {

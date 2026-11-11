@@ -34,6 +34,45 @@ test('no-secrets: each pattern found, by name only', () => {
   assert.deepEqual(findSecrets({ content: 'ATATT is a prefix; AKIA too; ghp_short' }), []);
 });
 
+test('sample-guard: copies and archives that only read samples/ pass; writes into it are blocked', () => {
+  for (const c of [
+    'cp samples/own/xsn/02-expense-report.xsn /tmp/x.xsn',
+    'cp -r samples/own/xsn /tmp/xsn',
+    'rsync -a samples/own/ /tmp/own/',
+    'install -m 644 samples/own/README.md /tmp/r.md',
+    'ln -s "$PWD/samples/own" /tmp/own',
+    'tar -czf /tmp/s.tgz samples/own/xsn',
+    'tar czf /tmp/s.tgz samples/own',
+    'tar -xzf samples/own/a.tgz -C /tmp/out',
+    'unzip samples/own/a.zip -d /tmp/out',
+  ])
+    assert.equal(shellTouchesSamples(c, '/repo'), false, c);
+  for (const c of [
+    'cp /tmp/x.xsn samples/own/xsn/',
+    'cp -t samples/own a b',
+    'rsync -a /tmp/own/ samples/own/',
+    'ln -s /tmp/x samples/own/x',
+    'tar -xzf /tmp/s.tgz -C samples/own',
+    'tar --extract -f /tmp/s.tgz --directory=samples/own',
+    'tar -czf samples/own/s.tgz src',
+    'unzip /tmp/a.zip -d samples/own',
+    'mv samples/own/a.xml /tmp/',
+    'touch samples/own/x',
+    'mkdir samples/own/new',
+    'git restore samples/own',
+    'git clean -fd samples/',
+  ])
+    assert.equal(shellTouchesSamples(c, '/repo'), true, c);
+  // A heredoc that writes a file elsewhere and reads samples/ on a later line.
+  const heredoc = [
+    "python3 - <<'EOF'",
+    "open(p, 'w').write(s)",
+    'EOF',
+    'grep -c x samples/own/a.xml',
+  ];
+  assert.equal(shellTouchesSamples(heredoc.join('\n'), '/repo'), false);
+});
+
 test('sample-guard: shell writes under samples/ are blocked, reads are not', () => {
   for (const c of [
     'rm samples/own/x.xml',

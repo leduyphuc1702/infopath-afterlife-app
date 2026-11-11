@@ -122,7 +122,21 @@ const field = node(
   { kind: en(['field', 'richText']), xsdType, required: bool },
   { default: str, fixed: str },
 );
-const group = node({ kind: lit('group') });
+const group = node(
+  { kind: lit('group') },
+  {
+    insert: obj(
+      {
+        component: en(['xCollection', 'xOptional', 'xReplace']),
+        xmlToEdit: str,
+        view: str,
+        fragments: arr(obj({ xml: str }, { innerFragment: str })),
+        source: located,
+      },
+      { container: str, caption: str },
+    ),
+  },
+);
 const control = obj(
   { id: str, binding: str, readOnly: bool, inRepeat: bool, source: located },
   {

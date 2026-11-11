@@ -61,6 +61,9 @@ Run from the repo root, `R=$(pwd)`:
 | `echo '{"tool_name":"write","tool_input":{"content":"const k = \"AKIA…EXAMPLE\""}}' \| node tools/kiro-hooks/no-secrets.mjs` (a 20-character AKIA key) | 2 | `Blocked by the no-secrets hook: the content holds an AWS access key id (AKIA…). Put secrets in Forge environment variables …` |
 | same, content `const k = 1` | 0 | (none) |
 | `{"cwd":"$R","tool_name":"shell","tool_input":{"command":"mv x.xml samples/own/records/"}}` → `sample-guard.mjs` | 2 | `Blocked by the sample-guard hook: the agent never changes files under samples/ …` |
+| `cp samples/own/xsn/02-expense-report.xsn /tmp/x.xsn` as a shell event → `sample-guard.mjs` (run from a script file, 2026-11-11) | 0 | none: a copy out of `samples/` reads it |
+| `tar -czf /tmp/s.tgz samples/own/xsn` → `sample-guard.mjs` | 0 | none: an archive written elsewhere |
+| `tar -xzf /tmp/s.tgz -C samples/own` → `sample-guard.mjs` | 2 | the block message. The live hook also blocked the first attempt at this proof, a shell command whose text held this line |
 | same, command `grep -r amount samples/own/records` | 0 | (none) |
 | `{"cwd":"$R","tool_name":"write","tool_input":{"command":"create","path":"samples/own/x.xml"}}` → `sample-guard.mjs` | 2 | same block message |
 | `{"cwd":"$R","tool_name":"write","tool_input":{"path":"package.json"}}` → `format-on-write.mjs` | 0 | (none: formatted) |

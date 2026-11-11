@@ -96,3 +96,24 @@ KB of 160; no new chunk.
 
 `pnpm check` (after task 7): exit 0; hooks 5, core 3,778 passed (3 skipped), browser 337, web 105.
 `pnpm e2e:web`: 63 passed.
+
+## Tasks 8–9: rows and optional sections (2026-11-11)
+
+| Criterion | Oracle | Result |
+|---|---|---|
+| Task 8, D18 (spec 02 changed) | `packages/core/test/ir/golden.samples.test.ts`: `IrGroup.insert` on 21 groups in 17 forms (18 `xCollection`, 1 `xOptional`, 2 `xReplace`) | 17 FormIR goldens changed, +396 lines, additions only (the `insert` object); the Worker parity test reads the same files |
+| Task 8, D20 (spec 03 changed) | `packages/core/test/render/golden.samples.test.ts` | 34 render goldens changed (17 forms × empty and first record): `rows` added (34 `row`, 1 `optional`, 38 `insert`); the HTML differs only by `data-afl-structure`, `data-afl-group`, `data-afl-node` on those elements, checked by a script that strips the three attributes and compares with `HEAD` |
+| Triage, death certificate, X-ray, converter inputs unchanged | Triage goldens (`test/golden/triage`), coverage tests, web X-ray e2e | no file changed; all pass |
+| R7.1–R7.3, D19 | `packages/core/test/runtime/structure.test.ts` (5): Insert item appends the manifest fragment, Total follows, remove restores the XML; insert above and below; focus paths; all rows removed then one inserted; form 05 Relocation inserts and removes; wrong targets are `FILL_PATH` | pass |
+| R7.4, P3 | `packages/core/test/property/p3.property.test.ts`: 48 cases (16 forms with `xCollection`, empty form and 2 records each), up to 20 inserts per run at generated positions (append, above, below), removed in reverse | 200 runs, 858 rows inserted, XML equal to the start every run |
+| R7.1–R7.3 on the page | `apps/web/e2e/fill.spec.ts` › "form 02: Insert item, the row menu by keyboard…": Insert item, focus in the new row's first control; the row menu by keyboard ("Insert a row below row 2 of Expenses"); remove gives focus to the row that took its place; Total $30.00 → $42.00 → $12.00 → $0.00; after the last row, focus on Insert item; a row change asks before Fill turns off | pass |
+| R7.3 on the page | same file › "form 05: the optional Relocation section": "Insert Relocation" by Enter, focus in the section, "Remove Relocation" from its menu, focus back on the placeholder | pass |
+
+No group stays read-only for a reason in our forms: every `xCollection` item has `minOccurs="0"`,
+so "the last row cannot be removed" (`FILL_PATH lastRow`) never applies to them. Form 05's two
+`xReplace` groups (Full time, Contractor) are recorded in FormIR but not editable: R7 covers
+`xCollection` and `xOptional` only.
+
+Bundle (gzip): entry 76.3 → 78.0 KB of 100, Worker 139.7 → 142.0 KB of 160; no new chunk.
+`pnpm check` (after task 9): exit 0; hooks 6, core 3,784 passed (3 skipped), browser 337, web 105.
+`pnpm e2e:web`: 65 passed.

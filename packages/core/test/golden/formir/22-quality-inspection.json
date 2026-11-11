@@ -533,6 +533,25 @@
       },
       "groupId": "g:main:/my:qualityInspection/my:checks",
       "id": "g:main:/my:qualityInspection/my:checks/my:check",
+      "insert": {
+        "caption": "check",
+        "component": "xCollection",
+        "container": "/my:qualityInspection",
+        "fragments": [
+          {
+            "innerFragment": "my:checks/my:check",
+            "xml": "<my:checks xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:22:00\"><my:check>\n\t<my:checkItem/>\n\t<my:checkPass>false</my:checkPass>\n\t<my:checkNote/>\n</my:check></my:checks>"
+          }
+        ],
+        "source": {
+          "column": 5,
+          "file": "manifest.xsf",
+          "line": 36,
+          "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[4]"
+        },
+        "view": "Main",
+        "xmlToEdit": "check_4"
+      },
       "kind": "group",
       "label": "Check",
       "labelEvidence": {

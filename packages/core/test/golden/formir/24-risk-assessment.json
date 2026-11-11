@@ -590,6 +590,25 @@
       },
       "groupId": "g:main:/my:riskAssessment/my:risks",
       "id": "g:main:/my:riskAssessment/my:risks/my:risk",
+      "insert": {
+        "caption": "risk",
+        "component": "xCollection",
+        "container": "/my:riskAssessment",
+        "fragments": [
+          {
+            "innerFragment": "my:risks/my:risk",
+            "xml": "<my:risks xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:24:00\"><my:risk>\n\t<my:hazard/>\n\t<my:likelihood xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:consequence xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:riskScore xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:control/>\n</my:risk></my:risks>"
+          }
+        ],
+        "source": {
+          "column": 5,
+          "file": "manifest.xsf",
+          "line": 35,
+          "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[3]"
+        },
+        "view": "Main",
+        "xmlToEdit": "risk_3"
+      },
       "kind": "group",
       "label": "Risk",
       "labelEvidence": {

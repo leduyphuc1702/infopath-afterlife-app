@@ -1045,6 +1045,25 @@
       },
       "groupId": "g:main:/my:expenseClaim/my:expenses",
       "id": "g:main:/my:expenseClaim/my:expenses/my:expense",
+      "insert": {
+        "caption": "expense",
+        "component": "xCollection",
+        "container": "/my:expenseClaim",
+        "fragments": [
+          {
+            "innerFragment": "my:expenses/my:expense",
+            "xml": "<my:expenses xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:10:00\"><my:expense>\n\t<my:expenseDate xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:expenseType/>\n\t<my:expenseDescription/>\n\t<my:amount xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:receipt xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n</my:expense></my:expenses>"
+          }
+        ],
+        "source": {
+          "column": 5,
+          "file": "manifest.xsf",
+          "line": 38,
+          "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[6]"
+        },
+        "view": "Claim",
+        "xmlToEdit": "expense_6"
+      },
       "kind": "group",
       "label": "Expense",
       "labelEvidence": {

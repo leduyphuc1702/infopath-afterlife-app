@@ -1767,6 +1767,25 @@
       },
       "groupId": "g:main:/my:purchaseRequest/my:lines",
       "id": "g:main:/my:purchaseRequest/my:lines/my:line",
+      "insert": {
+        "caption": "line",
+        "component": "xCollection",
+        "container": "/my:purchaseRequest",
+        "fragments": [
+          {
+            "innerFragment": "my:lines/my:line",
+            "xml": "<my:lines xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:30:00\"><my:line>\n\t<my:lineDescription/>\n\t<my:quantity xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:unitPrice xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:lineTotal xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n</my:line></my:lines>"
+          }
+        ],
+        "source": {
+          "column": 5,
+          "file": "manifest.xsf",
+          "line": 44,
+          "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[6]"
+        },
+        "view": "Request",
+        "xmlToEdit": "line_6"
+      },
       "kind": "group",
       "label": "Line",
       "labelEvidence": {

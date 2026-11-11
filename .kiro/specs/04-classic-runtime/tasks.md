@@ -42,13 +42,13 @@ Every task ends with the app working and `pnpm check` green. Test first where a 
   - Requirements: R5.4, R8.1, R8.2, R8.3, R11.5
   - Done when: e2e downloads form 02 after edits, drops the file back, sees it matched and the
     same values; the request guards see nothing; Worker p95 logged for R2.4.
-- [ ] 8. Fragments in FormIR and row marks in render
+- [x] 8. Fragments in FormIR and row marks in render
   - `IrGroup.insert` from `xmlToEdit`/`fragmentToInsert` (spec 02 builder, D18); row,
     optional and collection marks (spec 03 marks, D20); goldens of both specs re-run.
   - Requirements: R7.1, R7.3
   - Done when: FormIR of the 17 forms with fragments carries them; spec 02 and 03 suites green
     with reviewed golden changes only.
-- [ ] 9. Repeating rows and optional sections; P3
+- [x] 9. Repeating rows and optional sections; P3
   - `insertRow`, `removeRow`, `insertOptional`, `removeOptional` (D19); "Insert item" and the
     row menu on the paper.
   - Requirements: R7.1, R7.2, R7.3, R7.4

@@ -19,6 +19,7 @@ import {
   type FormIR,
   type ParsedTemplate,
   type PreparedView,
+  type RowMark,
   type RecordEvidence,
   type TriageRecord,
   type TriageResult,
@@ -337,7 +338,14 @@ export class Session {
       locale: 'en-US',
       ...(record && { record: record.bytes }),
     });
-    return { type: 'rendered', html: r.html, css: r.css, issues: r.issues, marks: r.marks };
+    return {
+      type: 'rendered',
+      html: r.html,
+      css: r.css,
+      issues: r.issues,
+      marks: r.marks,
+      ...(r.rows && { rows: r.rows }),
+    };
   }
 
   // --- Spec 04: fill-in mode ------------------------------------------------------------------
@@ -410,13 +418,24 @@ export class Session {
     const t0 = performance.now();
     const f = this.fillState;
     if (!f) throw new AppError('FILL_STATE', { reason: 'closed' });
+    const s = f.session;
     const a =
       command.kind === 'edit'
-        ? f.session.edit(command.path, command.value, now)
+        ? s.edit(command.path, command.value, now)
         : command.kind === 'press'
-          ? f.session.press(command.ctrlId, command.path, now)
-          : undefined;
-    if (a && a.changes.length > 0) f.dirty = true;
+          ? s.press(command.ctrlId, command.path, now)
+          : command.kind === 'insertRow'
+            ? s.insertRow(command.groupId, command.at, now)
+            : command.kind === 'removeRow'
+              ? s.removeRow(command.path, now)
+              : command.kind === 'insertOptional'
+                ? s.insertOptional(command.groupId, command.in, now)
+                : command.kind === 'removeOptional'
+                  ? s.removeOptional(command.path, now)
+                  : undefined;
+    // A row or section change is a change even when no value moved.
+    const structural = command.kind !== 'edit' && command.kind !== 'press';
+    if (a && (a.changes.length > 0 || structural)) f.dirty = true;
     return this.filled(view, now, a, 0, t0);
   }
 
@@ -470,6 +489,7 @@ export class Session {
       css: r.css,
       issues: r.issues,
       marks: r.marks,
+      ...(r.rows && { rows: r.rows }),
       values,
       calculated,
       invalid,
@@ -478,10 +498,27 @@ export class Session {
       notices: a?.notices ?? [],
       ...(a?.view !== undefined && { view: a.view }),
       dirty: f.dirty,
+      ...(a?.focus !== undefined && { focus: a.focus }),
+      groups: groupNames(f.template.summary.ir, r.rows ?? []),
       workedOut,
       ms: performance.now() - t0,
     };
   }
+}
+
+/** Spec 04 task 9: rows are named by their parent ("Expenses"), a section by itself. */
+function groupNames(ir: FormIR, rows: readonly RowMark[]): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const { groupId } of rows) {
+    if (groupId in out) continue;
+    const g = ir.groups.find((x) => x.id === groupId);
+    const parent = g?.groupId === undefined ? undefined : ir.groups.find((x) => x.id === g.groupId);
+    out[groupId] =
+      (g?.insert?.component === 'xCollection' ? parent?.label : g?.label) ??
+      g?.label ??
+      'this group';
+  }
+  return out;
 }
 
 /** An app-level error with its code (`FILL_PATH`, `FILL_STATE`), carried as a WireError. */

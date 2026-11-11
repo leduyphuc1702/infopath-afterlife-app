@@ -598,6 +598,25 @@
       },
       "groupId": "g:main:/my:travelPerdiem/my:days",
       "id": "g:main:/my:travelPerdiem/my:days/my:day",
+      "insert": {
+        "caption": "day",
+        "component": "xCollection",
+        "container": "/my:travelPerdiem",
+        "fragments": [
+          {
+            "innerFragment": "my:days/my:day",
+            "xml": "<my:days xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-04T09:31:00\"><my:day>\n\t<my:dayDate xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:dayMeals xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:dayLodging xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:dayTotal xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n</my:day></my:days>"
+          }
+        ],
+        "source": {
+          "column": 5,
+          "file": "manifest.xsf",
+          "line": 35,
+          "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[3]"
+        },
+        "view": "Main",
+        "xmlToEdit": "day_3"
+      },
       "kind": "group",
       "label": "Day",
       "labelEvidence": {

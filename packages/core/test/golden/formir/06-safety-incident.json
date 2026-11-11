@@ -1073,6 +1073,25 @@
       },
       "groupId": "g:main:/my:incidentReport/my:persons",
       "id": "g:main:/my:incidentReport/my:persons/my:person",
+      "insert": {
+        "caption": "person",
+        "component": "xCollection",
+        "container": "/my:incidentReport",
+        "fragments": [
+          {
+            "innerFragment": "my:persons/my:person",
+            "xml": "<my:persons xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00\"><my:person>\n\t<my:personName/>\n\t<my:personRole/>\n\t<my:injuryType/>\n\t<my:followUps>\n\t\t<my:followUp>\n\t\t\t<my:actionDate xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t\t\t<my:actionTaken/>\n\t\t\t<my:actionOwner/>\n\t\t</my:followUp>\n\t</my:followUps>\n</my:person></my:persons>"
+          }
+        ],
+        "source": {
+          "column": 5,
+          "file": "manifest.xsf",
+          "line": 41,
+          "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[9]"
+        },
+        "view": "Report",
+        "xmlToEdit": "person_9"
+      },
       "kind": "group",
       "label": "Person",
       "labelEvidence": {
@@ -1139,6 +1158,25 @@
       },
       "groupId": "g:main:/my:incidentReport/my:persons/my:person/my:followUps",
       "id": "g:main:/my:incidentReport/my:persons/my:person/my:followUps/my:followUp",
+      "insert": {
+        "caption": "followUp",
+        "component": "xCollection",
+        "container": "/my:incidentReport/my:persons/my:person",
+        "fragments": [
+          {
+            "innerFragment": "my:followUps/my:followUp",
+            "xml": "<my:followUps xmlns:my=\"http://schemas.microsoft.com/office/infopath/2003/myXSD/2026-11-03T08:50:00\"><my:followUp>\n\t<my:actionDate xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\"/>\n\t<my:actionTaken/>\n\t<my:actionOwner/>\n</my:followUp></my:followUps>"
+          }
+        ],
+        "source": {
+          "column": 5,
+          "file": "manifest.xsf",
+          "line": 56,
+          "path": "/xsf:xDocumentClass[1]/xsf:views[1]/xsf:view[1]/xsf:editing[1]/xsf:xmlToEdit[13]"
+        },
+        "view": "Report",
+        "xmlToEdit": "followUp_13"
+      },
       "kind": "group",
       "label": "Follow Up",
       "labelEvidence": {
