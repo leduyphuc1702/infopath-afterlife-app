@@ -10,6 +10,7 @@ export const placeOf = (s: State): Place => ({
   screen: s.screen,
   ...(s.openId !== undefined && { openId: s.openId }),
   ...(s.certificateId !== undefined && { certificateId: s.certificateId }),
+  ...(s.screen === 'form' && { recordIndex: s.recordIndex }),
 });
 
 /** Triage is one place whatever form is open behind it; a certificate is its form's. */
@@ -36,7 +37,11 @@ export function placeIn(state: unknown): Place | undefined {
  */
 export function visit(h: HistoryLike, place: Place): void {
   const current = placeIn(h.state);
-  if (current && keyOf(current) === keyOf(place)) return;
   const data = { [KEY]: place };
+  // Spec 27 R1: the same place keeps its entry, which learns the record now showing.
+  if (current && keyOf(current) === keyOf(place)) {
+    if (current.recordIndex !== place.recordIndex) h.replaceState(data, '');
+    return;
+  }
   h.pushState(data, '');
 }

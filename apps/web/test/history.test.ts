@@ -1,6 +1,6 @@
 import type { FormIR, TriageResult } from '@afterlife/core';
 import fc from 'fast-check';
-import { expect, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { keyOf, placeIn, placeOf, visit, type HistoryLike } from '../src/shell/history';
 import { initialState, reducer, type Action, type State } from '../src/store';
 import type { SessionRes, TemplateSummary } from '../src/worker/protocol';
@@ -119,4 +119,35 @@ test('spec 26 M1: Forward from the start page to Triage or a certificate shows t
     const s = reducer(home, { type: 'restore', place });
     expect(placeOf(s)).toEqual(place);
   }
+});
+
+describe('spec 27 R1: a form reached again shows its record', () => {
+  const recs = ['r1', 'r2', 'r3'].map((recordId) => ({
+    recordId,
+    fileName: `${recordId}.xml`,
+    match: { kind: 'exact', templateId: 't1' },
+  }));
+  const withRecords = { ...session(IDS.map(tpl)), records: recs } as unknown as SessionRes;
+  const opened = (s: State) => reducer(s, { type: 'session', session: withRecords, open: 't1' });
+
+  test('opened again from the start page: the first record, as the first time', () => {
+    const first = opened(initialState);
+    expect(first.recordIndex).toBe(1);
+    const again = opened(reducer(first, { type: 'home' }));
+    expect(again.recordIndex).toBe(1);
+  });
+
+  test('Back and Forward: the record the entry was left on; the first when it is gone', () => {
+    const on3 = { ...opened(initialState), recordIndex: 3 };
+    const entry = placeOf(on3);
+    const home = reducer(on3, { type: 'home' });
+    expect(reducer(home, { type: 'restore', place: entry }).recordIndex).toBe(3);
+    const fewer = { ...home, records: home.records.slice(0, 1) };
+    expect(reducer(fewer, { type: 'restore', place: entry }).recordIndex).toBe(1);
+  });
+
+  test('the record does not make a new entry', () => {
+    const s = opened(initialState);
+    expect(keyOf(placeOf({ ...s, recordIndex: 2 }))).toBe(keyOf(placeOf(s)));
+  });
 });

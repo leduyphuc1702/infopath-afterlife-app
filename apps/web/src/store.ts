@@ -64,6 +64,8 @@ export interface Place {
   readonly screen: Screen;
   readonly openId?: string;
   readonly certificateId?: string;
+  /** Spec 27 R1: on the form screen, the record showing when the entry was left (0: empty form). */
+  readonly recordIndex?: number;
 }
 
 export const initialState: State = {
@@ -174,7 +176,15 @@ export function reducer(s: State, a: Action): State {
         : still
           ? next
           : openState(next, a.session.templates[0]);
-      return showArrived(s, opened);
+      const shown = showArrived(s, opened);
+      // Spec 27 R1: a form opened anew (from the start page, or another form) shows its first
+      // record, whether its records are new to the session or not.
+      return wanted &&
+        wanted.templateId !== s.openId &&
+        shown.recordIndex === 0 &&
+        recordsOf(shown, wanted.templateId).length > 0
+        ? { ...shown, recordIndex: 1 }
+        : shown;
     }
     case 'restore': {
       const { place } = a;
@@ -190,10 +200,14 @@ export function reducer(s: State, a: Action): State {
             t.templateId !== s.openId))
           ? openState(s, t)
           : s;
+      // Spec 27 R1: the record the entry was left on; the first when it is gone.
+      const count = recordsOf(base, base.openId).length;
+      const at = place.recordIndex;
       return {
         ...base,
         screen: place.screen,
         ...(place.certificateId !== undefined && { certificateId: place.certificateId }),
+        ...(at !== undefined && { recordIndex: at <= count ? at : count > 0 ? 1 : 0 }),
       };
     }
     case 'screen': {

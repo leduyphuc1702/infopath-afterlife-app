@@ -866,8 +866,9 @@ export function App() {
           },
       place,
     );
-    // `placeKey` says when the place changed; `place` is a new object every render.
-  }, [placeKey]);
+    // `placeKey` says when the place changed; `place` is a new object every render. Spec 27
+    // R1: a new record on the same place updates its entry, so Back and Forward return to it.
+  }, [placeKey, place.recordIndex]);
 
   // Spec 13 B6: a new screen takes focus on its heading; back on Triage, the scroll position and
   // the certificate button it was left from come back.
