@@ -19,7 +19,7 @@ test('a template, three records and a text file: one form, three records, one fi
     'Expense Report',
   );
   await expect(page.getByRole('region', { name: 'Templates' })).toHaveCount(0);
-  await page.getByRole('button', { name: 'Next' }).click();
+  // Spec 13 B4: the first record is shown.
   await expect(page.getByText('Record 1 of 3, 02-expense-report-001.xml')).toBeVisible();
   const ignored = page.getByRole('region', { name: /Files not opened/ });
   await expect(ignored).toContainText('Files not opened (1)');
@@ -66,7 +66,6 @@ test('forms 01 and 07 with all their records: two templates, 30 and 10 records',
 
 test("form 07 alone takes 01's records as another version", async ({ page }) => {
   await pick(page, [xsnPath('07-leave-request-v2'), ...recordPaths('01-leave-request', 2)]);
-  await page.getByRole('button', { name: 'Next' }).click();
   await expect(page.getByText('Made with version 1.0.0.1')).toBeVisible();
 });
 

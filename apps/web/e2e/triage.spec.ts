@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
-import { bytes, pick, recordPaths, xsnPath } from './files';
+import { readdirSync } from 'node:fs';
+import { OWN, pick, recordPaths, xsnPath } from './files';
 
 // Spec 12 R4.1–R4.3, R6.1, R2.3: Triage after opening several templates, the Wave rules by
 // keyboard, and death certificates.
@@ -136,25 +137,14 @@ test('"Triage all samples": 48 forms, wave 1: 23, wave 2: 17, wave 3: 8', async 
   await expect(menu.locator('li button')).toHaveCount(9);
 });
 
-// R7.1: 40 templates (forms 01–08, five copies each under other names), from drop to table.
+// R7.1: 40 templates (forms 01–40), from drop to table. Spec 13 B3: copies of the same bytes
+// are one form now, so the test takes 40 different templates instead of five copies of eight.
 test('40 templates triage in under 60 s', async ({ page }) => {
-  const slugs = [
-    '01-leave-request',
-    '02-expense-report',
-    '03-travel-request',
-    '04-purchase-request',
-    '05-new-hire-onboarding',
-    '06-safety-incident',
-    '07-leave-request-v2',
-    '08-big-form',
-  ];
-  const files = [1, 2, 3, 4, 5].flatMap((k) =>
-    slugs.map((s) => ({
-      name: `copy${k}-${s}.xsn`,
-      mimeType: 'application/octet-stream',
-      buffer: bytes(xsnPath(s)),
-    })),
-  );
+  const files = readdirSync(new URL('xsn/', OWN))
+    .filter((f) => f.endsWith('.xsn'))
+    .sort()
+    .slice(0, 40)
+    .map((f) => xsnPath(f.slice(0, -4)));
   const t0 = Date.now();
   await pick(page, files);
   await expect(table(page).locator('tbody tr')).toHaveCount(40, { timeout: 60_000 });

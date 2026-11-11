@@ -121,9 +121,9 @@ test(`${RUNS} hostile templates and records: no script, dialog, request or viola
       continue;
     }
     outcome.opened++;
-    // The empty form (the hostile template.xml), then the record.
-    for (const which of ['empty form', `${name}-001.xml`]) {
-      if (which !== 'empty form') await page.getByRole('button', { name: 'Next' }).click();
+    // The record (shown first, spec 13 B4), then the empty form (the hostile template.xml).
+    for (const which of [`${name}-001.xml`, 'empty form']) {
+      if (which === 'empty form') await page.getByRole('button', { name: 'Previous' }).click();
       const paper = page
         .getByRole('region', { name: `Hostile-${n}, V view, ${which}` })
         .locator('.afl-root');

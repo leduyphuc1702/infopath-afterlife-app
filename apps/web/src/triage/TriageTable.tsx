@@ -24,14 +24,17 @@ export function TriageTable({ result, onCertificate, actions }: Props) {
   return (
     <section className="afl-triage" aria-labelledby="afl-triage-h">
       <div className="afl-triage-head">
-        <h2 id="afl-triage-h">Triage</h2>
+        <h2 id="afl-triage-h" tabIndex={-1}>
+          Triage
+        </h2>
         {actions}
       </div>
       <p className="afl-sub">
         {totals.forms} {totals.forms === 1 ? 'form' : 'forms'}, {waves.join(', ')}.
         {totals.errors > 0 && ` ${totals.errors} could not be opened.`}
       </p>
-      <div className="afl-triage-scroll">
+      {/* Spec 13 B8: it scrolls sideways on narrow screens, so the keyboard can reach it. */}
+      <div className="afl-triage-scroll" tabIndex={0} role="region" aria-label="Table of forms">
         <table className="afl-table afl-triage-table">
           <caption className="afl-hidden">
             One row per form: wave, coverage, counts, records and causes of death
@@ -77,6 +80,7 @@ export function TriageTable({ result, onCertificate, actions }: Props) {
                   <button
                     type="button"
                     className="afl-link"
+                    data-afl-cert={r.templateId}
                     onClick={() => onCertificate(r.templateId)}
                   >
                     {r.name}

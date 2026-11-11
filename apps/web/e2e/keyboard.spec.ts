@@ -35,18 +35,18 @@ test('the whole X-ray flow from the keyboard', async ({ page }) => {
   });
   await page.keyboard.press('Enter');
   const region = (end: RegExp) => page.getByRole('region', { name: end }).locator('.afl-root');
-  await expect(region(/Employee view, empty form$/)).toBeAttached();
+  await expect(region(/Employee view, 03-travel-request-001\.xml$/)).toBeAttached();
 
   // The view selector: typing a caption's first letter chooses it (on every platform; macOS
   // opens the list on ArrowDown instead of moving the selection).
   await tabTo(page, () => document.activeElement!.tagName === 'SELECT');
   await page.keyboard.press('a');
-  await expect(region(/Accounting view, empty form$/)).toBeAttached();
+  await expect(region(/Accounting view, 03-travel-request-001\.xml$/)).toBeAttached();
 
   // Next record.
   await tabTo(page, () => document.activeElement!.textContent === 'Next');
   await page.keyboard.press('Enter');
-  await expect(region(/Accounting view, 03-travel-request-001\.xml$/)).toBeAttached();
+  await expect(region(/Accounting view, 03-travel-request-002\.xml$/)).toBeAttached();
 
   // X-ray on: the switch is before the toolbar, so Shift+Tab back to it.
   for (let i = 0; i < 20 && (await focusedText(page)) !== 'X-ray'; i++)

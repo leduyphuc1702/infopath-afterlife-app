@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { useMenu } from './menu';
 import sampleList from 'virtual:sample-list';
 import { sampleDetail, sampleName } from './sample-names';
 
@@ -13,7 +14,7 @@ interface Props {
 
 export function Header({ onFiles, onSample, xray, onTriage }: Props) {
   const input = useRef<HTMLInputElement>(null);
-  const menu = useRef<HTMLDetailsElement>(null);
+  const menu = useMenu();
   return (
     <header className="afl-header">
       <h1>InfoPath Afterlife</h1>
@@ -40,7 +41,7 @@ export function Header({ onFiles, onSample, xray, onTriage }: Props) {
             if (files.length > 0) onFiles(files);
           }}
         />
-        <details className="afl-menu" ref={menu}>
+        <details className="afl-menu" ref={menu.ref}>
           <summary className="afl-button">Try a sample</summary>
           <ul>
             {sampleList
@@ -50,7 +51,7 @@ export function Header({ onFiles, onSample, xray, onTriage }: Props) {
                   <button
                     type="button"
                     onClick={() => {
-                      menu.current?.removeAttribute('open');
+                      menu.close();
                       onSample(s.id);
                     }}
                   >

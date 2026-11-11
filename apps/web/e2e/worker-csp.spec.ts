@@ -65,6 +65,8 @@ test("_headers' policy on the Worker's response (Cloudflare Pages): the Worker i
   // The Worker's own work (the samples chunk, parsing, rendering) needs nothing the policy forbids.
   await page.getByRole('button', { name: /^Expense report/ }).click();
   await expect(
-    page.getByRole('region', { name: /Claim view, empty form$/ }).locator('.afl-root'),
+    page
+      .getByRole('region', { name: /Claim view, 02-expense-report-001\.xml$/ })
+      .locator('.afl-root'),
   ).toBeVisible();
 });

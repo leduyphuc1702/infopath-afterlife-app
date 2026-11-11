@@ -20,6 +20,7 @@ import {
   type TriageResult,
 } from '@afterlife/core';
 import type {
+  Duplicate,
   FileFailure,
   InputFile,
   Progress,
@@ -58,6 +59,12 @@ export function toWireError(e: unknown): WireError {
   };
 }
 
+/** Spec 13 B3: a file's identity is its bytes, whatever its name. Web Crypto, in Node and Workers. */
+async function sha256(bytes: Uint8Array<ArrayBuffer>): Promise<string> {
+  const d = new Uint8Array(await crypto.subtle.digest('SHA-256', bytes));
+  return Array.from(d, (b) => b.toString(16).padStart(2, '0')).join('');
+}
+
 const byName = <T extends { readonly fileName: string }>(a: T, b: T) =>
   a.fileName < b.fileName ? -1 : a.fileName > b.fileName ? 1 : 0;
 
@@ -66,25 +73,39 @@ export class Session {
   private readonly records: StoredRecord[] = [];
   private readonly failures: FileFailure[] = [];
   private next = 1;
+  /** Every file this session took in, by SHA-256: the template it became, if it did. */
+  private readonly seen = new Map<string, { readonly templateId?: string }>();
 
   private last: TriageResult | undefined;
 
   async open(files: readonly InputFile[], progress?: Progress): Promise<SessionRes> {
+    const duplicates: Duplicate[] = [];
     for (const [i, f] of files.entries()) {
       progress?.({ type: 'progress', index: i + 1, total: files.length, fileName: f.name });
       const bytes = new Uint8Array(f.bytes);
       const ext = f.name.slice(f.name.lastIndexOf('.') + 1).toLowerCase();
+      if (ext !== 'xsn' && ext !== 'xml') continue;
+      const hash = await sha256(bytes);
+      const seen = this.seen.get(hash);
+      if (seen) {
+        duplicates.push({ fileName: f.name, ...seen });
+        continue;
+      }
       try {
-        if (ext === 'xsn') await this.addTemplate(f.name, bytes, f.sample);
-        else if (ext === 'xml') this.addRecord(f.name, bytes);
+        if (ext === 'xsn') {
+          const templateId = await this.addTemplate(f.name, bytes, f.sample);
+          this.seen.set(hash, { templateId });
+        } else this.addRecord(f.name, bytes);
       } catch (e) {
         this.failures.push({ fileName: f.name, error: toWireError(e) });
       }
+      // A failed file is kept once too, as its failure.
+      if (!this.seen.has(hash)) this.seen.set(hash, {});
     }
-    return this.summary();
+    return { ...this.summary(), duplicates };
   }
 
-  private async addTemplate(fileName: string, bytes: Uint8Array, sample?: string): Promise<void> {
+  private async addTemplate(fileName: string, bytes: Uint8Array, sample?: string): Promise<string> {
     const parsed = await parseXsn(bytes);
     const ir: FormIR = buildFormIR(parsed);
     const templateId = `t${this.next++}`;
@@ -95,6 +116,7 @@ export class Session {
       ...(sample !== undefined && { sample }),
     });
     this.templates.sort((a, b) => byName(a.summary, b.summary));
+    return templateId;
   }
 
   private addRecord(fileName: string, bytes: Uint8Array): void {
@@ -136,6 +158,7 @@ export class Session {
       templates: this.templates.map((t) => t.summary),
       records,
       failures: [...this.failures],
+      duplicates: [],
       triage: this.last,
     };
   }

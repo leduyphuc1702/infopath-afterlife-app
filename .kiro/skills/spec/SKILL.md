@@ -77,3 +77,23 @@ copies the brief's file name: `docs/spec-briefs/01-xsn-parser.md` → `.kiro/spe
 - One task at a time, in order. Run the whole test suite before ticking `[x]`.
 - After each task, report what changed and the test output, then stop for review.
 - If a task cannot be done as written, stop and propose a change to tasks.md (or design.md).
+
+## Bugfix specs
+
+A round of verified defects gets its own spec, `.kiro/specs/NN-<area>-bugfixes/`, with no brief
+and, when the human approves it in advance, all three files in one turn.
+
+- `bugfix.md`: one section per bug, `B1`, `B2`, …, each with three parts:
+  - **Current behaviour**: the defect, as EARS (`WHEN … THE SYSTEM …`);
+  - **Expected behaviour**: EARS with `SHALL`;
+  - **Unchanged behaviour**: what must keep working, so the fix cannot break it.
+  Then any properties, with the next free `P` numbers.
+- `design.md`: per bug, the root cause with file and line (at the commit the bugs were found
+  on), the fix, and the regression test (kind and file). Under 150 lines. Name the existing tests
+  that asserted a defect and must change.
+- `tasks.md`: one task per bug (small ones may share), each with `Bugfix: B<n>` and `Done when:`.
+- `verification.md`: per bug, the failing test's one-line failure before the fix and its result
+  after.
+- **Failing test first.** Write each regression test and run it on the unfixed code before
+  touching the code. A test that passes on the unfixed code does not test the bug: rewrite it.
+- No existing test is edited to pass, except those that asserted the defect itself; name them.

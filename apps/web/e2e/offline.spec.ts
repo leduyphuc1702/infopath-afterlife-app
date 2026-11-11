@@ -22,11 +22,9 @@ test('after warm-up, a sample, paging, views and dropped files all work offline'
   await page.getByRole('button', { name: /^Travel request/ }).click();
   const paper = (end: string) =>
     page.getByRole('region', { name: new RegExp(`${end}$`) }).locator('.afl-root');
-  await expect(paper('Employee view, empty form')).toBeVisible();
+  await expect(paper('Employee view, 03-travel-request-001.xml')).toBeVisible();
 
   // Paging and switching views render in the Worker, with no request.
-  await page.getByRole('button', { name: 'Next' }).click();
-  await expect(paper('Employee view, 03-travel-request-001.xml')).toBeVisible();
   await page
     .getByRole('toolbar', { name: 'Views and records' })
     .locator('select')
@@ -44,9 +42,9 @@ test('after warm-up, a sample, paging, views and dropped files all work offline'
     page.getByRole('heading', { name: 'Death certificate: Expense Report' }),
   ).toBeVisible();
   await page.getByRole('button', { name: 'Open form' }).click();
-  await expect(paper('Claim view, empty form')).toBeVisible();
-  await page.getByRole('button', { name: 'Next' }).click();
   await expect(paper('Claim view, 02-expense-report-001.xml')).toBeVisible();
+  await page.getByRole('button', { name: 'Next' }).click();
+  await expect(paper('Claim view, 02-expense-report-002.xml')).toBeVisible();
 
   expect({ requested, failed }).toEqual({ requested: [], failed: [] });
 });
@@ -72,7 +70,6 @@ test('offline, characters outside Latin get a note under the paper', async ({ pa
     xsnPath('02-expense-report'),
     { name: '02-expense-report-001.xml', mimeType: 'text/xml', buffer: Buffer.from(record) },
   ]);
-  await page.getByRole('button', { name: 'Next' }).click();
   await expect(
     page
       .getByRole('region', { name: /Claim view, 02-expense-report-001\.xml$/ })

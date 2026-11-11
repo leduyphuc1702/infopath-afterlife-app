@@ -9,6 +9,9 @@ import { fadeIn } from './fade';
 import { hitTest, measure, toFrame, type Box } from './geometry';
 import './paper.css';
 
+/** 180 mm in CSS pixels: the narrower of A4 and Letter inside the 15 mm print margins. */
+const PRINT_WIDTH = (180 / 25.4) * 96;
+
 interface Props {
   readonly result: RenderedRes;
   /** Accessible name of the paper region, e.g. "Expense Report, Claim view, empty form". */
@@ -75,6 +78,20 @@ export function Paper({
       cancelAnimationFrame(pending.current);
     };
   }, [remeasure]);
+
+  // Spec 13 B1: before printing, the paper's zoom that fits its drawn width into the page.
+  useEffect(() => {
+    const fit = () => {
+      const el = host.current;
+      if (!el) return;
+      el.style.minWidth = '0';
+      const width = el.offsetWidth;
+      el.style.minWidth = '';
+      el.style.setProperty('--afl-print-zoom', String(Math.min(1, PRINT_WIDTH / width)));
+    };
+    window.addEventListener('beforeprint', fit);
+    return () => window.removeEventListener('beforeprint', fit);
+  }, []);
 
   useEffect(() => {
     const b = boxes.find((x) => x.index === reveal);

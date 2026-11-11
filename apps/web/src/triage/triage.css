@@ -10,6 +10,11 @@
   margin-top: var(--ds-space-150);
 }
 
+/* Spec 13 B8: a tab stop, so its focus ring sits inside the page. */
+.afl-triage-scroll:focus-visible {
+  outline-offset: -2px;
+}
+
 .afl-triage-table {
   font-size: 13px;
 }
@@ -194,10 +199,11 @@
     margin: 15mm;
   }
 
-  /* The plan is a child of <main>; everything else is taken out of the layout. */
+  /* The plan is a child of <main>; on Triage everything else is taken out of the layout. Other
+     screens print themselves (spec 13 B1, app.css). */
   .afl-header,
   .afl-footer,
-  .afl-main > :not(.afl-print) {
+  .afl-main[data-screen='triage'] > :not(.afl-print) {
     display: none !important;
   }
 

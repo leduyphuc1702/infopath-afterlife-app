@@ -19,7 +19,10 @@ export function PaperToolbar({ formName, views, view, onView, records, index, on
   const other = record?.match.kind === 'otherVersion' ? record.match.recordVersion : undefined;
   return (
     <div className="afl-toolbar" role="toolbar" aria-label="Views and records">
-      <span className="afl-form-name">{formName}</span>
+      {/* Spec 13 B6: the form screen's heading, focused when the screen opens. */}
+      <h2 className="afl-form-name" tabIndex={-1}>
+        {formName}
+      </h2>
       <label className="afl-field">
         View
         <select value={view} onChange={(e) => onView(e.target.value)}>

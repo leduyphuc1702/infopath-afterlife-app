@@ -1,6 +1,6 @@
 // Spec 12 R5.1, R5.2: "Export plan": the CSV (made in the Worker, saved through a `blob:` URL,
 // so nothing is fetched or sent) and the one-page print view (`PrintPlan`, `window.print()`).
-import { useRef } from 'react';
+import { useMenu } from '../shell/menu';
 
 interface Props {
   /** Resolves with the CSV text, or undefined when the Worker could not make it. */
@@ -8,8 +8,7 @@ interface Props {
 }
 
 export function ExportMenu({ onCsv }: Props) {
-  const menu = useRef<HTMLDetailsElement>(null);
-  const close = () => menu.current?.removeAttribute('open');
+  const { ref, close } = useMenu();
   const csv = async () => {
     close();
     const text = await onCsv();
@@ -24,7 +23,7 @@ export function ExportMenu({ onCsv }: Props) {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
   return (
-    <details className="afl-menu afl-export" ref={menu}>
+    <details className="afl-menu afl-export" ref={ref}>
       <summary className="afl-button">Export plan</summary>
       <ul>
         <li>

@@ -14,12 +14,14 @@ export function Certificate({ row, onOpenForm, onBack }: Props) {
   const c = row.coverage;
   return (
     <section className="afl-certificate" aria-labelledby="afl-cert-h">
-      <p>
+      <p className="afl-no-print">
         <button type="button" className="afl-link" onClick={onBack}>
           Back to Triage
         </button>
       </p>
-      <h2 id="afl-cert-h">Death certificate: {row.name}</h2>
+      <h2 id="afl-cert-h" tabIndex={-1}>
+        Death certificate: {row.name}
+      </h2>
       <p className="afl-sub">
         {row.fileName}, InfoPath{' '}
         {row.generation === 'unknown' ? '(version unknown)' : row.generation},{' '}
@@ -35,7 +37,7 @@ export function Certificate({ row, onOpenForm, onBack }: Props) {
           {c.manual}, Unsupported {c.unsupported}
           {row.nativePercent !== undefined && ` (${row.nativePercent}% native)`}
         </span>
-        <button type="button" className="afl-button" onClick={onOpenForm}>
+        <button type="button" className="afl-button afl-no-print" onClick={onOpenForm}>
           Open form
         </button>
       </div>

@@ -43,9 +43,18 @@ export interface State {
   readonly certificateId?: string;
   readonly triage?: TriageResult;
   readonly busy?: string;
+  /** Spec 13 B3: a note on the last files opened, e.g. one already open. */
+  readonly notice?: string;
 }
 
 export type Screen = 'form' | 'triage' | 'certificate';
+
+/** Spec 13 B2: what one history entry holds. */
+export interface Place {
+  readonly screen: Screen;
+  readonly openId?: string;
+  readonly certificateId?: string;
+}
 
 export const initialState: State = {
   templates: [],
@@ -68,6 +77,7 @@ export type Action =
       readonly open?: string;
       /** Spec 12 R4.1: files that leave two or more templates open show Triage. */
       readonly screen?: Screen;
+      readonly notice?: string;
     }
   | {
       readonly type: 'input';
@@ -76,6 +86,8 @@ export type Action =
     }
   | { readonly type: 'open'; readonly templateId: string }
   | { readonly type: 'screen'; readonly screen: Screen; readonly templateId?: string }
+  /** Spec 13 B2: Back or Forward reached a history entry; show its place. */
+  | { readonly type: 'restore'; readonly place: Place }
   | { readonly type: 'view'; readonly view: string }
   | { readonly type: 'record'; readonly index: number }
   | { readonly type: 'xray'; readonly on: boolean }
@@ -90,6 +102,22 @@ const withoutConnection = (s: State): State => {
   delete (rest as { connectionId?: string }).connectionId;
   return rest;
 };
+
+const withoutNotice = (s: State): State => {
+  const rest = { ...s };
+  delete (rest as { notice?: string }).notice;
+  return rest;
+};
+
+/**
+ * Spec 13 B4: when records arrive for the open template (with it, or later), the pager shows the
+ * first of them; the empty form stays one Previous away. No new record: the place is kept.
+ */
+function showArrived(before: State, after: State): State {
+  const had = new Set(recordsOf(before, after.openId).map((r) => r.recordId));
+  const i = recordsOf(after, after.openId).findIndex((r) => !had.has(r.recordId));
+  return i < 0 ? after : { ...after, recordIndex: i + 1 };
+}
 
 function openState(s: State, t: TemplateSummary | undefined): State {
   if (!t) return s;
@@ -113,18 +141,32 @@ export function reducer(s: State, a: Action): State {
     }
     case 'session': {
       const next: State = {
-        ...s,
+        ...withoutNotice(s),
         templates: a.session.templates,
         records: a.session.records,
         failures: a.session.failures,
         triage: a.session.triage,
         ...(a.screen !== undefined && { screen: a.screen }),
+        ...(a.notice !== undefined && { notice: a.notice }),
       };
       const wanted = a.session.templates.find((t) => t.templateId === a.open);
       const still = a.session.templates.find((t) => t.templateId === s.openId);
-      if (wanted) return openState(next, wanted);
-      if (still) return next;
-      return openState(next, a.session.templates[0]);
+      const opened = wanted
+        ? openState(next, wanted)
+        : still
+          ? next
+          : openState(next, a.session.templates[0]);
+      return showArrived(s, opened);
+    }
+    case 'restore': {
+      const { place } = a;
+      const t = s.templates.find((x) => x.templateId === place.openId);
+      const base = place.screen === 'form' && t && t.templateId !== s.openId ? openState(s, t) : s;
+      return {
+        ...base,
+        screen: place.screen,
+        ...(place.certificateId !== undefined && { certificateId: place.certificateId }),
+      };
     }
     case 'screen': {
       const t =
@@ -142,7 +184,7 @@ export function reducer(s: State, a: Action): State {
     }
     case 'input':
       return {
-        ...s,
+        ...withoutNotice(s),
         ignored: [...s.ignored, ...a.ignored],
         problems: [...s.problems, ...a.problems],
       };

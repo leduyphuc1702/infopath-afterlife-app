@@ -1,5 +1,13 @@
 import type { TriageRow } from '@afterlife/core';
-import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import { fromDataTransfer, sortInput } from './files/collect';
 import { Paper } from './paper/Paper';
 import { PaperToolbar, viewCaption } from './paper/PaperToolbar';
@@ -7,6 +15,8 @@ import { ErrorBanner } from './shell/ErrorBanner';
 import { Header } from './shell/Header';
 import { Landing } from './shell/Landing';
 import { Notices } from './shell/Notices';
+import { alreadyOpen, notOpened, screenTitle } from './shell/announce';
+import { keyOf, placeIn, placeOf, visit } from './shell/history';
 import { loadPaperFonts, onDemandFacesFailed } from './shell/fonts';
 import { sampleName } from './shell/sample-names';
 import { cardFor, cardForControl } from './side/card';
@@ -64,6 +74,14 @@ export function App() {
     });
   }, []);
 
+  // Spec 13 B10: one polite announcement per drop. The same words twice are said twice: the
+  // region is emptied first.
+  const [announcement, setAnnouncement] = useState('');
+  const say = useCallback((text: string) => {
+    setAnnouncement('');
+    if (text !== '') requestAnimationFrame(() => setAnnouncement(text));
+  }, []);
+
   /** Applies a Worker answer to an open request; opens the first template it added. */
   const [reading, setReading] = useState<string>();
   const progress: Progress = useCallback(
@@ -82,14 +100,26 @@ export function App() {
     }
     const added = res.templates.find((t) => !known.current.has(t.templateId));
     for (const t of res.templates) known.current.add(t.templateId);
+    // Spec 13 B3: files already open add nothing; the template they are is shown again.
+    const again = [
+      ...new Set(res.duplicates.flatMap((d) => (d.templateId === undefined ? [] : [d.templateId]))),
+    ];
+    const open = added?.templateId ?? (again.length === 1 ? again[0] : undefined);
     const screen =
-      triage && added && res.templates.length >= 2 ? 'triage' : added ? 'form' : undefined;
+      triage && (added ? res.templates.length >= 2 : again.length >= 2)
+        ? 'triage'
+        : open !== undefined
+          ? 'form'
+          : undefined;
+    const notice = alreadyOpen(res.duplicates.map((d) => d.fileName));
     dispatch({
       type: 'session',
       session: res,
-      ...(added && { open: added.templateId }),
+      ...(open !== undefined && { open }),
       ...(screen && { screen }),
+      ...(notice !== undefined && { notice }),
     });
+    return res;
   }, []);
 
   const openFiles = useCallback(
@@ -100,15 +130,30 @@ export function App() {
         ...(c.tooMany ? [{ fileName: '', error: c.tooMany }] : []),
       ];
       dispatch({ type: 'input', ignored: c.ignored, problems });
-      if (c.files.length === 0) return;
+      if (c.files.length === 0) {
+        say(notOpened(c.ignored, []));
+        return;
+      }
       dispatch({
         type: 'busy',
         what: c.files.length === 1 ? c.files[0]!.name : `${c.files.length} files`,
       });
       const [res] = await Promise.all([client.open(c.files, progress), loadPaperFonts()]);
       applySession(res, 'the files', true);
+      // Spec 13 B10: this drop's files not opened, and its records no open template made.
+      const names = new Set(c.files.map((f) => f.name));
+      const orphans =
+        res.type === 'session'
+          ? res.records.filter((r) => r.match.kind === 'unmatched' && names.has(r.fileName))
+          : [];
+      say(
+        notOpened(
+          c.ignored,
+          orphans.map((r) => r.fileName),
+        ),
+      );
     },
-    [client, applySession, progress],
+    [client, applySession, progress, say],
   );
 
   const openSample = useCallback(
@@ -233,6 +278,67 @@ export function App() {
     (r): r is TriageRow => r.kind === 'form' && r.templateId === s.certificateId,
   );
 
+  // Spec 13 B2: one history entry per screen change; Back and Forward restore the place.
+  const place = placeOf(s);
+  const placeKey = template ? keyOf(place) : undefined;
+  const screenRef = useRef(s.screen);
+  screenRef.current = placeKey === undefined ? 'form' : s.screen;
+  const triageScroll = useRef(0);
+  useEffect(() => {
+    history.scrollRestoration = 'manual';
+    const pop = (e: PopStateEvent) => {
+      const p = placeIn(e.state);
+      if (!p) return;
+      if (screenRef.current === 'triage') triageScroll.current = scrollY;
+      dispatch({ type: 'restore', place: p });
+    };
+    window.addEventListener('popstate', pop);
+    return () => window.removeEventListener('popstate', pop);
+  }, []);
+  useEffect(() => {
+    if (placeKey !== undefined) visit(history, place);
+    // `placeKey` says when the place changed; `place` is a new object every render.
+  }, [placeKey]);
+
+  // Spec 13 B6: a new screen takes focus on its heading; back on Triage, the scroll position and
+  // the certificate button it was left from come back.
+  const lastKey = useRef<string>(undefined);
+  useLayoutEffect(() => {
+    const before = lastKey.current;
+    lastKey.current = placeKey;
+    if (before === undefined || placeKey === undefined || before === placeKey) return;
+    const focus = (el: Element | null | undefined) =>
+      (el as HTMLElement | null | undefined)?.focus({ preventScroll: true });
+    if (s.screen === 'triage') {
+      window.scrollTo(0, triageScroll.current);
+      const id = s.certificateId;
+      focus(
+        (id !== undefined && document.querySelector(`[data-afl-cert="${CSS.escape(id)}"]`)) ||
+          document.getElementById('afl-triage-h'),
+      );
+    } else {
+      window.scrollTo(0, 0);
+      focus(
+        s.screen === 'certificate'
+          ? document.getElementById('afl-cert-h')
+          : document.querySelector('.afl-form-name'),
+      );
+    }
+  }, [placeKey]);
+
+  // Spec 13 B7: the title names the screen first.
+  useEffect(() => {
+    document.title = screenTitle(
+      !template
+        ? undefined
+        : s.screen === 'triage'
+          ? { triage: s.triage?.totals.forms ?? 0 }
+          : s.screen === 'certificate' && certificateRow
+            ? { certificate: certificateRow.name }
+            : { form: template.ir.meta.name },
+    );
+  }, [template, s.screen, s.triage, certificateRow]);
+
   const label =
     template && view
       ? `${template.ir.meta.name}, ${viewCaption(view)} view, ${record ? record.fileName : 'empty form'}`
@@ -252,9 +358,12 @@ export function App() {
             onTriage: () => dispatch({ type: 'screen', screen: 'triage' }),
           })}
       />
-      <main className="afl-main">
+      <main className="afl-main" data-screen={template ? s.screen : 'landing'}>
         <div aria-live="polite" className="afl-status">
-          {s.busy !== undefined && (reading ?? `Opening ${s.busy}…`)}
+          {s.busy !== undefined ? (reading ?? `Opening ${s.busy}…`) : s.notice}
+        </div>
+        <div aria-live="polite" className="afl-hidden" data-afl-announce="">
+          {announcement}
         </div>
         <ErrorBanner problems={failures} />
         {!template ? (
@@ -270,9 +379,10 @@ export function App() {
             <TriageTable
               result={s.triage}
               actions={<ExportMenu onCsv={csv} />}
-              onCertificate={(templateId) =>
-                dispatch({ type: 'screen', screen: 'certificate', templateId })
-              }
+              onCertificate={(templateId) => {
+                triageScroll.current = scrollY;
+                dispatch({ type: 'screen', screen: 'certificate', templateId });
+              }}
             />
             <Unmatched records={unmatched(s)} ignored={s.ignored} />
             <PrintPlan result={s.triage} />
@@ -304,6 +414,7 @@ export function App() {
               )}
               {render?.type === 'rendered' && (
                 <>
+                  <p className="afl-print-caption">{label}</p>
                   <Paper
                     result={render}
                     label={label}

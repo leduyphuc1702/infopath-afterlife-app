@@ -15,6 +15,8 @@ const golden = (slug: string, file: string) =>
 test('sample 02 renders its default view on the paper, from the Worker', async ({ page }) => {
   await page.goto('./');
   await page.getByRole('button', { name: /^Expense report/ }).click();
+  // Spec 13 B4: the sample opens on record 1; the empty form is one Previous away.
+  await page.getByRole('button', { name: 'Previous' }).click();
   const paper = page.getByRole('region', { name: /Claim view, empty form/ });
   await expect(paper.locator('.afl-root')).toBeVisible();
   // The template's own empty form (template.xml) holds one blank expense row, which the
@@ -43,7 +45,6 @@ test('sample 02 record 1 matches core baseline 02-expense-report-Claim-first', a
   await page.setViewportSize({ width: 1600, height: 1000 });
   await page.goto('./');
   await page.getByRole('button', { name: /^Expense report/ }).click();
-  await page.getByRole('button', { name: 'Next' }).click();
   const host = page
     .getByRole('region', { name: /02-expense-report-001\.xml/ })
     .locator('[data-afl-paper]');
@@ -83,7 +84,6 @@ for (const [label, count] of [
     await expect(page.locator('.afl-root')).toBeVisible();
     const captions = await select.locator('option').allTextContents();
     expect(captions).toHaveLength(count);
-    await page.getByRole('button', { name: 'Next' }).click();
     for (const caption of captions) {
       await select.selectOption({ label: caption });
       const region = page.getByRole('region', {
@@ -100,7 +100,6 @@ test('the paper computes the same styles in light and dark colour schemes', asyn
   await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
   await page.goto('./');
   await page.getByRole('button', { name: /^Expense report/ }).click();
-  await page.getByRole('button', { name: 'Next' }).click();
   const host = page
     .getByRole('region', { name: /02-expense-report-001\.xml/ })
     .locator('[data-afl-paper]');
@@ -180,7 +179,7 @@ test('the first render of a template fades from sepia to clean, once', async ({ 
     .getByLabel('View')
     .selectOption({ index: 1 });
   await expect(
-    page.getByRole('region', { name: /-001\.xml$/ }).locator('.afl-root'),
+    page.getByRole('region', { name: /-002\.xml$/ }).locator('.afl-root'),
   ).toBeAttached();
   await page.waitForTimeout(300);
   expect(await filters(page)).toEqual(['sepia(0.85) contrast(0.92)', 'none']);

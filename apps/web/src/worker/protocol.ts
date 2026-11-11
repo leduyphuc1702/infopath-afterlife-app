@@ -62,11 +62,20 @@ export interface FileFailure {
   readonly error: WireError;
 }
 
+/** Spec 13 B3: a file of this request whose bytes were already open, so it was not added. */
+export interface Duplicate {
+  readonly fileName: string;
+  /** The open template it is; absent for a record or a file that failed. */
+  readonly templateId?: string;
+}
+
 export interface SessionRes {
   readonly type: 'session';
   readonly templates: readonly TemplateSummary[];
   readonly records: readonly RecordSummary[];
   readonly failures: readonly FileFailure[];
+  /** This request's files that were already open (B3); empty on other answers. */
+  readonly duplicates: readonly Duplicate[];
   /** Spec 12: every open template triaged, with the open records (design §6). */
   readonly triage: TriageResult;
 }
