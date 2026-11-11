@@ -78,13 +78,13 @@
     {
       "attributes": 32,
       "bytes": {
-        "sha256": "96ed33036fd1ec98d49f08bee19c2448cbdce06f9e119bd593f076d4ed7f18c3",
-        "size": 11863
+        "sha256": "7cb8f78ec9be3127d30dfd7fa6a9408b975f804bd328f4625e6b9d5233802339",
+        "size": 11841
       },
       "date": 23908,
       "folder": 0,
       "name": "view1.xsl",
-      "size": 11863,
+      "size": 11841,
       "time": 28404
     }
   ],

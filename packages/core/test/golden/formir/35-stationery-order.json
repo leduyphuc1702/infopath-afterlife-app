@@ -371,7 +371,7 @@
       "label": "Unit price",
       "labelEvidence": {
         "at": {
-          "column": 9756,
+          "column": 9734,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[3]/div[1]/span[1]/@title"
@@ -435,7 +435,7 @@
       "label": "Total",
       "labelEvidence": {
         "at": {
-          "column": 10623,
+          "column": 10601,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[4]/div[1]/span[1]/@title"
@@ -778,7 +778,7 @@
           "inRepeat": true,
           "readOnly": false,
           "source": {
-            "column": 9690,
+            "column": 9668,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[3]/div[1]/span[1]"
@@ -794,7 +794,7 @@
           "inRepeat": true,
           "readOnly": false,
           "source": {
-            "column": 10557,
+            "column": 10535,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[4]/div[1]/span[1]"

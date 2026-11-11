@@ -361,7 +361,7 @@
       "label": "Note",
       "labelEvidence": {
         "at": {
-          "column": 11552,
+          "column": 11530,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[3]/div[1]/span[1]/@title"
@@ -797,7 +797,7 @@
           "inRepeat": true,
           "readOnly": false,
           "source": {
-            "column": 11508,
+            "column": 11486,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[3]/div[1]/span[1]"

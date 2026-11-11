@@ -814,7 +814,7 @@
       "label": "Reason",
       "labelEvidence": {
         "at": {
-          "column": 13523,
+          "column": 13501,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[9]/td[2]/div[1]/span[1]/@title"
@@ -874,7 +874,7 @@
       "label": "Manager e-mail",
       "labelEvidence": {
         "at": {
-          "column": 13945,
+          "column": 13923,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[10]/td[2]/div[1]/span[1]/@title"
@@ -1325,7 +1325,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 13479,
+            "column": 13457,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[9]/td[2]/div[1]/span[1]"
@@ -1341,7 +1341,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 13901,
+            "column": 13879,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[10]/td[2]/div[1]/span[1]"

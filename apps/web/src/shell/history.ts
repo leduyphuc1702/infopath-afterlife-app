@@ -31,12 +31,12 @@ export function placeIn(state: unknown): Place | undefined {
 
 /**
  * Records `place` as the current entry. The same place (Back or Forward just restored it) adds
- * nothing; the first place replaces the page's own entry, so Back from it leaves the page.
+ * nothing. Spec 25 L2: the first place is an entry after the page's own (the start page), so Back
+ * from it returns there; spec 13 B2 replaced the page's entry, and Back left the app.
  */
 export function visit(h: HistoryLike, place: Place): void {
   const current = placeIn(h.state);
   if (current && keyOf(current) === keyOf(place)) return;
   const data = { [KEY]: place };
-  if (current) h.pushState(data, '');
-  else h.replaceState(data, '');
+  h.pushState(data, '');
 }

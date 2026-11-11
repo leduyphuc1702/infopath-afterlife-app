@@ -363,18 +363,24 @@ function magnitude(
 /**
  * `grouping` is Windows NUMBERFMT `Grouping` (`Changed at review:` it was read as a flag): 0–9
  * give groups of that many digits, repeated, 0 meaning none; 32 gives 3, then 2 repeated. Form
- * 08's screenshot shows `grouping:1` as `4,3` for 43 [seen]. Absent means none. Any other value
- * is FORMAT_UNSUPPORTED.
+ * 08's screenshot shows `grouping:1` as `4,3` for 43 [seen].
+ *
+ * Spec 25 G1: with no `grouping` item the locale groups, by 3 for en-US: [MS-IPFF2] 2.4.2.11
+ * ("If unspecified, the grouping is determined based on the form server settings"). For currency
+ * that is [seen] (`$1,423.94`, form 04); for number and percentage it is from the specification
+ * only. `-1` is read as unspecified, as `negativeOrder:-1` is "the default pattern of the
+ * locale" (2.4.1.4); not seen. Any other value is FORMAT_UNSUPPORTED.
  */
 function grouped(opts: ReadonlyMap<string, string>): readonly number[] {
-  const g = opts.get('grouping') ?? '0';
+  const g = opts.get('grouping') ?? '-1';
+  if (g === '-1') return LOCALE_GROUPING;
   if (/^\d$/.test(g)) return [Number(g)];
   if (g === '32') return [3, 2];
   throw new Unsupported('grouping');
 }
 
-/** en-US currency groups by 3 with no `grouping` option ([seen] `$1,423.94`, form 04). */
-const CURRENCY_GROUPING = [3];
+/** en-US groups by 3. */
+const LOCALE_GROUPING = [3];
 
 /** One entry of an order table, from an option; a missing option uses `fallback`. */
 function order<T>(
@@ -437,13 +443,14 @@ const NEGATIVE_CURRENCY: readonly Shape[] = [
 ];
 
 /**
- * en-US currency, always grouped by 3: `350.3` → `$350.30` (docs/infopath-ux.md §3–4, [seen]);
- * `$1,423.94` in form 04's screenshot [seen]. No corpus currency pattern has `grouping`.
+ * en-US currency: `350.3` → `$350.30` (docs/infopath-ux.md §3–4, [seen]); `$1,423.94` in form
+ * 04's screenshot [seen], with no `grouping` item. Spec 25 G1: an explicit `grouping` is read as
+ * for numbers.
  */
 function formatCurrency(value: string, opts: ReadonlyMap<string, string>): string | undefined {
   const d = parseDecimal(value);
   if (!d) return undefined;
-  const m = magnitude(d, opts, CURRENCY_GROUPING);
+  const m = magnitude(d, opts, grouped(opts));
   const pos = order(POSITIVE_CURRENCY, opts, 'positiveOrder', 0);
   const neg = order(NEGATIVE_CURRENCY, opts, 'negativeOrder', 0);
   return m.negative ? neg(m.text) : pos(m.text);

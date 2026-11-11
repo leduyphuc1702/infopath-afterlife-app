@@ -371,7 +371,7 @@
       "label": "Consequence 1-5",
       "labelEvidence": {
         "at": {
-          "column": 8926,
+          "column": 8904,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[3]/div[1]/span[1]/@title"
@@ -431,7 +431,7 @@
       "label": "Score",
       "labelEvidence": {
         "at": {
-          "column": 9752,
+          "column": 9708,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[4]/div[1]/span[1]/@title"
@@ -487,7 +487,7 @@
       "label": "Control",
       "labelEvidence": {
         "at": {
-          "column": 10643,
+          "column": 10599,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[5]/div[1]/span[1]/@title"
@@ -775,7 +775,7 @@
           "inRepeat": true,
           "readOnly": false,
           "source": {
-            "column": 8860,
+            "column": 8838,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[3]/div[1]/span[1]"
@@ -791,7 +791,7 @@
           "inRepeat": true,
           "readOnly": false,
           "source": {
-            "column": 9686,
+            "column": 9642,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[4]/div[1]/span[1]"
@@ -807,7 +807,7 @@
           "inRepeat": true,
           "readOnly": false,
           "source": {
-            "column": 10599,
+            "column": 10555,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[5]/div[1]/span[1]"

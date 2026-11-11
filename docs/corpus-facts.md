@@ -96,6 +96,12 @@ Total: 51 validation conditions, 13 distinct messages. This is the text shown wh
 
 ## Formatting patterns used in the forms
 
+Counted before spec 25 G2 (2026-11-11): since then the 13 own templates 01, 04, 07, 10, 13, 14,
+17, 18, 24, 29, 35, 40 and 41 no longer carry `grouping:1;` (it was a writing mistake: a group
+size of one, so 12 showed as `1,2`), and their patterns read `numDigits:0;negativeOrder:0;` and
+`numDigits:2;negativeOrder:0;`. Form 08 keeps `grouping:1;` as the evidence for the group size.
+None of the third-party number or percentage patterns has a `grouping` item.
+
 | Type | Parameters | Times |
 |---|---|---|
 | `date` | `dateFormat:Short Date;` | 123 |

@@ -644,11 +644,14 @@ export function App() {
     return () => document.removeEventListener('keydown', onKey);
   }, [fillOn, fillCommand]);
   useEffect(() => {
-    if (!dirty) return;
-    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
+    // Spec 25 L1: typing still in its field counts as a change too; it is asked about when the
+    // page is left, as it is for Back, Next and the Fill switch (spec 23 B2).
+    const warn = (e: BeforeUnloadEvent) => {
+      if (dirty || (fillOn && uncommitted())) e.preventDefault();
+    };
     window.addEventListener('beforeunload', warn);
     return () => window.removeEventListener('beforeunload', warn);
-  }, [dirty]);
+  }, [dirty, fillOn]);
 
   useEffect(() => {
     if (!template || !view || s.screen !== 'form' || fillOn) return;

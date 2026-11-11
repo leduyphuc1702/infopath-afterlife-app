@@ -78,25 +78,25 @@
     {
       "attributes": 32,
       "bytes": {
-        "sha256": "62ab0fb419018164e9fcc499dc06f3b34898992292a0ce5ed0d0ad740485dc8d",
-        "size": 8394
+        "sha256": "55262999af4927481b9ae78cd22f06938bdbb98d5987b33f12e6b81d921d3fec",
+        "size": 8372
       },
       "date": 23908,
       "folder": 0,
       "name": "view1.xsl",
-      "size": 8394,
+      "size": 8372,
       "time": 28404
     },
     {
       "attributes": 32,
       "bytes": {
-        "sha256": "139525f5390e82cd985ac4abc150c4c8a9c82875c507db912b09cf498f87ab4d",
-        "size": 9853
+        "sha256": "0590d9b0023acc1c42860b8a8f1e7f4ac48742efb042ed3ef856ee06e4bb71ed",
+        "size": 9831
       },
       "date": 23908,
       "folder": 0,
       "name": "view2.xsl",
-      "size": 9853,
+      "size": 9831,
       "time": 28404
     }
   ],

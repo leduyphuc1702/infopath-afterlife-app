@@ -443,7 +443,7 @@
       "label": "Project",
       "labelEvidence": {
         "at": {
-          "column": 12506,
+          "column": 12484,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[3]/div[1]/select[1]/@title"
@@ -499,7 +499,7 @@
       "label": "Note",
       "labelEvidence": {
         "at": {
-          "column": 13458,
+          "column": 13436,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[4]/div[1]/span[1]/@title"
@@ -1002,7 +1002,7 @@
           "inRepeat": true,
           "readOnly": false,
           "source": {
-            "column": 12455,
+            "column": 12433,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[3]/div[1]/select[1]"
@@ -1018,7 +1018,7 @@
           "inRepeat": true,
           "readOnly": false,
           "source": {
-            "column": 13414,
+            "column": 13392,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[3]/tr[1]/td[4]/div[1]/span[1]"

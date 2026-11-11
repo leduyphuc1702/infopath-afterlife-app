@@ -357,7 +357,7 @@
       "label": "Description",
       "labelEvidence": {
         "at": {
-          "column": 11570,
+          "column": 11548,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[1]/div[1]/span[1]/@title"
@@ -417,7 +417,7 @@
       "label": "Qty",
       "labelEvidence": {
         "at": {
-          "column": 11927,
+          "column": 11905,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[2]/div[1]/span[1]/@title"
@@ -477,7 +477,7 @@
       "label": "Unit price",
       "labelEvidence": {
         "at": {
-          "column": 12725,
+          "column": 12681,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[3]/div[1]/span[1]/@title"
@@ -541,7 +541,7 @@
       "label": "Total",
       "labelEvidence": {
         "at": {
-          "column": 13592,
+          "column": 13548,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[4]/div[1]/span[1]/@title"
@@ -725,7 +725,7 @@
       "label": "Gross",
       "labelEvidence": {
         "at": {
-          "column": 10563,
+          "column": 10541,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]/@title"
@@ -1007,7 +1007,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 10497,
+            "column": 10475,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]"
@@ -1023,7 +1023,7 @@
           "inRepeat": true,
           "readOnly": false,
           "source": {
-            "column": 11526,
+            "column": 11504,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[1]/div[1]/span[1]"
@@ -1039,7 +1039,7 @@
           "inRepeat": true,
           "readOnly": false,
           "source": {
-            "column": 11861,
+            "column": 11839,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[2]/div[1]/span[1]"
@@ -1055,7 +1055,7 @@
           "inRepeat": true,
           "readOnly": false,
           "source": {
-            "column": 12659,
+            "column": 12615,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[3]/div[1]/span[1]"
@@ -1071,7 +1071,7 @@
           "inRepeat": true,
           "readOnly": false,
           "source": {
-            "column": 13526,
+            "column": 13482,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[4]/div[1]/span[1]"

@@ -375,7 +375,7 @@
       "label": "Odometer end",
       "labelEvidence": {
         "at": {
-          "column": 8351,
+          "column": 8329,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]/@title"
@@ -435,7 +435,7 @@
       "label": "Distance",
       "labelEvidence": {
         "at": {
-          "column": 9263,
+          "column": 9219,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]/@title"
@@ -491,7 +491,7 @@
       "label": "Purpose",
       "labelEvidence": {
         "at": {
-          "column": 10241,
+          "column": 10197,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]/@title"
@@ -693,7 +693,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 8285,
+            "column": 8263,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]"
@@ -709,7 +709,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 9197,
+            "column": 9153,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[6]/td[2]/div[1]/span[1]"
@@ -725,7 +725,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 10197,
+            "column": 10153,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[7]/td[2]/div[1]/span[1]"

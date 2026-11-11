@@ -95,3 +95,10 @@ test('P17: n screen changes, then n Back steps, is the start; Forward replays th
     { numRuns: 300 },
   );
 });
+
+test('spec 25 L2: the first place is an entry after the start page', () => {
+  const h = new FakeHistory(() => undefined);
+  visit(h, { screen: 'form', openId: 't1' });
+  expect(h.entries).toHaveLength(2);
+  expect(h.entries[0]).toBeNull();
+});

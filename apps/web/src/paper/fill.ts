@@ -17,6 +17,22 @@ export function dateValue(text: string): string {
   return t;
 }
 
+/**
+ * Spec 25 L3: a number typed the way a number or currency box shows it (`1,200`, `$1,200.00`)
+ * is stored as the number (`1200`, `1200.00`). en-US separators only, the one locale formatted;
+ * anything else is stored as typed, for the check to mark.
+ */
+export function numberValue(text: string, datafmt: string | null): string {
+  const kind = /^\s*"(number|currency)"/.exec(datafmt ?? '')?.[1];
+  if (!kind) return text;
+  const t = text.trim();
+  const plain = (kind === 'currency' ? t.replace(/^(-?)\$/, '$1') : t).replace(
+    /(?<=\d),(?=\d)/g,
+    '',
+  );
+  return plain !== t && /^-?\d+(\.\d+)?$/.test(plain) ? plain : text;
+}
+
 const xct = (el: Element) => el.getAttribute('xd:xctname') ?? '';
 const pathOf = (el: Element) => (el as HTMLElement).dataset.aflPath;
 const isText = (el: Element) =>
@@ -266,7 +282,8 @@ export function listen(
     if (path === undefined || raw === undefined) return;
     let text = el.textContent ?? '';
     if (xct(el) === 'DTPicker_DTText') text = dateValue(text);
-    else if (xct(el) !== 'RichText') text = text.replace(/\r?\n/g, ' ');
+    else if (xct(el) !== 'RichText')
+      text = numberValue(text.replace(/\r?\n/g, ' '), el.getAttribute('xd:datafmt'));
     if (text === raw || text === el.dataset.aflSent) return;
     el.dataset.aflSent = text;
     send({ kind: 'edit', path, value: text });

@@ -114,7 +114,7 @@
       "label": "Name",
       "labelEvidence": {
         "at": {
-          "column": 7026,
+          "column": 7004,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
@@ -178,7 +178,7 @@
       "label": "Week starting",
       "labelEvidence": {
         "at": {
-          "column": 7442,
+          "column": 7420,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/@title"
@@ -298,7 +298,7 @@
       "label": "Decision",
       "labelEvidence": {
         "at": {
-          "column": 6566,
+          "column": 6544,
           "file": "view2.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]/@title"
@@ -355,7 +355,7 @@
       "label": "Note",
       "labelEvidence": {
         "at": {
-          "column": 7593,
+          "column": 7571,
           "file": "view2.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]/@title"
@@ -544,7 +544,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 6982,
+            "column": 6960,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
@@ -559,7 +559,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 7529,
+            "column": 7507,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]"
@@ -608,7 +608,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 6515,
+            "column": 6493,
             "file": "view2.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/select[1]"
@@ -624,7 +624,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 7549,
+            "column": 7527,
             "file": "view2.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/span[1]"
@@ -640,7 +640,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 8441,
+            "column": 8419,
             "file": "view2.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
@@ -655,7 +655,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 8988,
+            "column": 8966,
             "file": "view2.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/div[1]/span[1]"

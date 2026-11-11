@@ -433,7 +433,7 @@
       "label": "Rate per km",
       "labelEvidence": {
         "at": {
-          "column": 10896,
+          "column": 10874,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[5]/div[1]/span[1]/@title"
@@ -497,7 +497,7 @@
       "label": "Amount",
       "labelEvidence": {
         "at": {
-          "column": 11760,
+          "column": 11738,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[6]/div[1]/span[1]/@title"
@@ -855,7 +855,7 @@
           "inRepeat": true,
           "readOnly": false,
           "source": {
-            "column": 10830,
+            "column": 10808,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[5]/div[1]/span[1]"
@@ -871,7 +871,7 @@
           "inRepeat": true,
           "readOnly": false,
           "source": {
-            "column": 11694,
+            "column": 11672,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/tr[1]/td[6]/div[1]/span[1]"

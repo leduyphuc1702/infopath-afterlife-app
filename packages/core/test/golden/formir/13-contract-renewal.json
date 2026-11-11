@@ -86,7 +86,7 @@
       "label": "Contract number",
       "labelEvidence": {
         "at": {
-          "column": 9083,
+          "column": 9061,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]/@title"
@@ -142,7 +142,7 @@
       "label": "Counterparty",
       "labelEvidence": {
         "at": {
-          "column": 9527,
+          "column": 9505,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]/@title"
@@ -198,7 +198,7 @@
       "label": "Annual value",
       "labelEvidence": {
         "at": {
-          "column": 9986,
+          "column": 9964,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]/@title"
@@ -254,7 +254,7 @@
       "label": "Expiry",
       "labelEvidence": {
         "at": {
-          "column": 10914,
+          "column": 10892,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/div[1]/@title"
@@ -422,7 +422,7 @@
       "label": "Legal reviewed",
       "labelEvidence": {
         "at": {
-          "column": 7579,
+          "column": 7557,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[1]/@title"
@@ -478,7 +478,7 @@
       "label": "Comments",
       "labelEvidence": {
         "at": {
-          "column": 8184,
+          "column": 8162,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]/@title"
@@ -661,7 +661,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 7539,
+            "column": 7517,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/input[1]"
@@ -677,7 +677,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 8140,
+            "column": 8118,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[5]/td[2]/div[1]/span[1]"
@@ -693,7 +693,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 9039,
+            "column": 9017,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/div[1]/span[1]"
@@ -709,7 +709,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 9483,
+            "column": 9461,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[2]/td[2]/div[1]/span[1]"
@@ -725,7 +725,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 9920,
+            "column": 9898,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[3]/td[2]/div[1]/span[1]"
@@ -740,7 +740,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 10994,
+            "column": 10972,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[2]/div[1]/table[1]/tbody[1]/tr[4]/td[2]/div[1]/div[1]/span[1]"

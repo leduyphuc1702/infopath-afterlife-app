@@ -820,7 +820,7 @@
       "label": "Half day only",
       "labelEvidence": {
         "at": {
-          "column": 13513,
+          "column": 13491,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[9]/td[2]/div[1]/input[1]/@title"
@@ -876,7 +876,7 @@
       "label": "Reason",
       "labelEvidence": {
         "at": {
-          "column": 14097,
+          "column": 14075,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[10]/td[2]/div[1]/span[1]/@title"
@@ -936,7 +936,7 @@
       "label": "Manager e-mail",
       "labelEvidence": {
         "at": {
-          "column": 14519,
+          "column": 14497,
           "file": "view1.xsl",
           "line": 1,
           "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[11]/td[2]/div[1]/span[1]/@title"
@@ -1387,7 +1387,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 13473,
+            "column": 13451,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[9]/td[2]/div[1]/input[1]"
@@ -1403,7 +1403,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 14053,
+            "column": 14031,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[10]/td[2]/div[1]/span[1]"
@@ -1419,7 +1419,7 @@
           "inRepeat": false,
           "readOnly": false,
           "source": {
-            "column": 14475,
+            "column": 14453,
             "file": "view1.xsl",
             "line": 1,
             "path": "/{http://www.w3.org/1999/XSL/Transform}stylesheet[1]/{http://www.w3.org/1999/XSL/Transform}template[1]/html[1]/body[1]/div[2]/table[1]/tbody[1]/tr[11]/td[2]/div[1]/span[1]"

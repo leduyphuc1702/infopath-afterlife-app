@@ -151,9 +151,10 @@ test.each([
   ['time, no options', '09:30:00', 'time', '', '9:30:00 AM'],
   ['number 0, grouped by 1', '12345.5', 'number', INT, '1,2,3,4,6'],
   ['number 2, grouped', '0.1', 'number', DEC2, '0.10'],
-  ['number 0, not grouped', '12345.4', 'number', NUM0, '12345'],
-  ['number 2, not grouped', '-1234.567', 'number', NUM2, '-1234.57'],
-  ['number auto', '-1234.50', 'number', AUTO, '-1234.50'],
+  // Spec 25 G1: these three asserted the defect; no `grouping` item groups by 3.
+  ['number 0, grouped by the locale', '12345.4', 'number', NUM0, '12,345'],
+  ['number 2, grouped by the locale', '-1234.567', 'number', NUM2, '-1,234.57'],
+  ['number auto', '-1234.50', 'number', AUTO, '-1,234.50'],
   ['currency 1033', '3021.6', 'currency', CURRENCY, '$3,021.60'],
   ['percentage', '0.256', 'percentage', PCT, '26%'],
   ['string plainMultiline', 'line 1\nline 2', 'string', 'plainMultiline', 'line 1\nline 2'],
@@ -189,7 +190,8 @@ test.each([
   ['percentage, positiveOrder 0', '0.5', 'percentage', 'numDigits:0;positiveOrder:0;', '50 %'],
   ['number auto, grouped', '1234567.125', 'number', 'numDigits:auto;grouping:3;', '1,234,567.125'],
   ['grouping 0: none', '1234567', 'number', 'numDigits:0;grouping:0;', '1234567'],
-  ['grouping absent: none', '1234567', 'number', 'numDigits:0;', '1234567'],
+  // Spec 25 G1: this asserted the defect (absent read as none).
+  ['grouping absent: by 3', '1234567', 'number', 'numDigits:0;', '1,234,567'],
   ['grouping 2', '1234567', 'number', 'numDigits:0;grouping:2;', '1,23,45,67'],
   ['grouping 32: 3, then 2', '123456789', 'number', 'numDigits:0;grouping:32;', '12,34,56,789'],
   ['grouping 9, short', '12345', 'number', 'numDigits:0;grouping:9;', '12345'],
@@ -261,4 +263,24 @@ test('currencyLocale other than 1033 formats as en-US and names the locale', () 
     text: '$5.00',
     locale: '1036',
   });
+});
+
+// Spec 25 G1: [MS-IPFF2] 2.4.2.11: an unspecified `grouping` is the locale's (en-US: 3); `0` is
+// none. `-1` is read as unspecified, by analogy with `negativeOrder:-1` (not seen).
+test.each([
+  ['number, no grouping item', '1472.13', 'number', 'numDigits:2;negativeOrder:1;', '1,472.13'],
+  [
+    'number auto, no grouping item',
+    '1234567.5',
+    'number',
+    'numDigits:auto;negativeOrder:1;',
+    '1,234,567.5',
+  ],
+  ['percentage, no grouping item', '12.5', 'percentage', 'numDigits:0;negativeOrder:1;', '1,250%'],
+  ['number, grouping -1', '1472', 'number', 'numDigits:0;grouping:-1;', '1,472'],
+  ['number, grouping 0', '1472', 'number', 'numDigits:0;grouping:0;', '1472'],
+  ['currency, grouping 0', '1472', 'currency', 'numDigits:2;grouping:0;', '$1472.00'],
+  ['currency, grouping 1', '43', 'currency', 'numDigits:0;grouping:1;', '$4,3'],
+])('spec 25 G1: %s', (_name, value, type, options, expected) => {
+  expect(formatString(value, type, options)).toBe(expected);
 });
