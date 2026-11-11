@@ -244,6 +244,8 @@ export interface FilledRes extends Omit<RenderedRes, 'type'> {
   readonly groups: Readonly<Record<string, string>>;
   /** Opening only: calculated fields the record stored empty and the runtime worked out. */
   readonly workedOut: number;
+  /** Spec 16 K13: stored values the form's formulas disagreed with, corrected on open. */
+  readonly corrected: number;
   /** R2.4: command in to render out, in the Worker. */
   readonly ms: number;
 }

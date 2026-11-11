@@ -1,0 +1,22 @@
+# Spec 16 tasks
+
+- [x] 1. Dossier words in core
+  - Bugfix: K2, K3, K4, K9, K10, K11
+  - Done when: `bugfixes16.test.ts` passes; P19 still holds.
+- [x] 2. Markdown escaping
+  - Bugfix: K6
+  - Done when: K6 examples and property pass; the hostile test passes.
+- [x] 3. Documentation screen and downloads
+  - Bugfix: K1, K5, K7, K8, K12
+  - Done when: e2e K1, K5, K7/K8, K12 pass; `dossier.spec.ts` passes.
+- [x] 4. An honest open, undo in the trace
+  - Bugfix: K13, N1
+  - Done when: core K13 and e2e K13, N1 pass.
+- [x] 5. Export notice in Fill, print without "Insert item"
+  - Bugfix: N2, N3
+  - Done when: e2e N2, N3 pass.
+- [x] 6. Spec 04's unproven criteria
+  - Bugfix: D1
+  - Done when: R4.3, R5.3, R5.4, R6.1, R9.2 tests pass and spec 04's `verification.md` lists them as proven.
+- [x] 7. Verification
+  - Done when: `pnpm check` and `pnpm e2e:web` green; `verification.md` written.

@@ -5,11 +5,9 @@ import { useMenu } from '../shell/menu';
 interface Props {
   /** Resolves with the CSV text, or undefined when the Worker could not make it. */
   readonly onCsv: () => Promise<string | undefined>;
-  /** Spec 15 R3.3: the dossier of every triaged form, as a `.zip` of Markdown. */
-  readonly onDocumentation: () => void;
 }
 
-export function ExportMenu({ onCsv, onDocumentation }: Props) {
+export function ExportMenu({ onCsv }: Props) {
   const { ref, close } = useMenu();
   const csv = async () => {
     close();
@@ -42,17 +40,6 @@ export function ExportMenu({ onCsv, onDocumentation }: Props) {
             }}
           >
             Print plan
-          </button>
-        </li>
-        <li>
-          <button
-            type="button"
-            onClick={() => {
-              close();
-              onDocumentation();
-            }}
-          >
-            Download documentation
           </button>
         </li>
       </ul>

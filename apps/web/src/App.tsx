@@ -46,6 +46,7 @@ import type {
 } from './worker/protocol';
 import { DISCARD, useConfirm, type Question } from './shell/Confirm';
 import { Documentation } from './docs/Documentation';
+import { keepTrace, stepEntry } from './side/trace-keep';
 import './docs/docs.css';
 
 /** The latest render answer; the previous paper stays up while the next one is drawn. */
@@ -310,7 +311,7 @@ export function App() {
   const [traced, setTraced] = useState<string>();
   /** Spec 14 B5: what the last button press could not do, until the next command. */
   const [pressNote, setPressNote] = useState<string>();
-  const fillAnswer = useCallback((r: ResBody, message?: string) => {
+  const fillAnswer = useCallback((r: ResBody, message?: string, step?: 'undo' | 'redo') => {
     if (r.type === 'filled') {
       setFill(
         (f) =>
@@ -318,7 +319,10 @@ export function App() {
             ...f,
             res: r,
             view: viewRef.current ?? f.view,
-            trace: [...f.trace, ...r.trace].slice(-500),
+            trace: keepTrace(f.trace, [
+              ...r.trace,
+              ...(step && f.res ? [stepEntry(step, f.res.values, r.values, r.trace)] : []),
+            ]),
             ...(message !== undefined && { message }),
           },
       );
@@ -339,7 +343,9 @@ export function App() {
       if (v !== undefined)
         void client.fill(c, v, localNow()).then((r) => {
           setPressNote(pressMessage(c, r));
-          fillAnswer(r);
+          // Spec 16 N2: a new command ends the last export's note.
+          dispatch({ type: 'notice', notice: undefined });
+          fillAnswer(r, undefined, c.kind === 'undo' || c.kind === 'redo' ? c.kind : undefined);
         });
     },
     [client, fillAnswer],
@@ -379,9 +385,20 @@ export function App() {
       view: view.name,
       res: r,
       // The marks opening draws are on the paper already; the trace starts with what ran.
-      trace: r.trace.filter((e) => e.kind !== 'validation').slice(-500),
-      ...(r.workedOut > 0 && {
-        message: `${r.workedOut} calculated ${r.workedOut === 1 ? 'field was' : 'fields were'} empty in this record and ${r.workedOut === 1 ? 'has' : 'have'} been worked out.`,
+      trace: keepTrace(
+        [],
+        r.trace.filter((e) => e.kind !== 'validation'),
+      ),
+      ...((r.workedOut > 0 || r.corrected > 0) && {
+        message: [
+          r.workedOut > 0 &&
+            `${r.workedOut} calculated ${r.workedOut === 1 ? 'field was' : 'fields were'} empty in this record and ${r.workedOut === 1 ? 'has' : 'have'} been worked out.`,
+          // Spec 16 K13: say when the form's formulas disagree with what the record stored.
+          r.corrected > 0 &&
+            `${r.corrected} ${r.corrected === 1 ? 'value stored in this record differs from the form’s own formula' : 'values stored in this record differ from the form’s own formulas'}; the form’s ${r.corrected === 1 ? 'value is' : 'values are'} shown.`,
+        ]
+          .filter(Boolean)
+          .join(' '),
       }),
     });
   }, [template, view, record, s.recordIndex, fillOn, leaveFill, client, fillAnswer]);
@@ -637,6 +654,7 @@ export function App() {
                       'Filling in this form. Nothing is saved until you choose Download XML.',
                       fill.message,
                       pressNote,
+                      s.notice,
                     ]
                       .filter(Boolean)
                       .join(' ')
@@ -691,7 +709,19 @@ export function App() {
           <>
             <TriageTable
               result={s.triage}
-              actions={<ExportMenu onCsv={csv} onDocumentation={() => void documentationZip()} />}
+              actions={
+                <>
+                  <ExportMenu onCsv={csv} />
+                  {/* Spec 16 K8: in plain sight; it stays focused after the download (K7). */}
+                  <button
+                    type="button"
+                    className="afl-button"
+                    onClick={() => void documentationZip()}
+                  >
+                    Download documentation
+                  </button>
+                </>
+              }
               onCertificate={(templateId) => {
                 triageScroll.current = scrollY;
                 dispatch({ type: 'screen', screen: 'certificate', templateId });
@@ -720,13 +750,14 @@ export function App() {
             <Documentation
               dossier={doc.res.dossier}
               onBack={() => history.back()}
-              onDownload={() =>
+              onDownload={() => {
                 save(
                   new TextEncoder().encode(doc.res.markdown).buffer,
                   doc.res.fileName,
                   'text/markdown;charset=utf-8',
-                )
-              }
+                );
+                dispatch({ type: 'notice', notice: `Saved ${doc.res.fileName}.` });
+              }}
             />
           ) : (
             <p className="afl-doc">Writing the documentation…</p>

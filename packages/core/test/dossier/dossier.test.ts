@@ -1,6 +1,5 @@
 // Spec 15: the form dossier. P19 over the 48 in-repo forms, section order, determinism, form
 // 04's sentences, and the Markdown escaping (R3.4).
-import fc from 'fast-check';
 import { beforeAll, describe, expect, test } from 'vitest';
 import {
   buildDossier,
@@ -102,7 +101,7 @@ test('form 04: rules, calculations and connections in words, expressions under t
   const d = dossierOf(samples.find((x) => x.slug.startsWith('04-'))!);
   const approval = d.logic.rules.find((r) => r.sentence.includes('Over 1000'))!;
   expect(approval.sentence).toBe(
-    'Rule “Over 1000 needs accounting approval” runs when button CTRL901 on view “Request” is pressed, if a condition on Total incl. VAT is true: it sets Needs accounting approval to “true” and shows a message built from Total incl. VAT.',
+    'Rule “Over 1000 needs accounting approval” runs when button CTRL901 on view “Request” is pressed, if Total incl. VAT is greater than 1000: it sets Needs accounting approval to “true” and shows a message built from Total incl. VAT.',
   );
   expect(approval.expressions[0]).toBe('/my:purchaseRequest/my:grandTotal > 1000');
   expect(d.logic.calculations[0]!.sentence).toMatch(
@@ -139,40 +138,17 @@ describe('R3.4: Markdown escaping', () => {
     const outside = md
       .replace(/(?<!\\)(`+)[\s\S]*?(?<!`)\1(?!`)/g, '')
       .replace(/\*\*[A-Za-z ]+:\*\*|<\/?sub>/g, '');
-    const bad = [...outside.matchAll(/(^|[^\\])[[\]<>*_!&]/gm)].map((m) =>
-      outside.slice(Math.max(0, m.index - 30), m.index + 10),
-    );
+    const bad = [
+      ...outside.matchAll(/(^|[^\\])[[\]<*~]|(^|[^\\A-Za-z0-9])_|(^|[^\\])&(?=#?\w+;)/gm),
+    ].map((m) => outside.slice(Math.max(0, m.index - 30), m.index + 10));
     expect(bad).toEqual([]);
     expect(outside).not.toMatch(/https?:\/\/|www\.|@/);
     expect(md.split('\n').filter((l) => l.startsWith('# '))).toHaveLength(1);
     expect(mdText(HOSTILE).includes('\n')).toBe(false);
   });
 
-  test('property: no unescaped punctuation outside code spans, no line break, no link', () => {
-    fc.assert(
-      fc.property(fc.string({ unit: 'binary-ascii' }), fc.boolean(), (s, table) => {
-        const out = mdText(s, table);
-        expect(out).not.toMatch(/[\r\n]/);
-        // Read as CommonMark does: a backslash escapes the next character; an unescaped backtick
-        // run opens a code span that the same run closes; any other punctuation is markup.
-        const bare: string[] = [];
-        for (let i = 0; i < out.length; i++) {
-          const c = out[i]!;
-          if (c === '\\') i++;
-          else if (c === '`') {
-            const run = /^`+/.exec(out.slice(i))![0];
-            const end = out.indexOf(run, i + run.length);
-            expect(end, out).toBeGreaterThan(i);
-            i = end + run.length - 1;
-          } else if (/[!-/:-@[-`{-~]/.test(c)) bare.push(c);
-        }
-        expect(bare, out).toEqual([]);
-        if (table) expect(out.replace(/\\\|/g, '')).not.toContain('|');
-      }),
-      { numRuns: 500 },
-    );
-  });
-
+  // Spec 16 K6: the property that every punctuation character is escaped asserted the defect;
+  // `bugfixes16.test.ts` holds its replacement (nothing left can be markup, and the text comes back).
   test('a code span holds backticks', () => {
     expect(mdCode('a`b')).toBe('``a`b``');
     expect(mdCode('`a')).toBe('`` `a ``');

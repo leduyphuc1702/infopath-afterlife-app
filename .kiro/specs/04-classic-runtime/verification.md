@@ -164,12 +164,12 @@ XML is still the opened XML (so also after an edit and its undo). Before: 0 of 3
 | R3.1–R3.4 | `test/runtime/evaluate.test.ts` | proven |
 | R4.1, R4.2, R4.4 | `rules.test.ts` (6); `rules.spec.ts` (dialog, view switches) | proven |
 | R4.3 query skipped | `rules.test.ts`; `rules.spec.ts` › "Check budget" | proven |
-| R4.3 submit and close | only the message constant is tested (`rules.test.ts`): no own form binds a submit or close action to a button, and no test presses one | **open** |
+| R4.3 submit and close | `test/runtime/submit-close.test.ts` (spec 16): form 04's button given a submit, then a close action: one "Not available in the viewer" message, a skipped trace entry, the XML unchanged. It found D1 (the message twice), fixed in spec 16 | proven |
 | R5.1 | `validate.test.ts` (24); `validate-oracle.test.ts` | proven |
 | R5.2 | `fill.spec.ts`: border class, `aria-invalid`, "Cannot be blank", form 10's `aria-description` | proven |
-| R5.3 | the line "N fields need attention" (`fill.spec.ts`); its next and previous buttons were only checked by hand through MCP (spec 14) | **open**: no test presses them |
-| R5.4 | Download stays enabled while invalid (`fill.spec.ts`); the count in the status line after a download has no test | **open** |
-| R6.1 | text boxes, dropdown and date text in `fill.spec.ts` | **open** for CheckBox, OptionButton, RichText and Ctrl+Enter in a multi-line box: no test edits one |
+| R5.3 | `e2e/bugfixes16.spec.ts` › R5.3, R5.4: form 10 record 1, "Next error" visits each invalid field once and wraps, "Previous error" goes back | proven |
+| R5.4 | same test: after Download XML the status line says how many fields still need attention | proven |
+| R6.1 | `fill.spec.ts` (text, dropdown, date); `bugfixes16.spec.ts` › R6.1: form 03 CheckBox, form 01 OptionButton, form 06 RichText (Enter is a new line, Ctrl+Enter commits) | proven |
 | R6.2 | `fill.spec.ts`: Total and Receipt say why they are read-only | proven |
 | R6.3 | `fill.spec.ts` (Tab, Enter, caret); `fill-bugfixes.spec.ts` B6, B11 | proven |
 | R6.4 | `fill.spec.ts` › "leaving Fill"; `fill-bugfixes.spec.ts` B9, B10 | proven |
@@ -179,7 +179,7 @@ XML is still the opened XML (so also after an edit and its undo). Before: 0 of 3
 | R8.2, R8.3 | `fill.spec.ts` › "Download XML, drop it back" | proven |
 | R9.1 | `trace-words.test.ts`; `rules.spec.ts` › Rule Trace | proven |
 | R9.2 outline and filter | `rules.spec.ts` › Rule Trace | proven |
-| R9.2 last 500 entries | `App.tsx` keeps `slice(-500)`; no test fills more than 500 | **open** |
+| R9.2 last 500 entries | `apps/web/test/trace-keep.test.ts`: 600 entries keep the newest 500, in order (the page's `keepTrace`) | proven |
 | R10.1 | `history.test.ts` (cap 100, redo cleared); `rules.spec.ts` › undo and redo | proven |
 | R11.1 P7, R11.2 P18 | property tests | proven |
 | R11.3 | `calc-oracle.test.ts`: 135 of 139 match, 4 rounding cases (records 004 and 010) | proven |

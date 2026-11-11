@@ -296,6 +296,11 @@ export const READ_CSS = `
 .afl-root[inert] input[type='button'] { opacity: 0.5; filter: grayscale(1); cursor: default; }
 `;
 
+/** Spec 16 N3: InfoPath did not print its "Insert item" placeholders; read mode and Fill. */
+export const PRINT_CSS = `
+@media print { .afl-root [data-afl-structure='insert'] { display: none !important; } }
+`;
+
 /** Drawn inside the paper's shadow root in Fill mode: InfoPath's invalid border, focus rings. */
 export const FILL_CSS = `
 .afl-root .afl-traced { outline: 3px solid #6e5dc6 !important; outline-offset: 2px; }

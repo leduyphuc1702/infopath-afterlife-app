@@ -1,6 +1,7 @@
 // Spec 04 R1, R2, design D1, D9–D14: a working copy of one record and the change cycle over it.
 // Pure: no Worker, no clock (`now` comes with each command), no network.
 
+import { buttonCaptions } from '../dossier/buttons';
 import type { FormIR, IrCalculation, IrRule } from '../ir/types';
 import { resolveLimits } from '../limits';
 import { dataPath } from '../render/marks';
@@ -85,6 +86,9 @@ export class FillSession {
   private seq = 0;
   /** Spec 14 B4: true while the record is being opened. */
   private opening = false;
+  /** Spec 16 K2: the caption of the button being pressed, for its trace entries. */
+  private pressing: string | undefined;
+  private captions: Map<string, string> | undefined;
   private pending: TraceEntry[] = [];
   private effects: RuleEffects = { dialogs: [], notices: [] };
   private lastInvalid = new Map<string, string>();
@@ -169,14 +173,20 @@ export class FillSession {
     const ctx = path === undefined ? this.doc.documentElement! : this.resolve(path, true);
     this.now = now;
     this.evaluator.setNow(now);
-    return this.command(() => {
-      const changes: Change<RtNode>[] = [];
-      for (const rules of this.ruleSets((r) =>
-        r.triggers.some((t) => t.kind === 'button' && t.button === ctrlId),
-      ))
-        changes.push(...runRuleSet(rules, ctx, undefined, this.ruleHost()));
-      return changes;
-    });
+    this.captions ??= buttonCaptions(this.template);
+    this.pressing = this.captions.get(ctrlId) ?? ctrlId;
+    try {
+      return this.command(() => {
+        const changes: Change<RtNode>[] = [];
+        for (const rules of this.ruleSets((r) =>
+          r.triggers.some((t) => t.kind === 'button' && t.button === ctrlId),
+        ))
+          changes.push(...runRuleSet(rules, ctx, undefined, this.ruleHost()));
+        return changes;
+      });
+    } finally {
+      this.pressing = undefined;
+    }
   }
 
   // --- rows and optional sections (spec 04 task 9, D19) ---------------------------------------
@@ -402,7 +412,9 @@ export class FillSession {
             out.push(ch);
             this.add({
               kind: 'calc',
-              trigger,
+              // Spec 16 K13: at open nothing changed; the stored value is the cause.
+              trigger: this.opening ? undefined : trigger,
+              ...(this.opening && { opened: true as const }),
               caption: this.pathOf(node),
               note: c.expression,
               changes: [{ path: ch.path, before: ch.before, after: ch.after }],
@@ -542,7 +554,13 @@ export class FillSession {
   }
 
   private add(e: Omit<TraceEntry, 'seq' | 'at'>): void {
-    const entry: TraceEntry = { seq: ++this.seq, at: this.now, ...e };
+    const entry: TraceEntry = {
+      seq: ++this.seq,
+      at: this.now,
+      ...e,
+      ...(this.pressing !== undefined &&
+        (e.kind === 'rule' || e.kind === 'skipped') && { button: this.pressing }),
+    };
     this.pending.push(entry);
     this.trace.push(entry);
     if (this.trace.length > TRACE_CAP) this.trace.splice(0, this.trace.length - TRACE_CAP);

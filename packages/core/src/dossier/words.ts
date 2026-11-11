@@ -51,7 +51,12 @@ export const actionVerb = (a: Pick<IrAction, 'kind'>): string =>
 /** The sentence for one entry. Expressions are not in it; `entry.note` has them on demand. */
 export function traceSentence(ir: FormIR, e: TraceEntry): string {
   const name = (p: string) => fieldName(ir, p);
-  const because = e.trigger === undefined ? '' : ` because ${name(e.trigger)} changed`;
+  const because =
+    e.button !== undefined
+      ? ` because “${e.button}” was pressed`
+      : e.trigger === undefined
+        ? ''
+        : ` because ${name(e.trigger)} changed`;
   const changed = e.changes
     .map((c) => `${name(c.path)} changed from ${shown(c.before)} to ${shown(c.after)}`)
     .join('; ');
@@ -59,6 +64,11 @@ export function traceSentence(ir: FormIR, e: TraceEntry): string {
     case 'calc': {
       const c = e.changes[0];
       if (!c) return `${name(e.caption)} was worked out again${because}.`;
+      // Spec 16 K13: at open the cause is the stored value, not another field.
+      if (e.opened)
+        return c.before === ''
+          ? `${name(c.path)} was empty in the record and has been worked out: ${shown(c.after)}.`
+          : `${name(c.path)} in the record (${c.before}) does not match the form’s formula, which gives ${shown(c.after)}; the form’s value is shown.`;
       return e.trigger === undefined
         ? `${name(c.path)} was worked out again: from ${shown(c.before)} to ${shown(c.after)}.`
         : `${changed}${because}.`;
@@ -88,6 +98,16 @@ export function traceSentence(ir: FormIR, e: TraceEntry): string {
       if (e.note?.endsWith(' selects no field'))
         return `${what}: the field it sets is not in this form.`;
       return `${what}. ${e.note ?? ''}`.trim();
+    }
+    case 'undo':
+    case 'redo': {
+      // Spec 16 N1: written by the page from the values before and after the step.
+      const back = e.changes.map((x) =>
+        e.kind === 'undo'
+          ? `${name(x.path)} is back to ${shown(x.after)}`
+          : `${name(x.path)} is ${shown(x.after)} again`,
+      );
+      return `${e.kind === 'undo' ? 'Undo' : 'Redo'}: ${back.length ? back.join('; ') : 'no field changed'}.`;
     }
     case 'loop':
       return `Stopped a possible rule loop. ${e.note ?? ''}`.trim();
@@ -140,8 +160,25 @@ export function pathName(ir: FormIR, path: string): string {
 /** The label of a field or group by id, with its data source when it is not the main one. */
 export function nodeName(ir: FormIR, id: string): string {
   const n = ir.fields.find((f) => f.id === id) ?? ir.groups.find((g) => g.id === id);
-  if (!n) return id;
+  // Spec 16 K11: a node FormIR does not know is named by its own name; the caller puts the
+  // path under the sentence (`unnamedPaths`).
+  if (!n) return localName(id);
   return n.dataSource === 'main' ? n.label : `${n.label} in data connection “${n.dataSource}”`;
+}
+
+/** The last step's local name of a path or id: `f:main:/my:a/my:subtotal` → "subtotal". */
+export const localName = (path: string): string =>
+  path.split('/').at(-1)?.replace(/\[.*$/, '').replace(/^.*:/, '') || path;
+
+/** Spec 16 K11: paths an element refers to that FormIR has no node for. */
+export function unnamedPaths(ir: FormIR, elementId: string): string[] {
+  const known = (id: string) =>
+    ir.fields.some((f) => f.id === id) || ir.groups.some((g) => g.id === id);
+  return unique(
+    ir.dependencies.references
+      .filter((r) => r.elementId === elementId && !known(r.targetId))
+      .map((r) => r.targetId.replace(/^[^/]*:(?=\/)/, '')),
+  );
 }
 
 /** "A", "A and B", "A, B and C". */
@@ -221,7 +258,11 @@ export function actionSentence(ir: FormIR, a: IrAction): Sentence {
 }
 
 /** When a rule runs: "when Country changes", "when the form opens", … */
-export function ruleWhen(ir: FormIR, r: FormIR['rules'][number]): string {
+export function ruleWhen(
+  ir: FormIR,
+  r: FormIR['rules'][number],
+  captions?: ReadonlyMap<string, string>,
+): string {
   const whens = r.triggers.map((t) => {
     switch (t.kind) {
       case 'fieldChange':
@@ -231,19 +272,47 @@ export function ruleWhen(ir: FormIR, r: FormIR['rules'][number]): string {
       case 'submit':
         return 'when the form is submitted';
       case 'button':
-        return `when ${buttonName(t.button, t.view)} is pressed`;
+        return `when ${buttonName(t.button, t.view, captions)} is pressed`;
     }
   });
   return whens.length ? list(unique(whens)) : 'only when another rule runs its rule set';
 }
 
-/** Spec 15 D1: FormIR has no button captions; a button is its control id and view. */
-export const buttonName = (button?: string, view?: string) =>
-  `button ${button ?? '(no id)'}${view ? ` on view “${view}”` : ''}`;
+/**
+ * Spec 16 K2: a button by the caption its view shows (`buttonCaptions`); its control id only
+ * when the view gives none.
+ */
+export const buttonName = (
+  button?: string,
+  view?: string,
+  captions?: ReadonlyMap<string, string>,
+) => {
+  const caption = button === undefined ? undefined : captions?.get(button);
+  const on = view ? ` on view “${view}”` : '';
+  return caption !== undefined
+    ? `the button “${caption}”${on}`
+    : `button ${button ?? '(no id)'}${on}`;
+};
 
-export function ruleSentence(ir: FormIR, r: FormIR['rules'][number]): Sentence {
+export function ruleSentence(
+  ir: FormIR,
+  r: FormIR['rules'][number],
+  captions?: ReadonlyMap<string, string>,
+): Sentence {
+  const self = r.triggers.find((t) => t.kind === 'fieldChange');
+  const words =
+    r.condition === undefined
+      ? undefined
+      : conditionWords(
+          ir,
+          r.condition,
+          self?.kind === 'fieldChange' && self.targetId ? nodeName(ir, self.targetId) : undefined,
+        );
+  const on = readsOf(ir, r.id, ['condition']);
   const cond = r.condition
-    ? `, if ${readsOf(ir, r.id, ['condition']).length ? `a condition on ${list(readsOf(ir, r.id, ['condition']))}` : 'its condition'} is true`
+    ? words !== undefined
+      ? `, if ${words}`
+      : `, if ${on.length ? `a condition on ${list(on)}` : 'its condition'} is true`
     : '';
   const acts = r.actions.map((a) => actionSentence(ir, a));
   const does = acts.length ? `it ${list(acts.map((a) => a.sentence))}` : 'it does nothing';
@@ -252,8 +321,13 @@ export function ruleSentence(ir: FormIR, r: FormIR['rules'][number]): Sentence {
     r.enabled ? '' : ' It is turned off.',
   ].join('');
   return {
-    sentence: `Rule “${r.caption ?? 'without a name'}” runs ${ruleWhen(ir, r)}${cond}: ${does}.${tail}`,
-    expressions: [...(r.condition ? [r.condition] : []), ...acts.flatMap((a) => a.expressions)],
+    sentence: `Rule “${r.caption ?? 'without a name'}” runs ${ruleWhen(ir, r, captions)}${cond}: ${does}.${tail}`,
+    expressions: [
+      ...(r.condition ? [r.condition] : []),
+      ...acts.flatMap((a) => a.expressions),
+      ...unnamedPaths(ir, r.id),
+      ...r.actions.flatMap((a) => unnamedPaths(ir, a.id)),
+    ],
   };
 }
 
@@ -265,7 +339,11 @@ export function calcSentence(ir: FormIR, c: FormIR['calculations'][number]): Sen
     sentence: from.length
       ? `${target} is calculated${row} from ${list(from)}, again whenever ${from.length > 1 ? 'they change' : 'it changes'}.`
       : `${target} is calculated${row} by a formula that reads no field.`,
-    expressions: [c.expression],
+    expressions: [
+      c.expression,
+      ...(c.targetId && ir.fields.some((f) => f.id === c.targetId) ? [] : [c.target]),
+      ...unnamedPaths(ir, c.id).filter((p) => p !== c.target),
+    ],
   };
 }
 
@@ -280,15 +358,12 @@ export function validationSentence(ir: FormIR, v: FormIR['validations'][number])
       sentence: `${field} must not be blank.${short ? ` Message: “${short}”.` : ''}`,
       expressions: [],
     };
+  const words = v.expression === undefined ? undefined : conditionWords(ir, v.expression, 'it');
   const on = readsOf(ir, v.id, ['validationExpression']);
-  if (/^\s*\.\s*=\s*(""|'')\s*$/.test(v.expression ?? ''))
-    return {
-      sentence: `${field} is marked${short ? ` “${short}”` : ' as an error'} when it is blank.${full}`,
-      expressions: [v.expression!],
-    };
+  const when = words ?? `${on.length ? `a condition on ${list(on)}` : 'its condition'} is true`;
   return {
-    sentence: `${field} is marked${short ? ` “${short}”` : ' as an error'} when ${on.length ? `a condition on ${list(on)}` : 'its condition'} is true.${full}`,
-    expressions: v.expression === undefined ? [] : [v.expression],
+    sentence: `${field} is marked${short ? ` “${short}”` : ' as an error'} when ${when}.${full}`,
+    expressions: [...(v.expression === undefined ? [] : [v.expression]), ...unnamedPaths(ir, v.id)],
   };
 }
 
@@ -309,4 +384,191 @@ export function elementName(ir: FormIR, id: string): string {
       return `the ${k.choicesFrom ? 'choice list' : (k.xctname ?? 'control')} of ${k.targetId ? nodeName(ir, k.targetId) : 'a control'} on view “${view.caption ?? view.name}”`;
   }
   return id;
+}
+
+// ---------------------------------------------------------------------------------------------
+// Spec 16 K4: a condition in words, for the shapes InfoPath's condition builder writes:
+// comparisons of a field with a value or another field, "is blank", and `and`, `or`, `not()`
+// of those. Anything else gives `undefined`, and the caller keeps "a condition on X is true".
+
+type Tok = { readonly t: 'str' | 'num' | 'op' | 'name' | '(' | ')' | ','; readonly v: string };
+
+function tokens(e: string): Tok[] | undefined {
+  const out: Tok[] = [];
+  const re =
+    /\s*(?:("[^"]*"|'[^']*')|(-?\d+(?:\.\d+)?)(?![\w:])|(!=|<=|>=|=|<|>)|([(),])|([^\s()=!<>,"']+))/y;
+  let i = 0;
+  while (i < e.length) {
+    if (/^\s*$/.test(e.slice(i))) break;
+    re.lastIndex = i;
+    const m = re.exec(e);
+    if (!m) return undefined;
+    i = re.lastIndex;
+    if (m[1] !== undefined) out.push({ t: 'str', v: m[1].slice(1, -1) });
+    else if (m[2] !== undefined) out.push({ t: 'num', v: m[2] });
+    else if (m[3] !== undefined) out.push({ t: 'op', v: m[3] });
+    else if (m[4] !== undefined) out.push({ t: m[4] as '(' | ')' | ',', v: m[4] });
+    else out.push({ t: 'name', v: m[5]! });
+  }
+  return out;
+}
+
+type Operand =
+  | { readonly k: 'field'; readonly name: string }
+  | { readonly k: 'value'; readonly text: string; readonly blank: boolean };
+type Cond =
+  | { readonly k: 'cmp'; readonly a: Operand; readonly op: string; readonly b: Operand }
+  | { readonly k: 'before'; readonly a: Operand; readonly b: Operand; readonly not: boolean }
+  | { readonly k: 'blank'; readonly a: Operand; readonly not: boolean }
+  | { readonly k: 'and' | 'or'; readonly xs: readonly Cond[] }
+  | { readonly k: 'not'; readonly x: Cond };
+
+const INVERSE: Readonly<Record<string, string>> = {
+  '=': '!=',
+  '!=': '=',
+  '<': '>=',
+  '>=': '<',
+  '>': '<=',
+  '<=': '>',
+};
+const UNWRAP = new Set(['xdMath:Nz', 'string', 'number', 'normalize-space']);
+
+export function conditionWords(ir: FormIR, expression: string, self?: string): string | undefined {
+  const ts = tokens(expression);
+  if (!ts) return undefined;
+  let i = 0;
+  const peek = () => ts[i];
+  const take = (t: Tok['t'], v?: string) => {
+    const x = ts[i];
+    if (!x || x.t !== t || (v !== undefined && x.v !== v)) throw new Error('shape');
+    i++;
+    return x;
+  };
+  const isName = (v: string) => peek()?.t === 'name' && peek()!.v === v;
+  const fieldOf = (p: string): Operand => {
+    if (p.includes('[') || p.includes('*') || p.startsWith('$') || p.startsWith('@'))
+      throw new Error('shape');
+    if (p === '.') {
+      if (self === undefined) throw new Error('shape');
+      return { k: 'field', name: self };
+    }
+    return { k: 'field', name: pathName(ir, p) };
+  };
+  const operand = (): Operand => {
+    const x = peek();
+    if (!x) throw new Error('shape');
+    if (x.t === 'str') return (i++, { k: 'value', text: `“${x.v}”`, blank: x.v === '' });
+    if (x.t === 'num') return (i++, { k: 'value', text: x.v, blank: false });
+    if (x.t === 'name' && ts[i + 1]?.t === '(') {
+      if (!UNWRAP.has(x.v)) throw new Error('shape');
+      i += 2;
+      const inner = operand();
+      take(')');
+      return inner;
+    }
+    if (x.t === 'name') return (i++, fieldOf(x.v));
+    throw new Error('shape');
+  };
+  const primary = (): Cond => {
+    if (isName('not') && ts[i + 1]?.t === '(') {
+      i += 2;
+      const x = or();
+      take(')');
+      return { k: 'not', x };
+    }
+    if (peek()?.t === '(') {
+      i++;
+      const x = or();
+      take(')');
+      return x;
+    }
+    if (isName('msxsl:string-compare') && ts[i + 1]?.t === '(') {
+      i += 2;
+      const a = operand();
+      take(',');
+      const b = operand();
+      take(')');
+      const op = take('op').v;
+      const n = take('num').v;
+      if (n !== '0' || !['<', '>', '>=', '<='].includes(op)) throw new Error('shape');
+      return op === '<' || op === '>='
+        ? { k: 'before', a, b, not: op === '>=' }
+        : { k: 'before', a: b, b: a, not: op === '<=' };
+    }
+    const a = operand();
+    if (peek()?.t !== 'op') {
+      // A bare field: true when it has text.
+      if (a.k !== 'field') throw new Error('shape');
+      return { k: 'blank', a, not: true };
+    }
+    const op = take('op').v;
+    const b = operand();
+    if (b.k === 'value' && b.blank && (op === '=' || op === '!='))
+      return { k: 'blank', a, not: op === '!=' };
+    return { k: 'cmp', a, op, b };
+  };
+  const and = (): Cond => {
+    const xs = [primary()];
+    while (isName('and')) {
+      i++;
+      xs.push(primary());
+    }
+    return xs.length === 1 ? xs[0]! : { k: 'and', xs };
+  };
+  const or = (): Cond => {
+    const xs = [and()];
+    while (isName('or')) {
+      i++;
+      xs.push(and());
+    }
+    return xs.length === 1 ? xs[0]! : { k: 'or', xs };
+  };
+  let c: Cond;
+  try {
+    c = or();
+    if (i !== ts.length) return undefined;
+  } catch {
+    return undefined;
+  }
+  return say(c, false);
+}
+
+const word = (o: Operand) => (o.k === 'field' ? o.name : o.text);
+
+function say(c: Cond, not: boolean): string | undefined {
+  switch (c.k) {
+    case 'not':
+      return say(c.x, !not);
+    case 'and':
+    case 'or': {
+      // De Morgan under `not`.
+      const k = not ? (c.k === 'and' ? 'or' : 'and') : c.k;
+      const parts = c.xs.map((x) => say(x, not));
+      if (parts.some((p) => p === undefined)) return undefined;
+      return parts.join(` ${k} `);
+    }
+    case 'blank':
+      return `${word(c.a)} is ${c.not !== not ? 'not blank' : 'blank'}`;
+    case 'before':
+      return `${word(c.a)} ${c.not !== not ? 'does not come before' : 'comes before'} ${word(c.b)}`;
+    case 'cmp': {
+      const op = not ? INVERSE[c.op]! : c.op;
+      const b = word(c.b);
+      switch (op) {
+        case '=':
+          return `${word(c.a)} is ${b}`;
+        case '!=':
+          return `${word(c.a)} is not ${b}`;
+        case '<':
+          return `${word(c.a)} is less than ${b}`;
+        case '>':
+          return `${word(c.a)} is greater than ${b}`;
+        case '<=':
+          return `${word(c.a)} is ${b} or less`;
+        case '>=':
+          return `${word(c.a)} is ${b} or more`;
+      }
+      return undefined;
+    }
+  }
 }

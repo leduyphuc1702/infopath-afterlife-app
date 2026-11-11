@@ -6,6 +6,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import type { FillCommand, FilledRes, RenderedRes } from '../worker/protocol';
 import {
   FILL_CSS,
+  PRINT_CSS,
   focusState,
   listen,
   READ_CSS,
@@ -88,7 +89,7 @@ export function Paper({
       scrollX,
       scrollY,
     ];
-    root.innerHTML = `<style>${result.css}${f ? FILL_CSS + ROWS_CSS : READ_CSS}</style>${result.html}`;
+    root.innerHTML = `<style>${result.css}${f ? FILL_CSS + ROWS_CSS : READ_CSS}${PRINT_CSS}</style>${result.html}`;
     if (f) {
       // e2e and R2.4: how many fill renders this paper has drawn.
       el.dataset.aflRenders = String(Number(el.dataset.aflRenders ?? 0) + 1);

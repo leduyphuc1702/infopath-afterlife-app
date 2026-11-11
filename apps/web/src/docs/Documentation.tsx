@@ -32,6 +32,10 @@ export function Documentation({ dossier: d, onBack, onDownload }: Props) {
   useEffect(() => document.getElementById('afl-doc-h')?.focus({ preventScroll: true }), [d]);
   return (
     <article className="afl-doc" aria-labelledby="afl-doc-h">
+      {/* Spec 16 K12: the heading first, so Tab from it reaches the screen's buttons. */}
+      <h2 id="afl-doc-h" tabIndex={-1}>
+        {d.name}: form documentation
+      </h2>
       <div className="afl-doc-tools afl-no-print">
         <button type="button" className="afl-link" onClick={onBack}>
           Back
@@ -43,9 +47,6 @@ export function Documentation({ dossier: d, onBack, onDownload }: Props) {
           Print
         </button>
       </div>
-      <h2 id="afl-doc-h" tabIndex={-1}>
-        {d.name}: form documentation
-      </h2>
       <section aria-labelledby="afl-doc-about">
         <h3 id="afl-doc-about">What the form is</h3>
         <dl className="afl-doc-about">
@@ -74,13 +75,14 @@ export function Documentation({ dossier: d, onBack, onDownload }: Props) {
             {d.fields.map((f) => (
               <tr key={f.path}>
                 <th scope="row">{f.label}</th>
-                <td>
+                {/* Spec 16 K1: on a narrow screen each row is a block; the labels name its parts. */}
+                <td data-label="Path">
                   <code>{f.path}</code>
                 </td>
-                <td>{f.type}</td>
-                <td>{f.required ? 'Yes' : ''}</td>
-                <td>{f.default}</td>
-                <td>{f.views.join(', ')}</td>
+                <td data-label="Type">{f.type}</td>
+                <td data-label="Required">{f.required ? 'Yes' : 'No'}</td>
+                <td data-label="Default">{f.default}</td>
+                <td data-label="Views">{f.views.join(', ')}</td>
               </tr>
             ))}
           </tbody>

@@ -127,7 +127,8 @@ function action(
         return skip(NO_QUERIES);
       case 'submitAction':
       case 'closeDocumentAction':
-        host.effects.notices.push(NOT_IN_VIEWER);
+        // Spec 16 D1: said once per command, however many actions hit it.
+        if (!host.effects.notices.includes(NOT_IN_VIEWER)) host.effects.notices.push(NOT_IN_VIEWER);
         return skip(NOT_IN_VIEWER);
       default:
         return skip(`${a.kind} is not available in the viewer.`);

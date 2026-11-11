@@ -119,11 +119,13 @@ export { typeProblem, type Invalid } from './runtime/validate';
 export { TRACE_CAP, type TraceEntry } from './runtime/trace';
 export {
   ACTION_VERBS,
+  conditionWords,
   fieldName,
   traceExpression,
   tracePaths,
   traceSentence,
 } from './dossier/words';
 export { buildDossier } from './dossier/build';
+export { buttonCaptions } from './dossier/buttons';
 export type { Dossier, DossierField, DossierItem, DossierOptions } from './dossier/build';
 export { dossierIndex, dossierMarkdown, mdCode, mdText } from './dossier/markdown';

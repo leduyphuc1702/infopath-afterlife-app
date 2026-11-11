@@ -17,19 +17,35 @@ export function mdCode(s: string, inTable = false): string {
 /** Could autolink in GFM: a scheme, `www.`, or an e-mail address. */
 const LINKY = /\S*(?:[a-z][a-z0-9+.-]*:\/\/|www\.|@)\S*/gi;
 
-/** Plain text: every ASCII punctuation character escaped; link-like tokens as code. */
+/**
+ * Spec 16 K6: plain text, escaped only where a character could become markup where it stands,
+ * so pasted Markdown still reads as text: `\\`, `` ` ``, `*`, `[`, `]`, `<`, `~` anywhere; `_`
+ * at a word's edge; `&` that starts an entity; `|` in a table cell; and what would start a
+ * block (`#`, `>`, `+`, `-`, `=`, `1.`) at the start. Link-like tokens become code spans.
+ */
 export function mdText(s: string, inTable = false): string {
   const t = flat(s);
   let out = '';
   let last = 0;
   for (const m of t.matchAll(LINKY)) {
-    out += esc(t.slice(last, m.index)) + mdCode(m[0], inTable);
+    out += esc(t.slice(last, m.index), inTable) + mdCode(m[0], inTable);
     last = m.index + m[0].length;
   }
-  return out + esc(t.slice(last));
+  out += esc(t.slice(last), inTable);
+  return out.replace(/^(\s*)([#>+=-]|\d+(?=[.)]))/, (_, sp: string, c: string) =>
+    /\d/.test(c) ? `${sp}${c}\\` : `${sp}\\${c}`,
+  );
 }
 
-const esc = (s: string) => s.replace(/[!-/:-@[-`{-~]/g, (c) => `\\${c}`);
+const esc = (s: string, inTable: boolean) =>
+  s.replace(/[\\`*[\]<~|]|&(?=#?\w+;)|_/g, (c, at: number) => {
+    if (c === '|' && !inTable) return c;
+    if (c === '_') {
+      const alnum = (x: string | undefined) => x !== undefined && /[A-Za-z0-9]/.test(x);
+      if (alnum(s[at - 1]) && alnum(s[at + 1])) return c;
+    }
+    return `\\${c}`;
+  });
 
 /** Each expression on its own line under the sentence: a backslash at a line's end breaks it. */
 const item = (i: DossierItem) =>

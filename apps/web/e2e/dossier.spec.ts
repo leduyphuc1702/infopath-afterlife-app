@@ -14,7 +14,8 @@ test('R3.1–R3.3: from the form, Back, print, Download Markdown', async ({ page
   const doc = page.locator('.afl-doc');
   await expect(doc.locator('dl')).toContainText('Records loaded20');
   await expect(doc).toContainText(
-    'Rule “Over 1000 needs accounting approval” runs when button CTRL901 on view “Request” is pressed',
+    // Spec 16 K2: the button by its caption, not its control id.
+    'Rule “Over 1000 needs accounting approval” runs when the button “Check approval” on view “Request” is pressed',
   );
   await expect(doc.locator('.afl-doc-expr').first()).toBeVisible();
   const headings = await doc.locator('h3').allTextContents();
@@ -33,7 +34,8 @@ test('R3.1–R3.3: from the form, Back, print, Download Markdown', async ({ page
   await expect(page.locator('.afl-doc-tools')).toBeHidden();
   expect(
     await doc.locator('section').evaluateAll((s) => s.map((x) => getComputedStyle(x).breakBefore)),
-  ).toEqual(['auto', 'page', 'page', 'page', 'page', 'page']);
+    // Spec 16 K5: sections flow; a page per section wasted paper.
+  ).toEqual(['auto', 'auto', 'auto', 'auto', 'auto', 'auto']);
   await page.emulateMedia({ media: 'screen' });
 
   const download = page.waitForEvent('download');

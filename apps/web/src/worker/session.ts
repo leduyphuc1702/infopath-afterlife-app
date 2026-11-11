@@ -5,6 +5,7 @@ import {
   buildFormIR,
   DEFAULT_LIMITS,
   buildDossier,
+  buttonCaptions,
   dossierIndex,
   dossierMarkdown,
   exportRecords,
@@ -206,7 +207,11 @@ export class Session {
     const records = this.summary().records.filter(
       (r) => r.match.kind !== 'unmatched' && r.match.templateId === templateId,
     ).length;
-    const dossier = buildDossier(t.summary.ir, { fileName: t.summary.fileName, records });
+    const dossier = buildDossier(t.summary.ir, {
+      fileName: t.summary.fileName,
+      records,
+      buttons: buttonCaptions(t.parsed),
+    });
     return {
       type: 'documentation',
       dossier,
@@ -472,7 +477,13 @@ export class Session {
             .map((c) => c.path),
         ).size
       : 0;
-    return this.filled(view, now, session.opened, workedOut, t0);
+    // Spec 16 K13: stored values the form's own formulas disagree with, corrected on open.
+    const corrected = record
+      ? session.opened.trace.filter(
+          (e) => e.kind === 'calc' && e.opened && e.changes.some((c) => c.before !== ''),
+        ).length
+      : 0;
+    return this.filled(view, now, session.opened, workedOut, t0, undefined, corrected);
   }
 
   /** R1.3, R2.1: one command, then a render of `view`. */
@@ -551,6 +562,7 @@ export class Session {
     workedOut: number,
     t0: number,
     restore?: PaperFocus,
+    corrected = 0,
   ): Promise<FilledRes> {
     const f = this.fillState!;
     const r = renderView(await this.prepared(f.template, view), {
@@ -591,6 +603,7 @@ export class Session {
       redo: f.history.redoable,
       groups: groupNames(f.template.summary.ir, r.rows ?? []),
       workedOut,
+      corrected,
       ms: performance.now() - t0,
     };
   }
