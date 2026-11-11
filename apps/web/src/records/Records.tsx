@@ -8,7 +8,9 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import type { RecordListRes } from '../worker/protocol';
+import type { SummaryQuery } from '@afterlife/core';
+import type { RecordListRes, ResBody } from '../worker/protocol';
+import { Summary, type SummaryPick } from './Summary';
 import { findRows, searchText, whereFound, type Sort } from './find';
 
 /** What Back to the list restores (R9). */
@@ -29,11 +31,24 @@ interface Props {
   readonly onOpen: (recordId: string, order: readonly string[], found: boolean) => void;
   /** Spec 18 R1: tools given the shown rows' record ids, in order. */
   readonly actions?: (order: readonly string[]) => ReactNode;
+  /** Spec 20: asks the Worker for a summary of the found records. */
+  readonly summarize?: (query: SummaryQuery, recordIds: readonly string[]) => Promise<ResBody>;
 }
 
 export const ROW_PX = 36;
 
-export function Records({ formName, list, place, onPlace, onBack, onOpen, actions }: Props) {
+export function Records({
+  formName,
+  list,
+  place,
+  onPlace,
+  onBack,
+  onOpen,
+  actions,
+  summarize,
+}: Props) {
+  const [summing, setSumming] = useState(false);
+  const [pick, setPick] = useState<SummaryPick>();
   const [query, setQuery] = useState(place.query);
   const [sort, setSort] = useState(place.sort);
   const [scroll, setScroll] = useState(place.scroll);
@@ -44,7 +59,14 @@ export function Records({ formName, list, place, onPlace, onBack, onOpen, action
   const rows = list?.rows ?? [];
   const skip = list?.columns.findIndex((c) => c.kind === 'checks') ?? -1;
   const text = useMemo(() => searchText(rows, skip), [rows, skip]);
-  const shown = useMemo(() => findRows(rows, text, deferred, sort), [rows, text, deferred, sort]);
+  const found = useMemo(() => findRows(rows, text, deferred, sort), [rows, text, deferred, sort]);
+  const foundIds = useMemo(() => found.map((k) => rows[k]!.recordId), [found]);
+  // Spec 20 R8: a chosen summary line narrows what Find found.
+  const shown = useMemo(
+    () => (pick ? found.filter((k) => pick.ids.has(rows[k]!.recordId)) : found),
+    [found, pick],
+  );
+  const filtered = deferred.trim() !== '';
   const latest = useRef(place);
   latest.current = {
     query,
@@ -64,8 +86,9 @@ export function Records({ formName, list, place, onPlace, onBack, onOpen, action
 
   const first = Math.max(0, Math.floor(scroll / ROW_PX) - Math.ceil(height / ROW_PX));
   const last = Math.min(shown.length, Math.ceil((scroll + 2 * height) / ROW_PX));
-  const count =
-    deferred.trim() === ''
+  const count = pick
+    ? `${shown.length} of ${rows.length} ${rows.length === 1 ? 'record matches' : 'records match'} ${filtered ? 'Find and ' : ''}${pick.by}: ${pick.label}.`
+    : !filtered
       ? `${rows.length} ${rows.length === 1 ? 'record' : 'records'}.`
       : `${shown.length} of ${rows.length} ${rows.length === 1 ? 'record matches' : 'records match'}.`;
 
@@ -80,7 +103,7 @@ export function Records({ formName, list, place, onPlace, onBack, onOpen, action
     onOpen(
       id,
       shown.map((k) => rows[k]!.recordId),
-      deferred.trim() !== '',
+      filtered || pick !== undefined,
     );
   };
 
@@ -114,9 +137,43 @@ export function Records({ formName, list, place, onPlace, onBack, onOpen, action
         </label>
         <p className="afl-records-count" role="status" aria-live="polite">
           {list ? count : 'Reading the records…'}
+          {pick && (
+            <>
+              {' '}
+              <button type="button" className="afl-link" onClick={() => setPick(undefined)}>
+                Show every group
+              </button>
+            </>
+          )}
         </p>
+        {list && summarize && (
+          <button
+            type="button"
+            className="afl-button"
+            aria-expanded={summing}
+            aria-controls="afl-summary"
+            onClick={() => {
+              setSumming(!summing);
+              setPick(undefined);
+            }}
+          >
+            Summarize
+          </button>
+        )}
         {list && actions?.(shown.map((k) => rows[k]!.recordId))}
       </div>
+      {list && summarize && summing && (
+        <div id="afl-summary">
+          <Summary
+            formName={formName}
+            list={list}
+            found={foundIds}
+            pick={pick}
+            onPick={setPick}
+            ask={summarize}
+          />
+        </div>
+      )}
       {list && (
         <div
           ref={box}
@@ -186,8 +243,10 @@ export function Records({ formName, list, place, onPlace, onBack, onOpen, action
                             type="button"
                             className="afl-link"
                             {...(r.recordId === place.focusId && { 'data-afl-record-focus': '' })}
+                            title={c}
                           >
-                            {c}
+                            {/* Spec 19 R6: on a phone the start is cut, not the end (records.css). */}
+                            <span dir="ltr">{c}</span>
                           </button>
                           {where && <span className="afl-records-where"> {where}</span>}
                         </th>

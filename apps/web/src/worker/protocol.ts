@@ -9,6 +9,8 @@ import type {
   TraceEntry,
   TriageResult,
   ListColumn,
+  Summary,
+  SummaryQuery,
   ListRow,
 } from '@afterlife/core';
 
@@ -69,6 +71,15 @@ export type Req =
       readonly id: number;
       readonly type: 'recordList';
       readonly templateId: string;
+      readonly now: string;
+    }
+  /** Spec 20: the found records of the list, summarized. */
+  | {
+      readonly id: number;
+      readonly type: 'summary';
+      readonly templateId: string;
+      readonly query: SummaryQuery;
+      readonly recordIds: readonly string[];
       readonly now: string;
     }
   | {
@@ -242,7 +253,15 @@ export interface RecordListRes {
   readonly templateId: string;
   readonly columns: readonly ListColumn[];
   readonly rows: readonly (ListRow & { readonly recordId: string })[];
+  /** Spec 20 R5: the repeating groups whose rows can be counted; their rows stay in the Worker. */
+  readonly parts: readonly { readonly label: string; readonly columns: readonly ListColumn[] }[];
   /** Time spent in the Worker, for R11's measures. */
+  readonly ms: number;
+}
+
+/** Spec 20: a summary of the found records. */
+export interface SummaryRes extends Summary {
+  readonly type: 'summary';
   readonly ms: number;
 }
 
@@ -312,7 +331,8 @@ export type ResBody =
   | DocumentationRes
   | ArchivedRes
   | { readonly type: 'cancelled' }
-  | RecordListRes;
+  | RecordListRes
+  | SummaryRes;
 
 /**
  * Spec 12 R4.4: sent with an `open` or `openSample` request's id before its answer, once per

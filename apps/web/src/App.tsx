@@ -853,6 +853,7 @@ export function App() {
             key={template.templateId}
             formName={template.ir.meta.name}
             list={list?.templateId === template.templateId ? list : undefined}
+            summarize={(q, ids) => client.summary(template.templateId, q, ids, now)}
             place={listPlace.current.place}
             onPlace={(p) => (listPlace.current = { templateId: template.templateId, place: p })}
             onBack={() => history.back()}

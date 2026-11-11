@@ -106,6 +106,41 @@ test('R5: on a phone the file name keeps two fifths of the width; Failed checks 
   await expect(page.locator('.afl-records-table thead th').nth(1)).toHaveText('Failed checks');
 });
 
+test('R6: on a phone the end of each file name shows, so the rows read differently', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await records(page);
+  // What shows of each name: the characters whose box lies inside the button.
+  const seen = await rows(page)
+    .locator('th button')
+    .evaluateAll((bs) =>
+      bs.map((b) => {
+        const box = b.getBoundingClientRect();
+        const t = b.querySelector('span')!.firstChild!;
+        const r = document.createRange();
+        let out = '';
+        for (let i = 0; i < t.textContent!.length; i++) {
+          r.setStart(t, i);
+          r.setEnd(t, i + 1);
+          const c = r.getBoundingClientRect();
+          if (c.left >= box.left - 0.5 && c.right <= box.right + 0.5) out += t.textContent![i];
+        }
+        return out;
+      }),
+    );
+  expect(seen.every((s) => /\d{3}\.xml$/.test(s))).toBe(true);
+  expect(new Set(seen).size).toBe(seen.length);
+  await expect(rows(page).first().getByRole('button')).toHaveAccessibleName(
+    '02-expense-report-001.xml',
+  );
+  const w = await rows(page)
+    .first()
+    .locator('th')
+    .evaluate((t) => t.getBoundingClientRect().width);
+  expect(w).toBeLessThanOrEqual(0.4 * 390 + 1);
+});
+
 test('F5: at 200% zoom (640×400) the list shows more than a few rows', async ({ page }) => {
   await page.setViewportSize({ width: 640, height: 400 });
   await records(page);

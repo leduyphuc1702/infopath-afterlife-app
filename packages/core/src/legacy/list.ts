@@ -19,6 +19,20 @@ export interface ListColumn {
   /** The Records sheet's header (the field path), for fields. */
   readonly path?: string;
   readonly kind: ListKind;
+  /** Spec 20: the view's number format, for a number column that has one. */
+  readonly format?: ViewFormat;
+}
+
+/** Spec 20 R5: the rows of one top-level repeating group, for counting rows instead of records. */
+export interface ListPart {
+  readonly label: string;
+  readonly columns: readonly ListColumn[];
+  readonly rows: readonly {
+    /** The index of the record's row in `RecordList.rows`. */
+    readonly record: number;
+    readonly cells: readonly string[];
+    readonly keys: readonly ListKey[];
+  }[];
 }
 
 /** A sort key: a number, an ISO date or text; `null` when empty. */
@@ -35,6 +49,7 @@ export interface ListRow {
 export interface RecordList {
   readonly columns: readonly ListColumn[];
   readonly rows: readonly ListRow[];
+  readonly parts: readonly ListPart[];
 }
 
 export interface ViewFormat {
@@ -137,7 +152,15 @@ export function recordList(
     if (i === 0) return { label: 'File name', kind: 'text' };
     if (i === 1) return { label: 'Template version', kind: 'text' };
     const f = fields.get(path);
-    return { label: f?.label || path, path, kind: kindOf(f), ...(f && { field: f }) };
+    const kind = kindOf(f);
+    const format = kind === 'number' && f ? formats.get(localOf(f)) : undefined;
+    return {
+      label: f?.label || path,
+      path,
+      kind,
+      ...(f && { field: f }),
+      ...(format && { format }),
+    };
   });
   const counts = subs.flatMap((s, i) => {
     const r = repeating[i];
@@ -208,14 +231,48 @@ export function recordList(
     return { fileName, cells, keys, more: moreOf.get(fileName) ?? [] };
   });
 
+  const rowOf = new Map(rows.map((r, i) => [r.fileName, i]));
+  const parts = subs.flatMap((sheet, i): ListPart[] => {
+    const r = repeating[i];
+    if (!r?.top) return [];
+    const fixed = sheet.columns.findIndex((c) => fields.has(c));
+    const at = fixed < 0 ? [] : sheet.columns.map((_, k) => k).slice(fixed);
+    const cols = at.map((k) => {
+      const f = fields.get(sheet.columns[k]!);
+      const kind = kindOf(f);
+      const format = kind === 'number' && f ? formats.get(localOf(f)) : undefined;
+      return { k, f, kind, format, label: f?.label || sheet.columns[k]! };
+    });
+    return [
+      {
+        label: r.node.label || r.node.name,
+        columns: cols.map(({ label, kind, format, k }) => ({
+          label,
+          kind,
+          path: sheet.columns[k]!,
+          ...(format && { format }),
+        })),
+        rows: sheet.rows.flatMap((row) => {
+          const record = rowOf.get(cellText(row[0]));
+          if (record === undefined) return [];
+          const shownCells = cols.map((c) => shown(c.kind, c.f, cellText(row[c.k])));
+          return [
+            { record, cells: shownCells.map((s) => s[0]), keys: shownCells.map((s) => s[1]) },
+          ];
+        }),
+      },
+    ];
+  });
+
   const columns: ListColumn[] = [
-    ...fieldColumns.map(({ label, path, kind }) => ({
+    ...fieldColumns.map(({ label, path, kind, format }) => ({
       label,
       kind,
       ...(path !== undefined && { path }),
+      ...(format && { format }),
     })),
     ...counts.map((c) => ({ label: c.label, kind: 'count' as const })),
   ];
   columns.splice(1, 0, { label: 'Failed checks', kind: 'checks' });
-  return { columns, rows };
+  return { columns, rows, parts };
 }

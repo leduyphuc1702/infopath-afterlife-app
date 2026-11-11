@@ -92,3 +92,18 @@ Playwright MCP server in turn 69 (F1–F5, `docs/kiro/mcp.md`).
 - **P5 (rest).** The stored value itself: core's calculation writes `1472.1299999999999` into
   the record, where InfoPath writes 15 significant digits. Only the trace was asked for; the
   runtime's number output is a spec 04 change with goldens to re-run.
+
+## Leftovers after review (`732a9e7`)
+
+### T2. A flaky property in `test/dossier/bugfixes16.test.ts`
+- **Current:** "unescaping gives the text back" fails about one run in three
+  (`["0)\u0000", false]`, seed 1941761470): it still forbids any `\d+[.)]` at the start.
+- **Expected:** the assertion SHALL say what P3c promises: a number followed by `.` or `)` and
+  then a space, a tab or the end never reaches the text unescaped. The counterexample is pinned
+  as an example.
+
+### R6. On a phone every file name in the list reads the same
+- **Current:** at 390 px all thirty rows of sample 02 show "02-expense-report…".
+- **Expected:** the end of the name SHALL show ("…report-001.xml"), so the rows read
+  differently. Rows are a fixed 36 px (the list draws only the rows in sight), so the name keeps
+  to one line and the cut moves to its start; the full name stays the button's name and title.

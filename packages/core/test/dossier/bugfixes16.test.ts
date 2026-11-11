@@ -126,11 +126,15 @@ describe('K6: Markdown escapes only what could become markup', () => {
         expect(out).not.toMatch(/[\r\n]/);
         let plain = '';
         let bare = '';
+        // Spec 19 T2: escapes and code spans as a character that can be part of no markup, for
+        // the entity check (an "x" there turned "&\\<;" into "&x;").
+        let inert = '';
         for (let i = 0; i < out.length; i++) {
           const c = out[i]!;
           if (c === '\\' && /[!-/:-@[-`{-~]/.test(out[i + 1] ?? '')) {
             plain += out[++i];
             bare += 'x';
+            inert += '\u0001';
           } else if (c === '`') {
             const run = /^`+/.exec(out.slice(i))![0];
             const end = out.indexOf(run, i + run.length);
@@ -140,21 +144,37 @@ describe('K6: Markdown escapes only what could become markup', () => {
               body = body.slice(1, -1);
             plain += table ? body.replace(/\\\|/g, '|') : body;
             bare += 'x';
+            inert += '\u0001';
             i = end + run.length - 1;
           } else {
             plain += c;
             bare += c;
+            inert += c;
           }
         }
         // Spec 19 P3b: leading white space is dropped (it would start a code block).
         expect(plain).toBe(s.replace(/[\r\n\t\f\v]+/g, ' ').replace(/^\s+/, ''));
-        expect(bare).not.toMatch(/[*[\]<`~\\]|&#?\w+;/);
+        expect(bare).not.toMatch(/[*[\]<`~\\]/);
+        expect(inert).not.toMatch(/&#?\w+;/);
         expect(bare).not.toMatch(/(^|[^A-Za-z0-9])_|_($|[^A-Za-z0-9])/);
-        expect(bare).not.toMatch(/^\s*([#>+=-]|\d+[.)])/);
+        // Spec 19 T2: a number starts a list only when a space, a tab or the end follows (P3c).
+        expect(bare).not.toMatch(/^\s*([#>+=-]|\d+[.)]([ \t]|$))/);
         if (table) expect(bare).not.toContain('|');
       }),
       { numRuns: 1000 },
     );
+  });
+
+  // Spec 19 T2: the counterexample of seed 1941761470. "0)" followed by a control character is
+  // not a list, so it stays as it is; "0) " and "0)" alone are escaped.
+  test.each([
+    ['0)\u0000', '0)\u0000'],
+    ['0) x', '0\\) x'],
+    ['0)', '0\\)'],
+    // The second counterexample, from the final run of turn 70: "<" is escaped; no entity.
+    ['&<;', '&\\<;'],
+  ])('T2: mdText(%j) is %j', (s, out) => {
+    expect(mdText(s, false)).toBe(out);
   });
 });
 

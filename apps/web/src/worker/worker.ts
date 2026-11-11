@@ -31,6 +31,8 @@ async function handle(req: Req): Promise<ResBody> {
       return { type: 'ready' };
     case 'recordList':
       return session.recordList(req.templateId, req.now);
+    case 'summary':
+      return session.recordSummary(req.templateId, req.query, req.recordIds, req.now);
     case 'documentation':
       return session.documentation(req.templateId);
     case 'documentationZip':

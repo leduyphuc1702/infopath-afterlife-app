@@ -28,3 +28,19 @@ report, not a run of the test on the old build.
 
 Final runs: `pnpm check` exit 0 (hooks 6, core 3,831 passed and 3 skipped, browser 337, web 116);
 `pnpm e2e:web` 107 passed. Bundle: entry 85.8 of 100 KB, Worker 153.8 of 160 KB.
+
+## Leftovers after review (2026-11-11)
+
+| Bug | Test | Before | After |
+|---|---|---|---|
+| T2 | `bugfixes16.test.ts`, the property and the pinned `"0)\u0000"` | about one run in three red (reviewer) | 13 of 13, ten runs in a row |
+| R6 | e2e R6: what shows of each name inside its button, at 390 px | 30 rows read "02-expense-report…" | every row ends in `NNN.xml`, 30 different |
+
+`e2e/records.spec.ts` `column()` now waits for the first row before reading the headers: it
+read them once before the Worker's list arrived and found no "Failed checks" (one red run while
+working on R6; three green runs after).
+
+T2, second counterexample: the final `pnpm check` of turn 70 found `["&<;", false]`. The output
+`&\<;` is right (the `<` is escaped, so no entity), but the property put an `x` where the escape
+was and then saw `&x;` as an entity. The entity check now uses a character that can be part of no
+markup; the case is pinned. Ten runs in a row after: 14 of 14 each time.

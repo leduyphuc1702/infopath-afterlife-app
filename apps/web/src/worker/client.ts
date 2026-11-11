@@ -1,6 +1,7 @@
 // Spec 09 design §4: the page's side of the Worker. Each request gets an id and a promise; an
 // answer that takes more than 15 s ends the Worker, which is started again and given the files
 // it held (the watchdog; core's own budgets should make it unnecessary).
+import type { SummaryQuery } from '@afterlife/core';
 import type { FillCommand, InputFile, Progress, ReqBody, Res, ResBody } from './protocol';
 
 export const WATCHDOG_MS = 15_000;
@@ -148,6 +149,16 @@ export class WorkerClient {
   /** Spec 17: the open template's records as a list. */
   recordList(templateId: string, now: string): Promise<ResBody> {
     return this.send({ type: 'recordList', templateId, now }, []);
+  }
+
+  /** Spec 20: the found records summarized. */
+  summary(
+    templateId: string,
+    query: SummaryQuery,
+    recordIds: readonly string[],
+    now: string,
+  ): Promise<ResBody> {
+    return this.send({ type: 'summary', templateId, query, recordIds, now }, []);
   }
 
   /** Spec 15 R3.3: the Markdown of several forms, with an index, as a `.zip`. */

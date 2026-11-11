@@ -15,6 +15,7 @@ import {
   matchRecord,
   parseXsn,
   recordList,
+  summarize,
   archiveRecords,
   prepareView,
   readZip,
@@ -32,11 +33,14 @@ import {
   type RecordEvidence,
   type TriageRecord,
   type TriageResult,
+  type RecordList,
+  type SummaryQuery,
 } from '@afterlife/core';
 import type {
   Duplicate,
   DocumentationRes,
   RecordListRes,
+  SummaryRes,
   ArchivedRes,
   ExportedRes,
   FillCommand,
@@ -251,7 +255,7 @@ export class Session {
   }
 
   /** Spec 17: the records of one template as a list; kept until the session's records change. */
-  private lists = new Map<string, { key: string; res: RecordListRes }>();
+  private lists = new Map<string, { key: string; res: RecordListRes; list: RecordList }>();
   recordList(templateId: string, now: string): RecordListRes {
     const t0 = performance.now();
     const t = this.template(templateId);
@@ -270,10 +274,33 @@ export class Session {
       templateId,
       columns: list.columns,
       rows: list.rows.map((r, i) => ({ ...r, recordId: records[i]!.recordId })),
+      parts: list.parts.map((p) => ({ label: p.label, columns: p.columns })),
       ms: Math.round(performance.now() - t0),
     };
-    this.lists.set(templateId, { key, res });
+    this.lists.set(templateId, { key, res, list });
     return res;
+  }
+
+  /** Spec 20 R10: from the list kept above (read again when the records changed). */
+  recordSummary(
+    templateId: string,
+    query: SummaryQuery,
+    recordIds: readonly string[],
+    now: string,
+  ): SummaryRes {
+    const t0 = performance.now();
+    this.recordList(templateId, now);
+    const kept = this.lists.get(templateId)!;
+    const at = new Map(kept.res.rows.map((r, i) => [r.recordId, i]));
+    const found = recordIds.flatMap((id) => {
+      const i = at.get(id);
+      return i === undefined ? [] : [i];
+    });
+    return {
+      type: 'summary',
+      ...summarize(kept.list, query, found),
+      ms: Math.round(performance.now() - t0),
+    };
   }
 
   /** Spec 18 R8: set by a `cancel` message, read by the running archive. */

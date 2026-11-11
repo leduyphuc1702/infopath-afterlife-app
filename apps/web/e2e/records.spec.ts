@@ -10,6 +10,8 @@ const header = (page: Page, name: string) =>
     has: page.getByRole('button', { name, exact: true }),
   });
 const column = async (page: Page, name: string) => {
+  // The list arrives from the Worker; read the headers once it has.
+  await expect(bodyRows(page).first()).toBeVisible();
   const names = await page.locator('.afl-records-table thead th').allTextContents();
   const i = names.findIndex((n) => n.replace(/[▲▼]/g, '').trim() === name);
   return bodyRows(page).evaluateAll((rs, i) => rs.map((r) => r.children[i]!.textContent ?? ''), i);

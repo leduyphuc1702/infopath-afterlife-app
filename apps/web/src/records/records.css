@@ -122,9 +122,107 @@
   .afl-records-table tbody th button {
     display: inline-block;
     max-width: calc(40vw - 16px);
+    /* Spec 19 R6: rows are a fixed height, so the name stays on one line; the cut is at its start,
+       where every record of a form reads the same, and the end that tells them apart shows. */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    direction: rtl;
+    text-align: left;
     vertical-align: middle;
+  }
+}
+
+/* Spec 20: the summary of the records found. */
+.afl-summary {
+  margin-top: var(--ds-space-200, 16px);
+  padding: var(--ds-space-150, 12px) var(--ds-space-200, 16px);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-border-radius, 4px);
+}
+.afl-summary h3 {
+  margin: 0 0 var(--ds-space-100, 8px);
+  font-size: 1rem;
+}
+.afl-summary-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-100, 8px) var(--ds-space-200, 16px);
+  align-items: end;
+}
+.afl-summary-tools .afl-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.afl-summary-tools select {
+  max-width: 16rem;
+}
+.afl-summary-box {
+  margin-top: var(--ds-space-150, 12px);
+  max-height: 40vh;
+  overflow: auto;
+}
+.afl-summary-table {
+  border-collapse: collapse;
+  min-width: min(100%, 36rem);
+}
+.afl-summary-table caption {
+  text-align: left;
+  padding-bottom: var(--ds-space-075, 6px);
+  color: var(--ds-text-subtle);
+}
+.afl-summary-table th,
+.afl-summary-table td {
+  padding: var(--ds-space-050, 4px) var(--ds-space-100, 8px);
+  border-bottom: 1px solid var(--ds-border);
+  text-align: left;
+}
+.afl-summary-table thead th button {
+  font: inherit;
+  font-weight: 600;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+}
+.afl-summary-table td {
+  position: relative;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.afl-summary-table tfoot th,
+.afl-summary-table tfoot td {
+  font-weight: 600;
+  border-bottom: 0;
+}
+.afl-summary-picked {
+  background: var(--ds-background-selected);
+}
+/* The bar is decoration behind the number; the number is the content. */
+.afl-summary-bar {
+  position: absolute;
+  inset: 20% auto 20% 0;
+  background: var(--ds-background-information);
+  border-radius: 2px;
+}
+.afl-summary-n {
+  position: relative;
+}
+@media (max-width: 40rem) {
+  .afl-summary {
+    padding: var(--ds-space-100, 8px);
+  }
+  .afl-summary-tools .afl-field {
+    flex: 1 1 40%;
+  }
+  .afl-summary-tools select {
+    max-width: 100%;
+    width: 100%;
+  }
+  .afl-summary-table td {
+    white-space: normal;
   }
 }

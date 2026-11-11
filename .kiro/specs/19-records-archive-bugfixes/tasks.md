@@ -13,3 +13,6 @@
   - Done when: the seven named core files pass under load; render-perf measures again once.
 - [x] 5. Verification
   - Done when: `pnpm check` and `pnpm e2e:web` green; `verification.md` written.
+- [x] 6. Leftovers after review
+  - Bugfix: T2, R6
+  - Done when: `bugfixes16.test.ts` passes ten runs in a row; e2e R6 passes.
