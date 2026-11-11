@@ -48,8 +48,10 @@ test('R1–R10: find, sort, open, walk, back with the same place, keyboard', asy
   await expect(page.locator('#afl-records-h')).toBeFocused();
   await expect(page).toHaveTitle(/^Records: /);
   await expect(status(page)).toHaveText('30 records.');
+  // Spec 19 R3: Failed checks beside the file name.
   await expect(page.locator('.afl-records-table thead th')).toHaveText([
     'File name',
+    'Failed checks',
     'Template version',
     'Name',
     'Employee ID',
@@ -59,16 +61,17 @@ test('R1–R10: find, sort, open, walk, back with the same place, keyboard', asy
     'Total',
     'Approver e-mail',
     'Expense (rows)',
-    'Failed checks',
   ]);
   // R5, R6: Find ignores case and matches any shown value.
-  await page.getByRole('searchbox', { name: 'Find' }).fill('gbp');
+  // Spec 19 F1: the list shows the dropdown's name, as the paper does ("Pound sterling", not GBP).
+  await page.getByRole('searchbox', { name: 'Find' }).fill('pound');
   const names = await column(page, 'Currency');
   expect(names.length).toBeGreaterThan(1);
   expect(names.length).toBeLessThan(30);
   await expect(status(page)).toHaveText(`${names.length} of 30 records match.`);
   await expect(status(page)).toHaveAttribute('aria-live', 'polite');
-  for (const n of await bodyRows(page).allTextContents()) expect(n.toLowerCase()).toContain('gbp');
+  for (const n of await bodyRows(page).allTextContents())
+    expect(n.toLowerCase()).toContain('pound');
   // R7: sort by value with the keyboard, then the other way.
   await page.getByRole('button', { name: 'Total', exact: true }).focus();
   await page.keyboard.press('Enter');
@@ -99,7 +102,7 @@ test('R1–R10: find, sort, open, walk, back with the same place, keyboard', asy
   await expect(page.getByRole('button', { name: 'Previous', exact: true })).toBeDisabled();
   // R9: Back restores Find, sort and focus on the record opened.
   await page.goBack();
-  await expect(page.getByRole('searchbox', { name: 'Find' })).toHaveValue('gbp');
+  await expect(page.getByRole('searchbox', { name: 'Find' })).toHaveValue('pound');
   await expect(header(page, 'Total')).toHaveAttribute('aria-sort', 'descending');
   await expect(page.getByRole('button', { name: files[1]!, exact: true })).toBeFocused();
   // A click on a row opens it too.

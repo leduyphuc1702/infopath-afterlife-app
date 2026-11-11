@@ -69,6 +69,12 @@ const KEEP = new Set([
   ...['td', 'textarea', 'tfoot', 'th', 'thead', 'tr', 'tt', 'u', 'ul', 'var', 'wbr'],
 ]);
 
+/**
+ * Spec 19 A1: rich text is prose. A form control inside a rich-text field's content is dropped
+ * (a button keeps its words); the view's own controls are outside it.
+ */
+const RICH_CONTROLS = new Set(['input', 'button', 'select', 'textarea', 'option', 'optgroup']);
+
 /** Unwrapped without being counted: the page structure step 1 takes apart. */
 const STRUCTURE = new Set(['html', 'body']);
 
@@ -115,7 +121,7 @@ export function sanitiseResult(
   const body = html && elementChildren(html).find((n) => nameOf(n) === 'body');
   const container = body ?? html ?? fragment;
 
-  const walk = (node: ResultNode, out: HNode[]): void => {
+  const walk = (node: ResultNode, out: HNode[], rich = false): void => {
     for (let i = 0; i < node.childNodes.length; i++) {
       const child = node.childNodes.item(i)!;
       if (child.nodeType === 3 || child.nodeType === 4) {
@@ -132,6 +138,12 @@ export function sanitiseResult(
       }
       const ns = child.namespaceURI ?? null;
       const xhtml = ns === null || ns === XHTML;
+      if (rich && RICH_CONTROLS.has(name)) {
+        remove('element', name);
+        if (name === 'button') walk(child, out, rich);
+        continue;
+      }
+      const inRich = rich || attr(child, 'xd:xctname')?.toLowerCase() === 'richtext';
       // Step 2 (R6.2): before step 5 drops `object`; its `param` children go with it, uncounted.
       const classid = name === 'object' && xhtml ? attr(child, 'classid') : undefined;
       if (classid !== undefined) {
@@ -160,7 +172,7 @@ export function sanitiseResult(
       }
       if (!KEEP.has(name) || !xhtml) {
         if (!STRUCTURE.has(name)) remove('element', name);
-        walk(child, out);
+        walk(child, out, inRich);
         continue;
       }
       const el: HElement = {
@@ -170,7 +182,7 @@ export function sanitiseResult(
         children: [],
         origin: child,
       };
-      walk(child, el.children);
+      walk(child, el.children, inRich);
       out.push(el);
     }
   };

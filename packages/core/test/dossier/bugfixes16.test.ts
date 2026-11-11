@@ -108,8 +108,9 @@ describe('K4: conditions in words', () => {
 
 describe('K6: Markdown escapes only what could become markup', () => {
   test('ordinary text stays readable', () => {
+    // Spec 19 P3a: a dotted name (here a file name) is a code span, since some renderers link it.
     expect(mdText('04-purchase-request.xsn, version 1.0.0.1, Yes/No (a: b)')).toBe(
-      '04-purchase-request.xsn, version 1.0.0.1, Yes/No (a: b)',
+      '`04-purchase-request.xsn`, version 1.0.0.1, Yes/No (a: b)',
     );
     expect(mdText('my_field_name')).toBe('my_field_name');
     expect(mdText('# 1. - > text')).toBe('\\# 1. - > text');
@@ -145,7 +146,8 @@ describe('K6: Markdown escapes only what could become markup', () => {
             bare += c;
           }
         }
-        expect(plain).toBe(s.replace(/[\r\n\t\f\v]+/g, ' '));
+        // Spec 19 P3b: leading white space is dropped (it would start a code block).
+        expect(plain).toBe(s.replace(/[\r\n\t\f\v]+/g, ' ').replace(/^\s+/, ''));
         expect(bare).not.toMatch(/[*[\]<`~\\]|&#?\w+;/);
         expect(bare).not.toMatch(/(^|[^A-Za-z0-9])_|_($|[^A-Za-z0-9])/);
         expect(bare).not.toMatch(/^\s*([#>+=-]|\d+[.)])/);

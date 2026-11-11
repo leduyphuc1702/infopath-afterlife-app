@@ -1,16 +1,22 @@
 // Spec 09 R12.1–R12.4: "Export records", beside the pager when the open template has records.
 // The Worker builds the file; the page only saves the finished bytes through a `blob:` URL.
+import type { IrView } from '@afterlife/core';
 import { useMenu } from '../shell/menu';
+import { ArchiveViews, useViewChoice } from './ArchiveMenu';
 
 export type RecordFormat = 'xlsx' | 'csv';
 
 interface Props {
   readonly onExport: (format: RecordFormat) => void;
   readonly busy: boolean;
+  /** Spec 19 A2: "Archive as web pages" is the menu's third choice, with the views to archive. */
+  readonly views: readonly IrView[];
+  readonly onArchive: (views: readonly string[], opener: HTMLElement | null) => void;
 }
 
-export function ExportRecords({ onExport, busy }: Props) {
+export function ExportRecords({ onExport, busy, views, onArchive }: Props) {
   const { ref, close } = useMenu();
+  const choice = useViewChoice(views);
   const pick = (format: RecordFormat) => {
     close();
     onExport(format);
@@ -29,6 +35,20 @@ export function ExportRecords({ onExport, busy }: Props) {
         <li>
           <button type="button" disabled={busy} onClick={() => pick('csv')}>
             CSV files and attachments (.zip)
+          </button>
+        </li>
+        <ArchiveViews views={views} choice={choice} />
+        <li>
+          <button
+            type="button"
+            disabled={busy || choice.names.length === 0}
+            onClick={() => {
+              const opener = ref.current?.querySelector('summary') ?? null;
+              close();
+              onArchive(choice.names, opener);
+            }}
+          >
+            Web pages to keep (.zip)
           </button>
         </li>
       </ul>

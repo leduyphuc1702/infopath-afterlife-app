@@ -266,8 +266,15 @@ export function App() {
 
   // Spec 18: records as web pages, made in the Worker; Cancel stops it between records (R8).
   const [archiving, setArchiving] = useState(false);
+  const archiveOpener = useRef<HTMLElement | null>(null);
   const archive = useCallback(
-    async (templateId: string, views: readonly string[], recordIds?: readonly string[]) => {
+    async (
+      templateId: string,
+      views: readonly string[],
+      opener: HTMLElement | null,
+      recordIds?: readonly string[],
+    ) => {
+      archiveOpener.current = opener;
       setExporting(true);
       setArchiving(true);
       const res = await client.archive(
@@ -283,6 +290,11 @@ export function App() {
       setExporting(false);
       setArchiving(false);
       setReading(undefined);
+      // Spec 19 F2, F3: the menu closed and Cancel went; focus goes back to what opened it.
+      requestAnimationFrame(() => {
+        const a = document.activeElement;
+        if (!a || a === document.body) archiveOpener.current?.focus();
+      });
       const n = (k: number, one: string, many: string) => `${k} ${k === 1 ? one : many}`;
       if (res.type === 'archived') {
         save(res.bytes, res.fileName, 'application/zip');
@@ -849,12 +861,13 @@ export function App() {
                 views={template.ir.views}
                 count={order.length}
                 busy={exporting}
-                onArchive={(v) => void archive(template.templateId, v, order)}
+                onArchive={(v, opener) => void archive(template.templateId, v, opener, order)}
               />
             )}
             onOpen={(id, order, found) => {
               const index = records.findIndex((r) => r.recordId === id) + 1;
-              void (fillOn ? leaveFill() : Promise.resolve(true)).then(
+              // Spec 19 R1: Fill is not on here, but its unsaved changes are still asked about.
+              void leaveFill().then(
                 (ok) =>
                   ok &&
                   dispatch({
@@ -912,18 +925,12 @@ export function App() {
                   actions={
                     <>
                       {records.length > 0 && (
-                        <>
-                          <ExportRecords
-                            busy={exporting}
-                            onExport={(f) => void exportRecords(template.templateId, f)}
-                          />
-                          <ArchiveMenu
-                            views={template.ir.views}
-                            count={records.length}
-                            busy={exporting}
-                            onArchive={(v) => void archive(template.templateId, v)}
-                          />
-                        </>
+                        <ExportRecords
+                          busy={exporting}
+                          onExport={(f) => void exportRecords(template.templateId, f)}
+                          views={template.ir.views}
+                          onArchive={(v, opener) => void archive(template.templateId, v, opener)}
+                        />
                       )}
                     </>
                   }

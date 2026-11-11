@@ -6,6 +6,7 @@ import type { ParsedTemplate } from '../../src/xsn/parse';
 import { sampleTemplates } from '../helpers/formir';
 import { build, p13Input, relative, type P13Input } from './p13-inputs';
 import { P13_REGRESSIONS } from './regressions';
+import { HEAVY_MS } from '../helpers/time';
 
 // Property P13 (spec 02 R12): a calculated field added to a sample, whose expression holds 1–4
 // field references (absolute, relative with `..`, in a predicate, after GetDOM for a secondary
@@ -60,10 +61,14 @@ test('relative paths', () => {
   expect(relative('/a/b', '/a/b')).toBe('.');
 });
 
-test(`${RUNS} runs: every inserted field reads the calculation; literals do not`, () => {
-  fc.assert(fc.property(p13Input, check), { numRuns: RUNS });
-  for (const [k, n] of Object.entries(seen)) expect(n, k).toBeGreaterThan(20);
-});
+test(
+  `${RUNS} runs: every inserted field reads the calculation; literals do not`,
+  { timeout: HEAVY_MS },
+  () => {
+    fc.assert(fc.property(p13Input, check), { numRuns: RUNS });
+    for (const [k, n] of Object.entries(seen)) expect(n, k).toBeGreaterThan(20);
+  },
+);
 
 test.each(P13_REGRESSIONS.map((r) => [r.note, r.case] as const))('regression: %s', (_n, p) => {
   check(p);

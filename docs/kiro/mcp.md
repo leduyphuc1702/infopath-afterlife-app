@@ -52,3 +52,32 @@ Found by looking, and not by any suite (the suites passed on the code they were 
 
 K1, K2 and K4 to K6 were reproduced the same way before they were fixed; K1 and K2 were checked
 again on screen after the fix.
+
+## Turn 69: hunting the Records, Documentation and Archive screens (spec 19)
+
+The built app was served on port 4331 (`vite preview`) and walked through seven journeys:
+Records on forms 02 and 08 (find, sort, open, walk, Back) at 1280×800 and 390×844; Fill on,
+then Records; Documentation of forms 04 and 05 on screen, in print and at 390 px, with both
+downloads; "Archive as web pages" from the form screen (form 05, two of three views) and from
+Records with Find, with Cancel half way through 600 generated records; keyboard only from the
+landing page; dark colours and 200% zoom (640×400); Triage, a certificate, Documentation, Back
+and "Download documentation".
+
+16 MCP calls, 9 screenshots. Most calls were `browser_run_code_unsafe` walking a whole journey
+and returning exact answers (focus, computed colours, widths, status text); screenshots only for
+layout. Two calls were lost to a `beforeunload` question left open by the Fill journey (the
+question itself is correct: there were unsaved changes); a new tab cleared it.
+
+Defects that only showed up by looking:
+- **F1**, the list shows a dropdown's stored code ("FIN", "GBP") where the paper shows its name
+  ("Finance", "Pound sterling"), so Find "finance" found nothing. Every test searched codes.
+- **F2**, **F3**, focus fell to the page body after an archive finished and after Cancel: the
+  menu closed and the Cancel button went away. No test asked where focus was.
+- **F4**, from Find to the first record is one Tab per column: 13 on form 02, about 205 on
+  form 08 (203 columns).
+- **F5**, at 200% zoom the records box was 176 px high, three rows, inside a page that also
+  scrolls.
+- **R1** was confirmed by doing it (the reviewer's steps).
+
+One thing that looked wrong was not: form 08 shows 43 as "4,3". Spec 03 records that InfoPath
+does the same for `grouping:1` (seen in form 08's screenshot).

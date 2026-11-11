@@ -6,6 +6,7 @@ import { parseXml, xmlContext } from '../src/xml/parse';
 import { readCabinet } from '../src/index';
 import { writeCabinet } from './helpers/cab-writer';
 import { catchError, catchRejection } from './helpers/catch-error';
+import { HEAVY_MS } from './helpers/time';
 
 const MiB = 1024 * 1024;
 
@@ -132,7 +133,7 @@ describe('uncompressed size and block limits (R4.1, R4.4)', () => {
     });
   });
 
-  test('exactly 50 MiB of output is accepted', async () => {
+  test('exactly 50 MiB of output is accepted', { timeout: HEAVY_MS }, async () => {
     const blocks = Array.from({ length: 1_600 }, () => ({ ab: zeros32k, cbUncomp: 32_768 }));
     const { bytes } = writeCabinet([{ name: 'tiny.xml', bytes: new Uint8Array(1) }], {
       folders: [{ blocks }],

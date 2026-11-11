@@ -96,3 +96,35 @@
     flex: 1 1 100%;
   }
 }
+
+/* Spec 19 R2: where Find matched, when it is not in a column on screen. */
+.afl-records-where {
+  font-weight: 400;
+  color: var(--ds-text-subtle);
+}
+/* Spec 19 R4 */
+.afl-records-none {
+  padding: var(--ds-space-200, 16px);
+  margin: 0;
+}
+/* Spec 19 F5: at 200% zoom the box still shows more than a few rows. */
+.afl-records-box {
+  max-height: max(calc(100vh - 16rem), 70vh);
+}
+/* Spec 19 R5: on a phone the file name keeps at most two fifths of the width. */
+@media (max-width: 40rem) {
+  .afl-records-table tbody th,
+  .afl-records-table thead th:first-child {
+    max-width: 40vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .afl-records-table tbody th button {
+    display: inline-block;
+    max-width: calc(40vw - 16px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+}

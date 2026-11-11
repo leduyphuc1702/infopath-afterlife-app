@@ -16,11 +16,16 @@ test('R2, R3: form 02 has the Records sheet columns, a count of expenses, format
   const recs = recordsOf('02-expense-report');
   const list = recordList(t, ir, recs, NOW);
   const sheet = recordTables(ir, recs).sheets[0]!;
-  expect(list.columns.slice(2, sheet.columns.length).map((c) => c.path)).toEqual(
+  // Spec 19 R3: Failed checks moved beside the file name (column 1).
+  expect(list.columns.slice(3, sheet.columns.length + 1).map((c) => c.path)).toEqual(
     sheet.columns.slice(2),
   );
-  expect(list.columns.slice(0, 2).map((c) => c.label)).toEqual(['File name', 'Template version']);
-  expect(list.columns.at(-1)).toEqual({ label: 'Failed checks', kind: 'checks' });
+  expect(list.columns.slice(0, 3).map((c) => c.label)).toEqual([
+    'File name',
+    'Failed checks',
+    'Template version',
+  ]);
+  expect(list.columns[1]).toEqual({ label: 'Failed checks', kind: 'checks' });
   expect(list.columns.filter((c) => c.kind === 'count').map((c) => c.label)).toEqual([
     'Expense (rows)',
   ]);
@@ -41,9 +46,9 @@ test('R2, R3: form 02 has the Records sheet columns, a count of expenses, format
 test('R4: failed checks match what Fill shows; form 10 record 1 has some', async () => {
   const { t, ir } = await open('10-timesheet');
   const list = recordList(t, ir, recordsOf('10-timesheet'), NOW);
-  const checks = list.rows.map((r) => r.keys.at(-1));
+  const checks = list.rows.map((r) => r.keys[1]);
   expect(checks[0]).toBeGreaterThan(0);
-  expect(list.rows[0]!.cells.at(-1)).toBe(String(checks[0]));
+  expect(list.rows[0]!.cells[1]).toBe(String(checks[0]));
 });
 
 test('R2, R12: every form with records gives one row per record, text cells, keys in step', async () => {

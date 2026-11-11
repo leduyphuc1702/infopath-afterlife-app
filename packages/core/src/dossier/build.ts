@@ -1,5 +1,6 @@
 // Spec 15 R1, D1: the form dossier, the manual nobody wrote, as plain data. Markdown and the
 // web screen both draw this; the same FormIR always gives the same dossier.
+import type { Issue } from '../errors';
 import type { FormIR, IrConnection, IrField } from '../ir/types';
 import { isBlankCheck } from '../coverage/classify';
 import { causesOf } from '../triage/causes';
@@ -172,6 +173,39 @@ const FEEDS = [
   'trigger',
 ];
 
+const ISSUE_WORDS: Partial<Record<Issue['code'], string>> = {
+  CHECKSUM_MISMATCH:
+    'The template package is damaged: a file inside it does not match its checksum',
+  MISSING_FILE: 'The template names a file that is not in the package',
+  UNLISTED_FILE: 'The package holds a file the template does not name',
+  DUPLICATE_NAME: 'The package holds two files with the same name',
+  UNSAFE_NAME: 'The package holds a file whose name could point outside it, so it was not read',
+  URN_MISMATCH: 'The template’s identity differs between two of its files',
+  UNSAFE_XML: 'A file holds XML the viewer does not read, for safety',
+  INVALID_XML: 'A file is not well-formed XML',
+  LIMIT_EXCEEDED: 'A file is larger or deeper than the viewer reads',
+  INVALID_ENCODING: 'A file’s text encoding could not be read',
+  XML_WARNING: 'A file has an XML problem the viewer read past',
+  PATTERN_NOT_EVALUATED: 'A pattern check in the schema could not be run by the viewer',
+  REPEATED_ELEMENT: 'An element appears more than once where the template expects one',
+  DUPLICATE_GLOBAL: 'The schema defines the same name twice',
+  UNRESOLVED_BINDING: 'A control on a view is bound to a field the schema does not have',
+  DUPLICATE_ID:
+    'Two parts of the template have the same name, so the second is listed under another name',
+};
+
+function issueItem(i: Issue): DossierItem {
+  const where = [i.file, i.line !== undefined && `line ${i.line}`].filter(Boolean).join(', ');
+  const words = ISSUE_WORDS[i.code] ?? 'Part of the template could not be read';
+  const paths = [
+    i.path,
+    ...['id', 'path', 'binding', 'text']
+      .map((k) => i.details?.[k])
+      .filter((v) => typeof v === 'string'),
+  ].filter((v): v is string => v !== undefined && v !== '');
+  return { sentence: `${words}${where ? ` (${where})` : ''}.`, expressions: [...new Set(paths)] };
+}
+
 export function buildDossier(ir: FormIR, options: DossierOptions): Dossier {
   const views = ir.views.map((v) => v.caption ?? v.name);
   const main = ir.fields.filter((f) => f.dataSource === 'main');
@@ -239,10 +273,9 @@ export function buildDossier(ir: FormIR, options: DossierOptions): Dossier {
       sentence: `${u.kind === 'attribute' ? 'Attribute' : u.kind === 'text' ? 'Text' : 'Element'} “${u.name}” in ${u.file}, line ${u.line}, is not understood by the viewer.`,
       expressions: [],
     })),
-    ...ir.issues.map((i) => ({
-      sentence: `${i.message}${i.file ? ` (${i.file})` : ''}`,
-      expressions: [],
-    })),
+    // Spec 19 P4: in words, with paths under the sentence. UNRESOLVED_REFERENCE is said below,
+    // once per element, from `unresolvedRefs`.
+    ...ir.issues.filter((i) => i.code !== 'UNRESOLVED_REFERENCE').map(issueItem),
     ...[...ir.rules, ...ir.calculations, ...ir.validations].flatMap((e) =>
       e.unresolvedRefs.map((u) => ({
         sentence: `Part of an expression in ${elementName(ir, e.id)} could not be followed to a field (${u.reason}).`,

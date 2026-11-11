@@ -9,11 +9,22 @@ export interface Sort {
 export interface Findable {
   readonly cells: readonly string[];
   readonly keys: readonly ListKey[];
+  /** Spec 19 R2: values in repeating rows, "Label: value". */
+  readonly more?: readonly string[];
 }
 
-/** Each row's searchable text, made once per list. Failed checks (the last cell) are left out. */
-export const searchText = (rows: readonly Findable[]) =>
-  rows.map((r) => r.cells.slice(0, -1).join('\u0000').toLowerCase());
+/** Each row's searchable text, made once per list; the cell at `skip` (Failed checks) is not. */
+export const searchText = (rows: readonly Findable[], skip: number) =>
+  rows.map((r) =>
+    [...r.cells.filter((_c, i) => i !== skip), ...(r.more ?? [])].join('\u0000').toLowerCase(),
+  );
+
+/** Spec 19 R2: where a row matched, when no shown cell holds the text. */
+export function whereFound(row: Findable, query: string, skip: number): string | undefined {
+  const q = query.trim().toLowerCase();
+  if (q === '' || row.cells.some((c, i) => i !== skip && c.toLowerCase().includes(q))) return;
+  return row.more?.find((m) => m.toLowerCase().includes(q));
+}
 
 const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
 const compare = (a: ListKey, b: ListKey): number =>

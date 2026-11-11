@@ -39,4 +39,7 @@
   .afl-doc { max-width: none; padding: 0; }
   .afl-doc h2, .afl-doc h3, .afl-doc h4 { break-after: avoid; }
   .afl-doc li, .afl-doc-fields tr { break-inside: avoid; }
+  /* Spec 19 P1: on paper, words stay whole; only a long path may break, at any character. */
+  .afl-doc, .afl-doc-fields th, .afl-doc-fields td { overflow-wrap: normal; word-break: normal; hyphens: manual; }
+  .afl-doc-fields code { overflow-wrap: anywhere; }
 }

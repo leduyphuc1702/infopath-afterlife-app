@@ -54,6 +54,7 @@ body { margin: 0; font-family: Calibri, Carlito, sans-serif; color: #172b4d; bac
 /* Nothing can be inserted in an archive. */
 .afl-root [data-afl-structure='insert'] { display: none !important; }
 .afl-archive-error { color: #ae2e24; }
+.afl-archive-url { color: #505f79; overflow-wrap: anywhere; }
 @media print { .afl-archive-nav { display: none; } }
 `;
 
@@ -64,6 +65,8 @@ th, td { border: 1px solid #dfe1e6; padding: 2px 8px; text-align: left; vertical
 thead th { background: #f4f5f7; }
 td.n { text-align: right; }
 tbody th { white-space: nowrap; }
+/* Spec 19 A3: a long text gets a readable width, not one word per line. */
+td.long { min-width: 24em; }
 `;
 
 const enc = new TextEncoder();
@@ -142,6 +145,11 @@ export async function archiveRecords(
         css = r.css;
         // Searchable and selectable: the archive's own rule keeps the controls still.
         body = r.html.replace(/^(<div\b[^>]*?)\sinert(="")?(?=[\s>])/, '$1');
+        // Spec 19 A1: no link leaves the archive; its words stay, and where it pointed, as text.
+        body = body.replace(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi, (_m, attrs: string, inner: string) => {
+          const to = /\shref="([^"]*)"/i.exec(attrs)?.[1];
+          return `<span class="afl-archive-link">${inner}</span>${to ? ` <span class="afl-archive-url">(${to})</span>` : ''}`;
+        });
       } catch (e) {
         unread.add(i);
         body = `<p class="afl-archive-error">This view could not be drawn from the record: ${esc(message(e))}</p>`;
@@ -182,7 +190,7 @@ export async function archiveRecords(
     const cells = r.cells.map((c, j) =>
       j === 0
         ? `<th scope="row"><a href="${href(pageNames[i]![0]!)}">${esc(c)}</a>${unread.has(i) ? ' (could not be read)' : ''}</th>`
-        : `<td${list.columns[j]!.kind === 'text' ? '' : ' class="n"'}>${esc(c)}</td>`,
+        : `<td${list.columns[j]!.kind !== 'text' ? ' class="n"' : c.length > 40 ? ' class="long"' : ''}>${esc(c)}</td>`,
     );
     return `<tr>${cells.join('')}</tr>`;
   });

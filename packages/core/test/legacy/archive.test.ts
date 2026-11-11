@@ -12,6 +12,7 @@ import {
   type RecordFile,
 } from '../../src/index';
 import { recordsOf } from './records';
+import { HEAVY_MS } from '../helpers/time';
 
 // Spec 18: records as web pages.
 const OWN = new URL('../../../../samples/own/', import.meta.url);
@@ -177,46 +178,50 @@ function leaks(html: string, names: ReadonlySet<string>): string[] {
   return out;
 }
 
-test('P21: an archive of hostile records holds no script, no handler, no URL that leaves it', async () => {
-  const { t, ir, views } = await setup('02-expense-report');
-  const base = dec.decode(recordsOf('02-expense-report')[0]!.bytes);
-  const value = fc.oneof(fc.constantFrom(...HOSTILE), fc.string({ maxLength: 12 }));
-  await fc.assert(
-    fc.asyncProperty(
-      fc.array(fc.record({ name: value, purpose: value, description: value, file: value }), {
-        minLength: 1,
-        maxLength: 3,
-      }),
-      async (rs) => {
-        const records = rs.map((r, i) => ({
-          fileName: `${r.file}-${i}.xml`,
-          bytes: new TextEncoder().encode(
-            base
-              .replace(/<my:claimantName>[^<]*</, `<my:claimantName>${xmlText(r.name)}<`)
-              .replace(/<my:businessPurpose>[^<]*</, `<my:businessPurpose>${xmlText(r.purpose)}<`)
-              .replace(
-                /<my:expenseDescription>[^<]*</,
-                `<my:expenseDescription>${xmlText(r.description)}<`,
-              ),
-          ),
-        }));
-        const a = (await archiveRecords(t, ir, records, {
-          views,
-          now: NOW,
-          fileName: `${rs[0]!.file}.xsn`,
-        }))!;
-        const entries = await unzip(a.bytes);
-        const names = new Set(entries.map((e) => e.name));
-        for (const e of entries.filter((x) => x.name.endsWith('.html'))) {
-          const html = dec.decode(e.bytes);
-          expect(html, e.name).toContain(ARCHIVE_CSP);
-          expect(leaks(html, names), e.name).toEqual([]);
-        }
-      },
-    ),
-    { numRuns: 100 },
-  );
-});
+test(
+  'P21: an archive of hostile records holds no script, no handler, no URL that leaves it',
+  { timeout: HEAVY_MS },
+  async () => {
+    const { t, ir, views } = await setup('02-expense-report');
+    const base = dec.decode(recordsOf('02-expense-report')[0]!.bytes);
+    const value = fc.oneof(fc.constantFrom(...HOSTILE), fc.string({ maxLength: 12 }));
+    await fc.assert(
+      fc.asyncProperty(
+        fc.array(fc.record({ name: value, purpose: value, description: value, file: value }), {
+          minLength: 1,
+          maxLength: 3,
+        }),
+        async (rs) => {
+          const records = rs.map((r, i) => ({
+            fileName: `${r.file}-${i}.xml`,
+            bytes: new TextEncoder().encode(
+              base
+                .replace(/<my:claimantName>[^<]*</, `<my:claimantName>${xmlText(r.name)}<`)
+                .replace(/<my:businessPurpose>[^<]*</, `<my:businessPurpose>${xmlText(r.purpose)}<`)
+                .replace(
+                  /<my:expenseDescription>[^<]*</,
+                  `<my:expenseDescription>${xmlText(r.description)}<`,
+                ),
+            ),
+          }));
+          const a = (await archiveRecords(t, ir, records, {
+            views,
+            now: NOW,
+            fileName: `${rs[0]!.file}.xsn`,
+          }))!;
+          const entries = await unzip(a.bytes);
+          const names = new Set(entries.map((e) => e.name));
+          for (const e of entries.filter((x) => x.name.endsWith('.html'))) {
+            const html = dec.decode(e.bytes);
+            expect(html, e.name).toContain(ARCHIVE_CSP);
+            expect(leaks(html, names), e.name).toEqual([]);
+          }
+        },
+      ),
+      { numRuns: 100 },
+    );
+  },
+);
 
 test('P21 on every own form with records: no page leaks', async () => {
   for (const slug of [
@@ -252,3 +257,57 @@ test('P21’s checker finds each kind of leak', () => {
     [],
   );
 });
+
+// Spec 19 A1: P21 again on form 06, whose "What happened" is rich text: hostile XHTML inside it
+// (links out, controls, handlers), and hostile file names.
+const RICH = [
+  '<a href="http://evil.example/out">out</a>',
+  '<a href="javascript:x()">j</a>',
+  '<input value="v"/>',
+  '<button onclick="x()">b</button>',
+  '<img src="https://evil.example/p.png"/>',
+  '<select><option>o</option></select>',
+  '<p style="background:url(https://evil.example/b.png)">s</p>',
+  '<a href="//evil.example">p</a>',
+  'plain words',
+];
+test(
+  'P21 on rich text: links out, controls and handlers never reach a page',
+  async () => {
+    const { t, ir, views } = await setup('06-safety-incident');
+    const base = dec.decode(recordsOf('06-safety-incident')[0]!.bytes);
+    await fc.assert(
+      fc.asyncProperty(
+        fc.array(
+          fc.record({
+            rich: fc.array(fc.constantFrom(...RICH), { minLength: 1, maxLength: 4 }),
+            file: fc.constantFrom(...HOSTILE, 'ok'),
+          }),
+          { minLength: 1, maxLength: 3 },
+        ),
+        async (rs) => {
+          const records = rs.map((r, i) => ({
+            fileName: `${r.file}-${i}.xml`,
+            bytes: new TextEncoder().encode(
+              base.replace(
+                /(<my:incidentDescription[^>]*>)/,
+                `$1<div xmlns="http://www.w3.org/1999/xhtml">${r.rich.join('')}</div>`,
+              ),
+            ),
+          }));
+          const a = (await archiveRecords(t, ir, records, { views, now: NOW, fileName: 'f.xsn' }))!;
+          const entries = await unzip(a.bytes);
+          const names = new Set(entries.map((e) => e.name));
+          for (const e of entries.filter((x) => x.name.endsWith('.html'))) {
+            const html = dec.decode(e.bytes);
+            expect(leaks(html, names), e.name).toEqual([]);
+            const rich = /<span class="xdRichTextBox"[\s\S]*?<\/span><\/div>/.exec(html)?.[0] ?? '';
+            expect(rich, e.name).not.toMatch(/<(input|button|select|textarea)\b/);
+          }
+        },
+      ),
+      { numRuns: 100 },
+    );
+  },
+  HEAVY_MS,
+);

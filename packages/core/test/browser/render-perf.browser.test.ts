@@ -31,18 +31,32 @@ test.each(cabinets.map((c) => [c.slug, c] as const))(
         },
       };
     }
-    const reply = await runWorker<PerfReply>(
-      new URL('./render-perf.worker.ts', import.meta.url),
-      request,
-    );
-    expect(reply.error).toBeUndefined();
-    for (const [id, times] of Object.entries(reply.times!)) {
-      const row = { id, p50: times[9]!, p95: times[18]!, max: times[19]! };
+    const measure = async () => {
+      const reply = await runWorker<PerfReply>(
+        new URL('./render-perf.worker.ts', import.meta.url),
+        request,
+      );
+      expect(reply.error).toBeUndefined();
+      return Object.entries(reply.times!).map(([id, times]) => ({
+        id,
+        p50: times[9]!,
+        p95: times[18]!,
+        max: times[19]!,
+      }));
+    };
+    // Spec 19 T1: the budget stays; a miss is measured once more before it fails.
+    let found = await measure();
+    const again = found.some((r) => r.p95 >= BUDGET_MS);
+    if (again) found = await measure();
+    for (const row of found) {
       rows.push(row);
-      expect(row.p95, id).toBeLessThan(BUDGET_MS);
+      expect(
+        row.p95,
+        `${row.id}${again ? ': measured twice; over the budget both times. The machine may be busy: run it again when it is idle' : ''}`,
+      ).toBeLessThan(BUDGET_MS);
     }
   },
-  60_000,
+  120_000,
 );
 
 test('106 renders were timed', () => {

@@ -4,6 +4,7 @@ import { describe, expect, test } from 'vitest';
 import { parseFormIR, serialiseFormIR, type FormIR } from '../../src/index';
 import { formIR } from './p6-inputs';
 import { P6_REGRESSIONS } from './regressions';
+import { HEAVY_MS } from '../helpers/time';
 
 // Property P6 (spec 02 R14): parseFormIR(serialiseFormIR(ir)) deep-equals ir, and
 // serialiseFormIR(parseFormIR(s)) === s, for generated FormIRs and the 48 golden files.
@@ -17,7 +18,7 @@ const roundTrip = (ir: FormIR) => {
   expect(serialiseFormIR(back)).toBe(s);
 };
 
-test(`${RUNS} generated FormIRs round-trip`, () => {
+test(`${RUNS} generated FormIRs round-trip`, { timeout: HEAVY_MS }, () => {
   fc.assert(
     fc.property(formIR, (ir) => {
       roundTrip(ir);

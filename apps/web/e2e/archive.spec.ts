@@ -14,11 +14,12 @@ const unzip = async (d: Download) => {
 };
 const text = (b: Uint8Array | undefined) => new TextDecoder().decode(b);
 
-async function archiveFromForm(page: Page, count: number) {
-  await page.locator('summary', { hasText: 'Archive as web pages' }).click();
+// Spec 19 A2: on the form screen the archive is the third choice of "Export records".
+async function archiveFromForm(page: Page) {
+  await page.locator('summary', { hasText: 'Export records' }).click();
   const dl = page.waitForEvent('download', { timeout: 120_000 });
   const t0 = Date.now();
-  await page.getByRole('button', { name: `Archive ${count} records (.zip)` }).click();
+  await page.getByRole('button', { name: 'Web pages to keep (.zip)' }).click();
   const d = await dl;
   const ms = Date.now() - t0;
   return { d, ms };
@@ -32,7 +33,7 @@ test('R1–R5, R7, R8: form 02 from the form screen; the page draws as the paper
     .getByRole('button', { name: /^Expense report/ })
     .first()
     .click();
-  const { d, ms } = await archiveFromForm(page, 30);
+  const { d, ms } = await archiveFromForm(page);
   const { zip, out } = await unzip(d);
   console.log(`R2 form 02: 30 records in ${ms} ms, ${zip.byteLength} bytes`);
   expect(d.suggestedFilename()).toBe('02-expense-report-archive.zip');
@@ -61,7 +62,8 @@ test('R1: the Records screen archives the records found, in its order', async ({
     .first()
     .click();
   await page.getByRole('button', { name: 'Records', exact: true }).click();
-  await page.getByRole('searchbox', { name: 'Find' }).fill('gbp');
+  // Spec 19 F1: the list shows "Pound sterling", as the paper does.
+  await page.getByRole('searchbox', { name: 'Find' }).fill('pound');
   await page.getByRole('button', { name: 'Total', exact: true }).click();
   await expect(page.locator('.afl-records-count')).toHaveText(/^(\d+) of 30 records match\.$/);
   const files = await page
@@ -96,14 +98,16 @@ test('R8, R10: 1,000 generated records: progress, then Cancel saves nothing; the
 
   let downloads = 0;
   page.on('download', () => downloads++);
-  await page.locator('summary', { hasText: 'Archive as web pages' }).click();
-  await page.getByRole('button', { name: 'Archive 1000 records (.zip)' }).click();
+  await page.locator('summary', { hasText: 'Export records' }).click();
+  await page.getByRole('button', { name: 'Web pages to keep (.zip)' }).click();
   await expect(page.locator('.afl-status')).toContainText(/Archiving record \d+ of 1000: gen-/);
   await page.getByRole('button', { name: 'Cancel', exact: true }).click();
   await expect(page.locator('.afl-status')).toHaveText('Archiving stopped. Nothing was saved.');
   expect(downloads).toBe(0);
+  // Spec 19 F3: Cancel went away; focus is back on the menu that started the archive.
+  await expect(page.locator('summary', { hasText: 'Export records' })).toBeFocused();
 
-  const { d, ms } = await archiveFromForm(page, 1000);
+  const { d, ms } = await archiveFromForm(page);
   const { zip, out } = await unzip(d);
   console.log(`R2 1,000 generated records: ${ms} ms, ${zip.byteLength} bytes, ${out.size} entries`);
   expect([...out.keys()].filter((n) => n.endsWith('.html'))).toHaveLength(1001);

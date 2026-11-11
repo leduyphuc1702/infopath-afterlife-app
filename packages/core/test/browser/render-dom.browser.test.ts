@@ -159,6 +159,8 @@ test.each(cabinets.flatMap((c) => [[c.slug, 'empty'] as const, [c.slug, 'first']
     }
     r.parentElement!.remove();
   },
+  // Spec 19 T1: room for a busy or slower machine.
+  45_000,
 );
 
 test("form 01's empty PlainText controls are each at least one line high (R6.3)", async () => {

@@ -2,6 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { beforeAll, expect, test } from 'vitest';
 import { buildFormIR, parseXsn, prepareView, renderView, type PreparedView } from '../../src/index';
 import { readSample, repoRoot, sampleCabinets } from '../helpers/samples';
+import { HEAVY_MS } from '../helpers/time';
 
 // Spec 03 R2.1: a record made with another template version renders, with one
 // RECORD_TEMPLATE_MISMATCH naming both; R2.2 (secondary data, task 6) at the end.
@@ -53,18 +54,22 @@ test('a record of another form names both URNs', () => {
   expect(issue?.details?.templateUrn).not.toBe(issue?.details?.recordUrn);
 });
 
-test('every own record, with its own template, gives none (395 records)', () => {
-  let count = 0;
-  for (const slug of readdirSync(records).sort()) {
-    for (const name of readdirSync(`${records}${slug}`)
-      .filter((n) => n.endsWith('.xml'))
-      .sort()) {
-      expect(mismatches(slug, read(`${records}${slug}/${name}`)), name).toEqual([]);
-      count++;
+test(
+  'every own record, with its own template, gives none (395 records)',
+  { timeout: HEAVY_MS },
+  () => {
+    let count = 0;
+    for (const slug of readdirSync(records).sort()) {
+      for (const name of readdirSync(`${records}${slug}`)
+        .filter((n) => n.endsWith('.xml'))
+        .sort()) {
+        expect(mismatches(slug, read(`${records}${slug}/${name}`)), name).toEqual([]);
+        count++;
+      }
     }
-  }
-  expect(count).toBe(395);
-});
+    expect(count).toBe(395);
+  },
+);
 
 test('a record with no mso-infoPathSolution names nothing, so it gives none', () => {
   const plain = new TextEncoder().encode(

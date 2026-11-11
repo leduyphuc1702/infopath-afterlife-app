@@ -14,8 +14,12 @@ export function mdCode(s: string, inTable = false): string {
   return `${fence}${pad}${body}${pad}${fence}`;
 }
 
-/** Could autolink in GFM: a scheme, `www.`, or an e-mail address. */
-const LINKY = /\S*(?:[a-z][a-z0-9+.-]*:\/\/|www\.|@)\S*/gi;
+/**
+ * Could autolink: a scheme, `www.`, an e-mail address, or (spec 19 P3a) a dotted name such as a
+ * host, which some renderers link bare. Trailing punctuation stays outside the code span.
+ */
+const LINKY = /\S*(?:[a-z][a-z0-9+.-]*:\/\/|www\.|@|[a-z0-9-]\.[a-z][a-z0-9-]+)\S*/gi;
+const TRAIL = /[.,;:!?)\]”’"']+$/;
 
 /**
  * Spec 16 K6: plain text, escaped only where a character could become markup where it stands,
@@ -24,15 +28,19 @@ const LINKY = /\S*(?:[a-z][a-z0-9+.-]*:\/\/|www\.|@)\S*/gi;
  * block (`#`, `>`, `+`, `-`, `=`, `1.`) at the start. Link-like tokens become code spans.
  */
 export function mdText(s: string, inTable = false): string {
-  const t = flat(s);
+  // Spec 19 P3b: leading spaces would make an indented code block.
+  const t = flat(s).replace(/^\s+/, '');
   let out = '';
   let last = 0;
   for (const m of t.matchAll(LINKY)) {
-    out += esc(t.slice(last, m.index), inTable) + mdCode(m[0], inTable);
-    last = m.index + m[0].length;
+    const token = m[0].replace(TRAIL, '');
+    if (token === '') continue;
+    out += esc(t.slice(last, m.index), inTable) + mdCode(token, inTable);
+    last = m.index + token.length;
   }
   out += esc(t.slice(last), inTable);
-  return out.replace(/^(\s*)([#>+=-]|\d+(?=[.)]))/, (_, sp: string, c: string) =>
+  // Spec 19 P3c: a number starts a list only when a space or the end follows its `.` or `)`.
+  return out.replace(/^(\s*)([#>+=-]|\d+(?=[.)](\s|$)))/, (_, sp: string, c: string) =>
     /\d/.test(c) ? `${sp}${c}\\` : `${sp}\\${c}`,
   );
 }

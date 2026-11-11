@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from 'react';
 import type { RecordListRes } from '../worker/protocol';
-import { findRows, searchText, type Sort } from './find';
+import { findRows, searchText, whereFound, type Sort } from './find';
 
 /** What Back to the list restores (R9). */
 export interface ListPlace {
@@ -42,7 +42,8 @@ export function Records({ formName, list, place, onPlace, onBack, onOpen, action
   // R11: typing updates the box at once; the table follows when React has time.
   const deferred = useDeferredValue(query);
   const rows = list?.rows ?? [];
-  const text = useMemo(() => searchText(rows), [rows]);
+  const skip = list?.columns.findIndex((c) => c.kind === 'checks') ?? -1;
+  const text = useMemo(() => searchText(rows, skip), [rows, skip]);
   const shown = useMemo(() => findRows(rows, text, deferred, sort), [rows, text, deferred, sort]);
   const latest = useRef(place);
   latest.current = {
@@ -101,6 +102,14 @@ export function Records({ formName, list, place, onPlace, onBack, onOpen, action
               setQuery(e.target.value);
               onPlace({ ...latest.current, query: e.target.value });
             }}
+            // Spec 19 F4: Enter or Down goes to the first record found, past the column headers.
+            onKeyDown={(e) => {
+              if (e.key !== 'Enter' && e.key !== 'ArrowDown') return;
+              const first = box.current?.querySelector<HTMLElement>('tbody th button');
+              if (!first) return;
+              e.preventDefault();
+              first.focus();
+            }}
           />
         </label>
         <p className="afl-records-count" role="status" aria-live="polite">
@@ -148,10 +157,26 @@ export function Records({ formName, list, place, onPlace, onBack, onOpen, action
                 ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody
+              // Spec 19 F4: Up and Down move between records' file names.
+              onKeyDown={(e) => {
+                if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+                const tr = (e.target as HTMLElement).closest('tr');
+                let next =
+                  e.key === 'ArrowDown' ? tr?.nextElementSibling : tr?.previousElementSibling;
+                while (next && !next.hasAttribute('aria-rowindex'))
+                  next =
+                    e.key === 'ArrowDown' ? next.nextElementSibling : next.previousElementSibling;
+                const b = next?.querySelector<HTMLElement>('th button');
+                if (!b) return;
+                e.preventDefault();
+                b.focus();
+              }}
+            >
               {first > 0 && <tr aria-hidden="true" style={{ height: first * ROW_PX }} />}
               {shown.slice(first, last).map((i, k) => {
                 const r = rows[i]!;
+                const where = whereFound(r, deferred, skip);
                 return (
                   <tr key={r.recordId} aria-rowindex={first + k + 2} onClick={() => open(i)}>
                     {r.cells.map((c, j) =>
@@ -164,6 +189,7 @@ export function Records({ formName, list, place, onPlace, onBack, onOpen, action
                           >
                             {c}
                           </button>
+                          {where && <span className="afl-records-where"> {where}</span>}
                         </th>
                       ) : (
                         <td
@@ -183,6 +209,23 @@ export function Records({ formName, list, place, onPlace, onBack, onOpen, action
               )}
             </tbody>
           </table>
+          {/* Spec 19 R4: no match is said in the box, with a way back. */}
+          {shown.length === 0 && rows.length > 0 && (
+            <p className="afl-records-none">
+              No record matches “{deferred.trim()}”.{' '}
+              <button
+                type="button"
+                className="afl-link"
+                onClick={() => {
+                  setQuery('');
+                  onPlace({ ...latest.current, query: '' });
+                  document.querySelector<HTMLInputElement>('.afl-records-tools input')?.focus();
+                }}
+              >
+                Clear Find
+              </button>
+            </p>
+          )}
         </div>
       )}
     </article>

@@ -28,6 +28,8 @@ export interface ListRow {
   readonly fileName: string;
   readonly cells: readonly string[];
   readonly keys: readonly ListKey[];
+  /** Spec 19 R2: the values in repeating rows, as "Label: value", for Find. */
+  readonly more: readonly string[];
 }
 
 export interface RecordList {
@@ -59,6 +61,41 @@ export function viewFormats(t: ParsedTemplate): Map<string, ViewFormat> {
   return out;
 }
 
+/**
+ * Spec 19 F1: the names a view's dropdowns and list boxes show for their stored values, by the
+ * local name of the binding's last step; first one wins. Only static options are read.
+ */
+export function viewChoices(t: ParsedTemplate): Map<string, Map<string, string>> {
+  const out = new Map<string, Map<string, string>>();
+  for (const f of t.files) {
+    if (!f.name.toLowerCase().endsWith('.xsl')) continue;
+    const text = new TextDecoder().decode(f.bytes);
+    for (const m of text.matchAll(/<select\b[^>]*>[\s\S]*?<\/select>/gi)) {
+      const binding = xslAttr(m[0].slice(0, m[0].indexOf('>') + 1), 'xd:binding');
+      if (binding === undefined) continue;
+      const step = binding.slice(binding.lastIndexOf('/') + 1).replace(/^@/, '');
+      const name = step.slice(step.indexOf(':') + 1);
+      if (out.has(name)) continue;
+      const map = new Map<string, string>();
+      for (const o of m[0].matchAll(/<option\b([^>]*)>([\s\S]*?)<\/option>/gi)) {
+        const value = xslAttr(`<option${o[1]}>`, 'value');
+        const label = buttonDecode(
+          o[2]!.replace(/<xsl:if\b[\s\S]*?<\/xsl:if>/g, '').replace(/<[^>]*>/g, ''),
+        ).trim();
+        if (
+          value !== undefined &&
+          !value.includes('{') &&
+          label !== '' &&
+          !map.has(buttonDecode(value))
+        )
+          map.set(buttonDecode(value), label);
+      }
+      if (map.size) out.set(name, map);
+    }
+  }
+  return out;
+}
+
 const NUMERIC =
   /^xsd:(decimal|double|float|(non)?(negative|positive)?integer|nonNegativeInteger|positiveInteger|negativeInteger|nonPositiveInteger|int|long|short|byte|unsigned\w+)$/i;
 const kindOf = (f: IrField | undefined): ListKind => {
@@ -78,6 +115,8 @@ export function recordList(
   for (const f of ir.fields)
     if (f.dataSource === 'main' && !fields.has(f.path)) fields.set(f.path, f);
   const formats = viewFormats(t);
+  const choices = viewChoices(t);
+  const localOf = (f: IrField) => f.name.slice(f.name.indexOf(':') + 1);
 
   // The sheets after Records follow the repeating nodes in depth-first order (as recordTables).
   type Node = IrField | IrGroup;
@@ -108,35 +147,47 @@ export function recordList(
     return [{ label: `${r.node.label || r.node.name} (rows)`, per }];
   });
 
+  /** One value as the form shows it, and its sort key. */
+  const shown = (kind: ListKind, field: IrField | undefined, raw: string): [string, ListKey] => {
+    const text = raw.trim();
+    if (text === '') return [raw.replace(/^\s+$/, ''), null];
+    const fmt = field && formats.get(localOf(field));
+    if (kind === 'number') {
+      const v = Number(text);
+      return [
+        fmt ? formatString(text, fmt.type, fmt.options) : text,
+        Number.isFinite(v) ? v : text,
+      ];
+    }
+    if (kind === 'date') return [fmt ? formatString(text, fmt.type, fmt.options) : text, text];
+    if (field?.xsdType.builtin === 'xsd:boolean' && (raw === 'TRUE' || raw === 'FALSE'))
+      return raw === 'TRUE' ? ['Yes', 'Yes'] : ['No', 'No'];
+    const label = field && choices.get(localOf(field))?.get(raw);
+    return label === undefined ? [raw, raw] : [label, label];
+  };
+  // R2: the repeating sheets' values, per record file.
+  const moreOf = new Map<string, string[]>();
+  for (const sheet of subs) {
+    const fixed = sheet.columns.findIndex((c) => fields.has(c));
+    for (const row of sheet.rows) {
+      const file = cellText(row[0]);
+      const list = moreOf.get(file) ?? [];
+      for (let i = fixed < 0 ? sheet.columns.length : fixed; i < sheet.columns.length; i++) {
+        const f = fields.get(sheet.columns[i]!);
+        const [cell] = shown(kindOf(f), f, cellText(row[i]));
+        if (cell !== '') list.push(`${f?.label || sheet.columns[i]}: ${cell}`);
+      }
+      moreOf.set(file, list);
+    }
+  }
+
   const rows = (main?.rows ?? []).map((row, n): ListRow => {
     const cells: string[] = [];
     const keys: ListKey[] = [];
     for (const [i, c] of fieldColumns.entries()) {
-      const raw = cellText(row[i]);
-      const text = raw.trim();
-      if (text === '') {
-        cells.push(raw.replace(/^\s+$/, ''));
-        keys.push(null);
-        continue;
-      }
-      const fmt = c.field && formats.get(c.field.name.slice(c.field.name.indexOf(':') + 1));
-      if (c.kind === 'number') {
-        const v = Number(text);
-        cells.push(fmt ? formatString(text, fmt.type, fmt.options) : text);
-        keys.push(Number.isFinite(v) ? v : text);
-      } else if (c.kind === 'date') {
-        cells.push(fmt ? formatString(text, fmt.type, fmt.options) : text);
-        keys.push(text);
-      } else if (
-        c.field?.xsdType.builtin === 'xsd:boolean' &&
-        (raw === 'TRUE' || raw === 'FALSE')
-      ) {
-        cells.push(raw === 'TRUE' ? 'Yes' : 'No');
-        keys.push(raw === 'TRUE' ? 'Yes' : 'No');
-      } else {
-        cells.push(raw);
-        keys.push(raw);
-      }
+      const [cell, key] = shown(c.kind, c.field, cellText(row[i]));
+      cells.push(cell);
+      keys.push(key);
     }
     const fileName = cellText(row[0]);
     for (const c of counts) {
@@ -151,21 +202,20 @@ export function recordList(
     } catch {
       // A record the runtime cannot open: no number is claimed.
     }
-    cells.push(failed ? String(failed) : '');
-    keys.push(failed ?? null);
-    return { fileName, cells, keys };
+    // Spec 19 R3: beside the file name; a clean record says so.
+    cells.splice(1, 0, failed === null ? '' : failed === 0 ? 'None' : String(failed));
+    keys.splice(1, 0, failed);
+    return { fileName, cells, keys, more: moreOf.get(fileName) ?? [] };
   });
 
-  return {
-    columns: [
-      ...fieldColumns.map(({ label, path, kind }) => ({
-        label,
-        kind,
-        ...(path !== undefined && { path }),
-      })),
-      ...counts.map((c) => ({ label: c.label, kind: 'count' as const })),
-      { label: 'Failed checks', kind: 'checks' },
-    ],
-    rows,
-  };
+  const columns: ListColumn[] = [
+    ...fieldColumns.map(({ label, path, kind }) => ({
+      label,
+      kind,
+      ...(path !== undefined && { path }),
+    })),
+    ...counts.map((c) => ({ label: c.label, kind: 'count' as const })),
+  ];
+  columns.splice(1, 0, { label: 'Failed checks', kind: 'checks' });
+  return { columns, rows };
 }

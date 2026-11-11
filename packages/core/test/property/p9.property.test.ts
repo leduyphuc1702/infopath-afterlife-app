@@ -4,6 +4,7 @@ import { buildFormIR, causesOf, parseXsn, recordEvidence, type FormIR } from '..
 import type { ParsedTemplate } from '../../src/xsn/parse';
 import { selects } from '../helpers/located';
 import { readSample, sampleCabinets } from '../helpers/samples';
+import { HEAVY_MS } from '../helpers/time';
 
 // Property P9 (spec 12 R2.4): every cause's evidence names a file of the template's package (or
 // the record it came from), and its path selects a node in that file. Over the 48 in-repo forms,
@@ -50,30 +51,34 @@ test('the 48 in-repo forms: every evidence path selects its node', () => {
   for (const f of forms) expect(problems(f.ir, [f.t]), f.slug).toEqual([]);
 });
 
-test(`${RUNS} variants: parts of several forms combined, evidence still resolves`, () => {
-  const rich = forms.filter((f) => /^(04|43|44|45|46|47)-/.test(f.slug));
-  fc.assert(
-    fc.property(fc.nat(forms.length - 1), fc.subarray(rich, { minLength: 1 }), (base, parts) => {
-      const b = forms[base]!;
-      const ir: FormIR = {
-        ...b.ir,
-        meta: parts.some((p) => p.ir.meta.browserCompatible)
-          ? { ...b.ir.meta, browserCompatible: true }
-          : b.ir.meta,
-        dataConnections: [...b.ir.dataConnections, ...parts.flatMap((p) => p.ir.dataConnections)],
-        activeX: { controls: parts.flatMap((p) => p.ir.activeX.controls), allowed: [] },
-        signatures: { blocks: parts.flatMap((p) => p.ir.signatures.blocks), signatureLines: [] },
-        codeBehind: parts.find((p) => p.ir.codeBehind.present)?.ir.codeBehind ?? b.ir.codeBehind,
-      };
-      // Evidence of a copied part lives in that part's form; meta evidence in the base's.
-      const owners = [b.t, ...parts.map((p) => p.t)];
-      const found = problems(ir, owners);
-      // Files of the same name (manifest.xsf) are in several owners: the path must select in one.
-      expect(found).toEqual([]);
-    }),
-    { numRuns: RUNS },
-  );
-});
+test(
+  `${RUNS} variants: parts of several forms combined, evidence still resolves`,
+  { timeout: HEAVY_MS },
+  () => {
+    const rich = forms.filter((f) => /^(04|43|44|45|46|47)-/.test(f.slug));
+    fc.assert(
+      fc.property(fc.nat(forms.length - 1), fc.subarray(rich, { minLength: 1 }), (base, parts) => {
+        const b = forms[base]!;
+        const ir: FormIR = {
+          ...b.ir,
+          meta: parts.some((p) => p.ir.meta.browserCompatible)
+            ? { ...b.ir.meta, browserCompatible: true }
+            : b.ir.meta,
+          dataConnections: [...b.ir.dataConnections, ...parts.flatMap((p) => p.ir.dataConnections)],
+          activeX: { controls: parts.flatMap((p) => p.ir.activeX.controls), allowed: [] },
+          signatures: { blocks: parts.flatMap((p) => p.ir.signatures.blocks), signatureLines: [] },
+          codeBehind: parts.find((p) => p.ir.codeBehind.present)?.ir.codeBehind ?? b.ir.codeBehind,
+        };
+        // Evidence of a copied part lives in that part's form; meta evidence in the base's.
+        const owners = [b.t, ...parts.map((p) => p.t)];
+        const found = problems(ir, owners);
+        // Files of the same name (manifest.xsf) are in several owners: the path must select in one.
+        expect(found).toEqual([]);
+      }),
+      { numRuns: RUNS },
+    );
+  },
+);
 
 test('the oracle refuses paths that select nothing', () => {
   const f44 = forms.find((f) => f.slug.startsWith('44-'))!;

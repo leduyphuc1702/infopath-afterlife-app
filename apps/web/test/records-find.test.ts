@@ -39,7 +39,8 @@ test('P20: find, sort and walk', () => {
             c === '' ? null : i === column && numeric && Number.isFinite(Number(c)) ? Number(c) : c,
           ),
         }));
-        const text = searchText(rows);
+        // Spec 19 R3: the column Find skips (Failed checks) is now named, here the last.
+        const text = searchText(rows, w);
         const shown = findRows(rows, text, query, { column, descending });
         const q = query.trim().toLowerCase();
         const expected = rows
@@ -81,4 +82,18 @@ test('P20: find, sort and walk', () => {
     ),
     { numRuns: 200 },
   );
+});
+
+// Spec 19 R2: Find looks inside repeating rows, and says where a match is off screen.
+test('R2: a match in a repeating row is found, and its place is named', async () => {
+  const { whereFound } = await import('../src/records/find');
+  const rows = [
+    { cells: ['a.xml', 'None', 'Kenji'], keys: ['a.xml', 0, 'Kenji'], more: ['Type: Lodging'] },
+    { cells: ['b.xml', 'None', 'Lodge'], keys: ['b.xml', 0, 'Lodge'], more: [] },
+  ];
+  const text = searchText(rows, 1);
+  expect(findRows(rows, text, 'lodging')).toEqual([0]);
+  expect(findRows(rows, text, 'none')).toEqual([]);
+  expect(whereFound(rows[0]!, 'lodging', 1)).toBe('Type: Lodging');
+  expect(whereFound(rows[1]!, 'lodge', 1)).toBeUndefined();
 });

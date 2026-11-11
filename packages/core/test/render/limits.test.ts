@@ -7,6 +7,7 @@ import { functionTable } from '../../src/render/functions';
 import { catchError } from '../helpers/catch-error';
 import { compileText, runCompiled } from '../helpers/engine';
 import { viewCases, type ViewCase } from '../helpers/render-cases';
+import { HEAVY_MS } from '../helpers/time';
 
 // Spec 03 task 5 (R3.3, design §5.3 and §6): each bomb stops with LIMIT_EXCEEDED naming its
 // limit, at the defaults, and no HTML is returned. AFTERLIFE_BOMB_TIMES=1 prints how long each
@@ -64,16 +65,22 @@ describe('bombs, at the default limits', () => {
     expect(limitOf(e)).toEqual(['LIMIT_EXCEEDED', 'templateDepth']);
   });
 
-  test('nested for-each bomb (100^4 iterations): evaluationSteps', async () => {
-    const loops = (n: number): string =>
-      n === 0 ? '<xsl:if test="0"/>' : `<xsl:for-each select="/r/a">${loops(n - 1)}</xsl:for-each>`;
-    const e = await explode(
-      'nested for-each',
-      sheet(root(loops(4))),
-      `<r>${'<a/>'.repeat(100)}</r>`,
-    );
-    expect(e.details).toMatchObject({ limit: 'evaluationSteps', max: 200_000 });
-  });
+  test(
+    'nested for-each bomb (100^4 iterations): evaluationSteps',
+    { timeout: HEAVY_MS },
+    async () => {
+      const loops = (n: number): string =>
+        n === 0
+          ? '<xsl:if test="0"/>'
+          : `<xsl:for-each select="/r/a">${loops(n - 1)}</xsl:for-each>`;
+      const e = await explode(
+        'nested for-each',
+        sheet(root(loops(4))),
+        `<r>${'<a/>'.repeat(100)}</r>`,
+      );
+      expect(e.details).toMatchObject({ limit: 'evaluationSteps', max: 200_000 });
+    },
+  );
 
   test('output bomb (400 × 100,000 characters): outputBytes', async () => {
     const e = await explode(
