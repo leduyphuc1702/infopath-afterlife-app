@@ -113,8 +113,8 @@ Found in the review of B1–B10 (`d7f4a7b`).
 
 ## Properties
 
-- **P12 (B3).** For any list of files with repeats, opened in any order and in any number of
+- **P16 (B3).** For any list of files with repeats, opened in any order and in any number of
   batches, the session holds each distinct file once, and reports every other copy as a
   duplicate.
-- **P13 (B2).** For any sequence of screen changes followed by the same number of Back steps, the
+- **P17 (B2).** For any sequence of screen changes followed by the same number of Back steps, the
   app is on the screen it started from; the same number of Forward steps replays the sequence.

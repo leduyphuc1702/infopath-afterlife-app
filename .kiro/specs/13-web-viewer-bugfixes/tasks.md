@@ -10,14 +10,14 @@ Each task: write the regression test, run it on the unfixed code and record the 
   - Done when: both B1 tests and `e2e/export.spec.ts` print tests pass.
 - [x] 2. One history entry per screen change
   - Bugfix: B2
-  - Test P13 `test/history.test.ts`, e2e "B2"; fix `src/shell/history.ts`, `restore` in
+  - Test P17 `test/history.test.ts`, e2e "B2"; fix `src/shell/history.ts`, `restore` in
     `store.ts`, `App.tsx`.
-  - Done when: P13 (300 runs) and e2e "B2" pass.
+  - Done when: P17 (300 runs) and e2e "B2" pass.
 - [x] 3. The same bytes open once
   - Bugfix: B3
-  - Test `test/session.test.ts` (P12 and two examples), e2e "B3"; fix `session.ts`,
+  - Test `test/session.test.ts` (P16 and two examples), e2e "B3"; fix `session.ts`,
     `protocol.ts` (`duplicates`), `App.tsx`, `announce.ts`.
-  - Done when: P12 (25 runs) and e2e "B3" pass; `triage.spec.ts` "40 templates" uses 40
+  - Done when: P16 (25 runs) and e2e "B3" pass; `triage.spec.ts` "40 templates" uses 40
     distinct forms.
 - [x] 4. Show the first record that arrived
   - Bugfix: B4

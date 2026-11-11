@@ -8,10 +8,10 @@ tests only); "after" is the same test with the fix.
 | B1 | e2e "B1: the form screen prints the paper…" | `[data-afl-paper]`: expected visible, received hidden | pass |
 | B1 | e2e "B1: the certificate screen prints the certificate" | heading "Death certificate: …": element(s) not found | pass |
 | B2 | e2e "B2: Back and Forward…" | after `goBack()`, the certificate region: element(s) not found (the page had left the app) | pass |
-| B2 | P13 `test/history.test.ts` | cannot find module `../src/shell/history` (nothing records history) | pass, 300 runs |
+| B2 | P17 `test/history.test.ts` | cannot find module `../src/shell/history` (nothing records history) | pass, 300 runs |
 | B3 | `test/session.test.ts`, template twice | expected 1 template, received 2 | pass |
 | B3 | `test/session.test.ts`, record under another name | expected 1 record, received 2 | pass |
-| B3 | P12 `test/session.test.ts` | property failed after 1 test: the answer has no `duplicates` | pass, 25 runs |
+| B3 | P16 `test/session.test.ts` | property failed after 1 test: the answer has no `duplicates` | pass, 25 runs |
 | B3 | e2e "B3: the same template opened twice…" | expected "02-expense-report.xsn is already open", received "" | pass |
 | B4 | `test/store.test.ts`, template with records | expected `recordIndex` 1, received 0 | pass |
 | B4 | `test/store.test.ts`, record dropped later | expected `recordIndex` 2, received 0 | pass |

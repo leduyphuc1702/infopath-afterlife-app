@@ -5,7 +5,7 @@ import type { InputFile } from '../src/worker/protocol';
 import { readZip, writeZip } from '@afterlife/core';
 import { Session } from '../src/worker/session';
 
-// Spec 13 B3, P12: a file whose bytes are already open is not added again, templates and
+// Spec 13 B3, P16: a file whose bytes are already open is not added again, templates and
 // records alike; the answer names it, with the template it already is.
 
 const OWN = new URL('../../../samples/own/', import.meta.url);
@@ -42,7 +42,7 @@ describe('B3: the same bytes twice', () => {
   });
 });
 
-test('P12: any files with repeats, in any order and batches: each distinct file once', async () => {
+test('P16: any files with repeats, in any order and batches: each distinct file once', async () => {
   const names = Object.keys(FILES) as Name[];
   await fc.assert(
     fc.asyncProperty(

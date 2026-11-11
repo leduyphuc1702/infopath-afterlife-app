@@ -25,7 +25,7 @@ No new dependency; no change to `packages/core` (B3 hashes with Web Crypto in th
   changes, replaces the page's own entry the first time, and does nothing when Back/Forward just
   restored that place. `App.tsx` calls `visit` when the key changes and turns `popstate` into a
   new `restore` action (`src/store.ts`). `history.scrollRestoration = 'manual'` (B6 restores).
-- **Tests.** P13 in `test/history.test.ts` (fast-check over the reducer and a fake `History`);
+- **Tests.** P17 in `test/history.test.ts` (fast-check over the reducer and a fake `History`);
   e2e "B2 …" with `page.goBack()` / `goForward()` over Triage → certificate → form.
 
 ## B3. Same bytes twice
@@ -37,7 +37,7 @@ No new dependency; no change to `packages/core` (B3 hashes with Web Crypto in th
   reported in the new `SessionRes.duplicates`. `App.tsx` shows that template when nothing new
   was added, and the status line says "<file> is already open, so it was not added again."
   (`src/shell/announce.ts`).
-- **Tests.** Node `test/session.test.ts`: two examples and P12.
+- **Tests.** Node `test/session.test.ts`: two examples and P16.
 
 ## B4. First arrived record
 

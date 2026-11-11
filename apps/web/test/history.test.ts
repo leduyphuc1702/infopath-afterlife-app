@@ -5,7 +5,7 @@ import { keyOf, placeIn, placeOf, visit, type HistoryLike } from '../src/shell/h
 import { initialState, reducer, type Action, type State } from '../src/store';
 import type { SessionRes, TemplateSummary } from '../src/worker/protocol';
 
-// Spec 13 B2, P13: each screen change is one history entry; Back undoes them in order and
+// Spec 13 B2, P17: each screen change is one history entry; Back undoes them in order and
 // Forward replays them.
 
 const ir = { views: [{ name: 'V', isDefault: true }] } as unknown as FormIR;
@@ -58,7 +58,7 @@ const change = fc.oneof(
     .map<Action>((templateId) => ({ type: 'screen', screen: 'form', templateId })),
 );
 
-test('P13: n screen changes, then n Back steps, is the start; Forward replays them', () => {
+test('P17: n screen changes, then n Back steps, is the start; Forward replays them', () => {
   fc.assert(
     fc.property(fc.array(change, { maxLength: 12 }), (actions) => {
       let s: State = reducer(initialState, {
