@@ -25,9 +25,10 @@ Built spec-first in Kiro. MIT licence.
 
 ## Quality
 
-**Bugfix specs.** 10 of the 21 specs are bugfix specs. Together they hold 97 defect sections.
-Each one has a test that failed on the unfixed code before the fix, and a line in the spec's
-`verification.md` with the result before and after.
+**Bugfix specs.** 11 of the 22 specs are bugfix specs. Together they hold 98 defect sections.
+Each spec's `verification.md` gives every defect's test result before and after the fix. Every
+defect was run on the unfixed code first, with the gaps the files name: spec 27's F10 had no run
+before the fix in its round, and one spec 27 reducer test is a guard that passes on both.
 
 | Spec | Defect sections | Found by |
 |---|---|---|
@@ -41,6 +42,7 @@ Each one has a test that failed on the unfixed code before the fix, and a line i
 | 25 | 5 | [MS-IPFF2] and the reviewer's checks of the built app |
 | 26 | 4 | the reviewer's checks, and notes left by earlier specs |
 | 27 | 1 | the reviewer's checks of the built app |
+| 28 | 1 | the reviewer's checks of the built app |
 
 **Properties** (fast-check, defined in `.kiro/steering/testing.md` and the specs):
 
@@ -63,7 +65,7 @@ Each one has a test that failed on the unfixed code before the fix, and a line i
 - P17: n screen changes, then n Back steps, return to the start; n Forward steps replay them.
 - P18: recalculating twice with no input change changes nothing.
 - P19: every rule, calculation, validation and data connection appears in the form's dossier exactly once.
-- P20: the records list shows exactly the records that contain the Find text, in the sorted column's order.
+- P20: the records list shows exactly the records whose shown values, or the stored values of their number and date columns, contain the Find text, in the sorted column's order (spec 28).
 - P21: no page of a record archive can run script or load anything from outside the archive.
 - P22: the record summary's groups and totals add up to the records it counts (spec 20 R12).
 - P23: undo all and redo all give the first and last record, and the downloaded XML reads back the same (spec 24).
@@ -71,9 +73,9 @@ Each one has a test that failed on the unfixed code before the fix, and a line i
 **Accessibility:** `docs/accessibility.md`, WCAG 2.2 AA criterion by criterion, with the
 reviewer's axe-core 4.14 audit.
 
-**Suites**, measured by the reviewer on `0ec71b4`: Kiro hook tests 6, core 3,853 passed
-(3 skipped), browser 337, web 122, end-to-end 173. Bundle, measured on the same code (turn 80):
-page entry 91.3 of 100 KB, Worker 156.0 of 160 KB.
+**Suites**, measured by Kiro in this turn (spec 28, on `acd2394` plus the uncommitted spec 28
+changes): Kiro hook tests 6, core 3,853 passed (3 skipped), browser 337, web 123, end-to-end
+174. Bundle, same run: page entry 91.4 of 100 KB, Worker 156.0 of 160 KB.
 
 ## Status
 
@@ -104,6 +106,7 @@ files that cite the spec by number, so a file that serves two specs counts for b
 | 25 Number grouping and leaving | bugfix | done | 5 | 6 | 23 |
 | 26 Leftover bugfixes | bugfix | done; task 5 open: F7 (F10 fixed in spec 27) | 4 | 4 | 11 |
 | 27 Reopen shows record | bugfix | done | 2 | 1 | 7 |
+| 28 Find stored value | bugfix | done | 1 | 1 | 4 |
 
 Specs 05–08, 10 and 11 (converter, Forge app, Rovo agent and others) have briefs in
 `docs/spec-briefs/` and no spec yet.
@@ -123,7 +126,7 @@ Tests:
 
 ```sh
 pnpm check     # typecheck, lint, format check, hook tests, core, core in a browser, web
-pnpm e2e:web   # Playwright end-to-end tests of the built viewer (build first)
+pnpm e2e:web   # Playwright end-to-end tests; the Playwright config builds and serves the site
 pnpm test:perf # core's performance budgets
 ```
 
@@ -140,10 +143,11 @@ tests and the web viewer both use it.
 
 **Specs** (`.kiro/specs/`). Eleven specs went requirements first: `requirements.md`, then
 `design.md`, then `tasks.md`, each phase approved by the reviewer before the next (01, 02, 03, 04,
-09, 12, 15, 17, 18, 20, 21). Ten are bugfix specs (13, 14, 16, 19, 22–27): `bugfix.md` with
+09, 12, 15, 17, 18, 20, 21). Eleven are bugfix specs (13, 14, 16, 19, 22–28): `bugfix.md` with
 current, expected and unchanged behaviour in EARS, a design with each root cause, and a
-`verification.md` with the failing test before the fix and the result after. The briefs they
-started from are in `docs/spec-briefs/`. The spec skill that sets the format is
+`verification.md` with the failing test before the fix and the result after. Specs 01 to 12 started from the briefs in
+`docs/spec-briefs/`; the later ones started from the reviewer's prompt of that session, which is
+not in this repository. The spec skill that sets the format is
 `.kiro/skills/spec/SKILL.md`.
 
 **Steering** (`.kiro/steering/`). Eight files loaded into every session: product, tech,
@@ -164,8 +168,10 @@ built app by hand. It caught defects no suite had, and the document says which, 
 
 ## What Kiro did not write
 
-Commit authors do not separate the two; the commit messages do. 66 of the 75 commits say
-"Written by Kiro". These are the reviewer's, whole:
+Commit authors do not separate the two; the commit messages do. At `acd2394` there are 76
+commits (`git rev-list --count acd2394`): 67 say "Written by Kiro", one (`cefad29`, steering and
+docs aligned with the repo and the Forms API) is Kiro's and says "Made by Kiro CLI", and these
+eight are the reviewer's, whole:
 
 | Commit | What |
 |---|---|

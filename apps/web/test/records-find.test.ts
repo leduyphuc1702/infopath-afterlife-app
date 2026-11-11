@@ -3,8 +3,9 @@ import { expect, test } from 'vitest';
 import type { ListKey } from '@afterlife/core';
 import { findRows, searchText, walkStep } from '../src/records/find';
 
-// Spec 17 P20: the rows shown are exactly the records whose shown values contain the Find text,
-// in the sort column's value order (empty last, ties in input order), and Previous and Next
+// Spec 17 P20, restated by spec 28: the rows shown are exactly the records whose shown values,
+// or the stored values of their number and date columns, contain the Find text, in the sort
+// column's value order (empty last, ties in input order), and Previous and Next
 // visit them in that order.
 const cell = fc.oneof(
   fc.constantFrom('', 'Kenji', 'kenji brask', 'June', '10', '9', '1.5'),
@@ -40,13 +41,20 @@ test('P20: find, sort and walk', () => {
           ),
         }));
         // Spec 19 R3: the column Find skips (Failed checks) is now named, here the last.
-        const text = searchText(rows, w);
+        const kinds = rows[0]?.cells.map((_c, i) => (i === column && numeric ? 'number' : 'text'));
+        const text = searchText(rows, w, kinds);
         const shown = findRows(rows, text, query, { column, descending });
         const q = query.trim().toLowerCase();
         const expected = rows
           .map((r, i) => i)
           .filter(
-            (i) => rows[i]!.cells.slice(0, -1).some((c) => c.toLowerCase().includes(q)) || q === '',
+            (i) =>
+              q === '' ||
+              rows[i]!.cells.slice(0, -1).some((c) => c.toLowerCase().includes(q)) ||
+              (numeric &&
+                column !== w &&
+                rows[i]!.keys[column] !== null &&
+                String(rows[i]!.keys[column]).toLowerCase().includes(q)),
           );
         expect([...shown].sort((a, b) => a - b)).toEqual(expected);
         for (let k = 1; k < shown.length; k++) {
@@ -96,4 +104,27 @@ test('R2: a match in a repeating row is found, and its place is named', async ()
   expect(findRows(rows, text, 'none')).toEqual([]);
   expect(whereFound(rows[0]!, 'lodging', 1)).toBe('Type: Lodging');
   expect(whereFound(rows[1]!, 'lodge', 1)).toBeUndefined();
+});
+
+// Spec 28 R1: a number or date column also matches on the value the record stores.
+test('spec 28 R1: Find matches a number or a date as stored, text as shown', () => {
+  const kinds = ['text', 'checks', 'number', 'date', 'text'] as const;
+  const rows = [
+    {
+      cells: ['04-purchase-request-001.xml', 'None', '$1,423.94', '5/13/2026', 'Yes'],
+      keys: ['04-purchase-request-001.xml', 0, 1423.94, '2026-05-13', 'true'] as ListKey[],
+    },
+  ];
+  const text = searchText(rows, 1, kinds);
+  const count = (q: string) => findRows(rows, text, q).length;
+  for (const [q, n] of [
+    ['$1,423.94', 1],
+    ['1,423.94', 1],
+    ['1423.94', 1],
+    ['1423', 1],
+    ['5/13/2026', 1],
+    ['2026-05-13', 1],
+    ['true', 0],
+  ] as const)
+    expect(count(q), q).toBe(n);
 });
