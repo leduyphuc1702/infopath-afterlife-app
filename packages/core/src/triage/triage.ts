@@ -192,6 +192,7 @@ export async function triageFiles(files: readonly InputFile[]): Promise<TriageRe
   const keys = templates.map((t) => ({
     ...(t.ir.meta.urn !== undefined && { urn: t.ir.meta.urn }),
     ...(t.ir.meta.solutionVersion !== undefined && { version: t.ir.meta.solutionVersion }),
+    ...(t.ir.meta.publishUrl !== undefined && { publishUrl: t.ir.meta.publishUrl }),
   }));
   const records = xml.map((f): TriageRecord => {
     const m = matchRecord(f.bytes, keys);

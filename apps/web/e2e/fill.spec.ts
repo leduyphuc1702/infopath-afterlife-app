@@ -262,7 +262,7 @@ test('form 02: Insert item, the row menu by keyboard, Total follows, focus moves
   const rows = page.locator('[data-afl-paper] [data-afl-structure="row"]');
   await expect(rows).toHaveCount(1);
   const before = await renders(page);
-  await page.getByRole('button', { name: 'Insert a row at the end of Expenses' }).click();
+  await page.getByRole('button', { name: 'Insert item: a row at the end of Expenses' }).click();
   await expect.poll(() => renders(page)).toBeGreaterThan(before);
   await expect(rows).toHaveCount(2);
   // Focus is in the new row's first control.
@@ -305,7 +305,7 @@ test('form 02: Insert item, the row menu by keyboard, Total follows, focus moves
   }
   await expect(rows).toHaveCount(0);
   await expect(
-    page.getByRole('button', { name: 'Insert a row at the end of Expenses' }),
+    page.getByRole('button', { name: 'Insert item: a row at the end of Expenses' }),
   ).toBeFocused();
   await expect(at(page, TOTAL)).toHaveText('$0.00');
   // A row change is an unsaved change.
@@ -317,7 +317,7 @@ test('form 02: Insert item, the row menu by keyboard, Total follows, focus moves
 test('form 05: the optional Relocation section inserts and removes', async ({ page }) => {
   await openFill(page, /^New hire onboarding/);
   await page.getByRole('combobox', { name: 'View' }).selectOption({ label: 'Manager' });
-  const insert = page.getByRole('button', { name: 'Insert Relocation' });
+  const insert = page.getByRole('button', { name: 'Click here to add: Relocation' });
   await expect(insert).toBeVisible();
   await insert.focus();
   await page.keyboard.press('Enter');

@@ -19,7 +19,7 @@ This is a record of checks, not a claim of conformance.
 
 | Criterion | How it was checked | Result |
 |---|---|---|
-| 1.1.1 Non-text content | nameless controls and images per screen | Fixed in spec 23 (B4: the date picker's icon button) |
+| 1.1.1 Non-text content | nameless controls and images per screen | Spec 23 said fixed too early: the picture in Fill had no text alternative (X3). Fixed in spec 24 |
 | 1.3.1 Info and relationships | headings in order, landmarks, tables with captions or names and header cells, `aria-sort` | Fixed in spec 23 (B7: the Documentation's fields table); the rest passes |
 | 1.3.2 Meaningful sequence | Tab order against reading order on landing and Records | Passes |
 | 1.4.1 Use of colour | chosen and pressed states have a second mark (`aria-pressed`, a border, text) | Passes |
@@ -34,14 +34,32 @@ This is a record of checks, not a claim of conformance.
 | 2.4.2 Page titled | `document.title` per screen | Passes ("Records: Expense Report · InfoPath Afterlife") |
 | 2.4.3 Focus order | after Back, Close tip, Keep filling, exports, dialogs | Passes (spec 22); Keep filling after typing fixed in spec 23 (B2) |
 | 2.4.6 Headings and labels | one `h1` shown per screen, no skipped levels | Passes (Triage's second `h1` is in the print-only plan) |
+| 2.5.3 Label in name | the visible words inside each control's name | Fixed in spec 24 (X2: "Insert item" was named "Insert a row at the end of Lines") |
 | 2.4.7 Focus visible | outline present on every focus stop | Passes; forced colours keep a 2 px outline |
 | 2.5.8 Target size (minimum) | controls under 24 × 24 px and the space around them | Passes, by spacing for the 20 px link buttons |
 | 3.1.1 Language of page | `lang="en"` | Passes |
 | 3.2.2 On input | Find, Count, Group by | Passes; results only, focus stays |
 | 3.3.1 Error identification | a required field emptied in Fill | Passes: `aria-invalid` and "This field is required." |
 | 3.3.4 Error prevention | leaving Fill with changes | Fixed in spec 23 (B2: typing not yet left was lost without the question) |
-| 4.1.2 Name, role, value | `aria-pressed`, `aria-selected`, `aria-expanded`, `aria-sort`, `aria-invalid`; nothing nameless | Fixed in spec 23 (B4: the date box had no name) |
+| 4.1.2 Name, role, value | `aria-pressed`, `aria-selected`, `aria-expanded`, `aria-sort`, `aria-invalid`; nothing nameless | Spec 23 said fixed too early: in Fill, read-only boxes had `aria-readonly` and `aria-label` on a `span` with no role (X1), and the Weight keeper's box had no name (X4). Fixed in spec 24 |
 | 4.1.3 Status messages | live regions observed while acting | Passes: each message once, polite, focus unmoved |
 | Reduced motion | style sheets under `prefers-reduced-motion: reduce` | Passes: nothing animates |
 | Forced colours | computed colours under `forced-colors: active` | Fixed in spec 23 (B6: pressed toggles, the selected tab and the chosen line looked like the rest) |
 | History (not WCAG) | Forward to a task | Fixed in spec 23 (B1) |
+
+## Automated audit by the reviewer (axe-core 4.14)
+
+The reviewer ran axe-core 4.14 against the built app on `c55f031`, outside this repository, with
+the WCAG 2.0, 2.1 and 2.2 level A and AA rules: ten screens, each in the light and the dark
+scheme and at 320 px wide, then Fill on each of the nine bundled samples.
+
+- **Before (spec 23):** no violation on 27 of the 30 screen runs. The three were Fill:
+  `aria-allowed-attr` (critical: `aria-readonly` on a role-less `span`, X1) and
+  `label-content-name-mismatch` ("Insert item", X2). Fill on the nine samples added the picture's
+  missing text alternative and its role-less `aria-label` (X3) and `aria-input-field-name` on the
+  Weight keeper (X4).
+- **After (spec 24):** X1 to X4 are fixed. `e2e/bugfixes24.spec.ts` checks the same conditions on
+  samples 02, 04, 06 and the Weight keeper in Fill: `aria-readonly` only on roles that have it,
+  no `aria-label` without a role, each "Insert …" name holding its words on screen, every image
+  with an `alt`, every control named. axe-core itself was not run again in this repository (it is
+  not a dependency).

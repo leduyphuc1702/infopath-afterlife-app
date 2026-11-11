@@ -7,6 +7,34 @@ import { solutionAttribute } from './package';
 export interface TemplateKey {
   readonly urn?: string;
   readonly version?: string;
+  /** Spec 24 W3: `xDocumentClass/@publishUrl`, for records whose instruction has no `name`. */
+  readonly publishUrl?: string;
+}
+
+/** `file:///C:/Forms/a%20b.xsn` and `c:\forms\a b.xsn` are the same place. */
+const place = (url: string) => {
+  let u = url.trim().replace(/\\/g, '/');
+  try {
+    u = decodeURIComponent(u);
+  } catch {
+    // kept as written
+  }
+  return u.replace(/^file:\/*/i, '').toLowerCase();
+};
+
+/**
+ * Spec 24 W3: the record as Download XML writes it. A template without a form ID gives its new
+ * records `href="manifest.xsf"`; the template's `publishUrl` goes there instead, so the record can
+ * be matched to it again, as InfoPath's saved records were.
+ */
+export function downloadedXml(xml: string, publishUrl: string | undefined): string {
+  if (publishUrl === undefined || publishUrl.trim() === '') return xml;
+  return xml.replace(/<\?mso-infoPathSolution\b([\s\S]*?)\?>/, (pi, attrs: string) => {
+    if (/(?:^|\s)name\s*=/.test(attrs) || !/(?:^|\s)href\s*=\s*["']manifest\.xsf["']/i.test(attrs))
+      return pi;
+    const esc = publishUrl.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    return pi.replace(/(\shref\s*=\s*)(["'])manifest\.xsf\2/i, `$1"${esc}"`);
+  });
 }
 
 export type RecordMatch =
@@ -54,7 +82,20 @@ function highest(indices: readonly number[], templates: readonly TemplateKey[]):
  */
 export function matchRecord(record: Uint8Array, templates: readonly TemplateKey[]): RecordMatch {
   const urn = solutionAttribute(record, 'name');
-  if (urn === undefined) return { kind: 'unmatched', reason: 'noSolution' };
+  if (urn === undefined) {
+    // Spec 24 W3: no form ID on either side: the place the template was published to.
+    const href = solutionAttribute(record, 'href');
+    const at =
+      href === undefined
+        ? -1
+        : templates.findIndex(
+            (t) =>
+              t.urn === undefined &&
+              t.publishUrl !== undefined &&
+              place(t.publishUrl) === place(href),
+          );
+    return at >= 0 ? { kind: 'exact', template: at } : { kind: 'unmatched', reason: 'noSolution' };
+  }
   const version = solutionAttribute(record, 'solutionVersion');
   const same = templates.flatMap((t, i) => (t.urn === urn ? [i] : []));
   if (same.length === 0) return { kind: 'unmatched', reason: 'noTemplate', urn };

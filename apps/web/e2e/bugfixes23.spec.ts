@@ -131,7 +131,11 @@ test('B4: every field in Fill has a name; the date picker’s dead button is out
         (e) => !e.getAttribute('aria-label'),
       ).length,
       dead: [...root.querySelectorAll<HTMLElement>('button.xdDTButton')].filter(
-        (b) => b.tabIndex >= 0 && b.getAttribute('aria-hidden') !== 'true',
+        // Spec 24 W2: the calendar button works now; in the tab order it must have a name.
+        (b) =>
+          b.tabIndex >= 0 &&
+          b.getAttribute('aria-hidden') !== 'true' &&
+          !b.getAttribute('aria-label'),
       ).length,
     };
   });

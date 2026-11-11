@@ -191,7 +191,7 @@ test('form 02: undo and redo by toolbar and keys; a row insert is one step, focu
 
   // A row insert is one step; undoing it by key puts focus back on "Insert item".
   const rows = page.locator('[data-afl-paper] [data-afl-structure="row"]');
-  const insert = page.getByRole('button', { name: 'Insert a row at the end of Expenses' });
+  const insert = page.getByRole('button', { name: 'Insert item: a row at the end of Expenses' });
   await insert.focus();
   await page.keyboard.press('Enter');
   await expect(rows).toHaveCount(2);

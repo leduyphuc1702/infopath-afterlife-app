@@ -118,3 +118,24 @@ text spacing, reduced motion, forced colours, live regions, the row menu and the
 Found only this way: the date box with no name and the dead calendar button in Fill (B4), the
 paper and records list a keyboard could not scroll at 320 px (B5), and forced colours hiding
 pressed, selected and chosen states (B6). The results table is `docs/accessibility.md`.
+
+## Turn 76: Fill on every sample (spec 24)
+
+The built app on port 4331 at 1280×800. Fill on samples 01, 03, 05, 06, 07, 08 and the Weight
+keeper: an inventory of each form's controls and their names in Fill; then text, date, dropdown
+with a filtered list (03 Country → City), option buttons, check box, a required field emptied and
+a date typed wrong (03), view buttons and the view list while filling (05), repeating rows
+inserted, removed and undone (06), the rich text box (06), a button with rules (Weight keeper),
+and twenty fields typed with Tab on the Big form (08).
+
+9 MCP calls, no screenshots. Two were lost to timeouts on names I guessed wrong, and three to the
+`beforeunload` question a dirty Fill leaves (`browser_handle_dialog` twice, then a capture
+listener added with `addInitScript` stopped it for the rest).
+
+Found only by looking:
+- **D1:** typing in a rich text box that held bold text or a list stores plain text: the record's
+  XHTML (`<div><p>… <em>…</em></p></div>`) becomes "Zeta", and nothing says so.
+- **D2:** the Big form's date boxes are named "S1f01" (from the binding: InfoPath gave them no
+  title), while the other fields read "Section 1 field 2 (dropdown)".
+- W1 was seen as the reviewer described (offset 41 on sample 06). Views (05), checks (03), rows
+  (06) and the Big form (20 fields in 61 ms of typing) behaved as InfoPath did.

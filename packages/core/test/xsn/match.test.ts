@@ -1,6 +1,14 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { describe, expect, test } from 'vitest';
-import { buildFormIR, matchRecord, parseXsn, type TemplateKey } from '../../src/index';
+import {
+  buildFormIR,
+  downloadedXml,
+  FillSession,
+  matchRecord,
+  parseXsn,
+  type TemplateKey,
+} from '../../src/index';
+import { writeCabinet } from '../helpers/cab-writer';
 import { compareVersions } from '../../src/xsn/match';
 
 // Spec 09 R2.1, R2.2. Forms 01 and 07 share one URN, with versions 1.0.0.1 and 1.0.0.2; every
@@ -88,4 +96,49 @@ test('versions order numerically, part by part', () => {
     '1.0.0.9',
     '1.0.0.10',
   ]);
+});
+
+// Spec 24 W3: a template without a form ID (`xDocumentClass` has no `name`) still makes records
+// that open with it: the record's `href` is matched against the template's `publishUrl`.
+describe('spec 24 W3: no form ID', () => {
+  const pi = (attrs: string) =>
+    new TextEncoder().encode(`<?xml version="1.0"?>\n<?mso-infoPathSolution ${attrs} ?>\n<my:f/>`);
+  test('href against publishUrl, as InfoPath wrote them', () => {
+    const r = pi(
+      'solutionVersion="1.0.0.3" href="file:///C:/Forms/Task%20form.xsn" productVersion="15.0.0" PIVersion="1.0.0.0"',
+    );
+    expect(
+      matchRecord(r, [{ urn: 'urn:other' }, { publishUrl: 'c:\\forms\\Task form.xsn' }]),
+    ).toEqual({
+      kind: 'exact',
+      template: 1,
+    });
+    expect(matchRecord(r, [{ publishUrl: 'C:\\forms\\other.xsn' }]).kind).toBe('unmatched');
+  });
+
+  test('a record filled from such a template and downloaded opens with it', async () => {
+    const dir = new URL('../../../../samples/own/forms/01-leave-request/', import.meta.url);
+    const strip = (s: string) => s.replace(/\sname="urn:[^"]*"/, '');
+    const files = readdirSync(dir).map((name) => {
+      const raw = readFileSync(new URL(name, dir));
+      const text =
+        name === 'manifest.xsf' || name === 'template.xml'
+          ? strip(raw.toString('utf8'))
+          : undefined;
+      return {
+        name,
+        bytes: text === undefined ? new Uint8Array(raw) : new TextEncoder().encode(text),
+      };
+    });
+    const t = await parseXsn(writeCabinet(files).bytes);
+    const ir = buildFormIR(t);
+    expect(ir.meta.urn).toBeUndefined();
+    const s = FillSession.open(t, ir, { now: '2026-11-11T09:00:00+07:00' });
+    s.edit(s.paths(ir.fields.find((f) => f.name === 'employeeName')!.id)[0]!, 'Zeta');
+    const record = new TextEncoder().encode(downloadedXml(s.xml(), ir.meta.publishUrl));
+    expect(matchRecord(record, [{ publishUrl: ir.meta.publishUrl! }])).toEqual({
+      kind: 'exact',
+      template: 0,
+    });
+  });
 });

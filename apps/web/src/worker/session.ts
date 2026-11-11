@@ -30,6 +30,7 @@ import {
   type RowMark,
   type Snapshot,
   History,
+  downloadedXml,
   type RecordEvidence,
   type TriageRecord,
   type TriageResult,
@@ -431,6 +432,7 @@ export class Session {
     const keys = this.templates.map(({ summary: { ir } }) => ({
       ...(ir.meta.urn !== undefined && { urn: ir.meta.urn }),
       ...(ir.meta.solutionVersion !== undefined && { version: ir.meta.solutionVersion }),
+      ...(ir.meta.publishUrl !== undefined && { publishUrl: ir.meta.publishUrl }),
     }));
     const records: RecordSummary[] = this.records.map((r) => {
       const m = matchRecord(r.bytes, keys);
@@ -655,7 +657,8 @@ export class Session {
       f.original?.xml === now
         ? f.original.bytes.slice()
         : new TextEncoder().encode(
-            `<?xml version="1.0" encoding="UTF-8"?>\n${now.replace(/^<\?xml[^>]*\?>\s*/, '')}`,
+            // Spec 24 W3: a template without a form ID: the record says where it was published.
+            `<?xml version="1.0" encoding="UTF-8"?>\n${downloadedXml(now.replace(/^<\?xml[^>]*\?>\s*/, ''), f.template.summary.ir.meta.publishUrl)}`,
           );
     f.saved = now;
     return {

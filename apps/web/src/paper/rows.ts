@@ -17,9 +17,17 @@ export function upgradeRows(root: ShadowRoot, res: FilledRes): void {
       const optional = el.getAttribute('xd:action') === 'xOptional::insert';
       el.setAttribute('role', 'button');
       el.tabIndex = 0;
+      // Spec 24 X2: the name starts with the words on screen ("Insert item"), WCAG 2.5.3.
+      const shown = (el.textContent ?? '').trim();
+      const where = optional ? group : `a row at the end of ${group}`;
+      const name = optional ? `Insert ${group}` : `Insert ${where}`;
       el.setAttribute(
         'aria-label',
-        optional ? `Insert ${group}` : `Insert a row at the end of ${group}`,
+        !shown
+          ? name
+          : shown.toLowerCase().includes(group.toLowerCase())
+            ? shown
+            : `${shown}: ${where}`,
       );
       continue;
     }

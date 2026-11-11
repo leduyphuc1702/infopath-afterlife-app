@@ -11,6 +11,7 @@ import {
 import { fromDataTransfer, sortInput } from './files/collect';
 import { Attention } from './paper/Attention';
 import { ExportRecords, save, type RecordFormat } from './paper/ExportRecords';
+import { DrawError } from './paper/DrawError';
 import { Paper } from './paper/Paper';
 import { RuleDialog } from './paper/RuleDialog';
 import { PaperToolbar, viewCaption } from './paper/PaperToolbar';
@@ -381,6 +382,12 @@ export function App() {
   const [traced, setTraced] = useState<string>();
   /** Spec 14 B5: what the last button press could not do, until the next command. */
   const [pressNote, setPressNote] = useState<string>();
+  // Spec 24 D1: a line the paper asks for (a rich text box that will lose its formatting).
+  useEffect(() => {
+    const on = (e: Event) => setPressNote((e as CustomEvent<string>).detail);
+    document.addEventListener('afl-note', on);
+    return () => document.removeEventListener('afl-note', on);
+  }, []);
   const fillAnswer = useCallback((r: ResBody, message?: string, step?: 'undo' | 'redo') => {
     if (r.type === 'filled') {
       setFill(
@@ -433,6 +440,8 @@ export function App() {
     // Spec 23 B2: typing not yet left is committed as leaving the field commits it, and an edit
     // still on its way to the Worker counts: its answer says whether there are changes.
     const open = uncommitted();
+    // Spec 24 X5: the commit draws the paper again, so the field is found again by its marks.
+    const where = open && { ctrl: open.dataset.aflCtrl ?? '', path: open.dataset.aflPath ?? '' };
     open?.blur();
     let dirty = fill.res?.dirty;
     if (sent.current > 0) {
@@ -454,7 +463,13 @@ export function App() {
         };
       }
       if (!(await ask(q))) {
-        if (open?.isConnected) open.focus();
+        if (where)
+          document
+            .querySelector('[data-afl-paper]')
+            ?.shadowRoot?.querySelector<HTMLElement>(
+              `[data-afl-ctrl="${CSS.escape(where.ctrl)}"][data-afl-path="${CSS.escape(where.path)}"]`,
+            )
+            ?.focus();
         return false;
       }
     }
@@ -1147,18 +1162,32 @@ export function App() {
               {rendered && (
                 <>
                   <p className="afl-print-caption">{label}</p>
-                  <Paper
-                    result={rendered}
-                    {...(fillOn && fill.res && { fill: { res: fill.res, onCommand: fillCommand } })}
-                    {...(fillOn && traced !== undefined && { traced })}
-                    label={label}
-                    xray={s.xray}
-                    outlined={outlined}
-                    {...(reveal !== undefined && { reveal })}
-                    onPoint={onPoint}
-                    onText={onPaperText}
-                    fade={render?.type === 'rendered' && render.first === true && !fillOn}
-                  />
+                  <DrawError
+                    retry={fillOn ? fill.res : rendered}
+                    filling={fillOn}
+                    onHome={() =>
+                      void leaveRef.current().then((ok) => {
+                        if (!ok) return;
+                        history.pushState(null, '', location.pathname + location.search);
+                        homeFocus.current = true;
+                        dispatch({ type: 'home' });
+                      })
+                    }
+                  >
+                    <Paper
+                      result={rendered}
+                      {...(fillOn &&
+                        fill.res && { fill: { res: fill.res, onCommand: fillCommand } })}
+                      {...(fillOn && traced !== undefined && { traced })}
+                      label={label}
+                      xray={s.xray}
+                      outlined={outlined}
+                      {...(reveal !== undefined && { reveal })}
+                      onPoint={onPoint}
+                      onText={onPaperText}
+                      fade={render?.type === 'rendered' && render.first === true && !fillOn}
+                    />
+                  </DrawError>
                   {(rendered.issues.length > 0 || fontNote) && (
                     <details className="afl-notes" open={fontNote || undefined}>
                       <summary>Notes ({rendered.issues.length + (fontNote ? 1 : 0)})</summary>
