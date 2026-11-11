@@ -126,6 +126,25 @@ export class WorkerClient {
     return this.send({ type: 'documentation', templateId }, []);
   }
 
+  /** Spec 18: records as web pages. */
+  archive(
+    req: {
+      templateId: string;
+      views: readonly string[];
+      recordIds?: readonly string[];
+      now: string;
+      css: string;
+    },
+    progress?: Progress,
+  ): Promise<ResBody> {
+    return this.send({ type: 'archive', ...req }, [], progress);
+  }
+
+  /** Spec 18 R8: stops a running archive; it answers `cancelled`. No answer of its own. */
+  cancel(): void {
+    this.worker.postMessage({ type: 'cancel', id: -1 });
+  }
+
   /** Spec 17: the open template's records as a list. */
   recordList(templateId: string, now: string): Promise<ResBody> {
     return this.send({ type: 'recordList', templateId, now }, []);

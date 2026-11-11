@@ -107,17 +107,21 @@ const rowsOf = (page: Page, selector: string) =>
     return rows;
   }, selector);
 
-test('B3: the toolbars keep to one row at 1280 px and three at 390 px', async ({ page }) => {
+test('B3: the toolbars keep to two rows at 1280 px and four at 390 px', async ({ page }) => {
   await open(page, /^Expense report/);
-  expect(await rowsOf(page, '[role="toolbar"][aria-label="Views and records"]')).toBe(1);
+  // Spec 18: "Archive as web pages" no longer fits beside the side panel; two rows at 1280 px.
+  expect(
+    await rowsOf(page, '[role="toolbar"][aria-label="Views and records"]'),
+  ).toBeLessThanOrEqual(2);
   const fill = page.getByRole('toolbar', { name: 'Fill' });
   await expect(fill.getByRole('button', { name: /^Undo/ })).toBeVisible();
   await expect(fill.getByRole('button', { name: 'Download XML' })).toBeVisible();
   expect(await rowsOf(page, '[role="toolbar"][aria-label="Fill"]')).toBe(1);
   await page.setViewportSize({ width: 390, height: 844 });
+  // Spec 18: one more control (and spec 17's Records button): four rows at 390 px.
   expect(
     await rowsOf(page, '[role="toolbar"][aria-label="Views and records"]'),
-  ).toBeLessThanOrEqual(3);
+  ).toBeLessThanOrEqual(4);
   expect(await rowsOf(page, '[role="toolbar"][aria-label="Fill"]')).toBe(1);
 });
 

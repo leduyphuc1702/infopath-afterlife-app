@@ -15,6 +15,7 @@ import {
   matchRecord,
   parseXsn,
   recordList,
+  archiveRecords,
   prepareView,
   readZip,
   recordEvidence,
@@ -36,6 +37,7 @@ import type {
   Duplicate,
   DocumentationRes,
   RecordListRes,
+  ArchivedRes,
   ExportedRes,
   FillCommand,
   FilledRes,
@@ -272,6 +274,64 @@ export class Session {
     };
     this.lists.set(templateId, { key, res });
     return res;
+  }
+
+  /** Spec 18 R8: set by a `cancel` message, read by the running archive. */
+  cancelRequested = false;
+
+  /** Spec 18: records as web pages, in `recordIds` order, else every record of the template. */
+  async archive(
+    templateId: string,
+    viewNames: readonly string[],
+    recordIds: readonly string[] | undefined,
+    now: string,
+    css: string,
+    progress?: Progress,
+  ): Promise<ArchivedRes | { type: 'cancelled' }> {
+    this.cancelRequested = false;
+    const t = this.template(templateId);
+    const mine = new Set(
+      this.summary()
+        .records.filter((r) => r.match.kind !== 'unmatched' && r.match.templateId === templateId)
+        .map((r) => r.recordId),
+    );
+    const byId = new Map(
+      this.records.filter((r) => mine.has(r.recordId)).map((r) => [r.recordId, r]),
+    );
+    const records = (recordIds ?? [...byId.keys()]).flatMap((id) => byId.get(id) ?? []);
+    const views = await Promise.all(
+      t.summary.ir.views
+        .filter((v) => viewNames.includes(v.name))
+        .map(async (v) => {
+          let prepared = t.views.get(v.name);
+          if (!prepared) {
+            prepared = prepareView(t.parsed, t.summary.ir, { view: v.name });
+            t.views.set(v.name, prepared);
+            prepared.catch(() => t.views.delete(v.name));
+          }
+          return { name: v.name, caption: v.caption ?? v.name, prepared: await prepared };
+        }),
+    );
+    const out = await archiveRecords(t.parsed, t.summary.ir, records, {
+      views,
+      now,
+      css,
+      fileName: t.summary.fileName,
+      date: new Date(),
+      cancelled: () => this.cancelRequested,
+      progress: (index, total, name) =>
+        progress?.({ type: 'progress', index, total, fileName: name }),
+    });
+    if (!out) return { type: 'cancelled' };
+    return {
+      type: 'archived',
+      fileName: `${t.summary.fileName.replace(/\.xsn$/i, '')}-archive.zip`,
+      bytes: out.bytes.buffer,
+      records: out.records,
+      pages: out.pages,
+      files: out.files,
+      unread: out.unread,
+    };
   }
 
   /** Spec 09 R12.1–R12.4: the records matched to one template, exported. */

@@ -51,6 +51,8 @@ import { keepTrace, stepEntry } from './side/trace-keep';
 import './docs/docs.css';
 import './records/records.css';
 import { Records, type ListPlace } from './records/Records';
+import { ArchiveMenu } from './paper/ArchiveMenu';
+import { PRINT_CSS, READ_CSS } from './paper/fill';
 
 /** The latest render answer; the previous paper stays up while the next one is drawn. */
 /** `templateId`: the template it was made for; another template's render is never shown. */
@@ -257,6 +259,52 @@ export function App() {
           type: 'input',
           ignored: [],
           problems: [{ fileName: 'the export', error: res.error }],
+        });
+    },
+    [client],
+  );
+
+  // Spec 18: records as web pages, made in the Worker; Cancel stops it between records (R8).
+  const [archiving, setArchiving] = useState(false);
+  const archive = useCallback(
+    async (templateId: string, views: readonly string[], recordIds?: readonly string[]) => {
+      setExporting(true);
+      setArchiving(true);
+      const res = await client.archive(
+        {
+          templateId,
+          views,
+          ...(recordIds && { recordIds }),
+          now: localNow(),
+          css: READ_CSS + PRINT_CSS,
+        },
+        (p) => setReading(`Archiving record ${p.index} of ${p.total}: ${p.fileName}`),
+      );
+      setExporting(false);
+      setArchiving(false);
+      setReading(undefined);
+      const n = (k: number, one: string, many: string) => `${k} ${k === 1 ? one : many}`;
+      if (res.type === 'archived') {
+        save(res.bytes, res.fileName, 'application/zip');
+        dispatch({
+          type: 'notice',
+          notice: [
+            `Archived ${n(res.records, 'record', 'records')} as ${n(res.pages, 'web page', 'web pages')} in ${res.fileName}.`,
+            res.files > 0 &&
+              `${n(res.files, 'attachment or picture is', 'attachments and pictures are')} in its attachments folder.`,
+            res.unread > 0 &&
+              `${n(res.unread, 'record', 'records')} could not be read or drawn; ${res.unread === 1 ? 'its page says' : 'their pages say'} why.`,
+          ]
+            .filter(Boolean)
+            .join(' '),
+        });
+      } else if (res.type === 'cancelled')
+        dispatch({ type: 'notice', notice: 'Archiving stopped. Nothing was saved.' });
+      else if (res.type === 'failed')
+        dispatch({
+          type: 'input',
+          ignored: [],
+          problems: [{ fileName: 'the archive', error: res.error }],
         });
     },
     [client],
@@ -698,6 +746,11 @@ export function App() {
                       .join(' ')
                   : s.notice}
           </div>
+          {archiving && (
+            <button type="button" className="afl-button" onClick={() => client.cancel()}>
+              Cancel
+            </button>
+          )}
           {fillOn && s.screen === 'form' && (
             // Spec 14 B3: the Fill actions have their own toolbar, beside the status line, so the
             // views and records toolbar keeps to one row.
@@ -791,6 +844,14 @@ export function App() {
             place={listPlace.current.place}
             onPlace={(p) => (listPlace.current = { templateId: template.templateId, place: p })}
             onBack={() => history.back()}
+            actions={(order) => (
+              <ArchiveMenu
+                views={template.ir.views}
+                count={order.length}
+                busy={exporting}
+                onArchive={(v) => void archive(template.templateId, v, order)}
+              />
+            )}
             onOpen={(id, order, found) => {
               const index = records.findIndex((r) => r.recordId === id) + 1;
               void (fillOn ? leaveFill() : Promise.resolve(true)).then(
@@ -851,10 +912,18 @@ export function App() {
                   actions={
                     <>
                       {records.length > 0 && (
-                        <ExportRecords
-                          busy={exporting}
-                          onExport={(f) => void exportRecords(template.templateId, f)}
-                        />
+                        <>
+                          <ExportRecords
+                            busy={exporting}
+                            onExport={(f) => void exportRecords(template.templateId, f)}
+                          />
+                          <ArchiveMenu
+                            views={template.ir.views}
+                            count={records.length}
+                            busy={exporting}
+                            onArchive={(v) => void archive(template.templateId, v)}
+                          />
+                        </>
                       )}
                     </>
                   }

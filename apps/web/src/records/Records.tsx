@@ -1,6 +1,13 @@
 // Spec 17: the records list of the open form. Find, sort, open. Only the rows near the screen
 // are drawn (R11), and values are React text children only (R12).
-import { useDeferredValue, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import {
+  useDeferredValue,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import type { RecordListRes } from '../worker/protocol';
 import { findRows, searchText, type Sort } from './find';
 
@@ -20,11 +27,13 @@ interface Props {
   readonly onBack: () => void;
   /** Opens one record; `order` is the shown rows' record ids, `found` whether Find filtered. */
   readonly onOpen: (recordId: string, order: readonly string[], found: boolean) => void;
+  /** Spec 18 R1: tools given the shown rows' record ids, in order. */
+  readonly actions?: (order: readonly string[]) => ReactNode;
 }
 
 export const ROW_PX = 36;
 
-export function Records({ formName, list, place, onPlace, onBack, onOpen }: Props) {
+export function Records({ formName, list, place, onPlace, onBack, onOpen, actions }: Props) {
   const [query, setQuery] = useState(place.query);
   const [sort, setSort] = useState(place.sort);
   const [scroll, setScroll] = useState(place.scroll);
@@ -97,6 +106,7 @@ export function Records({ formName, list, place, onPlace, onBack, onOpen }: Prop
         <p className="afl-records-count" role="status" aria-live="polite">
           {list ? count : 'Reading the records…'}
         </p>
+        {list && actions?.(shown.map((k) => rows[k]!.recordId))}
       </div>
       {list && (
         <div

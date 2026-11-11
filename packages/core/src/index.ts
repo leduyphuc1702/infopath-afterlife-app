@@ -93,6 +93,8 @@ export { embedded, safeSegment } from './legacy/attachment';
 export type { Embedded } from './legacy/attachment';
 export { RECORD_COLUMNS, plainText, recordTables } from './legacy/tables';
 export { recordList, viewFormats } from './legacy/list';
+export { ARCHIVE_CSP, archiveRecords } from './legacy/archive';
+export type { ArchiveOptions, ArchiveView, RecordArchive } from './legacy/archive';
 export type { ListColumn, ListKey, ListKind, ListRow, RecordList, ViewFormat } from './legacy/list';
 export type {
   Cell,

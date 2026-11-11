@@ -52,6 +52,18 @@ export type Req =
     }
   /** Spec 15 R3: one form's dossier, or a `.zip` of the Markdown of several. */
   | { readonly id: number; readonly type: 'documentation'; readonly templateId: string }
+  /** Spec 18: records as web pages; no `recordIds`: every record of the template. */
+  | {
+      readonly id: number;
+      readonly type: 'archive';
+      readonly templateId: string;
+      readonly views: readonly string[];
+      readonly recordIds?: readonly string[];
+      readonly now: string;
+      readonly css: string;
+    }
+  /** Spec 18 R8: read at once, not queued; the running archive stops and answers `cancelled`. */
+  | { readonly id: number; readonly type: 'cancel' }
   /** Spec 17 R2: the records of one template as a list, read in the Worker (R11). */
   | {
       readonly id: number;
@@ -202,6 +214,17 @@ export interface CsvRes {
   readonly text: string;
 }
 
+/** Spec 18: the finished archive; `bytes` is transferred. */
+export interface ArchivedRes {
+  readonly type: 'archived';
+  readonly fileName: string;
+  readonly bytes: ArrayBuffer;
+  readonly records: number;
+  readonly pages: number;
+  readonly files: number;
+  readonly unread: number;
+}
+
 /** Spec 09 R12.4: the finished export; `bytes` is transferred. */
 export interface ExportedRes {
   readonly type: 'exported';
@@ -287,6 +310,8 @@ export type ResBody =
   | FilledRes
   | FilledXmlRes
   | DocumentationRes
+  | ArchivedRes
+  | { readonly type: 'cancelled' }
   | RecordListRes;
 
 /**

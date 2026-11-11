@@ -25,6 +25,10 @@ async function handle(req: Req): Promise<ResBody> {
       return { type: 'csv', text: session.csv() };
     case 'exportRecords':
       return session.exportRecords(req.templateId, req.format, progress);
+    case 'archive':
+      return session.archive(req.templateId, req.views, req.recordIds, req.now, req.css, progress);
+    case 'cancel':
+      return { type: 'ready' };
     case 'recordList':
       return session.recordList(req.templateId, req.now);
     case 'documentation':
@@ -48,6 +52,11 @@ async function handle(req: Req): Promise<ResBody> {
 let queue = Promise.resolve();
 scope.onmessage = (e) => {
   const req = e.data;
+  // Spec 18 R8: a cancel is read now, while the archive it stops waits between records.
+  if (req.type === 'cancel') {
+    session.cancelRequested = true;
+    return;
+  }
   queue = queue.then(async () => {
     let body: ResBody;
     try {
@@ -56,7 +65,10 @@ scope.onmessage = (e) => {
       body = { type: 'failed', error: toWireError(err) };
     }
     // An export's or a download's bytes are transferred, not copied (R12.4, spec 04 R8.1).
-    const transfer = body.type === 'exported' || body.type === 'filledXml' ? [body.bytes] : [];
+    const transfer =
+      body.type === 'exported' || body.type === 'filledXml' || body.type === 'archived'
+        ? [body.bytes]
+        : [];
     scope.postMessage({ ...body, id: req.id }, transfer);
   });
 };

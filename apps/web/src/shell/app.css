@@ -687,3 +687,15 @@ code {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* Spec 18: the views to archive. */
+.afl-archive-views {
+  padding: var(--ds-space-075) var(--ds-space-150) 0;
+  color: var(--ds-text-subtle);
+}
+.afl-archive-view {
+  display: flex;
+  gap: var(--ds-space-100);
+  align-items: center;
+  padding: var(--ds-space-075) var(--ds-space-150);
+}
