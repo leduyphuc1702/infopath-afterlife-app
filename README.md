@@ -19,7 +19,11 @@ sample; once the app is hosted, add the address to its URL.
 | Print what a form does, for whoever takes it over | `#document` |
 | Decide which forms can move first: Triage, death certificates, waves | `#triage` |
 
-The converter to native Jira Service Management forms and the Forge app are not written yet.
+On the first screen each task is a card with an icon and a few words; the sentence above is the
+card's hover text. Explanations sit behind a help icon and show on hover or focus.
+
+The converter to native Jira Service Management forms and the Forge app are not part of this
+repository.
 
 Built spec-first in Kiro. MIT licence.
 
@@ -77,6 +81,11 @@ reviewer's axe-core 4.14 audit.
 others were measured by Kiro on `cffc527` plus the spec 28 round 2 changes (committed as
 `94ef2fc`), and were not run again for B8: Kiro hook tests 6, core 3,854 passed (3 skipped),
 browser 337, web 124. Bundle, from that run: page entry 91.4 of 100 KB, Worker 156.1 of 160 KB.
+
+After the reviewer's interface commit (see "What Kiro did not write") the reviewer ran every
+suite once more, on that commit: Kiro hook tests 6, core 3,854 passed (3 skipped), browser 337,
+web 124, end-to-end 181 (Kiro's 176 and the reviewer's five in `apps/web/e2e/simple.spec.ts`).
+Page entry 93.5 of 100 KB, Worker 156.1 of 160 KB.
 
 ## Status
 
@@ -189,8 +198,23 @@ Inside Kiro's commits, these lines are the reviewer's: the upstream LICENSE file
 keeper sample (in `4c13ec8`), one `.gitignore` line, and the P12 and P13 lines of
 `.kiro/steering/testing.md`.
 
-After `abd9299`, Kiro's last commit, one more commit is the reviewer's: it puts the copyright
-holder's name in `LICENSE` and adds this paragraph.
+After `abd9299`, Kiro's last commit, two more commits are the reviewer's. The first puts the
+copyright holder's name in `LICENSE`. The second, made by hand after the Kiro credits ran out,
+makes the first screen and the buttons simpler. None of its changes is Kiro's:
+
+| File | What the reviewer wrote |
+|---|---|
+| `apps/web/src/shell/Landing.tsx` | Rewritten: one line, a drop zone with one button, task cards. The samples list and the task links' handling are kept from Kiro's version |
+| `apps/web/src/shell/Help.tsx` | New: an explanation behind a help icon, shown on hover or focus |
+| `apps/web/src/shell/simple.css` | New: the icons (drawn by the reviewer), the help tip, the first screen's layout |
+| `apps/web/e2e/simple.spec.ts` | New: five end-to-end tests of the above |
+| `Header.tsx`, `PaperToolbar.tsx`, `App.tsx`, `ExportRecords.tsx`, `ArchiveMenu.tsx`, `ExportMenu.tsx`, `Documentation.tsx`, `main.tsx` | An icon on each button (`data-icon`), the words of an icon-only button kept for screen readers, one import |
+| `README.md`, `docs/accessibility.md` | The paragraphs that describe this commit |
+
+It departs from spec 21 on purpose in one place. Requirement 7 asks for two lead sentences; the
+first screen now has one line, and the rest of what those sentences said is behind its help
+icon. The spec's files are left as Kiro wrote them. What each screen does once a file is open
+is still Kiro's code.
 
 Everything under `samples/` is the reviewer's, made by a generator outside this repository.
 Kiro cannot write there.

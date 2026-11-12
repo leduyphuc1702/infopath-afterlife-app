@@ -28,12 +28,18 @@ export function Header({ onFiles, onSample, xray, fill, onTriage, onDocumentatio
       <h1>InfoPath Afterlife</h1>
       <div className="afl-header-actions">
         {onTriage && (
-          <button type="button" className="afl-button" onClick={onTriage}>
+          <button type="button" className="afl-button" data-icon="table" onClick={onTriage}>
             Triage
           </button>
         )}
-        <button type="button" className="afl-button" onClick={() => input.current?.click()}>
-          Open files
+        <button
+          type="button"
+          className="afl-button afl-icon-b"
+          data-icon="folder"
+          title="Open files"
+          onClick={() => input.current?.click()}
+        >
+          <span className="afl-hidden">Open files</span>
         </button>
         <input
           ref={input}
@@ -50,7 +56,9 @@ export function Header({ onFiles, onSample, xray, fill, onTriage, onDocumentatio
           }}
         />
         <details className="afl-menu" ref={menu.ref}>
-          <summary className="afl-button">Try a sample</summary>
+          <summary className="afl-button afl-icon-b" data-icon="flask" title="Try a sample">
+            <span className="afl-hidden">Try a sample</span>
+          </summary>
           <ul>
             {sampleList
               .filter((s) => !s.triageOnly)
@@ -73,14 +81,21 @@ export function Header({ onFiles, onSample, xray, fill, onTriage, onDocumentatio
           </ul>
         </details>
         {onDocumentation && (
-          <button type="button" className="afl-button" onClick={onDocumentation}>
-            Documentation
+          <button
+            type="button"
+            className="afl-button afl-icon-b"
+            data-icon="doc"
+            title="Documentation"
+            onClick={onDocumentation}
+          >
+            <span className="afl-hidden">Documentation</span>
           </button>
         )}
         {xray && (
           <button
             type="button"
             className="afl-button afl-toggle"
+            data-icon="xray"
             aria-pressed={xray.on}
             onClick={xray.toggle}
           >
@@ -92,6 +107,7 @@ export function Header({ onFiles, onSample, xray, fill, onTriage, onDocumentatio
             type="button"
             role="switch"
             className="afl-button afl-toggle afl-fill-switch"
+            data-icon="pencil"
             aria-checked={fill.on}
             aria-disabled={fill.unavailable !== undefined || undefined}
             {...(fill.unavailable !== undefined && {

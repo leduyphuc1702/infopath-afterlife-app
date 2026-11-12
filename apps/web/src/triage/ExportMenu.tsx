@@ -24,7 +24,9 @@ export function ExportMenu({ onCsv }: Props) {
   };
   return (
     <details className="afl-menu afl-export" ref={ref}>
-      <summary className="afl-button">Export plan</summary>
+      <summary className="afl-button" data-icon="download">
+        Export plan
+      </summary>
       <ul>
         <li>
           <button type="button" onClick={() => void csv()}>

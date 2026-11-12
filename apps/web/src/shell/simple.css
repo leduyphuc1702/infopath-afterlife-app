@@ -1,0 +1,316 @@
+/* A simpler first screen: icons on buttons, explanations behind a help icon, the landing page as
+   a drop zone and task cards. Atlassian tokens only, as in app.css (R9.3).
+   Not written by Kiro (README, "What Kiro did not write"). */
+
+/* Icons: line drawings made for this app on a 24 px grid, shown as a mask in the colour of the
+   text. An icon is a pseudo-element, so it adds no node and no text to the control it sits in. */
+[data-icon]::before {
+  content: '';
+  flex: none;
+  align-self: center;
+  width: 16px;
+  height: 16px;
+  background: currentColor;
+  -webkit-mask: var(--afl-i) center / contain no-repeat;
+  mask: var(--afl-i) center / contain no-repeat;
+}
+
+@media (forced-colors: active) {
+  [data-icon]::before {
+    background: ButtonText;
+    forced-color-adjust: none;
+  }
+}
+
+[data-icon='upload'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3'/%3E%3C/svg%3E");
+}
+[data-icon='folder'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3C/svg%3E");
+}
+[data-icon='flask'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3M7.5 15h9'/%3E%3C/svg%3E");
+}
+[data-icon='lock'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 11h12v9H6zM8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E");
+}
+[data-icon='help'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM9.5 9.5a2.5 2.5 0 1 1 3.6 2.2c-.7.4-1.1.9-1.1 1.6v.4M12 17h.01'/%3E%3C/svg%3E");
+}
+[data-icon='prev'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 5l-7 7 7 7'/%3E%3C/svg%3E");
+}
+[data-icon='next'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5l7 7-7 7'/%3E%3C/svg%3E");
+}
+[data-icon='list'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01'/%3E%3C/svg%3E");
+}
+[data-icon='download'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v12M7 11l5 5 5-5M4 20h16'/%3E%3C/svg%3E");
+}
+[data-icon='undo'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 5L3 10l5 5M3 10h11a5 5 0 0 1 0 10h-3'/%3E%3C/svg%3E");
+}
+[data-icon='redo'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 5l5 5-5 5M21 10H10a5 5 0 0 0 0 10h3'/%3E%3C/svg%3E");
+}
+[data-icon='doc'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6'/%3E%3C/svg%3E");
+}
+[data-icon='xray'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M8 12h8'/%3E%3C/svg%3E");
+}
+[data-icon='pencil'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20l1-5L16 4l4 4L9 19zM14 6l4 4'/%3E%3C/svg%3E");
+}
+[data-icon='eye'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z'/%3E%3C/svg%3E");
+}
+[data-icon='bolt'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 3L5 14h6l-1 7 8-11h-6z'/%3E%3C/svg%3E");
+}
+[data-icon='search'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4'/%3E%3C/svg%3E");
+}
+[data-icon='archive'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 5h16v4H4zM6 9v10h12V9M10 13h4'/%3E%3C/svg%3E");
+}
+[data-icon='print'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 9V4h10v5M7 17H5a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-2M7 14h10v6H7z'/%3E%3C/svg%3E");
+}
+[data-icon='waves'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 7h16M4 12h11M4 17h6'/%3E%3C/svg%3E");
+}
+[data-icon='table'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 5h16v14H4zM4 10h16M10 5v14'/%3E%3C/svg%3E");
+}
+[data-icon='bulb'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.6.6 1 1.3 1 2.5h6c0-1.2.4-1.9 1-2.5A6 6 0 0 0 12 3z'/%3E%3C/svg%3E");
+}
+
+/* A button that is its icon. Its name stays in the button, out of sight, and is its `title`. */
+.afl-icon-b {
+  position: relative;
+  padding: var(--ds-space-075);
+}
+
+.afl-menu summary.afl-icon-b::after {
+  margin-left: calc(-1 * var(--ds-space-050));
+  font-size: 12px;
+}
+
+/* The explanation hangs under the line that holds its icon, from that line's left edge, so it
+   never leaves the page at 390 px. */
+.afl-lead,
+.afl-drop,
+.afl-triage-all {
+  position: relative;
+}
+
+/* The last word and its help icon wrap together. */
+.afl-keep {
+  white-space: nowrap;
+}
+
+.afl-keep .afl-tip {
+  white-space: normal;
+}
+
+.afl-help {
+  display: inline-flex;
+  margin-left: var(--ds-space-075);
+  vertical-align: middle;
+}
+
+.afl-help-b {
+  display: inline-flex;
+  box-sizing: border-box;
+  /* WCAG 2.5.8: a target of 24 by 24 px. */
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--ds-text-subtlest);
+  cursor: help;
+}
+
+.afl-help-b:hover,
+.afl-help-b:focus-visible {
+  color: var(--ds-text);
+}
+
+.afl-tip {
+  position: absolute;
+  z-index: 20;
+  top: 100%;
+  left: 0;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: min(100%, 440px);
+  margin-top: var(--ds-space-050);
+  padding: var(--ds-space-100) var(--ds-space-150);
+  border-radius: 4px;
+  background: var(--ds-background-neutral-bold);
+  box-shadow: var(--ds-shadow-overlay);
+  color: var(--ds-text-inverse);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: left;
+}
+
+.afl-tip[hidden] {
+  display: none;
+}
+
+/* The landing page. */
+.afl-landing {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.afl-lead {
+  margin: var(--ds-space-300) 0 var(--ds-space-200);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
+  letter-spacing: -0.01em;
+}
+
+.afl-dropzone {
+  display: grid;
+  gap: var(--ds-space-150);
+  justify-items: center;
+  margin: 0 0 var(--ds-space-400);
+  padding: var(--ds-space-400) var(--ds-space-300);
+  border: 2px dashed var(--ds-border);
+  border-radius: 12px;
+  background: var(--ds-surface-sunken);
+  text-align: center;
+}
+
+.afl-dropzone::before {
+  width: 32px;
+  height: 32px;
+  background: var(--ds-icon-brand);
+}
+
+.afl-dropzone .afl-drop {
+  margin: 0;
+  color: var(--ds-text);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+/* Above its line, so it never covers the button below. */
+.afl-dropzone .afl-tip {
+  top: auto;
+  right: 0;
+  bottom: 100%;
+  margin: 0 auto var(--ds-space-050);
+}
+
+.afl-dropzone .afl-note {
+  display: flex;
+  gap: var(--ds-space-075);
+  margin: 0;
+  font-size: 12px;
+  text-align: start;
+}
+
+/* Beside the first line when the sentence wraps (390 px). */
+.afl-dropzone .afl-note::before {
+  align-self: flex-start;
+  margin-top: var(--ds-space-025, 2px);
+}
+
+.afl-tasks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-100);
+  margin: 0 0 var(--ds-space-400);
+  padding: 0;
+  list-style: none;
+  line-height: 20px;
+}
+
+.afl-tasks li {
+  flex: 1 1 196px;
+}
+
+.afl-tasks a {
+  display: flex;
+  box-sizing: border-box;
+  gap: var(--ds-space-150);
+  align-items: center;
+  height: 100%;
+  padding: var(--ds-space-150);
+  border: 1px solid var(--ds-border);
+  border-radius: 8px;
+  background: var(--ds-surface-raised);
+  color: var(--ds-text);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.afl-tasks a:hover {
+  border-color: var(--ds-border-brand);
+  background: var(--ds-surface-raised-hovered);
+}
+
+.afl-tasks a::before {
+  width: 20px;
+  height: 20px;
+  background: var(--ds-icon-brand);
+}
+
+.afl-landing .afl-samples {
+  margin-bottom: var(--ds-space-150);
+}
+
+/* The line where a task lands. */
+/* The icon sits in the padding, so the sentence and "Close tip" wrap as they did. */
+.afl-hint {
+  position: relative;
+  padding-left: calc(var(--ds-space-150) + 16px + var(--ds-space-100));
+  border-radius: 4px;
+}
+
+.afl-hint::before {
+  position: absolute;
+  top: var(--ds-space-150);
+  left: var(--ds-space-150);
+  background: var(--ds-icon-information);
+}
+
+/* The form's documentation: a column is as wide as its longest word, so "Required" stays whole.
+   A long path still breaks anywhere (docs.css). */
+@media screen and (min-width: 40rem) {
+  .afl-doc-fields th,
+  .afl-doc-fields td {
+    overflow-wrap: break-word;
+  }
+}
+
+/* The documentation's tools: with icons the two buttons are wider, so at 320 px they wrap
+   instead of squeezing "Back". */
+.afl-doc-tools {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.afl-doc-tools .afl-link {
+  flex: none;
+}
+
+@media print {
+  .afl-help {
+    display: none;
+  }
+}

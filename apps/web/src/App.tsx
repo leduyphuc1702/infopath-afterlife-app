@@ -973,27 +973,34 @@ export function App() {
             <div className="afl-fill-tools" role="toolbar" aria-label="Fill">
               <button
                 type="button"
-                className="afl-button"
+                className="afl-button afl-icon-b"
+                data-icon="undo"
                 aria-label={`Undo (${MOD}+Z)`}
                 aria-keyshortcuts={`${MOD === 'Cmd' ? 'Meta' : 'Control'}+Z`}
                 title={`Undo (${MOD}+Z)`}
                 disabled={!fill.res || fill.res.undo === 0}
                 onClick={() => fillCommand({ kind: 'undo' })}
               >
-                Undo
+                <span className="afl-hidden">Undo</span>
               </button>
               <button
                 type="button"
-                className="afl-button"
+                className="afl-button afl-icon-b"
+                data-icon="redo"
                 aria-label={`Redo (Shift+${MOD}+Z)`}
                 aria-keyshortcuts={`Shift+${MOD === 'Cmd' ? 'Meta' : 'Control'}+Z`}
                 title={`Redo (Shift+${MOD}+Z)`}
                 disabled={!fill.res || fill.res.redo === 0}
                 onClick={() => fillCommand({ kind: 'redo' })}
               >
-                Redo
+                <span className="afl-hidden">Redo</span>
               </button>
-              <button type="button" className="afl-button" onClick={() => void downloadXml()}>
+              <button
+                type="button"
+                className="afl-button"
+                data-icon="download"
+                onClick={() => void downloadXml()}
+              >
                 Download XML
               </button>
             </div>
@@ -1005,7 +1012,7 @@ export function App() {
         </div>
         <ErrorBanner problems={failures} />
         {hint !== undefined && (
-          <p className="afl-hint">
+          <p className="afl-hint" data-icon="bulb">
             <span>{hint}</span>
             <button
               type="button"
@@ -1047,6 +1054,7 @@ export function App() {
                   <button
                     type="button"
                     className="afl-button"
+                    data-icon="doc"
                     onClick={() => void documentationZip()}
                   >
                     Download documentation

@@ -62,7 +62,7 @@ export function ArchiveMenu({ views, count, busy, onArchive }: Props) {
   const choice = useViewChoice(views);
   return (
     <details className="afl-menu afl-archive" ref={ref}>
-      <summary className="afl-button" aria-disabled={busy || undefined}>
+      <summary className="afl-button" data-icon="archive" aria-disabled={busy || undefined}>
         Archive as web pages
       </summary>
       <ul>

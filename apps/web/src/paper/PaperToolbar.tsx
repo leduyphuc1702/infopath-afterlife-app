@@ -61,25 +61,29 @@ export function PaperToolbar({
       </label>
       <button
         type="button"
-        className="afl-button"
+        className="afl-button afl-icon-b"
+        data-icon="prev"
+        title="Previous"
         disabled={prev === undefined}
         onClick={() => prev !== undefined && onIndex(prev)}
       >
-        Previous
+        <span className="afl-hidden">Previous</span>
       </button>
       <span aria-live="polite" className="afl-position">
         {position}
       </span>
       <button
         type="button"
-        className="afl-button"
+        className="afl-button afl-icon-b"
+        data-icon="next"
+        title="Next"
         disabled={next === undefined}
         onClick={() => next !== undefined && onIndex(next)}
       >
-        Next
+        <span className="afl-hidden">Next</span>
       </button>
       {onRecords && (
-        <button type="button" className="afl-button" onClick={onRecords}>
+        <button type="button" className="afl-button" data-icon="list" onClick={onRecords}>
           Records
         </button>
       )}

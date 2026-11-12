@@ -63,3 +63,28 @@ scheme and at 320 px wide, then Fill on each of the nine bundled samples.
   no `aria-label` without a role, each "Insert …" name holding its words on screen, every image
   with an `alt`, every control named. axe-core itself was not run again in this repository (it is
   not a dependency).
+
+## After the reviewer's interface commit
+
+The reviewer's commit after `0c1c792` changes the first screen and puts icons on the buttons
+(README, "What Kiro did not write"). The reviewer checked it by hand and with axe-core 4.14.0,
+outside this repository, on the built app. Kiro did not check it.
+
+- **axe-core:** 66 runs with the WCAG 2.0, 2.1 and 2.2 level A and AA rules, and no violation:
+  the first screen (plain, and with each of its three explanations open), Read, Rules, Fill,
+  Find, Keep, Documentation and Triage, each in the light and the dark scheme at 1280, 390 and
+  320 px wide. The first run found one: at 320 px the wider buttons squeezed the
+  Documentation's "Back" to 8 px (`target-size`). The tools now wrap, and
+  `e2e/simple.spec.ts` checks it.
+- **1.4.13 Content on hover or focus:** an explanation opens on hover or focus of its help
+  icon, stays open while the pointer is on it, closes with Escape without moving focus, and is
+  the icon's description (`aria-describedby`). `e2e/simple.spec.ts` checks each of these.
+- **2.5.8 Target size:** the help icon is 24 by 24 px.
+- **4.1.2 Name, role, value:** a button that shows only an icon keeps its words inside it,
+  hidden from sight, so its name is unchanged; the same words are its hover text.
+- **1.4.10 Reflow:** no sideways scroll on any of the 66 runs; an open explanation stays inside
+  the screen at 390 and 320 px.
+- **Forced colours:** the icons are drawn in the button's text colour. Emulated, looked at on
+  the first screen only.
+- **Not checked:** a screen reader; the icons under Windows' contrast themes; Fill on each of the
+  nine samples was not run through axe-core again.

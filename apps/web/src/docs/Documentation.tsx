@@ -40,10 +40,15 @@ export function Documentation({ dossier: d, onBack, onDownload }: Props) {
         <button type="button" className="afl-link" onClick={onBack}>
           Back
         </button>
-        <button type="button" className="afl-button" onClick={onDownload}>
+        <button type="button" className="afl-button" data-icon="download" onClick={onDownload}>
           Download Markdown
         </button>
-        <button type="button" className="afl-button" onClick={() => window.print()}>
+        <button
+          type="button"
+          className="afl-button"
+          data-icon="print"
+          onClick={() => window.print()}
+        >
           Print
         </button>
       </div>

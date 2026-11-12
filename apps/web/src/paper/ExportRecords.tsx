@@ -29,7 +29,7 @@ export function ExportRecords({ onExport, busy, views, onArchive, startOpen }: P
   };
   return (
     <details className="afl-menu afl-export-records" ref={ref}>
-      <summary className="afl-button" aria-disabled={busy || undefined}>
+      <summary className="afl-button" data-icon="download" aria-disabled={busy || undefined}>
         Export records
       </summary>
       <ul>
