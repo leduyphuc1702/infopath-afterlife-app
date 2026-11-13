@@ -88,3 +88,8 @@ outside this repository, on the built app. Kiro did not check it.
   the first screen only.
 - **Not checked:** a screen reader; the icons under Windows' contrast themes; Fill on each of the
   nine samples was not run through axe-core again.
+- **Missed by all of the above:** the help tip's class name was the one Kiro's Triage table
+  already used for the Wave column's explanation, and that header was drawn as a dark box, 30 px
+  wide. Its contrast was fine, so axe-core passed it. The reviewer's next commit renames the
+  class; `e2e/simple.spec.ts` checks the header, and Triage was run through axe-core again in
+  both schemes at the three widths.

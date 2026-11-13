@@ -44,7 +44,7 @@ export function Help({ label, children }: Props) {
           }
         }}
       />
-      <span role="tooltip" id={id} className="afl-tip" hidden={!open}>
+      <span role="tooltip" id={id} className="afl-help-tip" hidden={!open}>
         {children}
       </span>
     </span>

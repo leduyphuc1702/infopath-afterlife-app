@@ -22,6 +22,21 @@ test('an explanation stays behind its help icon until it is asked for', async ({
   await page.keyboard.press('Escape');
   await expect(tip).toBeHidden();
   await expect(help).toBeFocused();
+
+  // Triage has its own explanation, on the Wave column. The help icon's styles leave it alone:
+  // the header is the plain word, wide enough to read, and its rules show on hover.
+  await page.goto('./#triage');
+  const header = page.getByRole('columnheader', { name: 'Wave' });
+  const wave = header.getByRole('button', { name: 'Wave' });
+  await expect(wave).toBeVisible();
+  await expect(wave.locator('..')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+  const cell = await header.boundingBox();
+  const word = await wave.boundingBox();
+  expect(word!.x + word!.width).toBeLessThanOrEqual(cell!.x + cell!.width);
+  const rules = page.locator('#afl-wave-rules');
+  await expect(rules).toBeHidden();
+  await wave.hover();
+  await expect(rules).toBeVisible();
 });
 
 test('the first screen asks for one thing and reads nothing aloud twice', async ({ page }) => {

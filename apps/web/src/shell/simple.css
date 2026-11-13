@@ -113,7 +113,7 @@
   white-space: nowrap;
 }
 
-.afl-keep .afl-tip {
+.afl-keep .afl-help-tip {
   white-space: normal;
 }
 
@@ -144,7 +144,7 @@
   color: var(--ds-text);
 }
 
-.afl-tip {
+.afl-help-tip {
   position: absolute;
   z-index: 20;
   top: 100%;
@@ -164,7 +164,7 @@
   text-align: left;
 }
 
-.afl-tip[hidden] {
+.afl-help-tip[hidden] {
   display: none;
 }
 
@@ -209,7 +209,7 @@
 }
 
 /* Above its line, so it never covers the button below. */
-.afl-dropzone .afl-tip {
+.afl-dropzone .afl-help-tip {
   top: auto;
   right: 0;
   bottom: 100%;
