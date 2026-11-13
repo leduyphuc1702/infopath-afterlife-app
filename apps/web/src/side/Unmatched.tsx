@@ -6,11 +6,14 @@ export function Unmatched({
   records,
   ignored,
   focus,
+  onRemove,
 }: {
   readonly records: readonly RecordSummary[];
   readonly ignored: readonly string[];
   /** Spec 22 F2: on the landing page nothing else changed, so the first list takes focus. */
   readonly focus?: boolean;
+  /** On the library: takes these records out of it. */
+  readonly onRemove?: (recordIds: readonly string[]) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const key = `${records.map((r) => r.recordId).join()}|${ignored.join()}`;
@@ -24,6 +27,16 @@ export function Unmatched({
           <h2 id="afl-unmatched" tabIndex={-1}>
             Records not matched ({records.length})
           </h2>
+          {onRemove && (
+            <button
+              type="button"
+              className="afl-button afl-unmatched-remove"
+              data-icon="trash"
+              onClick={() => onRemove(records.map((r) => r.recordId))}
+            >
+              Remove {records.length === 1 ? 'it' : 'them'} from the library
+            </button>
+          )}
           <ul className="afl-list">
             {records.map((r) => (
               <li key={r.recordId}>

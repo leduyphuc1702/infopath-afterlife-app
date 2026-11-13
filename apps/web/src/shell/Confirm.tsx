@@ -63,7 +63,7 @@ export function useConfirm(): [JSX.Element, (q: Question) => Promise<boolean>] {
 
 export const DISCARD = {
   title: 'Discard your changes?',
-  body: "You changed this form and haven't downloaded the XML. Nothing is saved in the viewer, so the changes will be lost.",
+  body: "You changed this form and haven't saved it. The changes will be lost.",
   yes: 'Discard changes',
   no: 'Keep filling',
 } as const;

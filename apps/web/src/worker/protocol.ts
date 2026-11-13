@@ -106,6 +106,16 @@ export type Req =
     }
   /** Spec 04 R8.1: the filled record's bytes. */
   | { readonly id: number; readonly type: 'fillDownload' }
+  /** The library (not written by Kiro): what the last visit kept, files leaving, a record saved. */
+  | { readonly id: number; readonly type: 'restore' }
+  | {
+      readonly id: number;
+      readonly type: 'remove';
+      readonly templateIds: readonly string[];
+      readonly recordIds: readonly string[];
+    }
+  | { readonly id: number; readonly type: 'fillSave'; readonly now: string }
+  | { readonly id: number; readonly type: 'backup'; readonly now: string }
   | { readonly id: number; readonly type: 'fillClose' }
   | {
       readonly id: number;
@@ -162,6 +172,9 @@ export interface TemplateSummary {
   readonly templateId: string;
   readonly fileName: string;
   readonly ir: FormIR;
+  /** The library: when the file was added, in milliseconds since 1970; a bundled sample. */
+  readonly at?: number;
+  readonly sample?: boolean;
 }
 
 export type WireMatch =
@@ -177,6 +190,8 @@ export interface RecordSummary {
   readonly recordId: string;
   readonly fileName: string;
   readonly match: WireMatch;
+  /** The library: when the record was added or last saved, in milliseconds since 1970. */
+  readonly at?: number;
 }
 
 export interface FileFailure {
@@ -202,6 +217,8 @@ export interface SessionRes {
   readonly ignored: readonly string[];
   /** Spec 12: every open template triaged, with the open records (design §6). */
   readonly triage: TriageResult;
+  /** The library: the files are kept in this browser between visits. */
+  readonly kept?: boolean;
 }
 export interface RenderedRes {
   readonly type: 'rendered';
@@ -319,8 +336,20 @@ export interface FilledXmlRes {
   readonly invalid: number;
 }
 
+/** The library: the record Fill saved, and the session with it. */
+export interface SavedRes {
+  readonly type: 'saved';
+  readonly recordId: string;
+  readonly fileName: string;
+  readonly invalid: number;
+  /** A new record; false when it replaced the record it was opened from, or was kept already. */
+  readonly added: boolean;
+  readonly session: SessionRes;
+}
+
 export type ResBody =
   | SessionRes
+  | SavedRes
   | RenderedRes
   | FailedRes
   | ReadyRes

@@ -48,6 +48,7 @@ import type {
   FilledRes,
   PaperFocus,
   FilledXmlRes,
+  SavedRes,
   FileFailure,
   InputFile,
   Progress,
@@ -60,8 +61,30 @@ import type {
 } from './protocol';
 import { sampleName } from '../shell/sample-names';
 
+/**
+ * The library between visits: every file the session holds, by its SHA-256. Not written by Kiro
+ * (README, "What Kiro did not write").
+ */
+export interface ShelfFile {
+  readonly hash: string;
+  /** Its template or record id, the same in every session that reads it. */
+  readonly id: string;
+  readonly name: string;
+  readonly bytes: Uint8Array;
+  readonly sample?: string;
+  /** When it was added, or last saved: milliseconds since 1970. */
+  readonly at: number;
+}
+export interface Shelf {
+  all(): Promise<ShelfFile[]>;
+  put(files: readonly ShelfFile[]): Promise<void>;
+  remove(hashes: readonly string[]): Promise<void>;
+}
+
 interface Template {
   readonly summary: TemplateSummary;
+  readonly hash: string;
+  readonly bytes: Uint8Array;
   readonly parsed: ParsedTemplate;
   readonly views: Map<string, Promise<PreparedView>>;
   /** Set for a bundled sample (spec 12): Triage shows `sampleName(sample)`. */
@@ -70,6 +93,8 @@ interface Template {
 interface StoredRecord {
   readonly recordId: string;
   readonly fileName: string;
+  readonly hash: string;
+  readonly at: number;
   readonly bytes: Uint8Array;
   /** Spec 12 R6.2: what its first 4 KB say about its template. */
   readonly evidence: RecordEvidence;
@@ -119,7 +144,6 @@ export class Session {
   private readonly templates: Template[] = [];
   private readonly records: StoredRecord[] = [];
   private readonly failures: FileFailure[] = [];
-  private next = 1;
   /** Every file this session took in, by SHA-256: the template it became, if it did. */
   private readonly seen = new Map<string, { readonly templateId?: string }>();
 
@@ -128,7 +152,9 @@ export class Session {
   private fillState:
     | {
         readonly template: Template;
-        readonly fileName: string;
+        /** The record being changed; none while the empty form has not been saved. */
+        recordId?: string;
+        fileName: string;
         readonly session: FillSession;
         /** Spec 14 B9: the record as last downloaded, or as opened; dirty is any difference. */
         saved: string;
@@ -141,6 +167,142 @@ export class Session {
         readonly history: History<Step>;
       }
     | undefined;
+
+  /** Whether the library is kept between visits: a shelf was given and has not failed. */
+  private keeping: boolean;
+  constructor(private readonly shelf?: Shelf) {
+    this.keeping = shelf !== undefined;
+  }
+
+  private async keep(files: readonly ShelfFile[]): Promise<void> {
+    if (!this.keeping || files.length === 0) return;
+    try {
+      await this.shelf!.put(files);
+    } catch {
+      this.keeping = false;
+    }
+  }
+
+  private async unkeep(hashes: readonly string[]): Promise<void> {
+    if (!this.keeping || hashes.length === 0) return;
+    try {
+      await this.shelf!.remove(hashes);
+    } catch {
+      this.keeping = false;
+    }
+  }
+
+  /** An id from the file's own bytes, so a Worker started again gives the page the ids it has. */
+  private idFor(kind: 't' | 'r', hash: string): string {
+    const taken = (id: string) =>
+      this.templates.some((t) => t.summary.templateId === id) ||
+      this.records.some((r) => r.recordId === id);
+    const base = kind + hash.slice(0, 12);
+    let id = base;
+    for (let n = 2; taken(id); n++) id = `${base}-${n}`;
+    return id;
+  }
+
+  private async take(f: ShelfFile): Promise<void> {
+    if (extOf(f.name) === 'xsn') this.seen.set(f.hash, { templateId: await this.addTemplate(f) });
+    else {
+      this.addRecord(f);
+      this.seen.set(f.hash, {});
+    }
+  }
+
+  /** What an earlier visit left on the shelf, oldest first. A file that no longer reads is named. */
+  async restore(progress?: Progress): Promise<SessionRes> {
+    let files: ShelfFile[] = [];
+    try {
+      files = (await this.shelf?.all()) ?? [];
+    } catch {
+      this.keeping = false;
+    }
+    files.sort((a, b) => a.at - b.at || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+    for (const [i, f] of files.entries()) {
+      if (this.seen.has(f.hash)) continue;
+      progress?.({ type: 'progress', index: i + 1, total: files.length, fileName: f.name });
+      try {
+        await this.take(f);
+      } catch (e) {
+        this.failures.push({ fileName: f.name, error: toWireError(e) });
+        this.seen.set(f.hash, {});
+      }
+    }
+    return { ...this.summary(), duplicates: [], ignored: [] };
+  }
+
+  /** Templates leave with the records matched to them; the shelf forgets them too. */
+  async remove(templateIds: readonly string[], recordIds: readonly string[]): Promise<SessionRes> {
+    const templates = new Set(templateIds);
+    const records = new Set(recordIds);
+    for (const r of this.summary().records)
+      if (r.match.kind !== 'unmatched' && templates.has(r.match.templateId))
+        records.add(r.recordId);
+    const hashes: string[] = [];
+    const drop = <T extends { readonly hash: string }>(list: T[], gone: (x: T) => boolean) => {
+      for (let i = list.length - 1; i >= 0; i--)
+        if (gone(list[i]!)) hashes.push(list.splice(i, 1)[0]!.hash);
+    };
+    drop(this.templates, (t) => templates.has(t.summary.templateId));
+    drop(this.records, (r) => records.has(r.recordId));
+    for (const h of hashes) this.seen.delete(h);
+    this.lists.clear();
+    const f = this.fillState;
+    if (
+      f &&
+      (templates.has(f.template.summary.templateId) ||
+        (f.recordId !== undefined && records.has(f.recordId)))
+    )
+      this.fillState = undefined;
+    await this.unkeep(hashes);
+    return { ...this.summary(), duplicates: [], ignored: [] };
+  }
+
+  /** Every file the session holds as one zip: a folder per form, the form and its records. */
+  async backup(now: string): Promise<ExportedRes> {
+    const folder = new Map(
+      this.templates.map((t) => [t.summary.templateId, t.summary.fileName.replace(/\.xsn$/i, '')]),
+    );
+    const used = new Set<string>();
+    const path = (dir: string, name: string) => {
+      const dot = name.lastIndexOf('.');
+      let out = `${dir}/${name}`;
+      for (let n = 2; used.has(out.toLowerCase()); n++)
+        out = `${dir}/${name.slice(0, dot)}-${n}${name.slice(dot)}`;
+      used.add(out.toLowerCase());
+      return out;
+    };
+    const matches = this.summary().records;
+    const bytes = await writeZip(
+      [
+        ...this.templates.map((t) => ({
+          name: path(folder.get(t.summary.templateId)!, t.summary.fileName),
+          bytes: t.bytes,
+        })),
+        ...this.records.map((r, i) => {
+          const m = matches[i]!.match;
+          return {
+            name: path(
+              m.kind === 'unmatched' ? 'records-without-a-form' : folder.get(m.templateId)!,
+              r.fileName,
+            ),
+            bytes: r.bytes,
+          };
+        }),
+      ],
+      { date: new Date() },
+    );
+    return {
+      type: 'exported',
+      fileName: `infopath-afterlife-library-${now.slice(0, 10)}.zip`,
+      bytes: bytes.buffer,
+      records: this.records.length,
+      files: this.templates.length,
+      unread: 0,
+    };
+  }
 
   /** The files to read: `.zip` files opened (folders walked, nested zips not), in order. */
   private items(files: readonly InputFile[], ignored: string[]): Item[] {
@@ -178,6 +340,7 @@ export class Session {
   async open(files: readonly InputFile[], progress?: Progress): Promise<SessionRes> {
     const duplicates: Duplicate[] = [];
     const ignored: string[] = [];
+    const fresh: ShelfFile[] = [];
     const items = this.items(files, ignored);
     for (const [i, f] of items.entries()) {
       progress?.({ type: 'progress', index: i + 1, total: items.length, fileName: f.name });
@@ -196,17 +359,25 @@ export class Session {
         duplicates.push({ fileName: f.name, ...seen });
         continue;
       }
+      const file: ShelfFile = {
+        hash,
+        id: this.idFor(ext === 'xsn' ? 't' : 'r', hash),
+        name: f.name,
+        // Its own bytes: an entry read out of a .zip may be a view of the whole .zip.
+        bytes: bytes.byteLength === bytes.buffer.byteLength ? bytes : bytes.slice(),
+        at: Date.now(),
+        ...(f.sample !== undefined && { sample: f.sample }),
+      };
       try {
-        if (ext === 'xsn') {
-          const templateId = await this.addTemplate(f.name, bytes, f.sample);
-          this.seen.set(hash, { templateId });
-        } else this.addRecord(f.name, bytes);
+        await this.take(file);
+        fresh.push(file);
       } catch (e) {
         this.failures.push({ fileName: f.name, error: toWireError(e) });
       }
       // A failed file is kept once too, as its failure.
       if (!this.seen.has(hash)) this.seen.set(hash, {});
     }
+    await this.keep(fresh);
     return { ...this.summary(), duplicates, ignored };
   }
 
@@ -397,12 +568,26 @@ export class Session {
     };
   }
 
-  private async addTemplate(fileName: string, bytes: Uint8Array, sample?: string): Promise<string> {
+  private async addTemplate({
+    id: templateId,
+    name,
+    bytes,
+    hash,
+    at,
+    sample,
+  }: ShelfFile): Promise<string> {
     const parsed = await parseXsn(bytes);
     const ir: FormIR = buildFormIR(parsed);
-    const templateId = `t${this.next++}`;
     this.templates.push({
-      summary: { templateId, fileName, ir },
+      summary: {
+        templateId,
+        fileName: name,
+        ir,
+        at,
+        ...(sample !== undefined && { sample: true }),
+      },
+      hash,
+      bytes,
       parsed,
       views: new Map(),
       ...(sample !== undefined && { sample }),
@@ -411,7 +596,7 @@ export class Session {
     return templateId;
   }
 
-  private addRecord(fileName: string, bytes: Uint8Array): void {
+  private addRecord({ id: recordId, name: fileName, bytes, hash, at }: ShelfFile): string {
     if (bytes.byteLength > DEFAULT_LIMITS.xmlBytes)
       throw new AfterlifeError('LIMIT_EXCEEDED', {
         limit: 'xmlBytes',
@@ -419,12 +604,15 @@ export class Session {
         observed: bytes.byteLength,
       });
     this.records.push({
-      recordId: `r${this.next++}`,
+      recordId,
       fileName,
+      hash,
+      at,
       bytes,
       evidence: recordEvidence(fileName, bytes),
     });
     this.records.sort(byName);
+    return recordId;
   }
 
   /** Every record is matched again, so a template opened later picks up earlier records. */
@@ -443,7 +631,7 @@ export class Session {
           : m.kind === 'otherVersion'
             ? { kind: 'otherVersion', templateId: id(m.template), recordVersion: m.recordVersion }
             : m;
-      return { recordId: r.recordId, fileName: r.fileName, match };
+      return { recordId: r.recordId, fileName: r.fileName, match, at: r.at };
     });
     this.last = this.triage(records);
     return {
@@ -454,6 +642,7 @@ export class Session {
       duplicates: [],
       ignored: [],
       triage: this.last,
+      kept: this.keeping,
     };
   }
 
@@ -572,6 +761,7 @@ export class Session {
     const base = t.summary.fileName.replace(/\.xsn$/i, '');
     this.fillState = {
       template: t,
+      ...(record && { recordId: record.recordId }),
       fileName: record?.fileName ?? `${base}-new.xml`,
       session,
       saved: session.xml(),
@@ -652,21 +842,80 @@ export class Session {
   fillDownload(): FilledXmlRes {
     const f = this.fillState;
     if (!f) throw new AppError('FILL_STATE', { reason: 'closed' });
-    const now = f.session.xml();
-    const bytes =
-      f.original?.xml === now
-        ? f.original.bytes.slice()
-        : new TextEncoder().encode(
-            // Spec 24 W3: a template without a form ID: the record says where it was published.
-            `<?xml version="1.0" encoding="UTF-8"?>\n${downloadedXml(now.replace(/^<\?xml[^>]*\?>\s*/, ''), f.template.summary.ir.meta.publishUrl)}`,
-          );
-    f.saved = now;
+    const bytes = this.fillBytes(f);
+    f.saved = f.session.xml();
     return {
       type: 'filledXml',
       fileName: f.fileName,
       bytes: bytes.buffer,
       invalid: f.session.invalid().length,
     };
+  }
+
+  private fillBytes(f: NonNullable<Session['fillState']>): Uint8Array<ArrayBuffer> {
+    const now = f.session.xml();
+    return f.original?.xml === now
+      ? f.original.bytes.slice()
+      : new TextEncoder().encode(
+          // Spec 24 W3: a template without a form ID: the record says where it was published.
+          `<?xml version="1.0" encoding="UTF-8"?>\n${downloadedXml(now.replace(/^<\?xml[^>]*\?>\s*/, ''), f.template.summary.ir.meta.publishUrl)}`,
+        );
+  }
+
+  /**
+   * The record as Download XML writes it, kept in the library: over the record it was opened
+   * from, or as a new record named for the form and the time. Bytes the library holds already
+   * are not kept twice; the answer names the record that has them.
+   */
+  async fillSave(now: string): Promise<SavedRes> {
+    const f = this.fillState;
+    if (!f) throw new AppError('FILL_STATE', { reason: 'closed' });
+    const bytes = this.fillBytes(f);
+    const hash = await sha256(bytes);
+    const invalid = f.session.invalid().length;
+    const answer = (recordId: string, fileName: string, added: boolean): SavedRes => {
+      f.saved = f.session.xml();
+      f.recordId = recordId;
+      f.fileName = fileName;
+      return {
+        type: 'saved',
+        recordId,
+        fileName,
+        invalid,
+        added,
+        session: { ...this.summary(), duplicates: [], ignored: [] },
+      };
+    };
+    const twin = this.records.find((r) => r.hash === hash);
+    if (twin) return answer(twin.recordId, twin.fileName, false);
+    const at = Date.now();
+    const i = this.records.findIndex((r) => r.recordId === f.recordId);
+    if (i >= 0) {
+      const old = this.records[i]!;
+      this.seen.delete(old.hash);
+      await this.unkeep([old.hash]);
+      this.records[i] = {
+        recordId: old.recordId,
+        fileName: old.fileName,
+        hash,
+        at,
+        bytes,
+        evidence: recordEvidence(old.fileName, bytes),
+      };
+      this.seen.set(hash, {});
+      this.lists.clear();
+      await this.keep([{ hash, id: old.recordId, name: old.fileName, bytes, at }]);
+      return answer(old.recordId, old.fileName, false);
+    }
+    const base = `${f.template.summary.fileName.replace(/\.xsn$/i, '')}-${now.slice(0, 19).replace('T', '-').replaceAll(':', '')}`;
+    const taken = new Set(this.records.map((r) => r.fileName.toLowerCase()));
+    let name = `${base}.xml`;
+    for (let n = 2; taken.has(name.toLowerCase()); n++) name = `${base}-${n}.xml`;
+    const file: ShelfFile = { hash, id: this.idFor('r', hash), name, bytes, at };
+    const recordId = this.addRecord(file);
+    this.seen.set(hash, {});
+    await this.keep([file]);
+    return answer(recordId, name, true);
   }
 
   fillClose(): void {

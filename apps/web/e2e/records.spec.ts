@@ -137,7 +137,11 @@ test('R11, R12: 30 records and 5,000 generated ones; few rows drawn; values stay
     .click();
   const small = await measure(page, 30, 'kenji', 'form 02, 30 records');
 
+  // The sample is in the library now; the second measure starts from an empty one.
   await page.goto('./');
+  await page.getByRole('button', { name: 'Remove the 1 sample form' }).click();
+  await page.getByRole('button', { name: 'Remove', exact: true }).click();
+  await expect(page.locator('.afl-dropzone')).toBeVisible();
   const [one] = recordPaths('02-expense-report', 1);
   const base = bytes(one!).toString('utf8');
   const gen = (i: number) => ({

@@ -24,6 +24,8 @@ export class WorkerClient {
   private nextId = 1;
   private readonly pending = new Map<number, Pending>();
   private readonly replay: Replay[] = [];
+  /** The library is kept in this browser: a restarted Worker reads it from there. */
+  private kept = false;
 
   constructor(
     private readonly create: () => Worker = () =>
@@ -83,7 +85,27 @@ export class WorkerClient {
   private async restart(): Promise<void> {
     this.worker.terminate();
     this.worker = this.start();
+    if (this.kept) return void (await this.send({ type: 'restore' }));
     for (const r of this.replay) await (r.type === 'open' ? this.sendFiles(r.files) : this.send(r));
+  }
+
+  /** The library: the files an earlier visit kept in this browser. */
+  async restore(progress?: Progress): Promise<ResBody> {
+    const res = await this.send({ type: 'restore' }, [], progress);
+    this.kept = res.type === 'session' && res.kept === true;
+    return res;
+  }
+
+  remove(templateIds: readonly string[], recordIds: readonly string[]): Promise<ResBody> {
+    return this.send({ type: 'remove', templateIds, recordIds });
+  }
+
+  fillSave(now: string): Promise<ResBody> {
+    return this.send({ type: 'fillSave', now });
+  }
+
+  backup(now: string): Promise<ResBody> {
+    return this.send({ type: 'backup', now });
   }
 
   private async sendFiles(files: readonly File[], progress?: Progress): Promise<ResBody> {

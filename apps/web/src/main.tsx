@@ -5,6 +5,7 @@ import { startTheme } from './shell/theme';
 import './shell/app.css';
 import './shell/simple.css';
 import './shell/saas.css';
+import './shell/library.css';
 
 startTheme();
 createRoot(document.getElementById('root')!).render(

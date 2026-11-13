@@ -1,5 +1,4 @@
-/* A simpler first screen: icons on buttons, explanations behind a help icon, the landing page as
-   a drop zone and task cards. Atlassian tokens only, as in app.css (R9.3).
+/* Icons on buttons and explanations behind a help icon. The first screen is library.css. Atlassian tokens only, as in app.css (R9.3).
    Not written by Kiro (README, "What Kiro did not write"). */
 
 /* Icons: line drawings made for this app on a 24 px grid, shown as a mask in the colour of the
@@ -166,112 +165,6 @@
 
 .afl-help-tip[hidden] {
   display: none;
-}
-
-/* The landing page. */
-.afl-landing {
-  max-width: 860px;
-  margin: 0 auto;
-}
-
-.afl-lead {
-  margin: var(--ds-space-300) 0 var(--ds-space-200);
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 32px;
-  letter-spacing: -0.01em;
-}
-
-.afl-dropzone {
-  display: grid;
-  gap: var(--ds-space-150);
-  justify-items: center;
-  margin: 0 0 var(--ds-space-400);
-  padding: var(--ds-space-400) var(--ds-space-300);
-  border: 2px dashed var(--ds-border);
-  border-radius: 12px;
-  background: var(--ds-surface-sunken);
-  text-align: center;
-}
-
-.afl-dropzone::before {
-  width: 32px;
-  height: 32px;
-  background: var(--ds-icon-brand);
-}
-
-.afl-dropzone .afl-drop {
-  margin: 0;
-  color: var(--ds-text);
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 24px;
-}
-
-/* Above its line, so it never covers the button below. */
-.afl-dropzone .afl-help-tip {
-  top: auto;
-  right: 0;
-  bottom: 100%;
-  margin: 0 auto var(--ds-space-050);
-}
-
-.afl-dropzone .afl-note {
-  display: flex;
-  gap: var(--ds-space-075);
-  margin: 0;
-  font-size: 12px;
-  text-align: start;
-}
-
-/* Beside the first line when the sentence wraps (390 px). */
-.afl-dropzone .afl-note::before {
-  align-self: flex-start;
-  margin-top: var(--ds-space-025, 2px);
-}
-
-.afl-tasks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--ds-space-100);
-  margin: 0 0 var(--ds-space-400);
-  padding: 0;
-  list-style: none;
-  line-height: 20px;
-}
-
-.afl-tasks li {
-  flex: 1 1 196px;
-}
-
-.afl-tasks a {
-  display: flex;
-  box-sizing: border-box;
-  gap: var(--ds-space-150);
-  align-items: center;
-  height: 100%;
-  padding: var(--ds-space-150);
-  border: 1px solid var(--ds-border);
-  border-radius: 8px;
-  background: var(--ds-surface-raised);
-  color: var(--ds-text);
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.afl-tasks a:hover {
-  border-color: var(--ds-border-brand);
-  background: var(--ds-surface-raised-hovered);
-}
-
-.afl-tasks a::before {
-  width: 20px;
-  height: 20px;
-  background: var(--ds-icon-brand);
-}
-
-.afl-landing .afl-samples {
-  margin-bottom: var(--ds-space-150);
 }
 
 /* The line where a task lands. */

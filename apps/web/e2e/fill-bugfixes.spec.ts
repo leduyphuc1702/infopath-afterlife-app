@@ -200,7 +200,7 @@ test('B10: turning Fill on elsewhere names the form and record that hold the cha
   await fillSwitch(page).click();
   const dialog = page.getByRole('dialog', { name: 'Discard your changes?' });
   await expect(dialog).toContainText(
-    "You changed Expense Report (the empty form) and haven't downloaded the XML.",
+    "You changed Expense Report (the empty form) and haven't saved it.",
   );
   await page.getByRole('button', { name: 'Keep filling' }).click();
   await page.goBack();

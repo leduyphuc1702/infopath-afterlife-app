@@ -17,8 +17,7 @@ import { RuleDialog } from './paper/RuleDialog';
 import { PaperToolbar, viewCaption } from './paper/PaperToolbar';
 import { ErrorBanner } from './shell/ErrorBanner';
 import { Header } from './shell/Header';
-import { About } from './shell/About';
-import { Landing } from './shell/Landing';
+import { Library } from './shell/Library';
 import { taskOf, type Task } from './shell/tasks';
 import { Notices } from './shell/Notices';
 import { alreadyOpen, exportedNotice, notOpened, screenTitle } from './shell/announce';
@@ -137,6 +136,8 @@ export function App() {
   // Spec 13 B10: one polite announcement per drop. The same words twice are said twice: the
   // region is emptied first.
   const [announcement, setAnnouncement] = useState('');
+  /** Drops so far: a list of what a drop left unmatched takes focus; what the library kept does not. */
+  const [dropped, setDropped] = useState(0);
   const say = useCallback((text: string) => {
     setAnnouncement('');
     if (text !== '') requestAnimationFrame(() => setAnnouncement(text));
@@ -148,6 +149,25 @@ export function App() {
     (p) => setReading(`Reading ${p.index} of ${p.total}: ${p.fileName}`),
     [],
   );
+
+  // The library: what an earlier visit kept in this browser comes back before anything opens.
+  const [libraryRead, setLibraryRead] = useState(false);
+  const [kept, setKept] = useState(true);
+  const restored = useRef<Promise<void>>(undefined);
+  useEffect(() => {
+    restored.current ??= client
+      .restore((p) => setReading(`Reading your library: ${p.index} of ${p.total}, ${p.fileName}`))
+      .then((res) => {
+        setReading(undefined);
+        setLibraryRead(true);
+        if (res.type !== 'session') return setKept(false);
+        setKept(res.kept === true);
+        for (const t of res.templates) known.current.add(t.templateId);
+        for (const r of res.records) seenRecords.current.add(r.recordId);
+        if (res.templates.length + res.records.length + res.failures.length > 0)
+          dispatch({ type: 'session', session: res, stay: true });
+      });
+  }, [client]);
 
   /** `triage`: files were opened by the user, so two or more templates show Triage (R4.1). */
   // Spec 26 M2: `bundled`: a sample the app ships; loaded again, it just opens, with no notice.
@@ -164,6 +184,7 @@ export function App() {
           });
         return;
       }
+      setKept(res.kept === true);
       const added = res.templates.find((t) => !known.current.has(t.templateId));
       for (const t of res.templates) known.current.add(t.templateId);
       // Spec 13 B3: files already open add nothing; the template they are is shown again.
@@ -208,8 +229,12 @@ export function App() {
         type: 'busy',
         what: c.files.length === 1 ? c.files[0]!.name : `${c.files.length} files`,
       });
+      await restored.current;
       const [res] = await Promise.all([client.open(c.files, progress), loadPaperFonts()]);
       applySession(res, 'the files', true);
+      setDropped((n) => n + 1);
+      // The person's own files: ask the browser not to clear this site's storage on its own.
+      void navigator.storage?.persist?.().catch(() => undefined);
       // Spec 09 R12.8: entries of a .zip that are not opened join the list.
       const inZip = res.type === 'session' ? res.ignored : [];
       if (inZip.length > 0) dispatch({ type: 'input', ignored: inZip, problems: [] });
@@ -235,6 +260,7 @@ export function App() {
   const openSample = useCallback(
     async (id: string) => {
       dispatch({ type: 'busy', what: sampleName(id) });
+      await restored.current;
       const [res] = await Promise.all([client.openSample(id, progress), loadPaperFonts()]);
       applySession(res, sampleName(id), false, true);
     },
@@ -244,6 +270,7 @@ export function App() {
   // Spec 12 R4.5: every bundled sample, straight to Triage.
   const openAllSamples = useCallback(async () => {
     dispatch({ type: 'busy', what: 'all samples' });
+    await restored.current;
     const [res] = await Promise.all([client.openAllSamples(progress), loadPaperFonts()]);
     applySession(res, 'the samples', true, true);
   }, [client, applySession, progress]);
@@ -470,7 +497,7 @@ export function App() {
             : (recordsOf(s, fill.templateId)[fill.recordIndex - 1]?.fileName ?? 'a record');
         q = {
           ...DISCARD,
-          body: `You changed ${name ?? 'another form'} (${record}) and haven't downloaded the XML. Nothing is saved in the viewer, so the changes will be lost.`,
+          body: `You changed ${name ?? 'another form'} (${record}) and haven't saved it. The changes will be lost.`,
         };
       }
       if (!(await ask(q))) {
@@ -602,7 +629,7 @@ export function App() {
     homeFocus.current = false;
     // Focus goes to the tasks' heading. Back returns to the task cards the person left from;
     // the product name returns to the top of the page.
-    const heading = document.getElementById('afl-tasks-h');
+    const heading = document.getElementById(to === 'top' ? 'afl-library-h' : 'afl-tasks-h');
     heading?.focus({ preventScroll: true });
     if (to === 'top') window.scrollTo(0, 0);
     else heading?.scrollIntoView({ block: 'start' });
@@ -639,10 +666,58 @@ export function App() {
         },
     );
   }, [client, fillAnswer]);
+  // The record goes into the library: over the record it was opened from, or as a new one. Fill
+  // stays on, now on that record.
+  const saveRecord = useCallback(async () => {
+    if (!fill) return;
+    // Typing not yet left is committed as leaving the field commits it; the commit draws the
+    // paper again, so the field is found again by its marks.
+    const open = uncommitted();
+    const where = open && { ctrl: open.dataset.aflCtrl ?? '', path: open.dataset.aflPath ?? '' };
+    open?.blur();
+    if (sent.current > 0) await inFlight.current.catch(() => undefined);
+    const r = await client.fillSave(localNow());
+    if (r.type !== 'saved') return fillAnswer(r);
+    const index =
+      r.session.records
+        .filter((x) => x.match.kind !== 'unmatched' && x.match.templateId === fill.templateId)
+        .findIndex((x) => x.recordId === r.recordId) + 1;
+    for (const x of r.session.records) seenRecords.current.add(x.recordId);
+    setKept(r.session.kept === true);
+    setList(undefined);
+    setDoc(undefined);
+    dispatch({ type: 'session', session: r.session, stay: true });
+    if (index > 0) dispatch({ type: 'record', index });
+    const left =
+      r.invalid > 0
+        ? ` ${r.invalid} ${r.invalid === 1 ? 'field still needs' : 'fields still need'} attention.`
+        : '';
+    setFill(
+      (f) =>
+        f && {
+          ...f,
+          ...(index > 0 && { recordIndex: index }),
+          ...(f.res && { res: { ...f.res, dirty: false } }),
+          message: `${r.added ? `Saved as ${r.fileName}, a new record in your library.` : `Saved ${r.fileName}.`}${left}`,
+        },
+    );
+    void navigator.storage?.persist?.().catch(() => undefined);
+    if (where)
+      requestAnimationFrame(() =>
+        document
+          .querySelector('[data-afl-paper]')
+          ?.shadowRoot?.querySelector<HTMLElement>(
+            `[data-afl-ctrl="${CSS.escape(where.ctrl)}"][data-afl-path="${CSS.escape(where.path)}"]`,
+          )
+          ?.focus(),
+      );
+  }, [fill, client, fillAnswer]);
   // Another view while filling: the session renders it.
   useEffect(() => {
     if (fillOn && view && fill.view !== view.name) fillCommand({ kind: 'render' });
   }, [fillOn, view, fill?.view, fillCommand]);
+  const saveRef = useRef(saveRecord);
+  saveRef.current = saveRecord;
   // Closing the tab with unsaved changes asks the browser's own question.
   const dirty = fill?.res?.dirty === true;
   // R10.1: Ctrl/Cmd+Z and Shift+Ctrl/Cmd+Z anywhere on the form screen but in a text entry
@@ -651,6 +726,11 @@ export function App() {
     if (!fillOn) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.defaultPrevented || !(e.ctrlKey || e.metaKey) || e.altKey) return;
+      // Ctrl/Cmd+S saves into the library, from a field of the paper too.
+      if (e.key.toLowerCase() === 's' && !e.shiftKey) {
+        e.preventDefault();
+        return void saveRef.current();
+      }
       if (e.key.toLowerCase() !== 'z') return;
       const t = e.target as HTMLElement;
       if (t.closest('input, textarea, select, [contenteditable="true"], dialog')) return;
@@ -799,6 +879,87 @@ export function App() {
       });
     }
   }, [client, s.triage]);
+
+  // The library's own actions. A form opens on its empty form; "New record" opens it in Fill.
+  const [wantFill, setWantFill] = useState<string>();
+  const newRecord = useCallback(
+    async (templateId: string) => {
+      if (!(await leaveFill())) return;
+      dispatch({ type: 'screen', screen: 'form', templateId });
+      dispatch({ type: 'record', index: 0 });
+      setWantFill(templateId);
+    },
+    [leaveFill],
+  );
+  useEffect(() => {
+    if (wantFill === undefined || !template || !view || s.screen !== 'form') return;
+    if (template.templateId !== wantFill || s.recordIndex !== 0) return;
+    setWantFill(undefined);
+    if (!fillOn) void toggleFill();
+  }, [wantFill, template, view, s.screen, s.recordIndex, fillOn, toggleFill]);
+  /** Asks, then takes forms (with their records) or single records out of the library. */
+  const removeFiles = useCallback(
+    async (
+      templateIds: readonly string[],
+      recordIds: readonly string[],
+      q: Question,
+      done: string,
+    ) => {
+      if (!(await ask(q))) return;
+      const res = await client.remove(templateIds, recordIds);
+      if (res.type !== 'session') return void applySession(res, 'the library');
+      known.current = new Set(res.templates.map((t) => t.templateId));
+      seenRecords.current = new Set(res.records.map((r) => r.recordId));
+      setKept(res.kept === true);
+      setList(undefined);
+      setDoc(undefined);
+      dispatch({ type: 'session', session: res, stay: true, notice: done });
+    },
+    [ask, client, applySession],
+  );
+  const removeForms = (ids: readonly string[]) => {
+    const forms = s.templates.filter((t) => ids.includes(t.templateId));
+    const n = s.records.filter(
+      (r) => r.match.kind !== 'unmatched' && ids.includes(r.match.templateId),
+    ).length;
+    const what = forms.length === 1 ? forms[0]!.ir.meta.name : `${forms.length} forms`;
+    const theirs = n === 0 ? '' : ` and ${n === 1 ? '1 record' : `${n} records`}`;
+    void removeFiles(
+      ids,
+      [],
+      {
+        title: `Remove ${what}?`,
+        body: `${what}${theirs} will leave the library in this browser. Files on your computer are not touched.`,
+        yes: 'Remove',
+        no: 'Keep',
+      },
+      `Removed ${what}${theirs} from the library.`,
+    );
+  };
+  const removeRecords = (ids: readonly string[], name?: string) => {
+    const what = name ?? (ids.length === 1 ? '1 record' : `${ids.length} records`);
+    void removeFiles(
+      [],
+      ids,
+      {
+        title: `Remove ${what}?`,
+        body: `${what} will leave the library in this browser. Files on your computer are not touched.`,
+        yes: 'Remove',
+        no: 'Keep',
+      },
+      `Removed ${what} from the library.`,
+    );
+  };
+  const backup = useCallback(async () => {
+    const res = await client.backup(localNow());
+    if (res.type !== 'exported') return void applySession(res, 'the backup');
+    save(res.bytes, res.fileName, 'application/zip');
+    const n = (k: number, one: string, many: string) => `${k} ${k === 1 ? one : many}`;
+    dispatch({
+      type: 'notice',
+      notice: `Saved ${res.fileName}: ${n(res.files, 'form', 'forms')} and ${n(res.records, 'record', 'records')}. Drop it on this page to bring the library back.`,
+    });
+  }, [client, applySession]);
 
   const certificateRow = s.triage?.rows.find(
     (r): r is TriageRow => r.kind === 'form' && r.templateId === s.certificateId,
@@ -966,11 +1127,16 @@ export function App() {
           <div aria-live="polite" className="afl-status">
             {s.busy !== undefined
               ? (reading ?? `Opening ${s.busy}…`)
-              : exporting
+              : exporting || !libraryRead
                 ? reading
                 : fillOn
                   ? [
-                      'Filling in this form. Nothing is saved until you choose Download XML.',
+                      // Just saved or downloaded: that line stands alone.
+                      fill.message !== undefined && fill.res?.dirty === false
+                        ? undefined
+                        : kept
+                          ? 'Filling in this form. Nothing is kept until you choose Save.'
+                          : 'Filling in this form. This browser is not storing the library, so choose Download XML to keep your changes.',
                       fill.message,
                       pressNote,
                       s.notice,
@@ -1014,6 +1180,16 @@ export function App() {
               </button>
               <button
                 type="button"
+                className="afl-button afl-primary"
+                data-icon="save"
+                aria-keyshortcuts={`${MOD === 'Cmd' ? 'Meta' : 'Control'}+S`}
+                title={`Save in your library (${MOD}+S)`}
+                onClick={() => void saveRecord()}
+              >
+                Save
+              </button>
+              <button
+                type="button"
                 className="afl-button"
                 data-icon="download"
                 onClick={() => void downloadXml()}
@@ -1053,13 +1229,28 @@ export function App() {
         {!template ? (
           <>
             {/* Spec 22 F2: above the landing page, where the person is looking. */}
-            <Unmatched records={unmatched(s)} ignored={s.ignored} focus />
-            <Landing
+            <Unmatched
+              records={unmatched(s)}
+              ignored={s.ignored}
+              focus={dropped > 0}
+              onRemove={(ids) => removeRecords(ids)}
+            />
+            <Library
+              templates={s.templates}
+              records={s.records}
+              ready={libraryRead}
+              kept={kept}
+              onOpen={(templateId) => dispatch({ type: 'screen', screen: 'form', templateId })}
+              onNew={(templateId) => void newRecord(templateId)}
+              onRecords={(templateId) =>
+                dispatch({ type: 'screen', screen: 'records', templateId })
+              }
+              onRemove={removeForms}
+              onBackup={() => void backup()}
               onSample={(id) => void openSample(id)}
               onTriageAll={() => void openAllSamples()}
               onTask={startTask}
             />
-            <About onTask={startTask} />
           </>
         ) : s.screen === 'triage' && s.triage ? (
           <>
@@ -1113,12 +1304,22 @@ export function App() {
             onPlace={(p) => (listPlace.current = { templateId: template.templateId, place: p })}
             onBack={() => history.back()}
             actions={(order) => (
-              <ArchiveMenu
-                views={template.ir.views}
-                count={order.length}
-                busy={exporting}
-                onArchive={(v, opener) => void archive(template.templateId, v, opener, order)}
-              />
+              <>
+                <button
+                  type="button"
+                  className="afl-button"
+                  data-icon="plus"
+                  onClick={() => void newRecord(template.templateId)}
+                >
+                  New record
+                </button>
+                <ArchiveMenu
+                  views={template.ir.views}
+                  count={order.length}
+                  busy={exporting}
+                  onArchive={(v, opener) => void archive(template.templateId, v, opener, order)}
+                />
+              </>
             )}
             onOpen={(id, order, found) => {
               const index = records.findIndex((r) => r.recordId === id) + 1;
@@ -1187,6 +1388,16 @@ export function App() {
                           views={template.ir.views}
                           startOpen={keepOpen}
                           onArchive={(v, opener) => void archive(template.templateId, v, opener)}
+                        />
+                      )}
+                      {record && !fillOn && (
+                        <button
+                          type="button"
+                          className="afl-button afl-icon-b"
+                          data-icon="trash"
+                          title="Remove this record"
+                          aria-label="Remove this record"
+                          onClick={() => removeRecords([record.recordId], record.fileName)}
                         />
                       )}
                     </>

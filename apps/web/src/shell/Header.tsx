@@ -18,21 +18,15 @@ interface Props {
   readonly onDocumentation?: () => void;
   /** Spec 12: back to Triage, when two or more templates are open. */
   readonly onTriage?: () => void;
-  /** The first screen: the header also leads to that page's sections. */
+  /** The first screen: the product name leads to its top. */
   readonly landing?: boolean;
   /** The product name leads back to the first screen. */
   readonly onHome?: () => void;
 }
 
-/** The sections of the first screen, by the id each one carries. */
-const SECTIONS = [
-  ['afl-tasks-h', 'Features'],
-  ['afl-how', 'How it works'],
-  ['afl-private', 'Privacy'],
-  ['afl-faq', 'FAQ'],
-] as const;
-
 export const REPO = 'https://github.com/leduyphuc1702/infopath-afterlife-app';
+/** The product's page: what the app is and who it is for. */
+export const SITE = 'https://leduyphuc1702.github.io/infopath-afterlife-app/';
 
 /** The mark: a form sheet under a halo. Drawn for this app; its colours are tokens (saas.css). */
 export const Logo = () => (
@@ -43,13 +37,6 @@ export const Logo = () => (
     <path d="M12.5 16h7M12.5 19.5h7M12.5 23h4" />
   </svg>
 );
-
-/** Section links scroll; they are not addresses, so a task's `#address` stays the only hash. */
-export const toSection = (id: string) =>
-  document.getElementById(id)?.scrollIntoView({
-    behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-    block: 'start',
-  });
 
 export function Header({
   onFiles,
@@ -80,16 +67,6 @@ export function Header({
           InfoPath Afterlife
         </a>
       </h1>
-      {landing && (
-        <nav className="afl-nav" aria-label="On this page">
-          {SECTIONS.map(([id, words]) => (
-            <button key={id} type="button" onClick={() => toSection(id)}>
-              {words}
-            </button>
-          ))}
-          <a href={REPO}>Source</a>
-        </nav>
-      )}
       <div className="afl-header-actions">
         {onTriage && (
           <button type="button" className="afl-button" data-icon="table" onClick={onTriage}>

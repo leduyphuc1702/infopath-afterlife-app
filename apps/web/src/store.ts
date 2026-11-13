@@ -1,4 +1,4 @@
-// Spec 09 design §5: the page's state. In memory only.
+// Spec 09 design §5: the page's state. In memory; the files themselves are the Worker's to keep.
 import type { TriageResult } from '@afterlife/core';
 import type { SideTab } from './side/SideTabs';
 import type {
@@ -90,6 +90,8 @@ export type Action =
       /** Spec 12 R4.1: files that leave two or more templates open show Triage. */
       readonly screen?: Screen;
       readonly notice?: string;
+      /** The library came back, or lost files: no form opens for it, and one that left closes. */
+      readonly stay?: boolean;
     }
   | {
       readonly type: 'input';
@@ -151,6 +153,14 @@ function openState(s: State, t: TemplateSummary | undefined): State {
   };
 }
 
+/** The first screen: no form open; the session stays. */
+function homeState(s: State): State {
+  const rest: { -readonly [K in keyof State]: State[K] } = { ...s };
+  delete rest.openId;
+  delete rest.certificateId;
+  return { ...rest, screen: 'form', xray: false, selection: {}, recordIndex: 0 };
+}
+
 export function reducer(s: State, a: Action): State {
   switch (a.type) {
     case 'busy': {
@@ -175,8 +185,13 @@ export function reducer(s: State, a: Action): State {
         ? openState(next, wanted)
         : still
           ? next
-          : openState(next, a.session.templates[0]);
-      const shown = showArrived(s, opened);
+          : a.stay
+            ? homeState(next)
+            : openState(next, a.session.templates[0]);
+      const arrived = showArrived(s, opened);
+      // A record that left the library: the pager stays inside the records that remain.
+      const count = recordsOf(arrived, arrived.openId).length;
+      const shown = arrived.recordIndex > count ? { ...arrived, recordIndex: count } : arrived;
       // Spec 27 R1: a form opened anew (from the start page, or another form) shows its first
       // record, whether its records are new to the session or not.
       return wanted &&
@@ -249,12 +264,8 @@ export function reducer(s: State, a: Action): State {
       return { ...s, recordIndex: a.index, walk: a.walk, screen: 'form' };
     case 'xray':
       return { ...s, xray: a.on, selection: a.on ? s.selection : {} };
-    case 'home': {
-      const rest: { -readonly [K in keyof State]: State[K] } = { ...s };
-      delete rest.openId;
-      delete rest.certificateId;
-      return { ...rest, screen: 'form', xray: false, selection: {}, recordIndex: 0 };
-    }
+    case 'home':
+      return homeState(s);
     case 'select':
       return { ...s, selection: a.selection };
     case 'tab':

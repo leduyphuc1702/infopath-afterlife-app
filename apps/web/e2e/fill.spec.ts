@@ -52,7 +52,7 @@ test('form 02: type amounts, Total follows, focus stays, a blank name is marked'
 }) => {
   await openFill(page, /^Expense report/);
   await expect(page.locator('.afl-status')).toHaveText(
-    'Filling in this form. Nothing is saved until you choose Download XML.',
+    'Filling in this form. Nothing is kept until you choose Save.',
   );
   // R5.2: the empty required name is marked at once, with its message.
   await expect(at(page, NAME)).toHaveClass(/afl-invalid/);
@@ -108,7 +108,9 @@ test('form 02: type amounts, Total follows, focus stays, a blank name is marked'
   await expect(page.locator('.afl-outline').first()).toBeVisible();
 });
 
-test('form 02: Download XML, drop it back, the same values; nothing stored', async ({ page }) => {
+test('form 02: Download XML, drop it back, the same values; only the library is stored', async ({
+  page,
+}) => {
   await openFill(page, /^Expense report/);
   await type(page, at(page, NAME), 'Mara Quill');
   await type(page, at(page, AMOUNT), '41.25');
@@ -137,9 +139,12 @@ test('form 02: Download XML, drop it back, the same values; nothing stored', asy
   await expect(at(page, NAME)).toHaveText('Mara Quill');
   await expect(at(page, TOTAL)).toHaveText('$41.25');
 
-  // R8.3: nothing in storage.
+  // The library is the one thing this browser stores (it replaced R8.3, "store nothing").
   expect(await page.evaluate(() => [localStorage.length, sessionStorage.length])).toEqual([0, 0]);
-  expect(await page.evaluate(async () => (await indexedDB.databases()).length)).toBe(0);
+  expect(await page.evaluate(async () => (await indexedDB.databases()).map((d) => d.name))).toEqual(
+    ['afterlife-library'],
+  );
+  expect(await page.evaluate(() => document.cookie)).toBe('');
 });
 
 test('leaving Fill with changes asks in a dialog; Back and Forward keep the session', async ({

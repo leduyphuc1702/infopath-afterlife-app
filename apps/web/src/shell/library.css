@@ -1,0 +1,401 @@
+/* The first screen: the library, then the tasks and samples to learn with. Atlassian tokens only,
+   as in app.css (R9.3). Not written by Kiro (README, "What Kiro did not write"). */
+
+[data-icon='plus'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E");
+}
+[data-icon='trash'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v5M14 11v5'/%3E%3C/svg%3E");
+}
+[data-icon='save'] {
+  --afl-i: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 4h11l3 3v13H5zM8 4v5h7V4M8 20v-6h8v6'/%3E%3C/svg%3E");
+}
+
+.afl-landing {
+  box-sizing: border-box;
+  max-width: var(--afl-wide);
+  margin: 0 auto;
+  padding: var(--ds-space-300) 0 var(--ds-space-600);
+}
+
+.afl-main[data-screen='landing'] > div > .afl-panel {
+  box-sizing: border-box;
+  max-width: var(--afl-wide);
+  margin: 0 auto var(--ds-space-200);
+}
+
+.afl-unmatched-remove {
+  margin: 0 0 var(--ds-space-150);
+}
+
+.afl-lib-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-150) var(--ds-space-200);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.afl-lib-head h2 {
+  width: fit-content;
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 36px;
+  letter-spacing: -0.02em;
+}
+
+.afl-lib-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-100);
+}
+
+.afl-lead {
+  max-width: 44em;
+  margin: var(--ds-space-100) 0 var(--ds-space-300);
+  color: var(--ds-text-subtle);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+/* Where files come in while the library is empty. */
+.afl-dropzone {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--ds-space-150) var(--ds-space-250);
+  margin: 0 0 var(--ds-space-200);
+  padding: var(--ds-space-400);
+  border: 1.5px dashed var(--ds-border-bold);
+  border-radius: 12px;
+  background: var(--ds-surface-sunken);
+}
+
+.afl-dropzone::before {
+  grid-row: 1 / span 3;
+  align-self: start;
+  width: 32px;
+  height: 32px;
+  background: var(--ds-icon-brand);
+}
+
+.afl-dropzone > * {
+  grid-column: 2;
+}
+
+.afl-dropzone .afl-drop {
+  margin: 0;
+  color: var(--ds-text);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+}
+
+/* Above its line, so it never covers the buttons below. */
+.afl-dropzone .afl-help-tip {
+  top: auto;
+  bottom: 100%;
+  margin: 0 0 var(--ds-space-050);
+}
+
+.afl-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-150);
+}
+
+.afl-cta .afl-button {
+  padding: var(--ds-space-100) var(--ds-space-200);
+  font-weight: 600;
+}
+
+.afl-dropzone .afl-note {
+  display: flex;
+  gap: var(--ds-space-075);
+  margin: 0;
+  font-size: 12px;
+}
+
+/* Beside the first line when the sentence wraps (390 px). */
+.afl-dropzone .afl-note::before {
+  align-self: flex-start;
+  margin-top: var(--ds-space-025, 2px);
+}
+
+@media (width < 520px) {
+  .afl-dropzone {
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--ds-space-300) var(--ds-space-200);
+  }
+
+  .afl-dropzone::before {
+    grid-row: auto;
+  }
+
+  .afl-dropzone > * {
+    grid-column: 1;
+  }
+}
+
+/* The forms. */
+.afl-lib-find {
+  position: relative;
+  display: flex;
+  width: min(100%, 320px);
+  margin: 0 0 var(--ds-space-150);
+}
+
+.afl-lib-find::before {
+  position: absolute;
+  top: 50%;
+  left: var(--ds-space-150);
+  translate: 0 -50%;
+  background: var(--ds-icon-subtle);
+  pointer-events: none;
+}
+
+.afl-lib-find input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--ds-space-075) var(--ds-space-150) var(--ds-space-075) var(--ds-space-400);
+  border: 1px solid var(--ds-border-input);
+  border-radius: 6px;
+  background: var(--ds-background-input);
+  color: var(--ds-text);
+  font: inherit;
+}
+
+.afl-lib-find input::placeholder {
+  color: var(--ds-text-subtlest);
+}
+
+.afl-lib-box {
+  overflow: hidden;
+  margin: 0 0 var(--ds-space-150);
+  border: 1px solid var(--ds-border);
+  border-radius: 10px;
+  background: var(--ds-surface-raised);
+}
+
+.afl-lib-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.afl-lib-table :is(th, td) {
+  padding: var(--ds-space-150) var(--ds-space-200);
+  border-bottom: 1px solid var(--ds-border);
+  font-weight: 400;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.afl-lib-table thead th {
+  padding-block: var(--ds-space-100);
+  background: var(--ds-surface-sunken);
+  color: var(--ds-text-subtle);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.afl-lib-table tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.afl-lib-table tbody tr:hover {
+  background: var(--ds-background-neutral-subtle-hovered);
+}
+
+.afl-lib-name {
+  color: var(--ds-text);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.afl-lib-name:hover {
+  color: var(--ds-link);
+  text-decoration: underline;
+}
+
+.afl-lib-table th .afl-sub {
+  display: block;
+  margin-top: var(--ds-space-025, 2px);
+  overflow-wrap: anywhere;
+}
+
+.afl-lib-tag {
+  margin-left: var(--ds-space-100);
+  padding: 0 var(--ds-space-075);
+  border-radius: 3px;
+  background: var(--ds-background-neutral);
+  color: var(--ds-text-subtle);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.afl-lib-table td:not(.afl-lib-actions) {
+  white-space: nowrap;
+}
+
+.afl-lib-when {
+  color: var(--ds-text-subtle);
+}
+
+.afl-lib-actions {
+  width: 1%;
+}
+
+.afl-lib-actions > div {
+  display: flex;
+  gap: var(--ds-space-100);
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.afl-lib-none {
+  margin: 0;
+  padding: var(--ds-space-200);
+  color: var(--ds-text-subtle);
+}
+
+.afl-lib-after {
+  margin: 0 0 var(--ds-space-100);
+}
+
+/* A narrow window: each form is a block, its name first, then its records, date and actions. */
+@media (width < 720px) {
+  .afl-lib-table thead {
+    position: absolute;
+    overflow: hidden;
+    clip-path: inset(50%);
+    width: 1px;
+    height: 1px;
+  }
+
+  .afl-lib-table,
+  .afl-lib-table tbody {
+    display: block;
+  }
+
+  .afl-lib-table tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--ds-space-075) var(--ds-space-150);
+    align-items: center;
+    padding: var(--ds-space-150) var(--ds-space-200);
+    border-bottom: 1px solid var(--ds-border);
+  }
+
+  .afl-lib-table tbody tr:last-child {
+    border-bottom: 0;
+  }
+
+  .afl-lib-table tbody :is(th, td) {
+    display: block;
+    padding: 0;
+    border: 0;
+  }
+
+  .afl-lib-table tbody th,
+  .afl-lib-actions {
+    grid-column: 1 / -1;
+    width: auto;
+  }
+
+  .afl-lib-when {
+    font-size: 12px;
+    text-align: right;
+  }
+
+  .afl-lib-actions > div {
+    justify-content: flex-start;
+  }
+}
+
+/* The tasks: a list, two across where there is room. */
+.afl-landing > h2:not(#afl-library-h),
+.afl-try h2 {
+  width: fit-content;
+  margin: var(--ds-space-500) 0 var(--ds-space-150);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.afl-tasks {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 var(--ds-space-400);
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--ds-border);
+  list-style: none;
+  line-height: 20px;
+}
+
+@media (width >= 760px) {
+  .afl-tasks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.afl-tasks li {
+  border-bottom: 1px solid var(--ds-border);
+}
+
+.afl-tasks a {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 0 var(--ds-space-150);
+  height: 100%;
+  box-sizing: border-box;
+  padding: var(--ds-space-150) var(--ds-space-100);
+  color: var(--ds-text);
+  text-decoration: none;
+}
+
+.afl-tasks a::before {
+  grid-row: 1 / span 2;
+  align-self: start;
+  width: 20px;
+  height: 20px;
+  background: var(--ds-icon-subtle);
+}
+
+.afl-tasks a:hover {
+  background: var(--ds-background-neutral-subtle-hovered);
+}
+
+.afl-tasks a:hover::before {
+  background: var(--ds-icon-brand);
+}
+
+.afl-tasks b {
+  font-weight: 600;
+}
+
+.afl-tasks span {
+  color: var(--ds-text-subtle);
+  font-size: 13px;
+}
+
+.afl-landing .afl-samples {
+  margin-bottom: var(--ds-space-150);
+}
+
+.afl-try .afl-triage-all {
+  margin: 0;
+}
+
+/* The choice that loses something, in the question before it. */
+.afl-danger {
+  border-color: transparent;
+  background: var(--ds-background-danger-bold);
+  color: var(--ds-text-inverse);
+  font-weight: 600;
+}
+
+.afl-danger:hover {
+  background: var(--ds-background-danger-bold-hovered);
+}

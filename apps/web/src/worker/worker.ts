@@ -2,12 +2,13 @@
 import samples, { allSamples, warmSamples } from './samples';
 import type { Progress, Req, Res, ResBody } from './protocol';
 import { Session, toWireError } from './session';
+import { idbShelf } from './shelf';
 
 const scope = self as unknown as {
   onmessage: ((e: MessageEvent<Req>) => void) | null;
   postMessage(message: Res, transfer?: Transferable[]): void;
 };
-const session = new Session();
+const session = new Session(typeof indexedDB === 'undefined' ? undefined : idbShelf());
 
 async function handle(req: Req): Promise<ResBody> {
   const progress: Progress = (p) => scope.postMessage({ ...p, id: req.id });
@@ -43,6 +44,14 @@ async function handle(req: Req): Promise<ResBody> {
       return session.fill(req.command, req.view, req.now);
     case 'fillDownload':
       return session.fillDownload();
+    case 'restore':
+      return session.restore(progress);
+    case 'remove':
+      return session.remove(req.templateIds, req.recordIds);
+    case 'fillSave':
+      return session.fillSave(req.now);
+    case 'backup':
+      return session.backup(req.now);
     case 'fillClose':
       session.fillClose();
       return { type: 'ready' };
