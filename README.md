@@ -199,7 +199,7 @@ Inside Kiro's commits, these lines are the reviewer's: the upstream LICENSE file
 keeper sample (in `4c13ec8`), one `.gitignore` line, and the P12 and P13 lines of
 `.kiro/steering/testing.md`.
 
-After `abd9299`, Kiro's last commit, three more commits are the reviewer's. The first puts the
+After `abd9299`, Kiro's last commit, four more commits are the reviewer's. The first puts the
 copyright holder's name in `LICENSE`. The second, made by hand after the Kiro credits ran out,
 makes the first screen and the buttons simpler. None of its changes is Kiro's:
 
@@ -222,6 +222,11 @@ already the name of Kiro's explanation on the Wave column in Triage, so that col
 drawn as a dark box. The help tip is now `afl-help-tip`, and the first test of
 `e2e/simple.spec.ts` checks the Wave header. No suite and no axe-core run had caught it; the
 reviewer saw it on the screen.
+
+The fourth commit changes no code. It takes the line for `.kiro/settings/mcp.json`, a file that
+never existed, out of `.gitignore`, so that nothing under `.kiro/` is ignored, and brings
+`docs/kiro/mcp.md`, `docs/kiro/README.md` and one line of `.kiro/steering/structure.md` in line
+with that. Every suite was run on it too, with the same counts.
 
 Everything under `samples/` is the reviewer's, made by a generator outside this repository.
 Kiro cannot write there.

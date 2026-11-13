@@ -1,8 +1,9 @@
 # MCP servers for Kiro
 
 There is one MCP server, defined in the agent file `.kiro/agents/afterlife.json` (added in
-commit `84c1766`). There is no workspace `.kiro/settings/mcp.json`; that path stays in
-`.gitignore` in case a server with a token is added later.
+commit `84c1766`). There is no workspace `.kiro/settings/mcp.json`, and nothing under `.kiro/`
+is in `.gitignore`. A server that needs a token would read it from the environment: the
+`no-secrets` hook refuses a write that holds one.
 
 ## `playwright`: `@playwright/mcp` 0.0.85
 

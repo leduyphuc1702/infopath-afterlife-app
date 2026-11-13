@@ -9,7 +9,7 @@ below exists today unless marked "to be written".
 
 ```
 /
-├─ .kiro/                     steering, specs, agents (committed; only .kiro/settings/mcp.json is gitignored)
+├─ .kiro/                     steering, specs, agents, skills (committed whole; nothing under it is gitignored)
 ├─ packages/core/             pure TypeScript, no Forge/React imports; runs in Node and browser
 │  ├─ src/cab/                CAB (MSCF) reader, MSZIP only
 │  ├─ src/xml/                the one XML abstraction: decoding, DOCTYPE/depth pre-scan, @xmldom/xmldom, paths
