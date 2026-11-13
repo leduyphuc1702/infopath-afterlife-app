@@ -595,13 +595,17 @@ export function App() {
   );
   const homeRef = useRef(true);
   homeRef.current = !template;
-  const homeFocus = useRef(false);
+  const homeFocus = useRef<false | 'tasks' | 'top'>(false);
   useEffect(() => {
-    if (template || !homeFocus.current) return;
+    const to = homeFocus.current;
+    if (template || !to) return;
     homeFocus.current = false;
-    // The heading is below the first screen now: focus goes to it, the page stays at its top.
-    document.getElementById('afl-tasks-h')?.focus({ preventScroll: true });
-    window.scrollTo(0, 0);
+    // Focus goes to the tasks' heading. Back returns to the task cards the person left from;
+    // the product name returns to the top of the page.
+    const heading = document.getElementById('afl-tasks-h');
+    heading?.focus({ preventScroll: true });
+    if (to === 'top') window.scrollTo(0, 0);
+    else heading?.scrollIntoView({ block: 'start' });
   }, [template]);
   const taskRef = useRef(runTask);
   taskRef.current = runTask;
@@ -825,7 +829,7 @@ export function App() {
           // focus on the task list's heading once the landing page is drawn.
           if (location.hash !== '')
             history.replaceState(null, '', location.pathname + location.search);
-          homeFocus.current = true;
+          homeFocus.current = 'tasks';
           dispatch({ type: 'home' });
           setHint(undefined);
         });
@@ -931,7 +935,7 @@ export function App() {
     void leaveRef.current().then((ok) => {
       if (!ok) return;
       history.pushState(null, '', location.pathname + location.search);
-      homeFocus.current = true;
+      homeFocus.current = 'top';
       dispatch({ type: 'home' });
     });
 

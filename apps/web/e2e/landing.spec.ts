@@ -42,6 +42,20 @@ test('the product name leads back to the first screen', async ({ page }) => {
   await expect(page.locator('.afl-position')).toContainText('02-expense-report-001.xml');
 });
 
+test('Back from a task returns to the task cards, not to the top of the page', async ({ page }) => {
+  await page.goto('./');
+  await page.locator('.afl-tasks a[href="#fill"]').click();
+  await expect(page.getByRole('switch', { name: 'Fill' })).toBeVisible();
+  await page.goBack();
+  const heading = page.locator('#afl-tasks-h');
+  await expect(heading).toBeFocused();
+  await expect(heading).toBeInViewport();
+  // The cards are on screen, under the header that stays in view.
+  await expect(page.locator('.afl-tasks a[href="#find"]')).toBeInViewport();
+  const bar = (await page.locator('.afl-header').boundingBox())!;
+  expect((await heading.boundingBox())!.y).toBeGreaterThanOrEqual(bar.y + bar.height - 1);
+});
+
 test('the picture is this app, described, and follows the colour scheme', async ({ page }) => {
   await page.goto('./');
   const shot = page.locator('.afl-shot img');

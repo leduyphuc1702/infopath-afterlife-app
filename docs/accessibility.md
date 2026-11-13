@@ -111,6 +111,9 @@ Kiro did not check it.
   scroll; they add four tab stops on the first screen and none elsewhere. The header stays in
   view there and `scroll-padding-top` keeps it from covering the heading it led to;
   `e2e/landing.spec.ts` checks this for each link.
+- **2.4.3 Focus order:** after Back from a task, focus goes to the tasks' heading and the page
+  scrolls to it, under the header (the reviewer's seventh commit; the sixth left the page at its
+  top). `e2e/landing.spec.ts` checks it.
 - **1.1.1 Non-text content:** the picture of the app has a description. The mark, the window
   dots above the picture and Triage's wave bar are decoration and hidden from assistive
   technology; the sentence under the bar carries its numbers.

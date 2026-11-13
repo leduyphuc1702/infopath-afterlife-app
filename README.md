@@ -94,7 +94,9 @@ After the reviewer's product-page commit (the sixth in "What Kiro did not write"
 ran every suite again, on that commit: Kiro hook tests 6, core 3,854 passed (3 skipped), browser
 337, web 126 (two more, in `apps/web/test/preview.test.ts`), end-to-end 193 (Kiro's 176 and the
 reviewer's 17 in `e2e/simple.spec.ts` and `e2e/landing.spec.ts`). No test Kiro wrote was changed.
-Page entry 97.8 of 100 KB, Worker 156.1 of 160 KB.
+Page entry 97.8 of 100 KB, Worker 156.1 of 160 KB. The reviewer's seventh commit was run through
+every suite as well: the same counts, with one more end-to-end test (194) and a page entry of
+97.9 KB.
 
 ## Status
 
@@ -212,7 +214,7 @@ Inside Kiro's commits, these lines are the reviewer's: the upstream LICENSE file
 keeper sample (in `4c13ec8`), one `.gitignore` line, and the P12 and P13 lines of
 `.kiro/steering/testing.md`.
 
-After `abd9299`, Kiro's last commit, six more commits are the reviewer's. The first puts the
+After `abd9299`, Kiro's last commit, seven more commits are the reviewer's. The first puts the
 copyright holder's name in `LICENSE`. The second, made without Kiro after the Kiro credits ran
 out, makes the first screen and the buttons simpler. None of its changes is Kiro's:
 
@@ -263,6 +265,12 @@ product page under it. Spec 21's task links, their addresses and where focus goe
 built them, and its tests pass unchanged. What each screen does once a file is open is still
 Kiro's code; this commit changes how its panels, tables and text boxes are drawn, not what they
 do.
+
+The seventh commit, made without Kiro, repairs a choice of the sixth. With the task cards now
+below the first view, Back from a task left the page at its top, away from the cards the person
+had come from. Back now returns to the cards, as it did in Kiro's version, and the product name
+in the header returns to the top. It changes `App.tsx` and adds one test to
+`e2e/landing.spec.ts`.
 
 Everything under `samples/` is the reviewer's, made by a generator outside this repository.
 Kiro cannot write there.
