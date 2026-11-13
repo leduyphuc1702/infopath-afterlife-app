@@ -179,6 +179,11 @@ built app by hand. It caught defects no suite had, and the document says which, 
 
 ## What Kiro did not write
 
+"The reviewer" in this file is the entrant, working with a second AI coding assistant that is
+not Kiro. That assistant wrote the reviewer's commits listed below, drafted the steering drafts,
+the spec briefs and the prompts Kiro was given, ran Kiro CLI, and checked Kiro's work on the
+built app. Where a commit message says "hand-written", it means written without Kiro.
+
 Commit authors do not separate the two; the commit messages do. At `acd2394` there are 76
 commits (`git rev-list --count acd2394`): 67 say "Written by Kiro", one (`cefad29`, steering and
 docs aligned with the repo and the Forms API) is Kiro's and says "Made by Kiro CLI", and these
@@ -199,9 +204,9 @@ Inside Kiro's commits, these lines are the reviewer's: the upstream LICENSE file
 keeper sample (in `4c13ec8`), one `.gitignore` line, and the P12 and P13 lines of
 `.kiro/steering/testing.md`.
 
-After `abd9299`, Kiro's last commit, four more commits are the reviewer's. The first puts the
-copyright holder's name in `LICENSE`. The second, made by hand after the Kiro credits ran out,
-makes the first screen and the buttons simpler. None of its changes is Kiro's:
+After `abd9299`, Kiro's last commit, five more commits are the reviewer's. The first puts the
+copyright holder's name in `LICENSE`. The second, made without Kiro after the Kiro credits ran
+out, makes the first screen and the buttons simpler. None of its changes is Kiro's:
 
 | File | What the reviewer wrote |
 |---|---|
@@ -227,6 +232,9 @@ The fourth commit changes no code. It takes the line for `.kiro/settings/mcp.jso
 never existed, out of `.gitignore`, so that nothing under `.kiro/` is ignored, and brings
 `docs/kiro/mcp.md`, `docs/kiro/README.md` and one line of `.kiro/steering/structure.md` in line
 with that. Every suite was run on it too, with the same counts.
+
+The fifth commit changes this file only. It adds the first paragraph of this section, which
+says who the reviewer is, and replaces "made by hand" with "made without Kiro".
 
 Everything under `samples/` is the reviewer's, made by a generator outside this repository.
 Kiro cannot write there.
