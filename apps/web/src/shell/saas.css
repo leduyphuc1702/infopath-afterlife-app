@@ -1,0 +1,794 @@
+/* The product's look: the mark, the first screen as a product page, and rounder, calmer panels
+   on the working screens. Atlassian tokens only, as in app.css (R9.3).
+   Not written by Kiro (README, "What Kiro did not write"). */
+
+:root {
+  --afl-wide: 1120px;
+  --afl-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7'/%3E%3C/svg%3E");
+  --afl-cross: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M7 7l10 10M17 7L7 17'/%3E%3C/svg%3E");
+}
+
+[data-icon='check'] {
+  --afl-i: var(--afl-check);
+}
+
+/* The mark and the name. */
+.afl-brand {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  color: var(--ds-text);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 28px;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.afl-logo {
+  flex: none;
+  width: 28px;
+  height: 28px;
+}
+
+.afl-logo rect {
+  fill: var(--ds-background-brand-bold);
+}
+
+.afl-logo ellipse {
+  fill: none;
+  stroke: var(--ds-text-inverse);
+  stroke-width: 1.6;
+}
+
+.afl-logo path {
+  fill: var(--ds-text-inverse);
+}
+
+.afl-logo path + path {
+  fill: none;
+  stroke: var(--ds-background-brand-bold);
+  stroke-width: 1.7;
+  stroke-linecap: round;
+}
+
+/* The header. On the first screen it stays in view and leads to the page's sections. */
+.afl-header {
+  padding: 10px var(--ds-space-300);
+  background: var(--ds-surface);
+}
+
+.afl-header:has(+ .afl-main[data-screen='landing']) {
+  position: sticky;
+  z-index: 30;
+  top: 0;
+}
+
+html:has(.afl-main[data-screen='landing']) {
+  scroll-padding-top: 72px;
+}
+
+.afl-nav {
+  display: flex;
+  gap: var(--ds-space-050);
+  margin: 0 auto 0 var(--ds-space-200);
+}
+
+.afl-nav :is(a, button) {
+  padding: var(--ds-space-075) 10px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--ds-text-subtle);
+  font: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.afl-nav :is(a, button):hover {
+  background: var(--ds-background-neutral-subtle-hovered);
+  color: var(--ds-text);
+}
+
+@media (width < 900px) {
+  .afl-nav {
+    display: none;
+  }
+}
+
+/* Controls. */
+.afl-button,
+.afl-samples button,
+.afl-menu li button {
+  border-radius: 6px;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+}
+
+.afl-menu ul {
+  padding: var(--ds-space-075);
+  border-radius: 10px;
+}
+
+.afl-dialog {
+  border-radius: 12px;
+}
+
+.afl-hint,
+.afl-problem {
+  border-radius: 8px;
+}
+
+/* The working screens: the paper's field and the side panels are cards. */
+.afl-paper-frame {
+  border: 1px solid var(--ds-border);
+  border-radius: 10px;
+}
+
+.afl-panel {
+  padding: var(--ds-space-200);
+  border-radius: 10px;
+}
+
+@media print {
+  .afl-paper-frame {
+    border: 0;
+  }
+}
+
+/* Text boxes and lists match the buttons beside them. */
+.afl-field :is(input:not([type='checkbox'], [type='radio']), select) {
+  padding: var(--ds-space-075) var(--ds-space-100);
+  border: 1px solid var(--ds-border-input);
+  border-radius: 6px;
+  background: var(--ds-background-input);
+  color: var(--ds-text);
+  font: inherit;
+}
+
+:is(.afl-records, .afl-doc) > h2 {
+  /* As wide as its words, so the focus ring it gets on arrival is too. */
+  width: fit-content;
+  font-size: 20px;
+  line-height: 28px;
+}
+
+/* A label sits beside its box where there is room; on a phone it stays above (records.css). */
+@media (min-width: 40rem) {
+  :is(.afl-records-tools, .afl-summary-tools) {
+    align-items: center;
+  }
+
+  :is(.afl-records-tools, .afl-summary-tools) .afl-field {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* Tables: a box with round corners, its head on a sunken strip. */
+@media screen {
+  .afl-triage-scroll,
+  .afl-records-box {
+    border: 1px solid var(--ds-border);
+    border-radius: 10px;
+  }
+
+  .afl-triage-table :is(th, td):not(.afl-wave) {
+    padding: var(--ds-space-100) var(--ds-space-150);
+  }
+
+  .afl-triage-table .afl-wave {
+    box-sizing: border-box;
+    min-width: 24px;
+    margin: var(--ds-space-100) var(--ds-space-150);
+    border-bottom: 0;
+    border-radius: 999px;
+  }
+
+  /* The line under a row is the row's, so it has no gap under the wave. */
+  .afl-triage-table tbody tr:not(:last-child) {
+    border-bottom: 1px solid var(--ds-border);
+  }
+
+  .afl-triage-table th[scope='col'],
+  .afl-records-table thead th,
+  .afl-records-table thead th:first-child,
+  .afl-doc-fields thead th {
+    background: var(--ds-surface-sunken);
+  }
+
+  :is(.afl-triage-table, .afl-records-table) tbody tr:last-child :is(th, td) {
+    border-bottom: 0;
+  }
+
+  .afl-triage-table tbody tr:hover {
+    background: var(--ds-background-neutral-subtle-hovered);
+  }
+}
+
+/* Triage: the three waves as one bar, each as wide as its share of the forms. The sentence
+   under it carries the numbers. */
+.afl-wave-bar {
+  display: flex;
+  overflow: hidden;
+  gap: 2px;
+  max-width: 480px;
+  height: 8px;
+  margin: var(--ds-space-100) 0;
+  border-radius: 999px;
+}
+
+.afl-wave-bar [data-wave='1'] {
+  background: var(--ds-background-success-bold);
+}
+
+.afl-wave-bar [data-wave='2'] {
+  background: var(--ds-background-information-bold);
+}
+
+.afl-wave-bar [data-wave='3'] {
+  background: var(--ds-background-warning-bold);
+}
+
+/* The first screen. */
+.afl-main[data-screen='landing'] {
+  padding-bottom: 0;
+}
+
+.afl-landing {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  max-width: var(--afl-wide);
+  padding-top: clamp(24px, 5vw, 56px);
+  text-align: center;
+}
+
+.afl-landing > :is(h2, .afl-tasks, .afl-try) {
+  justify-self: stretch;
+  text-align: start;
+}
+
+.afl-eyebrow {
+  display: inline-flex;
+  gap: var(--ds-space-100);
+  align-items: center;
+  padding: var(--ds-space-050) var(--ds-space-150);
+  border-radius: 999px;
+  background: var(--ds-background-warning);
+  color: var(--ds-text-warning);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.afl-eyebrow::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.afl-lead {
+  max-width: 13em;
+  margin: var(--ds-space-250) 0 var(--ds-space-200);
+  font-size: clamp(36px, 6.4vw, 68px);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+/* Under the middle of its line, as wide as the line allows. */
+.afl-lead .afl-help-tip {
+  right: 0;
+  margin-inline: auto;
+}
+
+.afl-lead em {
+  color: var(--ds-text-brand);
+  font-style: normal;
+}
+
+.afl-help-tip {
+  letter-spacing: 0;
+}
+
+.afl-pitch {
+  max-width: 36em;
+  margin-bottom: var(--ds-space-400);
+  color: var(--ds-text-subtle);
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.55;
+  text-wrap: balance;
+}
+
+.afl-dropzone {
+  box-sizing: border-box;
+  width: min(100%, 620px);
+  margin-bottom: var(--ds-space-250);
+  padding: var(--ds-space-300);
+  border-width: 1.5px;
+  border-radius: 14px;
+  background: var(--ds-surface-raised);
+  transition: border-color 0.15s;
+}
+
+.afl-dropzone:hover {
+  border-color: var(--ds-border-brand);
+}
+
+.afl-dropzone::before {
+  display: none;
+}
+
+.afl-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-150);
+  justify-content: center;
+}
+
+.afl-cta .afl-button {
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.afl-primary {
+  box-shadow: var(--ds-shadow-raised);
+}
+
+.afl-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-100) var(--ds-space-250);
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  color: var(--ds-text-subtle);
+  font-size: 13px;
+  list-style: none;
+}
+
+.afl-trust li {
+  display: flex;
+  gap: var(--ds-space-075);
+  align-items: center;
+}
+
+.afl-trust li::before {
+  background: var(--ds-icon-success);
+}
+
+/* The picture of the app at work. */
+.afl-shot {
+  overflow: hidden;
+  justify-self: stretch;
+  margin-top: var(--ds-space-600);
+  border: 1px solid var(--ds-border);
+  border-radius: 12px;
+  background: var(--ds-surface-raised);
+  box-shadow: var(--ds-shadow-overlay);
+}
+
+.afl-shot-bar {
+  display: flex;
+  gap: var(--ds-space-075);
+  align-items: center;
+  padding: 10px var(--ds-space-150);
+  border-bottom: 1px solid var(--ds-border);
+  color: var(--ds-text-subtlest);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.afl-shot-bar i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ds-border);
+}
+
+.afl-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Section titles on the first screen. */
+.afl-landing > h2,
+.afl-band > h2 {
+  margin: 0 0 var(--ds-space-300);
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.afl-landing > h2 {
+  margin-top: var(--ds-space-1000);
+}
+
+/* The tasks, as cards: an icon on a tinted disc, the task, one line on it. */
+.afl-tasks {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ds-space-200);
+  margin-bottom: var(--ds-space-500);
+}
+
+@media (width >= 600px) {
+  .afl-tasks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .afl-tasks li:last-child {
+    grid-column: span 2;
+  }
+}
+
+@media (width >= 1040px) {
+  .afl-tasks {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.afl-tasks a {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: var(--ds-space-050) 14px;
+  align-items: start;
+  padding: var(--ds-space-250);
+  border-radius: 12px;
+  background: radial-gradient(
+      circle at 40px 40px,
+      var(--ds-background-information) 20px,
+      transparent 20.5px
+    )
+    var(--ds-surface-raised);
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s,
+    transform 0.15s;
+}
+
+.afl-tasks a:hover {
+  box-shadow: var(--ds-shadow-raised);
+}
+
+.afl-tasks a::before {
+  grid-row: 1 / span 2;
+  align-self: start;
+  width: 22px;
+  height: 22px;
+  margin: 9px;
+}
+
+.afl-tasks b {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.afl-tasks span {
+  grid-column: 2;
+  color: var(--ds-text-subtle);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .afl-tasks a:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.afl-try {
+  margin-bottom: var(--ds-space-1000);
+  padding: var(--ds-space-300);
+  border: 1px solid var(--ds-border);
+  border-radius: 14px;
+  background: var(--ds-surface-raised);
+}
+
+.afl-try h2 {
+  margin-bottom: var(--ds-space-150);
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.afl-try .afl-samples button {
+  border-radius: 999px;
+}
+
+.afl-try .afl-triage-all {
+  margin: 0;
+}
+
+/* Below the first view: bands, every other one on a sunken field as wide as the window. */
+.afl-about {
+  max-width: var(--afl-wide);
+  margin: 0 auto;
+}
+
+.afl-band {
+  padding: var(--ds-space-1000) 0;
+}
+
+.afl-band:nth-child(odd) {
+  background: var(--ds-surface-sunken);
+  box-shadow: 0 0 0 100vmax var(--ds-surface-sunken);
+  clip-path: inset(0 -100vmax);
+}
+
+.afl-versus {
+  display: grid;
+  gap: var(--ds-space-200) var(--ds-space-300);
+}
+
+@media (width >= 800px) {
+  .afl-versus,
+  .afl-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .afl-versus > h2 {
+    grid-column: 1 / -1;
+  }
+
+  .afl-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  /* The questions: the title beside the list. */
+  .afl-band:has(> .afl-faq) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: var(--ds-space-600);
+    align-items: start;
+  }
+}
+
+.afl-col,
+.afl-grid li {
+  padding: var(--ds-space-300);
+  border: 1px solid var(--ds-border);
+  border-radius: 14px;
+  background: var(--ds-surface);
+}
+
+.afl-col h3 {
+  margin: 0 0 var(--ds-space-200);
+  color: var(--ds-text-subtlest);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.afl-col ul {
+  display: grid;
+  gap: var(--ds-space-150);
+  margin: 0;
+  padding: 0;
+  color: var(--ds-text-subtle);
+  font-size: 15px;
+  line-height: 22px;
+  list-style: none;
+}
+
+.afl-col li {
+  display: flex;
+  gap: 10px;
+}
+
+.afl-col li::before {
+  content: '';
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  background: var(--ds-icon-danger);
+  -webkit-mask: var(--afl-cross) center / contain no-repeat;
+  mask: var(--afl-cross) center / contain no-repeat;
+}
+
+.afl-col-yes {
+  border-color: var(--ds-border-brand);
+  box-shadow: var(--ds-shadow-raised);
+}
+
+.afl-col-yes h3 {
+  color: var(--ds-text-brand);
+}
+
+.afl-col-yes ul {
+  color: var(--ds-text);
+  font-weight: 500;
+}
+
+.afl-col-yes li::before {
+  background: var(--ds-icon-success);
+  -webkit-mask-image: var(--afl-check);
+  mask-image: var(--afl-check);
+}
+
+.afl-steps,
+.afl-grid {
+  display: grid;
+  gap: var(--ds-space-300);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.afl-steps {
+  counter-reset: step;
+}
+
+.afl-steps li,
+.afl-grid li {
+  display: grid;
+  gap: var(--ds-space-075);
+  align-content: start;
+}
+
+.afl-steps li {
+  padding-top: var(--ds-space-200);
+  border-top: 2px solid var(--ds-border-brand);
+  counter-increment: step;
+}
+
+.afl-steps li::before {
+  content: '0' counter(step);
+  color: var(--ds-text-brand);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+:is(.afl-steps, .afl-grid) b {
+  font-size: 17px;
+  line-height: 24px;
+}
+
+:is(.afl-steps, .afl-grid) span {
+  color: var(--ds-text-subtle);
+  font-size: 15px;
+  line-height: 22px;
+}
+
+.afl-grid {
+  gap: var(--ds-space-200);
+  margin-bottom: var(--ds-space-500);
+}
+
+/* Four cards: one, two or four in a row, never three and one. */
+@media (min-width: 600px) {
+  .afl-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1040px) {
+  .afl-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.afl-grid li::before {
+  width: 22px;
+  height: 22px;
+  margin-bottom: var(--ds-space-075);
+  background: var(--ds-icon-success);
+}
+
+.afl-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--ds-space-300) var(--ds-space-200);
+  margin: 0;
+}
+
+.afl-stats dt {
+  color: var(--ds-text-brand);
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.afl-stats dd {
+  margin: var(--ds-space-100) 0 0;
+  color: var(--ds-text-subtle);
+}
+
+.afl-faq {
+  border-top: 1px solid var(--ds-border);
+}
+
+.afl-faq details {
+  border-bottom: 1px solid var(--ds-border);
+}
+
+.afl-faq summary {
+  display: flex;
+  gap: var(--ds-space-200);
+  justify-content: space-between;
+  padding: var(--ds-space-200) 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.afl-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.afl-faq summary::after {
+  content: '+';
+  color: var(--ds-text-subtlest);
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.afl-faq [open] summary::after {
+  content: '−';
+}
+
+.afl-faq details > div {
+  max-width: 62ch;
+  padding-bottom: var(--ds-space-250);
+  color: var(--ds-text-subtle);
+  font-size: 15px;
+  line-height: 24px;
+}
+
+.afl-band.afl-close {
+  display: grid;
+  justify-items: center;
+  background: var(--ds-background-brand-boldest);
+  box-shadow: 0 0 0 100vmax var(--ds-background-brand-boldest);
+  color: var(--ds-text-inverse);
+  text-align: center;
+}
+
+.afl-close .afl-button:not(.afl-primary) {
+  border-color: currentColor;
+  color: inherit;
+}
+
+.afl-close .afl-button:not(.afl-primary):hover {
+  background: var(--ds-background-inverse-subtle);
+}
+
+/* The footer. */
+.afl-footer {
+  gap: var(--ds-space-100) var(--ds-space-250);
+  align-items: center;
+  padding: var(--ds-space-300);
+}
+
+.afl-footer .afl-brand {
+  margin-right: auto;
+  font-size: 15px;
+}
+
+.afl-footer .afl-logo {
+  width: 22px;
+  height: 22px;
+}
+
+.afl-footer .afl-sub {
+  flex-basis: 100%;
+}

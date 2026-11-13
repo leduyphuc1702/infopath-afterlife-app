@@ -29,6 +29,14 @@ export function TriageTable({ result, onCertificate, actions }: Props) {
         </h2>
         {actions}
       </div>
+      <div className="afl-wave-bar" aria-hidden="true">
+        {([1, 2, 3] as const).map(
+          (w) =>
+            totals.waves[w] > 0 && (
+              <i key={w} data-wave={w} style={{ flexGrow: totals.waves[w] }} />
+            ),
+        )}
+      </div>
       <p className="afl-sub">
         {totals.forms} {totals.forms === 1 ? 'form' : 'forms'}, {waves.join(', ')}.
         {totals.errors > 0 && ` ${totals.errors} could not be opened.`}

@@ -5,9 +5,10 @@ browser, now that InfoPath Forms Services is gone from SharePoint Online (July 1
 for the people left holding those files: the IT admin who has to move them, the form owner who
 built them, and the auditor who has to read a record from 2014.
 
-The web viewer in `apps/web` runs fully in the browser and sends no data anywhere. Today a
-person can do the seven tasks on its landing page. Each task's address opens it with a bundled
-sample; once the app is hosted, add the address to its URL.
+The web viewer in `apps/web` runs fully in the browser and sends no data anywhere. It is hosted
+at <https://leduyphuc1702.github.io/infopath-afterlife-app/>. Today a person can do the seven
+tasks on its landing page. Each task's address opens it with a bundled sample: add the address
+to the app's URL.
 
 | Task | Address |
 |---|---|
@@ -19,8 +20,9 @@ sample; once the app is hosted, add the address to its URL.
 | Print what a form does, for whoever takes it over | `#document` |
 | Decide which forms can move first: Triage, death certificates, waves | `#triage` |
 
-On the first screen each task is a card with an icon and a few words; the sentence above is the
-card's hover text. Explanations sit behind a help icon and show on hover or focus.
+On the first screen each task is a card with an icon, a few words and one line on what it gives.
+Explanations sit behind a help icon and show on hover or focus. Below the cards the page says
+what the app does, how it works, what stays on the computer and what does not work.
 
 The converter to native Jira Service Management forms and the Forge app are not part of this
 repository.
@@ -87,6 +89,12 @@ suite once more, on that commit: Kiro hook tests 6, core 3,854 passed (3 skipped
 web 124, end-to-end 181 (Kiro's 176 and the reviewer's five in `apps/web/e2e/simple.spec.ts`).
 Page entry 93.5 of 100 KB, Worker 156.1 of 160 KB. The reviewer's repair commit after it was
 run through every suite as well, with the same counts.
+
+After the reviewer's product-page commit (the sixth in "What Kiro did not write") the reviewer
+ran every suite again, on that commit: Kiro hook tests 6, core 3,854 passed (3 skipped), browser
+337, web 126 (two more, in `apps/web/test/preview.test.ts`), end-to-end 193 (Kiro's 176 and the
+reviewer's 17 in `e2e/simple.spec.ts` and `e2e/landing.spec.ts`). No test Kiro wrote was changed.
+Page entry 97.8 of 100 KB, Worker 156.1 of 160 KB.
 
 ## Status
 
@@ -204,7 +212,7 @@ Inside Kiro's commits, these lines are the reviewer's: the upstream LICENSE file
 keeper sample (in `4c13ec8`), one `.gitignore` line, and the P12 and P13 lines of
 `.kiro/steering/testing.md`.
 
-After `abd9299`, Kiro's last commit, five more commits are the reviewer's. The first puts the
+After `abd9299`, Kiro's last commit, six more commits are the reviewer's. The first puts the
 copyright holder's name in `LICENSE`. The second, made without Kiro after the Kiro credits ran
 out, makes the first screen and the buttons simpler. None of its changes is Kiro's:
 
@@ -235,6 +243,26 @@ with that. Every suite was run on it too, with the same counts.
 
 The fifth commit changes this file only. It adds the first paragraph of this section, which
 says who the reviewer is, and replaces "made by hand" with "made without Kiro".
+
+The sixth commit, made without Kiro, turns the first screen into a product page and gives the
+working screens rounder panels and tables. None of its changes is Kiro's:
+
+| File | What the reviewer wrote |
+|---|---|
+| `apps/web/src/shell/Landing.tsx` | The first view again: a headline, one sentence, two buttons, a picture of the app, task cards with one line each, the samples in a card. The samples list and the task links' handling are still Kiro's |
+| `apps/web/src/shell/About.tsx` | New: the bands under it. Without and with the app, three steps, what stays on the computer, four numbers counted from the bundled samples, seven questions, a closing pair of buttons |
+| `apps/web/src/shell/saas.css` | New: the look of all of the above, the mark, and rounder controls, panels and tables on the working screens |
+| `Header.tsx`, `Notices.tsx`, `App.tsx`, `main.tsx` | The mark and a link home in the header, section links on the first screen, the mark and a source link in the footer, one function that goes home, one import |
+| `apps/web/src/triage/TriageTable.tsx` | Eight lines: the three waves as one bar above Kiro's sentence |
+| `apps/web/public/favicon.svg`, `public/og.jpg`, `src/shell/shot-light.webp`, `shot-dark.webp`, `index.html` | The mark (drawn by the reviewer), pictures taken of the built app showing the Purchase request sample, and the tags a shared link reads |
+| `apps/web/e2e/landing.spec.ts`, `apps/web/test/preview.test.ts` | New: 12 end-to-end tests and two on the built page |
+| `README.md`, `docs/accessibility.md` | The paragraphs that describe this commit |
+
+The second commit left the first screen with one line; it now has that line as a headline and a
+product page under it. Spec 21's task links, their addresses and where focus goes are as Kiro
+built them, and its tests pass unchanged. What each screen does once a file is open is still
+Kiro's code; this commit changes how its panels, tables and text boxes are drawn, not what they
+do.
 
 Everything under `samples/` is the reviewer's, made by a generator outside this repository.
 Kiro cannot write there.

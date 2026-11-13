@@ -93,3 +93,31 @@ outside this repository, on the built app. Kiro did not check it.
   wide. Its contrast was fine, so axe-core passed it. The reviewer's next commit renames the
   class; `e2e/simple.spec.ts` checks the header, and Triage was run through axe-core again in
   both schemes at the three widths.
+
+## After the reviewer's product-page commit
+
+The reviewer's sixth commit after Kiro's last one turns the first screen into a product page and
+restyles panels, tables and text boxes on the working screens (README, "What Kiro did not
+write"). The reviewer checked it on the built app with axe-core 4.14.0, outside this repository.
+Kiro did not check it.
+
+- **axe-core:** 72 runs with the WCAG 2.0, 2.1 and 2.2 level A and AA rules, and no violation:
+  the first screen (plain, with each of its three explanations open, and with all seven
+  questions open), Read, Rules, Fill, Find, Keep, Documentation and Triage, each in the light and
+  the dark scheme at 1280, 390 and 320 px wide.
+- **1.4.10 Reflow:** no sideways scroll on any of the 72 runs. `e2e/landing.spec.ts` checks the
+  whole first screen at 320, 390, 820, 1280 and 1920 px in both schemes.
+- **2.4.1 Bypass blocks, 2.4.3 Focus order:** the header's section links are buttons that
+  scroll; they add four tab stops on the first screen and none elsewhere. The header stays in
+  view there and `scroll-padding-top` keeps it from covering the heading it led to;
+  `e2e/landing.spec.ts` checks this for each link.
+- **1.1.1 Non-text content:** the picture of the app has a description. The mark, the window
+  dots above the picture and Triage's wave bar are decoration and hidden from assistive
+  technology; the sentence under the bar carries its numbers.
+- **4.1.2 Name, role, value:** a question is a `details` element, opened with Enter or Space. A
+  task card's name is now its words and its line together.
+- **2.3.3 Animation:** a card lifts 2 px on hover, and a section link scrolls smoothly, only when
+  reduced motion is not asked for.
+- **Forced colours:** emulated, looked at on the first screen and on Triage only.
+- **Not checked:** a screen reader; Windows' contrast themes; Fill on each of the nine samples
+  was not run through axe-core again.

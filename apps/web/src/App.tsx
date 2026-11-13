@@ -17,6 +17,7 @@ import { RuleDialog } from './paper/RuleDialog';
 import { PaperToolbar, viewCaption } from './paper/PaperToolbar';
 import { ErrorBanner } from './shell/ErrorBanner';
 import { Header } from './shell/Header';
+import { About } from './shell/About';
 import { Landing } from './shell/Landing';
 import { taskOf, type Task } from './shell/tasks';
 import { Notices } from './shell/Notices';
@@ -598,7 +599,9 @@ export function App() {
   useEffect(() => {
     if (template || !homeFocus.current) return;
     homeFocus.current = false;
-    document.getElementById('afl-tasks-h')?.focus();
+    // The heading is below the first screen now: focus goes to it, the page stays at its top.
+    document.getElementById('afl-tasks-h')?.focus({ preventScroll: true });
+    window.scrollTo(0, 0);
   }, [template]);
   const taskRef = useRef(runTask);
   taskRef.current = runTask;
@@ -924,11 +927,21 @@ export function App() {
       ? `${template.ir.meta.name}, ${viewCaption(view)} view, ${record ? record.fileName : 'empty form'}`
       : '';
 
+  const goHome = () =>
+    void leaveRef.current().then((ok) => {
+      if (!ok) return;
+      history.pushState(null, '', location.pathname + location.search);
+      homeFocus.current = true;
+      dispatch({ type: 'home' });
+    });
+
   return (
     <>
       <Header
         onFiles={(f) => void openFiles(f)}
         onSample={(id) => void openSample(id)}
+        landing={!template}
+        onHome={goHome}
         {...(template &&
           s.screen === 'form' && {
             xray: { on: s.xray, toggle: () => dispatch({ type: 'xray', on: !s.xray }) },
@@ -1042,6 +1055,7 @@ export function App() {
               onTriageAll={() => void openAllSamples()}
               onTask={startTask}
             />
+            <About onTask={startTask} />
           </>
         ) : s.screen === 'triage' && s.triage ? (
           <>
@@ -1184,18 +1198,7 @@ export function App() {
               {rendered && (
                 <>
                   <p className="afl-print-caption">{label}</p>
-                  <DrawError
-                    retry={fillOn ? fill.res : rendered}
-                    filling={fillOn}
-                    onHome={() =>
-                      void leaveRef.current().then((ok) => {
-                        if (!ok) return;
-                        history.pushState(null, '', location.pathname + location.search);
-                        homeFocus.current = true;
-                        dispatch({ type: 'home' });
-                      })
-                    }
-                  >
+                  <DrawError retry={fillOn ? fill.res : rendered} filling={fillOn} onHome={goHome}>
                     <Paper
                       result={rendered}
                       {...(fillOn &&
