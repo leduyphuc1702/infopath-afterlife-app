@@ -16,3 +16,42 @@ test-results/
 
 # Spec 09 design §7: build metadata the web tests read, kept out of dist
 apps/web/build-meta/
+
+# The product page (site/, published at /about/). The design kit it was built from is 37 MB, so
+# only the files the page loads are tracked (measured by listing every request the page makes);
+# the rest of the kit, the checker's working files and the screenshots stay local.
+site/shots/
+site/.taste-skill/*
+!site/.taste-skill/plan.md
+!site/.taste-skill/waivers.json
+site/assets/**
+!site/assets/**/
+!site/assets/LICENSE
+!site/assets/backgrounds/backgrounds.css
+!site/assets/backgrounds/backgrounds.js
+!site/assets/effects/fx.js
+!site/assets/effects/grain-gradient/effect.js
+!site/assets/icons/icon.css
+!site/assets/layout/layout.css
+!site/assets/layout/layout.js
+!site/assets/moments/lib.js
+!site/assets/moments/moments.js
+!site/assets/moments/word-highlight/moment.css
+!site/assets/moments/word-highlight/moment.js
+!site/assets/motion/motion.css
+!site/assets/motion/motion.js
+!site/assets/system.css
+!site/assets/system.js
+!site/assets/ui/base.css
+!site/assets/ui/cards.css
+!site/assets/ui/ui.js
+!site/assets/ui/code/fragment.css
+!site/assets/ui/code/fragment.js
+!site/assets/ui/doc/fragment.css
+!site/assets/ui/doc/fragment.js
+!site/assets/ui/notify/fragment.css
+!site/assets/ui/notify/fragment.js
+!site/assets/ui/search/fragment.css
+!site/assets/ui/search/fragment.js
+!site/assets/ui/window/fragment.css
+!site/assets/ui/window/fragment.js

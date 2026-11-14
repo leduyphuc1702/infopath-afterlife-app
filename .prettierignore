@@ -6,3 +6,4 @@ packages/core/test/golden/
 pnpm-lock.yaml
 packages/core/test/fixtures/whatwg-encodings.json
 packages/core/src/xsf/ms-ipff2.ts
+site/

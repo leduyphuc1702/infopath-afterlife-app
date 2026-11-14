@@ -26,7 +26,7 @@ interface Props {
 
 export const REPO = 'https://github.com/leduyphuc1702/infopath-afterlife-app';
 /** The product's page: what the app is and who it is for. */
-export const SITE = 'https://leduyphuc1702.github.io/infopath-afterlife-app/';
+export const SITE = 'https://leduyphuc1702.github.io/infopath-afterlife-app/about/';
 
 /** The mark: a form sheet under a halo. Drawn for this app; its colours are tokens (saas.css). */
 export const Logo = () => (

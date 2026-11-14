@@ -48,6 +48,8 @@ export default defineConfig(
       '.kiro/',
       'apps/web/dist/',
       'apps/web/playwright-report/',
+      // The product page and its design kit (README, What Kiro did not write).
+      'site/',
     ],
   },
   js.configs.recommended,

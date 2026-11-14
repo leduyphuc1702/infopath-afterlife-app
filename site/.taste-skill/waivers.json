@@ -1,0 +1,12 @@
+[
+ {
+  "check": "text-only",
+  "target": "section#faq",
+  "reason": "The skill's faq recipe has no picture and sections.md allows one picture-less FAQ. The checker fails it only as the last main section, which it reads as the close; this page's close is footer.closing, right after it."
+ },
+ {
+  "check": "section-gaps",
+  "target": "section#faq / footer#contact",
+  "reason": "The FAQ's five open answers fill 525px of a fixed one-screen section at 1440. A sixth question or a grey line was tried and ran past one screen at 1024x768 and at 390, so the space under the last answer stays."
+ }
+]

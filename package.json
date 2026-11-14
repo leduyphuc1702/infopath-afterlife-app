@@ -18,7 +18,8 @@
     "test:hooks": "node --test tools/kiro-hooks/test/*.test.mjs",
     "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test:hooks && pnpm test && pnpm test:browser && pnpm test:web",
     "test:web": "pnpm --filter web test",
-    "e2e:web": "pnpm --filter web e2e"
+    "e2e:web": "pnpm --filter web e2e",
+    "build:about": "node tools/about.mjs"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

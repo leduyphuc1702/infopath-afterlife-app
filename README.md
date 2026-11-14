@@ -5,10 +5,18 @@ browser, now that InfoPath Forms Services is gone from SharePoint Online (July 1
 for the people left holding those files: the IT admin who has to move them, the form owner who
 built them, and the auditor who has to read a record from 2014.
 
-The web viewer in `apps/web` runs fully in the browser and sends no data anywhere. It is hosted
-at <https://leduyphuc1702.github.io/infopath-afterlife-app/>. Today a person can do the seven
-tasks on its landing page. Each task's address opens it with a bundled sample: add the address
-to the app's URL.
+The web app in `apps/web` runs fully in the browser and sends no data anywhere. It is hosted at
+<https://leduyphuc1702.github.io/infopath-afterlife-app/>, and its product page is at
+<https://leduyphuc1702.github.io/infopath-afterlife-app/about/>.
+
+Its first screen is a library. Forms and records added to it are kept in this browser, in
+IndexedDB, so they are there on the next visit. Each form is listed with its records and its
+last change. From the list a person opens a form, starts a new record, saves a filled-in form
+as a record, removes a form or a record, and writes one backup `.zip` that reads back in. The
+library is the one thing the browser stores. Nothing is uploaded.
+
+Under the library are seven tasks to start from. Each task's address opens it with a bundled
+sample: add the address to the app's URL.
 
 | Task | Address |
 |---|---|
@@ -20,9 +28,9 @@ to the app's URL.
 | Print what a form does, for whoever takes it over | `#document` |
 | Decide which forms can move first: Triage, death certificates, waves | `#triage` |
 
-On the first screen each task is a card with an icon, a few words and one line on what it gives.
-Explanations sit behind a help icon and show on hover or focus. Below the cards the page says
-what the app does, how it works, what stays on the computer and what does not work.
+Each task is a row with an icon, a few words and one line on what it gives. Explanations sit
+behind a help icon and show on hover or focus. What the app is, who it is for and what does not
+work are on the product page (`site/`), not in the app.
 
 The converter to native Jira Service Management forms and the Forge app are not part of this
 repository.
@@ -98,6 +106,14 @@ Page entry 97.8 of 100 KB, Worker 156.1 of 160 KB. The reviewer's seventh commit
 every suite as well: the same counts, with one more end-to-end test (194) and a page entry of
 97.9 KB.
 
+After the reviewer's library commit (the eighth) the reviewer ran every suite again, on that
+commit: Kiro hook tests 6, core 3,854 passed (3 skipped), browser 337, web 141 (15 more, in
+`apps/web/test/library.test.ts`), end-to-end 199 (Kiro's 176 and the reviewer's 23 in
+`e2e/simple.spec.ts` and `e2e/library.spec.ts`, which takes the place of `e2e/landing.spec.ts`).
+Three of Kiro's end-to-end files were changed for it; "What Kiro did not write" says where. Page
+entry 97.9 of 100 KB, Worker 157.4 of 160 KB. The ninth commit, the product page, was run
+through every suite as well, with the same counts and sizes.
+
 ## Status
 
 One row per folder in `.kiro/specs/`. Criteria are the `SHALL` sentences in `requirements.md`
@@ -141,6 +157,7 @@ pnpm install
 pnpm --filter web dev        # the web viewer, on Vite's dev server
 pnpm --filter web build      # a static site in apps/web/dist
 pnpm --filter web preview    # serve the build
+pnpm build:about             # after a build: the product page (site/) into apps/web/dist/about
 ```
 
 Tests:
@@ -214,7 +231,7 @@ Inside Kiro's commits, these lines are the reviewer's: the upstream LICENSE file
 keeper sample (in `4c13ec8`), one `.gitignore` line, and the P12 and P13 lines of
 `.kiro/steering/testing.md`.
 
-After `abd9299`, Kiro's last commit, seven more commits are the reviewer's. The first puts the
+After `abd9299`, Kiro's last commit, nine more commits are the reviewer's. The first puts the
 copyright holder's name in `LICENSE`. The second, made without Kiro after the Kiro credits ran
 out, makes the first screen and the buttons simpler. None of its changes is Kiro's:
 
@@ -272,6 +289,41 @@ had come from. Back now returns to the cards, as it did in Kiro's version, and t
 in the header returns to the top. It changes `App.tsx` and adds one test to
 `e2e/landing.spec.ts`.
 
+The eighth commit, made without Kiro, gives the app a library. Until then the app read InfoPath
+files and forgot them when the tab closed, so it could not take InfoPath's place. None of its
+changes is Kiro's:
+
+| File | What the reviewer wrote |
+|---|---|
+| `apps/web/src/worker/shelf.ts` | New: the store, one IndexedDB database named `afterlife-library` |
+| `worker/session.ts`, `protocol.ts`, `worker.ts`, `client.ts` | Added to Kiro's files: a session restores the library, removes a form with its records, saves a filled-in form as a record (new, or over the one it was opened from), and writes and reads one backup `.zip`. A file's id comes from its SHA-256, so a restarted Worker gives the page the ids it already holds |
+| `apps/web/src/shell/Library.tsx`, `library.css` | New: the first screen. A table of forms with their records and last change, "New record", Remove, "Back up", "Add files", and a find box from nine forms on. Kiro's task links and samples list moved here from `Landing.tsx` and do what they did |
+| `App.tsx`, `store.ts`, `Header.tsx`, `Notices.tsx`, `main.tsx`, `side/Unmatched.tsx`, `shell/Confirm.tsx` | Added to Kiro's files: Save in Fill (Ctrl or Cmd+S), removing a record, the library's state, two sentences that said nothing is saved |
+| `shell/Landing.tsx`, `About.tsx`, `shot-light.webp`, `shot-dark.webp`, most of `saas.css`, `e2e/landing.spec.ts` | Removed: the product page of the sixth commit left the app. It is now a page of its own (the ninth commit) |
+| `apps/web/test/library.test.ts`, `apps/web/e2e/library.spec.ts` | New: 15 tests of the Worker's library and 18 end-to-end tests |
+| `e2e/fill.spec.ts`, `e2e/fill-bugfixes.spec.ts`, `e2e/records.spec.ts` | Kiro's tests, changed in four places. Two sentences the app now words differently. The storage check: it asked for no IndexedDB database, and now asks for exactly one, `afterlife-library`, and no cookie. One step that empties the library before a second timing |
+
+It departs from Kiro's specs on purpose. Spec 04 R8.3 and spec 09 design section 5 say the viewer
+stores nothing. The library is now the one thing it stores, in this browser only; the policy
+that forbids every network request is unchanged. The spec files are left as Kiro wrote them.
+
+The ninth commit, made without Kiro, adds the product page in `site/`, published beside the app
+at `/about/`. Kiro wrote none of it:
+
+| File | What it is |
+|---|---|
+| `site/index.html` | The page: its words, its layout choices and the pieces of the app's interface it draws are the reviewer's. Every figure on it was counted from the bundled samples |
+| `site/assets/` | The taste-skill design kit, version 2.5.1 (MIT, © 2026 Leonxlnx, `site/assets/LICENSE`): its CSS and scripts, unmodified. Only the 28 files the page loads are in this repository |
+| `site/fonts/` | Manrope and JetBrains Mono, latin subsets, with their SIL Open Font License texts |
+| `site/.taste-skill/plan.md`, `waivers.json` | The page's plan, and the two findings of the kit's checker that were waived instead of fixed, both on the Questions section, with the reason for each |
+| `tools/about.mjs`, `.github/workflows/web-pages.yml`, `package.json` | Copies the tracked files of `site/` into `apps/web/dist/about/`; the Pages workflow runs it after the build |
+| `apps/web/src/shell/Header.tsx`, `index.html`, `public/og.jpg` | The About link in the app's footer leads to the page; a shared link shows a picture of the page's top and a sentence that names the library |
+| `.gitignore`, `.prettierignore`, `eslint.config.js` | `site/` is left out of lint and format checks, and the rest of the kit out of the repository |
+
+The kit's checker passed the page at five screen widths with those two waivers. The page asks
+no other site for anything: its fonts, styles and scripts come from its own folder. It was not
+checked on a real phone or with a screen reader.
+
 Everything under `samples/` is the reviewer's, made by a generator outside this repository.
 Kiro cannot write there.
 
@@ -315,6 +367,15 @@ Fonts, shipped unmodified:
 | Package | Version | Licence | Use |
 |---|---|---|---|
 | `@fontsource/carlito` | 5.3.0 | SIL Open Font License 1.1 | Carlito, metric-compatible with Calibri, declared as `@font-face` family `Calibri` by the page that shows a render, with `ascent-override: 93%; descent-override: 26%` so line heights match InfoPath's GDI layout. Core does not inline it. |
+
+The product page (`site/`, served at `/about/`) is a separate static page and shares no code
+with the app:
+
+| What | Version | Licence | Use |
+|---|---|---|---|
+| taste-skill design kit (`site/assets/`) | 2.5.1 | MIT, `site/assets/LICENSE` | the page's layout, type, motion and interface pieces |
+| Manrope | latin subset | SIL Open Font License 1.1, `site/fonts/OFL-Manrope.txt` | the page's text |
+| JetBrains Mono | latin subset | SIL Open Font License 1.1, `site/fonts/OFL-JetBrainsMono.txt` | file names and figures on the page |
 
 ## Licence
 
